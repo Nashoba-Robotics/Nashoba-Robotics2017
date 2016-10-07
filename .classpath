@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/RIOdroid.jar" sourcepath="lib/RIOdroid_src.jar"/>
+	<classpathentry kind="lib" path="lib/navx_frc.jar" sourcepath="C:/Users/Nashoba Robotics/navx-mxp/java/src">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/Nashoba%20Robotics/navx-mxp/java/docs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/wpilib/java/current/lib/NetworkTables.jar" sourcepath="lib/wpilib/java/current/lib/NetworkTables-sources.jar"/>
+	<classpathentry kind="lib" path="lib/wpilib/java/current/lib/WPILib.jar" sourcepath="lib/wpilib/java/current/lib/WPILib-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
