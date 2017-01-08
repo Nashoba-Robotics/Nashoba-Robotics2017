@@ -25,3 +25,5 @@ sysProps.xml
 .DS_STORE
 build
 dist
+
+.metadata/
