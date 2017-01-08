@@ -2,7 +2,6 @@ package edu.nr.lib;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class NavX {
