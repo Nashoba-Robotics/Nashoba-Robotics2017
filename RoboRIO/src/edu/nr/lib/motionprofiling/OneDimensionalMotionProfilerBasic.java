@@ -75,8 +75,8 @@ public class OneDimensionalMotionProfilerBasic extends TimerTask implements OneD
 			double timeSinceStart = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - startTime;
 			
 			if((initialPosition + (trajectory.getGoalPosition(timeSinceStart))) < 0) {
-				double goalPosition = trajectory.getGoalPosition(timeSinceStart);
-				double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+				//double goalPosition = trajectory.getGoalPosition(timeSinceStart);
+				//double currentTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 				
 				isEnabled();
 			}

@@ -38,17 +38,11 @@ public class NRMath {
 	}
 
 	/**
-	 * Limites x from -1 to 1
+	 * Limits x from -1 to 1
 	 * @param x
-	 * @return the value, limited betweeen -1 and 1
+	 * @return the value, limited between -1 and 1
 	 */
 	public static double limit(double x) {
-		if (x > 1) {
-			return 1;
-		}
-		if (x < -1) {
-			return -1;
-		}
-		return x;
+		return limit(x, 1);
 	}
 }
