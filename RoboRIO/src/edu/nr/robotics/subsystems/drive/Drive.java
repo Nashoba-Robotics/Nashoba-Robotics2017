@@ -386,12 +386,4 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 	}
 
-	/**
-	 * Chooses the default command when the Drive class is initialized
-	 */
-	@Override
-	protected void initDefaultCommand() {
-		// TODO: Choose default command
-	}
-
 }

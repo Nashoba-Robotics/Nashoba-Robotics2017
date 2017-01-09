@@ -10,8 +10,18 @@ public abstract class NRSubsystem extends Subsystem {
 
 	public abstract void disable();
 	
+	JoystickCommand joystickCommand;
+	
 	public NRSubsystem(JoystickCommand joystickCommand) {
 		NRSubsystem.subsystems.add(this);
+		this.joystickCommand = joystickCommand;
+	}
+	
+	/**
+	 * Chooses the default command when the Drive class is initialized
+	 */
+	@Override
+	protected final void initDefaultCommand() {
 		setDefaultCommand(joystickCommand);
 	}
 
