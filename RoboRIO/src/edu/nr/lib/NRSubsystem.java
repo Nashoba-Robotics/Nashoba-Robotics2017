@@ -10,8 +10,9 @@ public abstract class NRSubsystem extends Subsystem {
 
 	public abstract void disable();
 	
-	public NRSubsystem() {
+	public NRSubsystem(JoystickCommand joystickCommand) {
 		NRSubsystem.subsystems.add(this);
+		setDefaultCommand(joystickCommand);
 	}
 
 }

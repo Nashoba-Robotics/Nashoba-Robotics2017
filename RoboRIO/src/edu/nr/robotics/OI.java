@@ -1,5 +1,7 @@
 package edu.nr.robotics;
 
+import edu.wpi.first.wpilibj.Joystick;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -28,6 +30,16 @@ public class OI {
 	// number it is.
 	// Joystick stick = new Joystick(port);
 	// Button button = new JoystickButton(stick, buttonNumber);
+
+	public Joystick getLeftDriveStick() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public Joystick getRightDriveStick() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	// There are a few additional built in buttons you can use. Additionally,
 	// by subclassing Button you can create custom triggers and bind those to

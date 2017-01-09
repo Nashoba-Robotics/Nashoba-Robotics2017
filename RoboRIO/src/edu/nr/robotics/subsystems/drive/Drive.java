@@ -46,6 +46,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	// public static final double turn_D = 0;
 
 	private Drive() {
+		super(new DriveJoystickCommand(OI.getInstance().getLeftDriveStick(), OI.getInstance().getRightDriveStick()));
 		if (EnabledSubsystems.leftDriveEnabled) {
 			leftTalon = new CANTalon(RobotMap.TALON_LEFT_A);
 
