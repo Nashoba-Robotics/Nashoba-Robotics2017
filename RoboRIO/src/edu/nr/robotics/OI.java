@@ -6,6 +6,9 @@ package edu.nr.robotics;
  */
 public class OI {
 
+	//Determine if speedMultiplier will actually be 1
+	public double driveSpeedMultiplier = 1;
+	
 	private static OI singleton;
 	public static OI getInstance() {
 		init();
