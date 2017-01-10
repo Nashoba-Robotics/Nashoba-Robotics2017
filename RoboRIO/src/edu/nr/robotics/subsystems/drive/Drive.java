@@ -25,25 +25,22 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	private CANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
 
 	// TODO: See if all below are needed this year:
-	// private static final int ticksPerRev = ();
-	// private static final double wheelDiameter = (); //Measured in feet
-	// private static final double distancePerRev = Math.PI * wheelDiameter;
+	private static final int ticksPerRev = 0;
+	private static final double wheelDiameter = 0; // Measured in feet
+	private static final double distancePerRev = Math.PI * wheelDiameter;
 
-	// private static final double rpm = RobotMap.MAX_SPEED / distancePerRev *
-	// 60;
+	private static final double rpm = RobotMap.MAX_SPEED / distancePerRev * 60;
 
-	// private static final double hundredMSPerMin = ;
-	// private static final int nativeUnitsPerRev = 4 * ticksPerRev;
+	private static final double hundredMSPerMin = 0;
+	private static final int nativeUnitsPerRev = 4 * ticksPerRev;
 
-	// TODO: Confirm actual setpoints are 0
 	double leftMotorSetpoint = 0;
 	double rightMotorSetpoint = 0;
 
-	// public static final double turn_F = (rpm / hundredMSPerMin *
-	// nativeUnitsPerRev);
-	// public static final double turn_P = 0;
-	// public static final double turn_I = 0;
-	// public static final double turn_D = 0;
+	public static final double turn_F = (rpm / hundredMSPerMin * nativeUnitsPerRev);
+	public static final double turn_P = 0;
+	public static final double turn_I = 0;
+	public static final double turn_D = 0;
 
 	private Drive() {
 		super(new DriveJoystickCommand(OI.getInstance().getLeftDriveStick(), OI.getInstance().getRightDriveStick()));
@@ -51,49 +48,48 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			leftTalon = new CANTalon(RobotMap.TALON_LEFT_A);
 
 			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
-			// TODO: Confirm actual feedback device
-			// leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			// leftTalon.setF(turn_F);
-			// leftTalon.setP(turn_P);
-			// leftTalon.setI(turn_I);
-			// leftTalon.setD(turn_D);
-			// leftTalon.configEncoderCodesPerRev(ticksPerRev);
+			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			leftTalon.setF(turn_F);
+			leftTalon.setP(turn_P);
+			leftTalon.setI(turn_I);
+			leftTalon.setD(turn_D);
+			leftTalon.configEncoderCodesPerRev(ticksPerRev);
 			// TODO: Confirm initial brake mode
-			// leftTalon.enableBrakeMode(false);
+			leftTalon.enableBrakeMode(false);
 			leftTalon.setEncPosition(0);
-			// TODO: Determine reverseSensor
-			// leftTalon.reverseSensor(true);
+			// TODO: Determine reverseSensor state
+			leftTalon.reverseSensor(true);
 			leftTalon.enable();
 
 			tempLeftTalon = new CANTalon(RobotMap.TALON_LEFT_B);
 			tempLeftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			// TODO: Determine initial brake mode
-			// tempLeftTalon.enableBrakeMode(false);
+			tempLeftTalon.enableBrakeMode(false);
 		}
 		if (EnabledSubsystems.rightDriveEnabled) {
 			rightTalon = new CANTalon(RobotMap.TALON_RIGHT_A);
 
 			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			// TODO: Confirm actual feedback device
-			// rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			// rightTalon.setF(turn_F);
-			// rightTalon.setP(turn_P);
-			// rightTalon.setI(turn_I);
-			// rightTalon.setD(turn_D);
-			// rightTalon.configEncoderCodesPerRev(ticksPerRev);
+			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			rightTalon.setF(turn_F);
+			rightTalon.setP(turn_P);
+			rightTalon.setI(turn_I);
+			rightTalon.setD(turn_D);
+			rightTalon.configEncoderCodesPerRev(ticksPerRev);
 			// TODO: Confirm initial brake mode
-			// rightTalon.enableBrakeMode(false);
+			rightTalon.enableBrakeMode(false);
 			rightTalon.setEncPosition(0);
 			// TODO: Determine reverseSensor
-			// rightTalon.reverseSensor(true);
+			rightTalon.reverseSensor(true);
 			rightTalon.enable();
 
 			tempRightTalon = new CANTalon(RobotMap.TALON_RIGHT_B);
 			tempRightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			// TODO: Determine initial brake mode
-			// temprightTalon.enableBrakeMode(false);
+			tempRightTalon.enableBrakeMode(false);
 		}
 	}
 
@@ -207,20 +203,20 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	 *            the right motor speed, from -1 to 1
 	 */
 	public void setMotorSpeed(double left, double right) {
-		leftMotorSetpoint = left;// * rpm;
-		rightMotorSetpoint = right;// * rpm;
+		leftMotorSetpoint = left * RobotMap.LEFT_DRIVE_DIRECTION;// * rpm;
+		rightMotorSetpoint = right * RobotMap.RIGHT_DRIVE_DIRECTION;// * rpm;
 
 		if (leftTalon != null) {
 			if (leftTalon.getControlMode() == TalonControlMode.Speed)
-				leftTalon.set(left/* \*rpm */);
+				leftTalon.set(leftMotorSetpoint/* \*rpm */);
 			else
-				leftTalon.set(left);
+				leftTalon.set(leftMotorSetpoint);
 		}
 		if (rightTalon != null) {
 			if (rightTalon.getControlMode() == TalonControlMode.Speed)
-				rightTalon.set(right/* \*rpm */);
+				rightTalon.set(rightMotorSetpoint/* \*rpm */);
 			else
-				rightTalon.set(right);
+				rightTalon.set(rightMotorSetpoint);
 		}
 	}
 

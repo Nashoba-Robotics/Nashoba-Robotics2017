@@ -7,14 +7,19 @@ package edu.nr.robotics;
  * floating around.
  */
 public class RobotMap {
-	
-	//TODO: Get actual talon ports
-	//These are the talon ports
+
+	// TODO: Get actual talon ports
+	// These are the talon ports
 	public static final int TALON_LEFT_A = 0;
 	public static final int TALON_LEFT_B = 0;
 	public static final int TALON_RIGHT_A = 0;
 	public static final int TALON_RIGHT_B = 0;
 
-	//TODO: Get actual max speed
+	// TODO: Get actual max speed
 	public static final double MAX_SPEED = 0;
+
+	// These are multipliers for each subsystem that allow for wiring changes
+	// Adding a negative will switch the motor direction
+	public static final int LEFT_DRIVE_DIRECTION = 1;
+	public static final int RIGHT_DRIVE_DIRECTION = 1;
 }
