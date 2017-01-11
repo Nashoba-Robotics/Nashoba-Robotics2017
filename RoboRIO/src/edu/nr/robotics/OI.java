@@ -8,34 +8,47 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
 
-	//Determine if speedMultiplier will actually be 1
+	// TODO: Determine if speedMultiplier will actually be 1
 	public double driveSpeedMultiplier = 1;
-	
+
 	private static OI singleton;
+
+	private Joystick driveLeft;
+	private Joystick driveRight;
+
+	private OI() {
+		driveLeft = new Joystick(RobotMap.STICK_LEFT);
+		driveRight = new Joystick(RobotMap.STICK_RIGHT);
+
+		initDriveLeft();
+		initDriveRight();
+	}
+
+	public void initDriveLeft() {
+
+	}
+
+	public void initDriveRight() {
+
+	}
+
 	public static OI getInstance() {
 		init();
 		return singleton;
 	}
-	
+
 	public static void init() {
 		if (singleton == null) {
 			singleton = new OI();
 		}
-		
+
 	}
-	//// CREATING BUTTONS
-	// One type of button is a joystick button which is any button on a
-	//// joystick.
-	// You create one by telling it which joystick it's on and which button
-	// number it is.
-	// Joystick stick = new Joystick(port);
-	// Button button = new JoystickButton(stick, buttonNumber);
 
 	public Joystick getLeftDriveStick() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	public Joystick getRightDriveStick() {
 		// TODO Auto-generated method stub
 		return null;

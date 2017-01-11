@@ -15,6 +15,10 @@ public class RobotMap {
 	public static final int TALON_RIGHT_A = 0;
 	public static final int TALON_RIGHT_B = 0;
 
+	// TODO: Get actual Joystick ports
+	public static final int STICK_LEFT = 0;
+	public static final int STICK_RIGHT = 0;
+	
 	// TODO: Get actual max speed
 	public static final double MAX_SPEED = 0;
 
