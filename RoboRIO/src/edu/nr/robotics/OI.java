@@ -45,13 +45,11 @@ public class OI {
 	}
 
 	public Joystick getLeftDriveStick() {
-		// TODO Auto-generated method stub
-		return null;
+		return driveLeft;
 	}
 
 	public Joystick getRightDriveStick() {
-		// TODO Auto-generated method stub
-		return null;
+		return driveRight;
 	}
 
 	// There are a few additional built in buttons you can use. Additionally,
