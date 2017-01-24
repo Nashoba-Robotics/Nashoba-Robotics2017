@@ -13,9 +13,9 @@ public class NRCommand extends Command {
 
 	boolean forceCancel = false;
 	
-	ArrayList<NRSubsystem> subsystems;
+	ArrayList<NRSubsystem> subsystems = new ArrayList<NRSubsystem>();
 	
-	public NRCommand(ArrayList<NRSubsystem> subsystems) {
+	NRCommand(ArrayList<NRSubsystem> subsystems) {
 		super();
 		this.subsystems = subsystems;
 		requires(subsystems);
@@ -46,7 +46,6 @@ public class NRCommand extends Command {
 	
 	public NRCommand(NRSubsystem subsystem) {
 		super();
-		this.subsystems = new ArrayList<NRSubsystem>();
 		subsystems.add(subsystem);
 		requires(subsystems);
 	}
@@ -58,21 +57,18 @@ public class NRCommand extends Command {
 	 */
 	public NRCommand(NRSubsystem subsystem, String name) {
 		super(name);
-		this.subsystems = new ArrayList<NRSubsystem>();
 		subsystems.add(subsystem);
 		requires(subsystems);
 	}
 
 	public NRCommand(NRSubsystem subsystem, String name, double timeout) {
 		super(name, timeout);
-		this.subsystems = new ArrayList<NRSubsystem>();
 		subsystems.add(subsystem);
 		requires(subsystems);
 	}
 
 	public NRCommand(NRSubsystem subsystem, double timeout) {
 		super(timeout);
-		this.subsystems = new ArrayList<NRSubsystem>();
 		subsystems.add(subsystem);
 		requires(subsystems);
 	}
@@ -144,10 +140,17 @@ public class NRCommand extends Command {
 		onExecute();
 	}
 
+	private void disableSubsystems() {
+		for(NRSubsystem s : subsystems) {
+			s.disable();
+		}
+	}
+	
 	@Override
 	protected final void end() {
 		reset = true;
 		forceCancel = false;
+		disableSubsystems();
 		onEnd(false);
 	}
 
@@ -155,6 +158,7 @@ public class NRCommand extends Command {
 	protected final void interrupted() {
 		reset = true;
 		forceCancel = false;
+		disableSubsystems();
 		onEnd(true);
 	}
 

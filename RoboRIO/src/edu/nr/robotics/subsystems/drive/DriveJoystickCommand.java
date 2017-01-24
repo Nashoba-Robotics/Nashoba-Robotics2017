@@ -9,6 +9,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 	Joystick rightJoystick;
 	
 	public DriveJoystickCommand(Joystick leftJoystick, Joystick rightJoystick) {
+		super(Drive.getInstance());
 		this.leftJoystick = leftJoystick;
 		this.rightJoystick = rightJoystick;
 	}
