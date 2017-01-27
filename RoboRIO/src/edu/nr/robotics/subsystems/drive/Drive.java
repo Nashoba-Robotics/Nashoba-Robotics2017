@@ -25,11 +25,10 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	private CANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
 
 	// TODO: See if all below are needed this year:
-	private static final int ticksPerRev = 0;
+	private static final int ticksPerRev = 256;
 	private static final double wheelDiameter = 0; // Measured in feet
 	private static final double distancePerRev = Math.PI * wheelDiameter;
-
-	private static final double rpm = RobotMap.MAX_SPEED / distancePerRev * 60;
+	private static final double rpm = RobotMap.MAX_DRIVE_SPEED / distancePerRev * 60;
 
 	private static final double hundredMSPerMin = 0;
 	private static final int nativeUnitsPerRev = 4 * ticksPerRev;
@@ -45,7 +44,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	private Drive() {
 		super(new DriveJoystickCommand(OI.getInstance().getLeftDriveStick(), OI.getInstance().getRightDriveStick()));
 		if (EnabledSubsystems.leftDriveEnabled) {
-			leftTalon = new CANTalon(RobotMap.TALON_LEFT_A);
+			leftTalon = new CANTalon(RobotMap.TALON_LEFT_F);
 
 			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -54,42 +53,37 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 			leftTalon.setI(turn_I);
 			leftTalon.setD(turn_D);
 			leftTalon.configEncoderCodesPerRev(ticksPerRev);
-			// TODO: Confirm initial brake mode
-			leftTalon.enableBrakeMode(false);
+			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
 			// TODO: Determine reverseSensor state
-			leftTalon.reverseSensor(true);
+			leftTalon.reverseSensor(false);
 			leftTalon.enable();
 
 			tempLeftTalon = new CANTalon(RobotMap.TALON_LEFT_B);
-			tempLeftTalon.changeControlMode(TalonControlMode.PercentVbus);
+			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
-			// TODO: Determine initial brake mode
-			tempLeftTalon.enableBrakeMode(false);
+			tempLeftTalon.enableBrakeMode(true);
 		}
 		if (EnabledSubsystems.rightDriveEnabled) {
-			rightTalon = new CANTalon(RobotMap.TALON_RIGHT_A);
+			rightTalon = new CANTalon(RobotMap.TALON_RIGHT_F);
 
 			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
-			// TODO: Confirm actual feedback device
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			rightTalon.setF(turn_F);
 			rightTalon.setP(turn_P);
 			rightTalon.setI(turn_I);
 			rightTalon.setD(turn_D);
 			rightTalon.configEncoderCodesPerRev(ticksPerRev);
-			// TODO: Confirm initial brake mode
-			rightTalon.enableBrakeMode(false);
+			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
 			// TODO: Determine reverseSensor
-			rightTalon.reverseSensor(true);
+			rightTalon.reverseSensor(false);
 			rightTalon.enable();
 
 			tempRightTalon = new CANTalon(RobotMap.TALON_RIGHT_B);
-			tempRightTalon.changeControlMode(TalonControlMode.PercentVbus);
+			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
-			// TODO: Determine initial brake mode
-			tempRightTalon.enableBrakeMode(false);
+			tempRightTalon.enableBrakeMode(true);
 		}
 	}
 
@@ -131,7 +125,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 	 */
 	public void arcadeDrive(double move, double turn) {
 		// TODO: Determine if speed multiplier will be used
-		// arcadeDrive(move, turn, false);
+		arcadeDrive(move, turn, false);
 	}
 
 	/**
@@ -208,13 +202,13 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 		if (leftTalon != null) {
 			if (leftTalon.getControlMode() == TalonControlMode.Speed)
-				leftTalon.set(leftMotorSetpoint/* \*rpm */);
+				leftTalon.set(leftMotorSetpoint * rpm);
 			else
 				leftTalon.set(leftMotorSetpoint);
 		}
 		if (rightTalon != null) {
 			if (rightTalon.getControlMode() == TalonControlMode.Speed)
-				rightTalon.set(rightMotorSetpoint/* \*rpm */);
+				rightTalon.set(rightMotorSetpoint * rpm );
 			else
 				rightTalon.set(rightMotorSetpoint);
 		}
