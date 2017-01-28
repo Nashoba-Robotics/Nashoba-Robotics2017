@@ -28,10 +28,12 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 	public static final double turn_I = 0;
 	public static final double turn_D = 0;
 
-	/*
-	 * private Shooter() { super(//TODO: Choose joystick command); if
-	 * (EnabledSubsystems.shooterEnabled) { //TODO: Create talon(s) } }
-	 */
+	
+	private Shooter() { 
+		super(/*TODO: Choose joystick command*/); 
+	}
+		if (EnabledSubsystems.shooterEnabled) { //TODO: Create talon(s) } }
+	}
 
 	public static Shooter getInstance() {
 		init();
