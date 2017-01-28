@@ -59,7 +59,7 @@ public class TCPServer implements Runnable {
 		}
 	}
 	
-	public TCPServer getInstance() {
+	public static TCPServer getInstance() {
 		init();
 		return singleton;
 	}
