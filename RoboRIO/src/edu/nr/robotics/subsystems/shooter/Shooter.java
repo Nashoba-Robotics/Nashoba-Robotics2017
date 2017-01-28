@@ -2,12 +2,15 @@ package edu.nr.robotics.subsystems.shooter;
 
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.DoNothingJoystickCommand;
 import edu.nr.lib.JoystickCommand;
 import edu.nr.lib.NRSubsystem;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.interfaces.SmartDashboardSource;
+import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
+import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 
 public class Shooter extends NRSubsystem implements SmartDashboardSource, Periodic {
 
@@ -23,16 +26,14 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 
 	// TODO: Create motor setpoint(s)
 
-	public static final double turn_F = (RobotMap.MAX_SHOOTER_SPEED / hundredMSPerMin * nativeUnitsPerRev);
-	public static final double turn_P = 0;
-	public static final double turn_I = 0;
-	public static final double turn_D = 0;
+	public static final double F = (RobotMap.MAX_SHOOTER_SPEED / hundredMSPerMin * nativeUnitsPerRev);
+	public static final double P = 0;
+	public static final double I = 0;
+	public static final double D = 0;
 
 	
 	private Shooter() { 
-		super(/*TODO: Choose joystick command*/); 
-	}
-		if (EnabledSubsystems.shooterEnabled) { //TODO: Create talon(s) } }
+		if (EnabledSubsystems.shooterEnabled) { /*TODO: Create talon(s)*/ }
 	}
 
 	public static Shooter getInstance() {
@@ -43,6 +44,7 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 	public static void init() {
 		if (singleton == null) {
 			singleton = new Shooter();
+			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
 		}
 	}
 
