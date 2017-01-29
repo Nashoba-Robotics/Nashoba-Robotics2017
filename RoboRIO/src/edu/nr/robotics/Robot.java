@@ -2,6 +2,8 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.DoNothingCommand;
+import edu.nr.lib.interfaces.Periodic;
+import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -72,9 +74,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
+		// teleop starts running.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 	}
@@ -117,5 +117,8 @@ public class Robot extends IterativeRobot {
 	 */
 	public void periodic() {
 		Scheduler.getInstance().run();
+		
+		Periodic.runAll();
+		SmartDashboardSource.runAll();
 	}
 }
