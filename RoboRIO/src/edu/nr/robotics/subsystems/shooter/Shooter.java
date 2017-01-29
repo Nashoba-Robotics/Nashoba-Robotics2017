@@ -1,5 +1,6 @@
 package edu.nr.robotics.subsystems.shooter;
 
+import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.DoNothingJoystickCommand;
@@ -12,12 +13,12 @@ import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 
-public class Shooter extends NRSubsystem implements SmartDashboardSource, Periodic {
+public class Shooter extends NRSubsystem {
 
 	private static Shooter singleton;
 
 	// TODO: Initialize actual talons
-	// private CANTalon ;
+	private CANTalon talon;
 
 	private static final int ticksPerRev = 256;
 
@@ -49,63 +50,16 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 	}
 
 	/**
-	 * Set the voltage ramp rate for both drive talons. Limits the rate at which
-	 * the throttle will change.
-	 * 
-	 * @param rampRate
-	 *            Maximum change in voltage, in volts / second
-	 */
-	public void setTalonRampRate(double rampRate) {
-		// TODO: Set voltage ramp rates of talons
-	}
-
-	/**
 	 * Sets motor speed of shooter
 	 * 
 	 * @param speed
-	 *            the shooter motor speed, from -1 to 1
+	 *            the shooter motor speed, 
+	 *            
+	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
+	 *            If the talon mode is PercentVBus from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		//TODO: Set actual motor speeds
-	}
-	
-	/**
-	 * Gets whether the PIDs are enabled or not. If both are enabled, then
-	 * returns true, otherwise returns false
-	 * 
-	 * @return whether the PIDs are enabled
-	 */
-	public boolean getPIDEnabled() {
-		//TODO: Check if talons are in speed mode
-		return false;
-	}
-
-	/**
-	 * Enables or disables both left and right PIDs. Disabling also resets the
-	 * integral term and the previous error of the PID, and sets the output to
-	 * zero
-	 * 
-	 * Doesn't do anything if they are already that state.
-	 * 
-	 * @param enabled
-	 *            whether to enable (true) or disable (false)
-	 */
-	public void setPIDEnabled(boolean enabled) {
-		//Set PIDEnabled for shooter talon(s)
-	}
-	
-	/**
-	 * Resets both the left and right encoders
-	 */
-	public void resetEncoders() {
-		//Set talon position(s) to 0
-	}
-	
-	/**
-	 * Resets talons
-	 */
-	public void resetTalons() {
-		//ClearIAccum of talon(s)
+		talon.set(speed);
 	}
 	
 	@Override
@@ -120,7 +74,7 @@ public class Shooter extends NRSubsystem implements SmartDashboardSource, Period
 
 	@Override
 	public void disable() {
-
+		setMotorSpeed(0);
 	}
 
 }

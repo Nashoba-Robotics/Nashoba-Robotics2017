@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Class that controls talons, encoders, and type of drive
  *
  */
-public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic {
+public class Drive extends NRSubsystem {
 
 	private static Drive singleton;
 
@@ -373,7 +373,7 @@ public class Drive extends NRSubsystem implements SmartDashboardSource, Periodic
 
 	@Override
 	public void disable() {
-
+		//TODO
 	}
 
 }

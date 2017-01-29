@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import edu.nr.lib.interfaces.Periodic;
+import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -14,7 +16,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * 
  * initDefaultCommand() and setDefaultCommand() should never be called.
  */
-public abstract class NRSubsystem extends Subsystem {
+public abstract class NRSubsystem extends Subsystem implements SmartDashboardSource, Periodic {
 
 	public static ArrayList<NRSubsystem> subsystems = new ArrayList<>();
 
@@ -26,6 +28,8 @@ public abstract class NRSubsystem extends Subsystem {
 	
 	public NRSubsystem() {
 		NRSubsystem.subsystems.add(this);
+		periodics.add(this);
+		sources.add(this);
 	}
 	
 	/**
