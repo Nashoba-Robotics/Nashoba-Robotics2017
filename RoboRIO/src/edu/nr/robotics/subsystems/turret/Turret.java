@@ -16,14 +16,11 @@ public class Turret extends NRSubsystem {
 
 	private CANTalon talon;
 	
-	public double motorSetpoint = 0;
+	public double speedSetpoint = 0;
+	public double positionSetpoint = 0;
 	
 	private static final int TICKS_PER_REV = 256;
 
-	private static final double HUNDRED_MS_PER_MIN = 600;
-	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
-
-	public static final double F = (RobotMap.MAX_TURRET_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static final double P = 0;
 	public static final double I = 0;
 	public static final double D = 0;
@@ -38,7 +35,6 @@ public class Turret extends NRSubsystem {
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			talon.setF(F);
 			talon.setP(P);
 			talon.setI(I);
 			talon.setD(D);
@@ -63,19 +59,43 @@ public class Turret extends NRSubsystem {
 	}
 
 	/**
-	 * Sets motor speed of turret
+	 * Sets motor speed of turret.
+	 * 
+	 * If not in speed or percentVbus mode, this does nothing.
 	 * 
 	 * @param speed
 	 *            the turret motor speed, 
 	 *            
 	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
-	 *            If the talon mode is PercentVBus from -1 to 1
+	 *            If the talon mode is PercentVbus, from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		motorSetpoint = speed;
+		speedSetpoint = speed;
 		if (talon != null) {
-			talon.set(speed);
+			CANTalon.TalonControlMode mode = talon.getControlMode();
+			if(mode == CANTalon.TalonControlMode.PercentVbus || mode == CANTalon.TalonControlMode.Speed) {
+				talon.set(speed);
+			}
 		}
+	}
+	
+	/**
+	 * Set the goal position of the robot. 
+	 * 
+	 * If the robot is not in position mode, this does nothing.
+	 * 
+	 * @param position
+	 * 			The goal positions in rotations
+	 */
+	public void setPosition(double position) {
+		positionSetpoint = position;
+		if (talon != null) {
+			CANTalon.TalonControlMode mode = talon.getControlMode();
+			if(mode == CANTalon.TalonControlMode.PercentVbus || mode == CANTalon.TalonControlMode.Speed) {
+				talon.set(position);
+			}
+		}
+
 	}
 	
 	/**
@@ -101,7 +121,8 @@ public class Turret extends NRSubsystem {
 		if (talon != null) {
 			SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
 			SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
+			SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
+			SmartDashboard.putString("Turret Position", talon.getPosition() + " : " + getInstance().positionSetpoint);
 		}
 	}
 
@@ -111,6 +132,13 @@ public class Turret extends NRSubsystem {
 	@Override
 	public void disable() {
 		setMotorSpeed(0);
+	}
+
+	public void setPID(double p, double i, double d) {
+		if(talon != null) {
+			talon.setPID(p, i, d);
+		}
+		
 	}
 
 }

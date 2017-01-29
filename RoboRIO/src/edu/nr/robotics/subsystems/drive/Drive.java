@@ -38,6 +38,8 @@ public class Drive extends NRSubsystem {
 	}
 	
 	private Drive() {
+		//TODO: Find phase of motors
+		
 		if (EnabledSubsystems.LEFT_DRIVE_ENABLED) {
 			leftTalon = new CANTalon(RobotMap.TALON_LEFT_F);
 
@@ -262,7 +264,7 @@ public class Drive extends NRSubsystem {
 	 */
 	public double getEncoderLeftDistance() {
 		if (leftTalon != null)
-			return -leftTalon.getEncPosition() / 4;
+			return leftTalon.getEncPosition() / 4;
 		return 0;
 	}
 
@@ -286,7 +288,7 @@ public class Drive extends NRSubsystem {
 	 */
 	public double getEncoderLeftSpeed() {
 		if (leftTalon != null)
-			return -leftTalon.getEncVelocity() / 4;
+			return leftTalon.getEncVelocity() / 4;
 		return 0;
 	}
 
