@@ -90,23 +90,56 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		//System.out.println("Running!");
 		if(enabled) {
 			System.out.println("Enabled!");
-			double outputLeft = left.calculate((int) (source.pidGetLeft()));
-			double outputRight = -right.calculate((int) (source.pidGetRight()));
+			double prelimOutputLeft = left.calculate((int) (source.pidGetLeft()));
+			double prelimOutputRight = -right.calculate((int) (source.pidGetRight()));
 
 			double currentHeading = gyroCorrection.getAngleErrorDegrees();
 			double desiredHeading = Pathfinder.r2d(left.getHeading());
 			
 			double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - currentHeading);
-			double turn = -kp_theta * angleDifference;
+			double headingAdjustment = -kp_theta * angleDifference;
+			
+			double outputLeft = 0;
+			double outputRight = 0;
 						
-			out.pidWrite(outputLeft + turn, outputRight - turn);
+			if (prelimOutputRight > 0.0) {
+				if (headingAdjustment > 0.0) {
+					outputRight = Math.max(prelimOutputRight, headingAdjustment);
+				} else {
+					outputRight = prelimOutputRight + headingAdjustment;
+				}
+			} else {
+				if (headingAdjustment > 0.0) {
+					outputRight = prelimOutputRight + headingAdjustment;
+				} else {
+					outputRight = -Math.max(-prelimOutputRight, -headingAdjustment);
+				}
+			}
+			
+			if (prelimOutputLeft > 0.0) {
+				if (headingAdjustment > 0.0) {
+					outputLeft = prelimOutputLeft - headingAdjustment;
+				} else {
+					outputLeft = Math.max(prelimOutputLeft, -headingAdjustment);
+				}
+			} else {
+				if (headingAdjustment > 0.0) {
+					outputLeft = -Math.max(-prelimOutputLeft, headingAdjustment);
+				} else {
+					outputLeft = prelimOutputLeft - headingAdjustment;
+				}
+			}
+			
+			out.pidWrite(outputLeft, outputRight);
+			
+			
 			
 			SmartDashboard.putNumber("Output Left", outputLeft);
 			SmartDashboard.putNumber("Output Right", outputRight);
 			
 			source.setPIDSourceType(PIDSourceType.kRate);
-			SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + ((outputLeft - turn) / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
-			SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight()  + ":" + ((outputRight + turn) / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
+			SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + -(outputLeft / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
+			SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight()  + ":" + (outputRight / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
 			source.setPIDSourceType(PIDSourceType.kDisplacement);
 			SmartDashboard.putNumber("Motion Profiler X Left", source.pidGetLeft()/256 * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254);
 			SmartDashboard.putNumber("Motion Profiler X Right", source.pidGetRight()/256 * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254);
