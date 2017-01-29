@@ -84,7 +84,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledPeriodic() {
-		periodic();
 	}
 
 	/**
@@ -92,7 +91,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		periodic();
 	}
 
 	/**
@@ -100,7 +98,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		periodic();
 	}
 
 	/**
@@ -109,13 +106,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
-		periodic();
 	}
 	
 	/**
 	 * This function is called periodically during all robot modes
 	 */
-	public void periodic() {
+	@Override
+	public void robotPeriodic() {
 		Scheduler.getInstance().run();
 		
 		Periodic.runAll();
