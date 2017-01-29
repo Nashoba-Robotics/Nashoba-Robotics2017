@@ -79,10 +79,10 @@ public class Intake extends NRSubsystem {
 	}
 
 	/**
-	 * Sets motor speed of climber
+	 * Sets motor speed of  intake
 	 * 
 	 * @param speed
-	 *            the climber motor speed, 
+	 *            the faster intake motor speed, 
 	 *            
 	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
 	 *            If the talon mode is PercentVBus from -1 to 1
@@ -97,7 +97,7 @@ public class Intake extends NRSubsystem {
 	}
 	
 	/**
-	 * Function that is periodically called once the Shooter class is initialized
+	 * Function that is periodically called once the subsystem class is initialized
 	 */
 	@Override
 	public void periodic() {

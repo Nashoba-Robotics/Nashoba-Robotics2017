@@ -41,8 +41,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public double leftMotorSetPoint = 0;
 	public double rightMotorSetPoint = 0;
 
-	public final double turn_F_LEFT = 0.873;
-	public final double turn_F_RIGHT = 0.892;
+	public final double turn_F_LEFT = 0.863;
+	public final double turn_F_RIGHT = 0.966;
 	public final double turn_P_LEFT = 0.0;
 	public final double turn_I_LEFT = 0;
 	public final double turn_D_LEFT = 0;
@@ -59,8 +59,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	// = 0.075;
 
 	// FOR TWO DIMENSIONAL
-	public static final double ka = 0.0, kp = 0.000084, kd = 0.0,
-			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1/39.37)), kp_theta = 0.0;
+	public static double ka = 0.06, kp = 0.0005, kd = 0.0,
+			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1/39.37)), kp_theta = 0.001;
 
 	// FOR ONE DIMENSIONAL
 	// public static final double ka = 0.01, kp = 0.0, kd = 0.0105, kv = 1 /
@@ -78,6 +78,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonLB.setI(turn_I_LEFT);
 			talonLB.setD(turn_D_LEFT);
 			talonLB.configEncoderCodesPerRev(ticksPerRev);
+			talonLB.reverseSensor(true);
 			talonLB.setStatusFrameRateMs(StatusFrameRate.Feedback, 1);
 
 			talonRB = new CANTalon(RobotMap.talonRB);
@@ -89,6 +90,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonRB.setI(turn_I_RIGHT);
 			talonRB.setD(turn_D_RIGHT);
 			talonRB.configEncoderCodesPerRev(ticksPerRev);
+			talonRB.reverseSensor(true);
 			talonRB.setStatusFrameRateMs(StatusFrameRate.Feedback, 1);
 
 			talonLF = new CANTalon(RobotMap.talonLF);
@@ -102,7 +104,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonRF.set(talonRB.getDeviceID());
 
 			profiler = new TwoDimensionalMotionProfilerPathfinder(this, this, kv, ka, kp, kd, kp_theta,
-					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254,
+					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
 					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254, RobotMap.MAX_JERK, ticksPerRev,
 					RobotMap.WHEEL_DIAMETER * 0.0254);
 
@@ -126,6 +128,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 						SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw(AngleUnit.DEGREE));
 
+						SmartDashboard.putString("Speed Right", Drive.getInstance().talonRB.getSpeed() + " : " + -Drive.getInstance().rightMotorSetPoint * RobotMap.MAX_RPS * 60);
+						SmartDashboard.putString("Speed Left", Drive.getInstance().talonLB.getSpeed() + " : " + -Drive.getInstance().leftMotorSetPoint * RobotMap.MAX_RPS * 60);
 						try {
 							java.util.concurrent.TimeUnit.MILLISECONDS.sleep(8);
 						} catch (InterruptedException e) {
@@ -263,14 +267,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		profiler.setKP(SmartDashboard.getNumber("kp", 0));
 		profiler.setKD(SmartDashboard.getNumber("kd", 0));
 		profiler.setKV(SmartDashboard.getNumber("kv", 0));
-		profiler.setKP_theta(SmartDashboard.getNumber("kp theta", 0));
+		profiler.setKP_theta(SmartDashboard.getNumber("kp_theta", 0));
 
 		Waypoint[] points = new Waypoint[] { 
 				
 				new Waypoint(0, 0, 0), 
-				//new Waypoint(SmartDashboard.getNumber("X Waypoint", 0), SmartDashboard.getNumber("Y Waypoint", 0), 0),
-				new Waypoint(3, -2, 0),
-				new Waypoint(2, 2, 0) };
+				new Waypoint(SmartDashboard.getNumber("X Waypoint", 0), SmartDashboard.getNumber("Y Waypoint", 0), 0) };
 
 		profiler.setTrajectory(points);
 		profiler.enable();
@@ -286,6 +288,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	@Override
 	public void pidWrite(double left, double right) {
+		leftMotorSetPoint = -left;
+		rightMotorSetPoint  = right;
+		
 		System.out.println("Left: " + left + " right: " + right);
 
 		talonLB.set(left * RobotMap.MAX_RPS * 60);

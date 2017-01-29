@@ -75,7 +75,7 @@ public class Climber extends NRSubsystem {
 	}
 	
 	/**
-	 * Function that is periodically called once the Shooter class is initialized
+	 * Function that is periodically called once the subsystem class is initialized
 	 */
 	@Override
 	public void periodic() {
