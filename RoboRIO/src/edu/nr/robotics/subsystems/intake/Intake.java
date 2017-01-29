@@ -71,10 +71,10 @@ public class Intake extends NRSubsystem {
 		return singleton;
 	}
 
-	public static void init() {
+	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Intake();
-			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
+			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
@@ -109,7 +109,7 @@ public class Intake extends NRSubsystem {
 	 */
 	@Override
 	public void smartDashboardInfo() {
-		if (EnabledSubsystems.INTAKE_ENABLED) {
+		if (lowTalon != null && highTalon != null) {
 			SmartDashboard.putNumber("Low Intake Current", lowTalon.getOutputCurrent());
 			SmartDashboard.putNumber("High Intake Current", highTalon.getOutputCurrent());
 			SmartDashboard.putNumber("Low Intake Voltage", lowTalon.getOutputVoltage());
@@ -124,7 +124,7 @@ public class Intake extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		getInstance().setMotorSpeed(0);
+		setMotorSpeed(0);
 	}
 
 }

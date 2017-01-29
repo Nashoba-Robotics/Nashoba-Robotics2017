@@ -85,7 +85,7 @@ public class Drive extends NRSubsystem {
 		return singleton;
 	}
 
-	public static void init() {
+	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Drive();
 			getInstance().setJoystickCommand(new DriveJoystickCommand(OI.getInstance().getLeftDriveStick(), OI.getInstance().getRightDriveStick()));
@@ -373,7 +373,7 @@ public class Drive extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		getInstance().setMotorSpeed(0, 0);
+		setMotorSpeed(0, 0);
 	}
 
 }
