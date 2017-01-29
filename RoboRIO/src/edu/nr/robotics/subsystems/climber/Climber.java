@@ -102,4 +102,11 @@ public class Climber extends NRSubsystem {
 		setMotorSpeed(0);
 	}
 
+	public void setPID(double P, double I, double D, double F) {
+		if(talon != null) {
+			talon.setPID(P, I, D);
+			talon.setF(F);
+		}
+	}
+	
 }
