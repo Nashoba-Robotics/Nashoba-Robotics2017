@@ -2,8 +2,6 @@ package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.NRMath;
 import edu.nr.lib.NRSubsystem;
-import edu.nr.lib.interfaces.Periodic;
-import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -13,48 +11,45 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * 
- * Class that controls talons, encoders, and type of drive
- *
- */
 public class Drive extends NRSubsystem {
 
 	private static Drive singleton;
 
 	private CANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
 
-	// TODO: See if all below are needed this year:
-	private static final int ticksPerRev = 256;
-	private static final double wheelDiameter = 0; // Measured in feet
-	private static final double distancePerRev = Math.PI * wheelDiameter;
-	private static final double rpm = RobotMap.MAX_DRIVE_SPEED / distancePerRev * 60;
+	private static final int TICKS_PER_REV = 256;
+	private static final double WHEEL_DIAMETER = (4.0 / 12.0); // Measured in feet
+	private static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
+	private static final double MAX_RPM = RobotMap.MAX_DRIVE_SPEED / DISTANCE_PER_REV * 60;
 
-	private static final double hundredMSPerMin = 0;
-	private static final int nativeUnitsPerRev = 4 * ticksPerRev;
+	private static final double HUNDRED_MS_PER_MIN = 600;
+	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
 	double leftMotorSetpoint = 0;
 	double rightMotorSetpoint = 0;
 
-	public static final double turn_F = (rpm / hundredMSPerMin * nativeUnitsPerRev);
-	public static final double turn_P = 0;
-	public static final double turn_I = 0;
-	public static final double turn_D = 0;
+	public static final double F = (MAX_RPM / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static final double P = 0;
+	public static final double I = 0;
+	public static final double D = 0;
+	
+	public static enum driveMode {
+		arcadeDrive, tankDrive
+	}
 	
 	private Drive() {
-		if (EnabledSubsystems.leftDriveEnabled) {
+		if (EnabledSubsystems.LEFT_DRIVE_ENABLED) {
 			leftTalon = new CANTalon(RobotMap.TALON_LEFT_F);
 
 			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			leftTalon.setF(turn_F);
-			leftTalon.setP(turn_P);
-			leftTalon.setI(turn_I);
-			leftTalon.setD(turn_D);
-			leftTalon.configEncoderCodesPerRev(ticksPerRev);
+			leftTalon.setF(F);
+			leftTalon.setP(P);
+			leftTalon.setI(I);
+			leftTalon.setD(D);
+			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
-			// TODO: Determine reverseSensor state
 			leftTalon.reverseSensor(false);
 			leftTalon.enable();
 
@@ -63,19 +58,18 @@ public class Drive extends NRSubsystem {
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 		}
-		if (EnabledSubsystems.rightDriveEnabled) {
+		if (EnabledSubsystems.RIGHT_DRIVE_ENABLED) {
 			rightTalon = new CANTalon(RobotMap.TALON_RIGHT_F);
 
 			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			rightTalon.setF(turn_F);
-			rightTalon.setP(turn_P);
-			rightTalon.setI(turn_I);
-			rightTalon.setD(turn_D);
-			rightTalon.configEncoderCodesPerRev(ticksPerRev);
+			rightTalon.setF(F);
+			rightTalon.setP(P);
+			rightTalon.setI(I);
+			rightTalon.setD(D);
+			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
-			// TODO: Determine reverseSensor
 			rightTalon.reverseSensor(false);
 			rightTalon.enable();
 
@@ -124,7 +118,6 @@ public class Drive extends NRSubsystem {
 	 *            turn at. 1 is max right, 0 is stopped, -1 is max left
 	 */
 	public void arcadeDrive(double move, double turn) {
-		// TODO: Determine if speed multiplier will be used
 		arcadeDrive(move, turn, false);
 	}
 
@@ -193,24 +186,23 @@ public class Drive extends NRSubsystem {
 	 * 
 	 * @param left
 	 *            the left motor speed, from -1 to 1
+	 *            		OR
+	 *            the left motor speed in rpm
+	 *         
 	 * @param right
 	 *            the right motor speed, from -1 to 1
+	 *            		OR
+	 *            the right motor speed in rpm
 	 */
 	public void setMotorSpeed(double left, double right) {
 		leftMotorSetpoint = left * RobotMap.LEFT_DRIVE_DIRECTION;// * rpm;
 		rightMotorSetpoint = right * RobotMap.RIGHT_DRIVE_DIRECTION;// * rpm;
 
 		if (leftTalon != null) {
-			if (leftTalon.getControlMode() == TalonControlMode.Speed)
-				leftTalon.set(leftMotorSetpoint * rpm);
-			else
-				leftTalon.set(leftMotorSetpoint);
+			leftTalon.set(leftMotorSetpoint);
 		}
 		if (rightTalon != null) {
-			if (rightTalon.getControlMode() == TalonControlMode.Speed)
-				rightTalon.set(rightMotorSetpoint * rpm );
-			else
-				rightTalon.set(rightMotorSetpoint);
+			rightTalon.set(rightMotorSetpoint * MAX_RPM );
 		}
 	}
 
@@ -333,10 +325,10 @@ public class Drive extends NRSubsystem {
 	/**
 	 * Sets the PID values for both talons
 	 * 
-	 * @param p
-	 * @param i
-	 * @param d
-	 * @param f
+	 * @param p Corrects for errors in velocity
+	 * @param i Integral error
+	 * @param d Smooths corrections
+	 * @param f Feed forward gain
 	 */
 	public void setPID(double p, double i, double d, double f) {
 		if (leftTalon != null)
@@ -368,12 +360,20 @@ public class Drive extends NRSubsystem {
 	 */
 	@Override
 	public void smartDashboardInfo() {
-
+		if (leftTalon != null && rightTalon != null) {
+			SmartDashboard.putString("Drive Current", leftTalon.getOutputCurrent() + " : " + rightTalon.getOutputCurrent());
+			SmartDashboard.putString("Drive Voltage", leftTalon.getOutputVoltage() + " : " + rightTalon.getOutputVoltage());
+			SmartDashboard.putString("Drive Left Speed", leftTalon.getSpeed() + " : " + getInstance().leftMotorSetpoint);
+			SmartDashboard.putString("Drive Right Speed", rightTalon.getSpeed() + " : " + getInstance().rightMotorSetpoint);
+		}
 	}
 
+	/**
+	 * What subsystem does upon robot being disabled
+	 */
 	@Override
 	public void disable() {
-		//TODO
+		getInstance().setMotorSpeed(0, 0);
 	}
 
 }

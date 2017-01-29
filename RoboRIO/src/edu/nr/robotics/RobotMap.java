@@ -1,5 +1,7 @@
 package edu.nr.robotics;
 
+import edu.nr.robotics.subsystems.drive.Drive;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -14,20 +16,31 @@ public class RobotMap {
 	public static final int TALON_LEFT_B = 0;
 	public static final int TALON_RIGHT_F = 0;
 	public static final int TALON_RIGHT_B = 0;
+	public static final int SHOOTER_TALON = 0;
+	public static final int CLIMBER_TALON = 0;
+	public static final int TURRET_TALON = 0;
+	public static final int INTAKE_LOW_TALON = 0;
+	public static final int INTAKE_HIGH_TALON = 0;
 
 	// TODO: Get actual Joystick ports
 	public static final int STICK_LEFT = 0;
 	public static final int STICK_RIGHT = 0;
 	
 	// TODO: Get actual max speed
-	public static final double MAX_DRIVE_SPEED = 0;//In feet per second
+	public static final double MAX_DRIVE_SPEED = 0; //In feet per second
 	
 	//TODO: Get actual subsystem max speeds
-	public static final double MAX_SHOOTER_SPEED = 0;
+	public static final double MAX_SHOOTER_SPEED = 0; //In rpm
+	public static final double MAX_CLIMBER_SPEED = 0; //In rpm
+	public static final double MAX_TURRET_SPEED = 0; //In rpm
+	public static final double MAX_LOW_INTAKE_SPEED = 0; //In rpm
+	public static final double MAX_HIGH_INTAKE_SPEED = 0; //In rpm
 
 	// These are multipliers for each subsystem that allow for wiring changes
 	// Adding a negative will switch the motor direction
 	public static final int LEFT_DRIVE_DIRECTION = 1;
 	public static final int RIGHT_DRIVE_DIRECTION = 1;
 	public static final int SHOOTER_DIRECTION = 1;
+	
+	public static final Drive.driveMode driveMode = Drive.driveMode.arcadeDrive;
 }

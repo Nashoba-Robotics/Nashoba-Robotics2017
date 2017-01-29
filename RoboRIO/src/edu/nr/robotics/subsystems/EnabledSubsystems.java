@@ -1,7 +1,10 @@
 package edu.nr.robotics.subsystems;
 
 public class EnabledSubsystems {
-	public static final boolean leftDriveEnabled = false, 
-								rightDriveEnabled = false,
-								shooterEnabled = false;
+	public static final boolean LEFT_DRIVE_ENABLED = false, 
+								RIGHT_DRIVE_ENABLED = false,
+								SHOOTER_ENABLED = false,
+								CLIMBER_ENABLED = false,
+								TURRET_ENABLED = false,
+								INTAKE_ENABLED = false;
 }
