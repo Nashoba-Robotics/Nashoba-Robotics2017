@@ -51,7 +51,7 @@ public class Climber extends NRSubsystem {
 		return singleton;
 	}
 
-	public static void init() {
+	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Climber();
 			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
@@ -87,7 +87,7 @@ public class Climber extends NRSubsystem {
 	 */
 	@Override
 	public void smartDashboardInfo() {
-		if (EnabledSubsystems.CLIMBER_ENABLED) {
+		if (talon != null) {
 			SmartDashboard.putNumber("Climber Current", talon.getOutputCurrent());
 			SmartDashboard.putNumber("Climber Voltage", talon.getOutputVoltage());
 			SmartDashboard.putString("Climber Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
@@ -99,7 +99,7 @@ public class Climber extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		getInstance().setMotorSpeed(0);
+		setMotorSpeed(0);
 	}
 
 }

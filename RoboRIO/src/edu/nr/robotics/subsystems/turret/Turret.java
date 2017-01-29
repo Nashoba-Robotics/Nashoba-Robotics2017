@@ -8,7 +8,6 @@ import edu.nr.lib.DoNothingJoystickCommand;
 import edu.nr.lib.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
-import edu.nr.robotics.subsystems.climber.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Turret extends NRSubsystem {
@@ -28,6 +27,9 @@ public class Turret extends NRSubsystem {
 	public static final double P = 0;
 	public static final double I = 0;
 	public static final double D = 0;
+	
+	public static final int FORWARD_POSITION = 0; //TODO
+	public static final int REVERSE_POSITION = 0; //TODO
 
 	
 	private Turret() { 
@@ -53,10 +55,10 @@ public class Turret extends NRSubsystem {
 		return singleton;
 	}
 
-	public static void init() {
+	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Turret();
-			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
+			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
@@ -81,6 +83,13 @@ public class Turret extends NRSubsystem {
 	 */
 	@Override
 	public void periodic() {
+		if(talon != null) {
+			if(talon.isFwdLimitSwitchClosed()) {
+				talon.setEncPosition(FORWARD_POSITION);
+			} else if(talon.isRevLimitSwitchClosed()) {
+				talon.setEncPosition(REVERSE_POSITION);
+			} 
+		}
 
 	}
 
@@ -89,7 +98,7 @@ public class Turret extends NRSubsystem {
 	 */
 	@Override
 	public void smartDashboardInfo() {
-		if (EnabledSubsystems.TURRET_ENABLED) {
+		if (talon != null) {
 			SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
 			SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
 			SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
@@ -101,7 +110,7 @@ public class Turret extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		getInstance().setMotorSpeed(0);
+		setMotorSpeed(0);
 	}
 
 }

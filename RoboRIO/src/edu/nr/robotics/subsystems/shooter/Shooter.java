@@ -53,10 +53,10 @@ public class Shooter extends NRSubsystem {
 		return singleton;
 	}
 
-	public static void init() {
+	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Shooter();
-			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
+			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
@@ -89,7 +89,7 @@ public class Shooter extends NRSubsystem {
 	 */
 	@Override
 	public void smartDashboardInfo() {
-		if (EnabledSubsystems.SHOOTER_ENABLED) {
+		if (talon != null) {
 			SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
 			SmartDashboard.putNumber("Shooter Voltage", talon.getOutputVoltage());
 			SmartDashboard.putString("Shooter Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
@@ -101,7 +101,7 @@ public class Shooter extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		getInstance().setMotorSpeed(0);
+		setMotorSpeed(0);
 	}
 
 }
