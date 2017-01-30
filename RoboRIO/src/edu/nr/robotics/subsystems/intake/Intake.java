@@ -25,15 +25,16 @@ public class Intake extends NRSubsystem {
 	private static final double HUNDRED_MS_PER_MIN = 600;
 	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
-	public static final double F_LOW = (RobotMap.MAX_LOW_INTAKE_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW = 0;
-	public static final double I_LOW = 0;
-	public static final double D_LOW = 0;
+	//TODO: Make final once tested using SmartDashboard
+	public static double F_LOW = (RobotMap.MAX_LOW_INTAKE_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static double P_LOW = 0;
+	public static double I_LOW = 0;
+	public static double D_LOW = 0;
 	
-	public static final double F_HIGH = (RobotMap.MAX_HIGH_INTAKE_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
-	public static final double P_HIGH = 0;
-	public static final double I_HIGH = 0;
-	public static final double D_HIGH = 0;
+	public static double F_HIGH = (RobotMap.MAX_HIGH_INTAKE_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static double P_HIGH = 0;
+	public static double I_HIGH = 0;
+	public static double D_HIGH = 0;
 
 	
 	private Intake() { 
@@ -127,4 +128,13 @@ public class Intake extends NRSubsystem {
 		setMotorSpeed(0);
 	}
 
+	public void setPID(double PLow, double ILow, double DLow, double FLow, double PHigh, double IHigh, double DHigh, double FHigh) {
+		if(lowTalon != null && highTalon != null) {
+			lowTalon.setPID(PLow, ILow, DLow);
+			lowTalon.setF(FLow);
+			highTalon.setPID(PHigh, IHigh, DHigh);
+			highTalon.setF(FHigh);
+		}
+	}
+	
 }

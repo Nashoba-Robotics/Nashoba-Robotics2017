@@ -59,7 +59,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 
         };
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
-		this.modifier = new TankModifier(trajectory).modify(0.5);
+		this.modifier = new TankModifier(trajectory).modify(0.67948718);
 		this.left = new EncoderFollower(modifier.getLeftTrajectory());
 		this.right = new EncoderFollower(modifier.getRightTrajectory());
 		timer = new Timer();

@@ -3,8 +3,12 @@ package edu.nr.robotics.subsystems.turret;
 import edu.nr.lib.NRCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ShooterSetPIDSmartDashboardCommand extends NRCommand {
+public class TurretSetPIDSmartDashboardCommand extends NRCommand {
 
+	public TurretSetPIDSmartDashboardCommand() {
+		requires(Turret.getInstance());
+	}
+	
 	@Override
 	protected void onStart() {
 		SmartDashboard.putNumber("Turret P", SmartDashboard.getNumber("Turret P", Turret.P));

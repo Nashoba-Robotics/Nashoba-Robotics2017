@@ -21,9 +21,10 @@ public class Turret extends NRSubsystem {
 	
 	private static final int TICKS_PER_REV = 256;
 
-	public static final double P = 0;
-	public static final double I = 0;
-	public static final double D = 0;
+	//TODO: Make final once tested
+	public static double P = 0;
+	public static double I = 0;
+	public static double D = 0;
 	
 	public static final int FORWARD_POSITION = 0; //TODO
 	public static final int REVERSE_POSITION = 0; //TODO

@@ -23,10 +23,11 @@ public class Climber extends NRSubsystem {
 	private static final double HUNDRED_MS_PER_MIN = 600;
 	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
-	public static final double F = (RobotMap.MAX_CLIMBER_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
-	public static final double P = 0;
-	public static final double I = 0;
-	public static final double D = 0;
+	//Make final once tested using SmartDashboard
+	public static double F = (RobotMap.MAX_CLIMBER_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static double P = 0;
+	public static double I = 0;
+	public static double D = 0;
 
 	
 	private Climber() { 

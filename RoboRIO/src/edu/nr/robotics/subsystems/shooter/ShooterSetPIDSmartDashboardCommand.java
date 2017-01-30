@@ -5,6 +5,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSetPIDSmartDashboardCommand extends NRCommand {
 
+	public ShooterSetPIDSmartDashboardCommand() {
+		requires(Shooter.getInstance());
+	}
+	
 	@Override
 	protected void onStart() {
 		SmartDashboard.putNumber("Shooter P", SmartDashboard.getNumber("Shooter P", Shooter.P));
