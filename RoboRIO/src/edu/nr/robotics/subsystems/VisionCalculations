@@ -1,0 +1,31 @@
+Gear
+kvi = vert pix of screen
+kvo = vert pix of target
+kho = horizontal pix of target
+thiv = vertical fov of camera
+m = kvi/(2tan(thiv/2))
+ydist = 4*m/5*kvo
+xdist = 2.05*ydist*kvo/kho
+
+Shooting
+thi = vertical camera field of view
+c = top of screen to top of target (pix)
+z = bottom of screen to bottom of target (pix)
+theta0 = camera angle from ground
+h = height from camera to target (inches)
+0 >= theta0-(thi/2)
+theta1 = 90-(thi/2)
+y1 = sin(theta1)(c+z)/sin(thi)
+theta2 = theta1-theta0
+y2 = sin(theta0)(c+z)/sin(theta2)
+y = y1+y2
+d1 = y1sin(theta1+theta0)
+g1 = sqrt(y1^2-d1^2)
+g2 = sqrt(y^2-d1^2)
+z1 = z-(g1-cos(theta0))
+theta3 = 90-theta0
+d2 = d1-g1tan(theta0)
+j = sqrt(d2^2+z1^2-2d2z1cos(theta3))
+theta4 = sin-1(z1sin(theta3)/j)
+g3 = d1tan(theta4)
+d = h*d1/g3 
