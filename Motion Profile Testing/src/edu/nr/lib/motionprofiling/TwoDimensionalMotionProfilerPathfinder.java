@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
+import jaci.pathfinder.followers.DistanceFollower;
 import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
@@ -30,8 +31,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	private double ka, kp, kd, kv, kp_theta;
 	
-	private int initialPositionLeft;
-	private int initialPositionRight;
+	private double initialPositionLeft;
+	private double initialPositionRight;
 			
 	private Trajectory trajectory;
 	private Trajectory.Config trajectoryConfig;
@@ -39,8 +40,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	GyroCorrection gyroCorrection;
 	
-	EncoderFollower left;
-	EncoderFollower right;
+	DistanceFollower left;
+	DistanceFollower right;
 	
 	Waypoint[] points;
 	
@@ -60,8 +61,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
         };
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
 		this.modifier = new TankModifier(trajectory).modify(0.67948718);
-		this.left = new EncoderFollower(modifier.getLeftTrajectory());
-		this.right = new EncoderFollower(modifier.getRightTrajectory());
+		this.left = new DistanceFollower(modifier.getLeftTrajectory());
+		this.right = new DistanceFollower(modifier.getRightTrajectory());
 		timer = new Timer();
 		timer.schedule(this, 0, this.period);
 		this.source.setPIDSourceType(PIDSourceType.kDisplacement);
@@ -71,9 +72,10 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		this.kv = kv;
 		this.kp_theta = kp_theta;
 		this.encoderTicksPerRevolution = encoderTicksPerRevolution;
-		this.initialPositionLeft = (int) (source.pidGetLeft());
-		this.initialPositionRight = (int) (source.pidGetRight());
+		this.initialPositionLeft = source.pidGetLeft();
+		this.initialPositionRight = source.pidGetRight();
 		this.gyroCorrection = new AngleGyroCorrection();
+		gyroCorrection.clearInitialValue();
 		this.wheelDiameter = wheelDiameter;
 		reset();
 	}
@@ -88,47 +90,23 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	@Override
 	public void run() {
 		//System.out.println("Running!");
+				
 		if(enabled) {
 			System.out.println("Enabled!");
-			double prelimOutputLeft = left.calculate((int) (source.pidGetLeft()));
-			double prelimOutputRight = -right.calculate((int) (source.pidGetRight()));
-
+			double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/3.579); //Actually should be the number of rotations per meter
+			double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight)/3.579); //Actually should be the number of rotations per meter
+			
 			double currentHeading = gyroCorrection.getAngleErrorDegrees();
 			double desiredHeading = Pathfinder.r2d(left.getHeading());
 			
+			SmartDashboard.putString("Motion Profiler Angle", currentHeading+ " : " +desiredHeading);
+			
 			double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - currentHeading);
-			double headingAdjustment = -kp_theta * angleDifference;
 			
-			double outputLeft = 0;
-			double outputRight = 0;
-						
-			if (prelimOutputRight > 0.0) {
-				if (headingAdjustment > 0.0) {
-					outputRight = Math.max(prelimOutputRight, headingAdjustment);
-				} else {
-					outputRight = prelimOutputRight + headingAdjustment;
-				}
-			} else {
-				if (headingAdjustment > 0.0) {
-					outputRight = prelimOutputRight + headingAdjustment;
-				} else {
-					outputRight = -Math.max(-prelimOutputRight, -headingAdjustment);
-				}
-			}
+			double headingAdjustment = kp_theta * angleDifference;
 			
-			if (prelimOutputLeft > 0.0) {
-				if (headingAdjustment > 0.0) {
-					outputLeft = prelimOutputLeft - headingAdjustment;
-				} else {
-					outputLeft = Math.max(prelimOutputLeft, -headingAdjustment);
-				}
-			} else {
-				if (headingAdjustment > 0.0) {
-					outputLeft = -Math.max(-prelimOutputLeft, headingAdjustment);
-				} else {
-					outputLeft = prelimOutputLeft - headingAdjustment;
-				}
-			}
+			double outputLeft = prelimOutputLeft + headingAdjustment;
+			double outputRight = prelimOutputRight + headingAdjustment;
 			
 			out.pidWrite(outputLeft, outputRight);
 			
@@ -169,10 +147,10 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	public void reset() {
 		PIDSourceType type = source.getPIDSourceType();
 		source.setPIDSourceType(PIDSourceType.kDisplacement);
-		initialPositionLeft = (int) source.pidGetLeft();
-		initialPositionRight = (int) source.pidGetRight();
-		left.configureEncoder(initialPositionLeft, encoderTicksPerRevolution, wheelDiameter);
-		right.configureEncoder(initialPositionRight, encoderTicksPerRevolution, wheelDiameter);
+		initialPositionLeft = source.pidGetLeft();
+		initialPositionRight = source.pidGetRight();
+		left.reset();
+		right.reset();
 		left.configurePIDVA(kp, 0, kd, kv, ka);
 		right.configurePIDVA(kp, 0, kd, kv, ka);
 		source.setPIDSourceType(type);
@@ -187,8 +165,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		this.points = points;
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
 		this.modifier = new TankModifier(trajectory).modify(0.67948718);
-		this.left = new EncoderFollower(modifier.getLeftTrajectory());
-		this.right = new EncoderFollower(modifier.getRightTrajectory());
+		this.left = new DistanceFollower(modifier.getLeftTrajectory());
+		this.right = new DistanceFollower(modifier.getRightTrajectory());
 	}
 
 	public boolean isEnabled() {

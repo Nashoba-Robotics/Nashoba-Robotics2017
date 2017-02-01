@@ -41,12 +41,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public double leftMotorSetPoint = 0;
 	public double rightMotorSetPoint = 0;
 
-	public final double turn_F_LEFT = 0.883;
-	public final double turn_F_RIGHT = 0.927;
-	public final double turn_P_LEFT = 1.0;
+	public final double turn_F_LEFT = 0.873;
+	public final double turn_F_RIGHT = 0.966;
+	public final double turn_P_LEFT = 2.5;
 	public final double turn_I_LEFT = 0;
 	public final double turn_D_LEFT = 0;
-	public final double turn_P_RIGHT = 1.0;
+	public final double turn_P_RIGHT = 2.5;
 	public final double turn_I_RIGHT = 0;
 	public final double turn_D_RIGHT = 0;
 
@@ -59,8 +59,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	// = 0.075;
 
 	// FOR TWO DIMENSIONAL
-	public static double ka = 0.06, kp = 0.0005, kd = 0.0,
-			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1/39.37)), kp_theta = 0.001;
+	public static double ka = 0.0025, kp = 0, kd = 0.0,
+			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1/39.37)), kp_theta = 0;
 
 	// FOR ONE DIMENSIONAL
 	// public static final double ka = 0.01, kp = 0.0, kd = 0.0105, kv = 1 /
@@ -71,7 +71,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (driveEnabled) {
 			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
-			talonLB.changeControlMode(TalonControlMode.PercentVbus);
+			talonLB.changeControlMode(TalonControlMode.Speed);
 			talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonLB.setF(turn_F_LEFT);
 			talonLB.setP(turn_P_LEFT);
@@ -83,14 +83,14 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 			talonRB = new CANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
-			talonRB.changeControlMode(TalonControlMode.PercentVbus);
+			talonRB.changeControlMode(TalonControlMode.Speed);
 			talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonRB.setF(turn_F_RIGHT);
 			talonRB.setP(turn_P_RIGHT);
 			talonRB.setI(turn_I_RIGHT);
 			talonRB.setD(turn_D_RIGHT);
 			talonRB.configEncoderCodesPerRev(ticksPerRev);
-			talonRB.reverseSensor(true);
+			talonRB.reverseSensor(false);
 			talonRB.setStatusFrameRateMs(StatusFrameRate.Feedback, 1);
 
 			talonLF = new CANTalon(RobotMap.talonLF);
@@ -104,7 +104,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonRF.set(talonRB.getDeviceID());
 
 			profiler = new TwoDimensionalMotionProfilerPathfinder(this, this, kv, ka, kp, kd, kp_theta,
-					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.25,
+					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
 					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254, RobotMap.MAX_JERK, ticksPerRev,
 					RobotMap.WHEEL_DIAMETER * 0.0254);
 
@@ -128,8 +128,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 						SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw(AngleUnit.DEGREE));
 
-						SmartDashboard.putString("Speed Right", Drive.getInstance().talonRB.getSpeed() + " : " + -Drive.getInstance().rightMotorSetPoint * RobotMap.MAX_RPS * 60);
-						SmartDashboard.putString("Speed Left", Drive.getInstance().talonLB.getSpeed() + " : " + Drive.getInstance().leftMotorSetPoint * RobotMap.MAX_RPS * 60);
+						//SmartDashboard.putString("Speed Right", Drive.getInstance().talonRB.getSpeed() + " : " + -Drive.getInstance().rightMotorSetPoint * RobotMap.MAX_RPS * 60);
+						//SmartDashboard.putString("Speed Left", Drive.getInstance().talonLB.getSpeed() + " : " + -Drive.getInstance().leftMotorSetPoint * RobotMap.MAX_RPS * 60);
+						
+						SmartDashboard.putString("Speed Right", Drive.getInstance().talonRB.getSpeed() + " : " + Drive.getInstance().talonRB.getSetpoint());
+						SmartDashboard.putString("Speed Left", Drive.getInstance().talonLB.getSpeed() + " : " + Drive.getInstance().talonLB.getSetpoint());
 						
 						SmartDashboard.putString("Current", talonLB.getOutputCurrent() + " : " + talonLF.getOutputCurrent() + " : " + talonRF.getOutputCurrent() + " : " + talonRB.getOutputCurrent());
 						try {
@@ -251,16 +254,18 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (type == PIDSourceType.kRate) {
 			return -talonLB.getSpeed() / 60;
 		} else {
-			return -talonLB.getEncPosition();
+			return -talonLB.getPosition();
 		}
+
 	}
+	
 
 	@Override
 	public double pidGetRight() {
 		if (type == PIDSourceType.kRate) {
 			return -talonRB.getSpeed() / 60;
 		} else {
-			return -talonRB.getEncPosition();
+			return -talonRB.getPosition();
 		}
 	}
 

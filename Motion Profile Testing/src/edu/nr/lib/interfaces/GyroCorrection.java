@@ -3,7 +3,7 @@ package edu.nr.lib.interfaces;
 public abstract class GyroCorrection
 {
 	private static final double DEFAULT_KP_THETA = 0.05, MAX_ANGLE_CORRECTION_SPEED = 0.2;
-	private boolean initialized = false;
+	protected boolean initialized = false;
 	
 	public double getTurnValue(double kP_theta)
 	{

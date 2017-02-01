@@ -49,13 +49,26 @@ public class AngleGyroCorrection extends GyroCorrection {
 	@Override
 	public double getAngleErrorDegrees()
 	{
+		if(initialized == false)
+		{
+			reset();
+			initialized = true;
+		}
+		double currentAngle = navx.getYaw(unit);
+		
+		System.out.println("goalAngle: " + goalAngle);
+		System.out.println("initialAngle: " + initialAngle);
+		System.out.println("currentAngle: " + currentAngle);
+		
 		//Error is just based off initial angle
-    	return (navx.getYaw(unit) - initialAngle) + goalAngle;
+    	return (currentAngle - initialAngle) + goalAngle;
 	}
 	
 	@Override
 	public void reset()
 	{
+		System.out.println("Resetting navx... Current initial angle: " + initialAngle);
 		initialAngle = navx.getYaw(unit);
+		System.out.println("Final initial angle: " + initialAngle);
 	}
 }
