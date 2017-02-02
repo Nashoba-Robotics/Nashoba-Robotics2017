@@ -43,4 +43,9 @@ public class RobotMap {
 	public static final int SHOOTER_DIRECTION = 1;
 	
 	public static final Drive.driveMode driveMode = Drive.driveMode.arcadeDrive;
+	
+	//TODO: Get actual PCM ports
+	public static final int INTAKE_ARM_PNEUMATIC = 0;
+	public static final int INTAKE_ARM_FORWARD = 0;
+	public static final int INTAKE_ARM_REVERSE = 0;
 }

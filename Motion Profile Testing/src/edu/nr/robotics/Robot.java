@@ -72,15 +72,6 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		
-		if (Drive.getInstance().talonLB != null) {
-			Drive.getInstance().talonLB.setP(Drive.getInstance().turn_P_LEFT);
-			Drive.getInstance().talonLB.setI(Drive.getInstance().turn_I_LEFT);
-			Drive.getInstance().talonLB.setD(Drive.getInstance().turn_D_LEFT);
-
-			Drive.getInstance().talonRB.setP(Drive.getInstance().turn_P_RIGHT);
-			Drive.getInstance().talonRB.setI(Drive.getInstance().turn_I_RIGHT);
-			Drive.getInstance().talonRB.setD(Drive.getInstance().turn_D_RIGHT);
-		}
 	}
 
 	/**
