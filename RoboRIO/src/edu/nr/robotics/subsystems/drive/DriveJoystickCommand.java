@@ -38,7 +38,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 			} else {
 				gyroCorrection.clearInitialValue();
 			}
-			Drive.getInstance().arcadeDrive(moveValue, rotateValue, true);
+			Drive.getInstance().arcadeDrive(moveValue * OI.getInstance().driveSpeedMultiplier, rotateValue * OI.getInstance().driveSpeedMultiplier);
 		} else {
 			// Get values of the joysticks
 			double left = OI.getInstance().getTankLeftValue();

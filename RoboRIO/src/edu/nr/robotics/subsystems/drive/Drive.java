@@ -2,7 +2,6 @@ package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.NRMath;
 import edu.nr.lib.NRSubsystem;
-import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 
@@ -119,30 +118,9 @@ public class Drive extends NRSubsystem {
 	 * @param turn
 	 *            The speed, from -1 to 1 (inclusive), that the robot should
 	 *            turn at. 1 is max right, 0 is stopped, -1 is max left
+	 * 
 	 */
 	public void arcadeDrive(double move, double turn) {
-		arcadeDrive(move, turn, false);
-	}
-
-	/**
-	 * Sets left and right motor speeds to the speeds needed for the given move
-	 * and turn values, multiplied by the OI speed multiplier if the speed
-	 * multiplier parameter is true. If you don't care about the speed
-	 * multiplier parameter, you might want to use {@link arcadeDrive(double
-	 * move, double turn)}
-	 * 
-	 * @param move
-	 *            The speed, from -1 to 1 (inclusive), that the robot should go
-	 *            at. 1 is max forward, 0 is stopped, -1 is max backward
-	 * @param turn
-	 *            The speed, from -1 to 1 (inclusive), that the robot should
-	 *            turn at. 1 is max right, 0 is stopped, -1 is max left
-	 * @param speedMultiplier
-	 *            whether or not to use the OI speed multiplier It should really
-	 *            only be used for operator driving
-	 * 
-	 */
-	public void arcadeDrive(double move, double turn, boolean speedMultiplier) {
 		move = NRMath.limit(move);
 		turn = NRMath.limit(turn);
 		double leftMotorSpeed, rightMotorSpeed;
@@ -165,8 +143,7 @@ public class Drive extends NRSubsystem {
 			}
 		}
 
-		double multiplier = speedMultiplier ? OI.getInstance().driveSpeedMultiplier : 1;
-		tankDrive(leftMotorSpeed * multiplier, rightMotorSpeed * multiplier);
+		tankDrive(leftMotorSpeed, rightMotorSpeed);
 	}
 
 	/**
