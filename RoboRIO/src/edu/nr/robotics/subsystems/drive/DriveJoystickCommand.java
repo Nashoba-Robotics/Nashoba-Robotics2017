@@ -5,7 +5,6 @@ import edu.nr.lib.NRMath;
 import edu.nr.lib.interfaces.GyroCorrection;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
-import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveJoystickCommand extends JoystickCommand {
 

@@ -3,12 +3,8 @@ package edu.nr.lib;
 import java.util.ArrayList;
 
 import com.ctre.CANTalon;
-import com.kauailabs.navx.frc.ITimestampedDataSubscriber;
 import com.kauailabs.sf2.frc.RoboRIO;
-import com.kauailabs.sf2.orientation.OrientationHistory;
-import com.kauailabs.sf2.orientation.Quaternion;
 import com.kauailabs.sf2.quantity.IQuantity;
-import com.kauailabs.sf2.quantity.Scalar;
 import com.kauailabs.sf2.sensor.IProcessorInfo;
 import com.kauailabs.sf2.sensor.ISensorDataSource;
 import com.kauailabs.sf2.sensor.ISensorDataSubscriber;
@@ -17,13 +13,8 @@ import com.kauailabs.sf2.sensor.SensorDataSourceInfo;
 import com.kauailabs.sf2.time.Timestamp;
 import com.kauailabs.sf2.time.TimestampInfo;
 import com.kauailabs.sf2.time.TimestampedValue;
-import com.kauailabs.sf2.time.Timestamp.TimestampResolution;
 import com.kauailabs.sf2.units.Unit;
-import com.kauailabs.sf2.units.Unit.Angle;
 import com.kauailabs.sf2.units.Unit.IUnit;
-import com.kauailabs.sf2.units.Unit.Time;
-import com.kauailabs.sf2.units.Unit.Angle.Degrees;
-import com.kauailabs.sf2.units.Unit.Time.Milliseconds;
 
 import edu.nr.lib.interfaces.Periodic;
 import edu.wpi.first.wpilibj.Timer;

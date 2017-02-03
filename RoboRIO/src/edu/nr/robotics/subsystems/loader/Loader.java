@@ -8,7 +8,6 @@ import edu.nr.lib.DoNothingJoystickCommand;
 import edu.nr.lib.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
-import edu.nr.robotics.subsystems.climber.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Loader extends NRSubsystem {

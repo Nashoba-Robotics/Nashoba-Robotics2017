@@ -1,6 +1,5 @@
 package edu.nr.lib;
 
-import java.lang.Math;
 import java.util.ArrayList;
 
 import com.kauailabs.sf2.interpolation.IInterpolate;
