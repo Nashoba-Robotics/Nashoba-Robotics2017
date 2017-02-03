@@ -1,40 +1,39 @@
-package edu.nr.robotics.subsystems.shooter;
+package edu.nr.robotics.subsystems.loader;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.DoNothingJoystickCommand;
-import edu.nr.lib.JoystickCommand;
 import edu.nr.lib.NRSubsystem;
-import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
+import edu.nr.robotics.subsystems.climber.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Shooter extends NRSubsystem {
+public class Loader extends NRSubsystem {
 
-	private static Shooter singleton;
+	public static Loader singleton;
 
 	private CANTalon talon;
 	
 	public double motorSetpoint = 0;
-
+	
 	private static final int TICKS_PER_REV = 256;
 
 	private static final double HUNDRED_MS_PER_MIN = 600;
 	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
-
-	//TODO: Shooter: Find FPID values
-	public static double F = (RobotMap.MAX_SHOOTER_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	
+	//TODO: Loader: Find good FPID values
+	public static double F = (RobotMap.MAX_LOADER_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
 
 	
-	private Shooter() { 
-		if (EnabledSubsystems.SHOOTER_ENABLED) { 
-			talon = new CANTalon(RobotMap.SHOOTER_TALON);
+	private Loader() { 
+		if (EnabledSubsystems.LOADER_ENABLED) { 		
+			talon = new CANTalon(RobotMap.LOADER_TALON);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talon.setF(F);
@@ -42,30 +41,30 @@ public class Shooter extends NRSubsystem {
 			talon.setI(I);
 			talon.setD(D);
 			talon.configEncoderCodesPerRev(TICKS_PER_REV);
-			talon.enableBrakeMode(false);
+			talon.enableBrakeMode(true);
 			talon.setEncPosition(0);
-			talon.reverseSensor(false); //TODO: Shooter: Find phase
+			talon.reverseSensor(false); //TODO: Loader: Find phase
 			talon.enable();
 		}
 	}
 
-	public static Shooter getInstance() {
+	public static Loader getInstance() {
 		init();
 		return singleton;
 	}
 
 	public synchronized static void init() {
 		if (singleton == null) {
-			singleton = new Shooter();
+			singleton = new Loader();
 			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
 	/**
-	 * Sets motor speed of shooter
+	 * Sets motor speed of  loader
 	 * 
 	 * @param speed
-	 *            the shooter motor speed, 
+	 *            the faster loader motor speed, 
 	 *            
 	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
 	 *            If the talon mode is PercentVBus from -1 to 1
@@ -78,7 +77,7 @@ public class Shooter extends NRSubsystem {
 	}
 	
 	/**
-	 * Function that is periodically called once the Shooter class is initialized
+	 * Function that is periodically called once the subsystem class is initialized
 	 */
 	@Override
 	public void periodic() {
@@ -91,9 +90,9 @@ public class Shooter extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
-			SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
-			SmartDashboard.putNumber("Shooter Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Shooter Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
+			SmartDashboard.putNumber("Loader Current", talon.getOutputCurrent());
+			SmartDashboard.putNumber("Loader Voltage", talon.getOutputVoltage());
+			SmartDashboard.putString("Loader Speed", talon.getSpeed() + " : " + motorSetpoint);
 		}
 	}
 
@@ -105,11 +104,11 @@ public class Shooter extends NRSubsystem {
 		setMotorSpeed(0);
 	}
 
-	public void setPID(double P, double I, double D, double F) {
+	public void setPID(double PHigh, double IHigh, double DHigh, double FHigh) {
 		if(talon != null) {
-			talon.setPID(P, I, D);
-			talon.setF(F);
+			talon.setPID(PHigh, IHigh, DHigh);
+			talon.setF(FHigh);
 		}
 	}
-
+	
 }

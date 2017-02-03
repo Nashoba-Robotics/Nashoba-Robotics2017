@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Turret extends NRSubsystem {
 
+	//TODO: Turret: Set up MagicMotion mode
+	
 	public static Turret singleton;
 
 	private CANTalon talon;
@@ -21,13 +23,14 @@ public class Turret extends NRSubsystem {
 	
 	private static final int TICKS_PER_REV = 256;
 
-	//TODO: Make final once tested
+	//TODO: Turret: Find FPID values
+	public static double F = 0;
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
 	
-	public static final int FORWARD_POSITION = 0; //TODO
-	public static final int REVERSE_POSITION = 0; //TODO
+	public static final int FORWARD_POSITION = 0; //TODO: Turret: Find forward position
+	public static final int REVERSE_POSITION = 0; //TODO: Turret: Find reverse position
 
 	
 	private Turret() { 
@@ -36,13 +39,14 @@ public class Turret extends NRSubsystem {
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talon.setF(F);
 			talon.setP(P);
 			talon.setI(I);
 			talon.setD(D);
 			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(true);
 			talon.setEncPosition(0);
-			talon.reverseSensor(false);
+			talon.reverseSensor(false); //TODO: Turret: Find phase
 			talon.enable();
 		}
 	}

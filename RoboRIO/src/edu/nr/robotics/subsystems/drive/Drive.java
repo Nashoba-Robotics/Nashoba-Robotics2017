@@ -28,6 +28,7 @@ public class Drive extends NRSubsystem {
 	double leftMotorSetpoint = 0;
 	double rightMotorSetpoint = 0;
 
+	//TODO: Drive: Find FPID values
 	public static final double F = (MAX_RPM / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static final double P = 0;
 	public static final double I = 0;
@@ -38,7 +39,7 @@ public class Drive extends NRSubsystem {
 	}
 	
 	private Drive() {
-		//TODO: Find phase of motors
+		//TODO: Drive: Find phase of motors
 		
 		if (EnabledSubsystems.LEFT_DRIVE_ENABLED) {
 			leftTalon = new CANTalon(RobotMap.TALON_LEFT_F);
@@ -90,7 +91,7 @@ public class Drive extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Drive();
-			getInstance().setJoystickCommand(new DriveJoystickCommand(OI.getInstance().getLeftDriveStick(), OI.getInstance().getRightDriveStick()));
+			getInstance().setJoystickCommand(new DriveJoystickCommand());
 		}
 	}
 
@@ -145,9 +146,6 @@ public class Drive extends NRSubsystem {
 		move = NRMath.limit(move);
 		turn = NRMath.limit(turn);
 		double leftMotorSpeed, rightMotorSpeed;
-		rightMotorSpeed = leftMotorSpeed = move;
-		leftMotorSpeed += turn;
-		rightMotorSpeed -= turn;
 
 		if (move > 0.0) {
 			if (turn > 0.0) {

@@ -9,25 +9,26 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveJoystickCommand extends JoystickCommand {
 
-	Joystick leftJoystick;
-	Joystick rightJoystick;
-
 	GyroCorrection gyroCorrection;
 
-	public DriveJoystickCommand(Joystick leftJoystick, Joystick rightJoystick) {
+	public DriveJoystickCommand() {
 		super(Drive.getInstance());
-		this.leftJoystick = leftJoystick;
-		this.rightJoystick = rightJoystick;
 	}
 
 	@Override
 	public void onExecute() {
 		if (RobotMap.driveMode == Drive.driveMode.arcadeDrive) {
+			
+			//Get the joystick values
 			double moveValue = OI.getInstance().getArcadeMoveValue();
-			double rotateAdjustValue = OI.getInstance().getTurnAdjust();
-			double rotateValue = OI.getInstance().getArcadeTurnValue() * rotateAdjustValue;
+			double rotateValue = OI.getInstance().getArcadeTurnValue();
+			
+			//Square the inputs (while preserving the sign) to increase fine control while permitting full power
 			moveValue = NRMath.squareWithSign(moveValue);
 			rotateValue = NRMath.squareWithSign(rotateValue);
+			
+			//Make the gyro guide us when we're going straight, 
+			//otherwise reset the gyroscrope and use the joystick turn value
 			if (Math.abs(rotateValue) < 0.05) {
 				if (Math.abs(moveValue) > .1) {
 					rotateValue = gyroCorrection.getTurnValue();
@@ -58,13 +59,16 @@ public class DriveJoystickCommand extends JoystickCommand {
 
 	@Override
 	public boolean shouldSwitchToJoystick() {
-		return false; // TODO: Should go if the joysticks are outside the
-						// threshold range.
+		if(RobotMap.driveMode == Drive.driveMode.arcadeDrive) {
+			return OI.getInstance().getArcadeMoveValue() != 0 || OI.getInstance().getArcadeTurnValue() != 0;
+		} else {
+			return OI.getInstance().getTankLeftValue() != 0 || OI.getInstance().getTankRightValue() != 0;
+		}
 	}
 
 	@Override
 	public long getPeriodOfCheckingForSwitchToJoystick() {
-		return 100; // TODO find the best period
+		return 100; // TODO: Drive: Find the best period for checking DriveJoystickCommand
 	}
 
 }

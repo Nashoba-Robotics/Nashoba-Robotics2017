@@ -45,21 +45,13 @@ public class OI implements SmartDashboardSource{
 			singleton = new OI();
 		}
 	}
-
-	public Joystick getLeftDriveStick() {
-		return driveLeft;
-	}
-
-	public Joystick getRightDriveStick() {
-		return driveRight;
-	}
 	
 	public double getArcadeMoveValue() {
 		return snapDriveJoysticks(driveLeft.getY()) * (driveLeft.getRawButton(2) ? 1 : -1);
 	}
 
 	public double getArcadeTurnValue() {
-		return snapDriveJoysticks(driveRight.getX());
+		return snapDriveJoysticks(driveRight.getX()) * getTurnAdjust();
 	}
 
 	public double getTankLeftValue() {
@@ -112,7 +104,7 @@ public class OI implements SmartDashboardSource{
 		return driveRight.getX();
 	}
 
-	public double getTurnAdjust() {
+	private double getTurnAdjust() {
 		return driveRight.getRawButton(1) ? 0.5 : 1;
 	}
 

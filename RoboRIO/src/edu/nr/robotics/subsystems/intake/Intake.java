@@ -25,12 +25,13 @@ public class Intake extends NRSubsystem {
 	private static final double HUNDRED_MS_PER_MIN = 600;
 	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
-	//TODO: Make final once tested using SmartDashboard
+	//TODO: Intake: Find FPID values (low)
 	public static double F_LOW = (RobotMap.MAX_LOW_INTAKE_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P_LOW = 0;
 	public static double I_LOW = 0;
 	public static double D_LOW = 0;
 	
+	//TODO: Intake: Find FPID values (high)
 	public static double F_HIGH = (RobotMap.MAX_HIGH_INTAKE_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P_HIGH = 0;
 	public static double I_HIGH = 0;
@@ -49,7 +50,7 @@ public class Intake extends NRSubsystem {
 			lowTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			lowTalon.enableBrakeMode(true);
 			lowTalon.setEncPosition(0);
-			lowTalon.reverseSensor(false);
+			lowTalon.reverseSensor(false); //TODO: Intake: Find low phase
 			lowTalon.enable();
 		
 			highTalon = new CANTalon(RobotMap.INTAKE_HIGH_TALON);
@@ -62,7 +63,7 @@ public class Intake extends NRSubsystem {
 			highTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			highTalon.enableBrakeMode(true);
 			highTalon.setEncPosition(0);
-			highTalon.reverseSensor(false);
+			highTalon.reverseSensor(false); //TODO: Intake: Find high phase
 			highTalon.enable();
 		}
 	}
