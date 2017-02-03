@@ -90,7 +90,7 @@ public class Drive extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Drive();
-			getInstance().setJoystickCommand(new DriveJoystickCommand());
+			singleton.setJoystickCommand(new DriveJoystickCommand());
 		}
 	}
 

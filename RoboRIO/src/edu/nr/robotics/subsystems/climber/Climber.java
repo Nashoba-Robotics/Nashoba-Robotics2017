@@ -55,7 +55,7 @@ public class Climber extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Climber();
-			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
+			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
