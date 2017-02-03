@@ -40,6 +40,8 @@ public class HistoricalCANTalon extends CANTalon implements Periodic, ISensorDat
     EncoderHistory encoder_history;
     
     double last_write_timestamp = 0;
+    
+    double period = 0.1; //In seconds
 
 	
 	public HistoricalCANTalon(int deviceNumber, String sensor_name) {
@@ -83,7 +85,7 @@ public class HistoricalCANTalon extends CANTalon implements Periodic, ISensorDat
 			@Override
 			public void run() {
 				while(true) {
-					Timer.delay(0.01); //The time in between values
+					Timer.delay(period); //The time in between values
 					timestampedDataReceived((long) (1000*Timer.getFPGATimestamp()),(float) getPosition());
 				}
 			}
@@ -205,7 +207,12 @@ public class HistoricalCANTalon extends CANTalon implements Periodic, ISensorDat
 		return false;
 	}
 	
-	
+	@Override
+	public void setStatusFrameRateMs(StatusFrameRate stateFrame, int periodMs)
+	{
+		period = Math.min(periodMs / 1000.0, period);
+		super.setStatusFrameRateMs(stateFrame, periodMs);
+	}
 
 
 }
