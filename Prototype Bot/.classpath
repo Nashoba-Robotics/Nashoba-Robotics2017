@@ -9,5 +9,6 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/Pathfinder-Java.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/TalonSRXLibJava.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/sf2-frc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

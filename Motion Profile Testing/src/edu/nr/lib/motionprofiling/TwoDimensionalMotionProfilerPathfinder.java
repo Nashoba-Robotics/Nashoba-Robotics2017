@@ -1,5 +1,6 @@
 package edu.nr.lib.motionprofiling;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,7 +24,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	//In milliseconds
 	private final long period;
-	private static final long defaultPeriod = 10; //100 Hz 
+	private static final long defaultPeriod = 7; //100 Hz 
 		
 	private boolean enabled = false;
 	private DoublePIDOutput out;
@@ -48,6 +49,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	int encoderTicksPerRevolution;
 	double wheelDiameter;
 
+	double timeSinceStart = 0;
+	double lastTime = 0;
 		
 	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, long period) {
 		this.out = out;
@@ -56,7 +59,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		this.trajectoryConfig = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, this.period/1000.0, max_velocity, max_acceleration, max_jerk);
         this.points = new Waypoint[] {
 				new Waypoint(0,0,0),
-				new Waypoint(-4,-1,0)
+				new Waypoint(1,0,0)
 
         };
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
@@ -90,16 +93,14 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	@Override
 	public void run() {
 		//System.out.println("Running!");
-				
+		
 		if(enabled) {
 			System.out.println("Enabled!");
-			double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/3.579); //Actually should be the number of rotations per meter
-			double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight)/3.579); //Actually should be the number of rotations per meter
+			double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/3.581 /*Rotations per meter*/);
+			double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight)/3.581 /*Rotations per meter*/);
 			
 			double currentHeading = gyroCorrection.getAngleErrorDegrees();
 			double desiredHeading = Pathfinder.r2d(left.getHeading());
-			
-			SmartDashboard.putString("Motion Profiler Angle", currentHeading+ " : " +desiredHeading);
 			
 			double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - currentHeading);
 			
@@ -108,19 +109,33 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 			double outputLeft = prelimOutputLeft + headingAdjustment;
 			double outputRight = prelimOutputRight + headingAdjustment;
 			
+			int place = (int)((edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - timeSinceStart) * 1000 / this.period);
+			
 			out.pidWrite(outputLeft, outputRight);
-			
-			
 			
 			SmartDashboard.putNumber("Output Left", outputLeft);
 			SmartDashboard.putNumber("Output Right", outputRight);
+			
+			int spot = Math.min(place, modifier.getLeftTrajectory().length() - 1);
+			
+			SmartDashboard.putString("Motion Profiler Angle", Pathfinder.boundHalfDegrees(currentHeading)+ " : " + Pathfinder.boundHalfDegrees(desiredHeading) + " : " + Pathfinder.boundHalfDegrees(Pathfinder.r2d(modifier.getLeftTrajectory().get(spot).heading)));
+			
+			SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / 3.581 + " : " + modifier.getLeftTrajectory().get(spot).position);
+			SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / 3.581 + " : " + modifier.getRightTrajectory().get(spot).position);
+			
+			/*
+			if(place < modifier.getLeftTrajectory().length()) {
+				SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / 3.581 + " : " + modifier.getLeftTrajectory().get(place).x);
+				SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / 3.581 + " : " + modifier.getRightTrajectory().get(place).position);
+				//SmartDashboard.putString("Motion Profiler Right Position Testing", source.pidGetRight() + ":" + initialPositionRight);
+				//SmartDashboard.putString("Motion Profiler Right Position Testing Part 2", (source.pidGetRight()) / 3.581 + ":" + (initialPositionRight) / 3.581);
+			}
+			*/
 			
 			source.setPIDSourceType(PIDSourceType.kRate);
 			SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + -(outputLeft / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
 			SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight()  + ":" + (outputRight / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
 			source.setPIDSourceType(PIDSourceType.kDisplacement);
-			SmartDashboard.putNumber("Motion Profiler X Left", source.pidGetLeft()/256 * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254);
-			SmartDashboard.putNumber("Motion Profiler X Right", source.pidGetRight()/256 * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254);
 		}
 	}
 		
@@ -155,6 +170,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		right.configurePIDVA(kp, 0, kd, kv, ka);
 		source.setPIDSourceType(type);
 		gyroCorrection.clearInitialValue();
+		timeSinceStart = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+		
 	}
 	
 	/**
@@ -167,6 +184,15 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		this.modifier = new TankModifier(trajectory).modify(0.67948718);
 		this.left = new DistanceFollower(modifier.getLeftTrajectory());
 		this.right = new DistanceFollower(modifier.getRightTrajectory());
+		
+		for(int i = 0; i < modifier.getLeftTrajectory().segments.length; i += 25) {
+			DecimalFormat df = new DecimalFormat("#.#");
+			df.setMinimumFractionDigits(1);
+			df.setMinimumIntegerDigits(3);
+			
+			//System.out.println("left:\t" + i*period + "ms:\t" + df.format(39.37*modifier.getLeftTrajectory().get(i).x)    + ", \t" + df.format(39.37*modifier.getLeftTrajectory().get(i).y));
+			//System.out.println("right:\t" + i*period + "ms:\t" + df.format(39.37*modifier.getRightTrajectory().get(i).x)    + ", \t" + df.format(39.37*modifier.getRightTrajectory().get(i).y));
+		}	
 	}
 
 	public boolean isEnabled() {

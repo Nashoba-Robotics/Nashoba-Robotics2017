@@ -59,8 +59,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	// = 0.075;
 
 	// FOR TWO DIMENSIONAL
-	public static double ka = 0.0025, kp = 0, kd = 0.0,
-			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1/39.37)), kp_theta = 0;
+	public static double ka = 0.00, kp = 0, kd = 0.0, /*kv = 0.167,*/ kp_theta = 0.01,
+			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1/39.37));
 
 	// FOR ONE DIMENSIONAL
 	// public static final double ka = 0.01, kp = 0.0, kd = 0.0105, kv = 1 /
@@ -105,7 +105,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 			profiler = new TwoDimensionalMotionProfilerPathfinder(this, this, kv, ka, kp, kd, kp_theta,
 					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
-					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254, RobotMap.MAX_JERK, ticksPerRev,
+					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254/2, RobotMap.MAX_JERK / 2, ticksPerRev,
 					RobotMap.WHEEL_DIAMETER * 0.0254);
 
 			SmartDashboard.putNumber("ka", ka);
@@ -116,6 +116,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			
 			SmartDashboard.putNumber("X Waypoint", 0);
 			SmartDashboard.putNumber("Y Waypoint", 0);
+			SmartDashboard.putNumber("End Angle", 0);
 
 			new Thread(new Runnable() {
 				@Override
@@ -133,6 +134,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 						
 						SmartDashboard.putString("Speed Right", Drive.getInstance().talonRB.getSpeed() + " : " + Drive.getInstance().talonRB.getSetpoint());
 						SmartDashboard.putString("Speed Left", Drive.getInstance().talonLB.getSpeed() + " : " + Drive.getInstance().talonLB.getSetpoint());
+						
+						//SmartDashboard.putString("Talon Position", (Drive.getInstance().pidGetLeft()) / 3.581 + ":" + -(Drive.getInstance().pidGetRight() - Drive.getInstance().profiler.initialPositionRight) / 3.581 );
 						
 						SmartDashboard.putString("Current", talonLB.getOutputCurrent() + " : " + talonLF.getOutputCurrent() + " : " + talonRF.getOutputCurrent() + " : " + talonRB.getOutputCurrent());
 						try {
@@ -254,7 +257,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (type == PIDSourceType.kRate) {
 			return -talonLB.getSpeed() / 60;
 		} else {
-			return -talonLB.getPosition();
+			return talonLB.getPosition();
 		}
 
 	}
@@ -265,7 +268,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (type == PIDSourceType.kRate) {
 			return -talonRB.getSpeed() / 60;
 		} else {
-			return -talonRB.getPosition();
+			return talonRB.getPosition();
 		}
 	}
 
@@ -279,7 +282,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		Waypoint[] points = new Waypoint[] { 
 				
 				new Waypoint(0, 0, 0), 
-				new Waypoint(SmartDashboard.getNumber("X Waypoint", 0), SmartDashboard.getNumber("Y Waypoint", 0), 0) };
+				new Waypoint(SmartDashboard.getNumber("X Waypoint", 0), SmartDashboard.getNumber("Y Waypoint", 0), Pathfinder.d2r(SmartDashboard.getNumber("End Angle", 0))) };
 
 		profiler.setTrajectory(points);
 		profiler.enable();
