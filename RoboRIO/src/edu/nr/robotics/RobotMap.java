@@ -22,6 +22,7 @@ public class RobotMap {
 	public static final int LOADER_TALON = -1;
 	public static final int INTAKE_LOW_TALON = -1;
 	public static final int INTAKE_HIGH_TALON = -1;
+	public static final int HOOD_TALON = -1;
 
 	// TODO: Generic: Get actual Joystick ports
 	public static final int STICK_LEFT = 0;
