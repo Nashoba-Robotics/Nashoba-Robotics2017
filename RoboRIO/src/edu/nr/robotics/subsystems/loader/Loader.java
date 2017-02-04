@@ -1,4 +1,4 @@
-package edu.nr.robotics.subsystems.climber;
+package edu.nr.robotics.subsystems.loader;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -10,9 +10,9 @@ import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Climber extends NRSubsystem {
+public class Loader extends NRSubsystem {
 
-	public static Climber singleton;
+	public static Loader singleton;
 
 	private CANTalon talon;
 	
@@ -22,17 +22,17 @@ public class Climber extends NRSubsystem {
 
 	private static final double HUNDRED_MS_PER_MIN = 600;
 	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
-
-	//Make final once tested using SmartDashboard
-	public static double F = (RobotMap.MAX_CLIMBER_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	
+	//TODO: Loader: Find good FPID values
+	public static double F = (RobotMap.MAX_LOADER_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
 
 	
-	private Climber() { 
-		if (EnabledSubsystems.CLIMBER_ENABLED) { 
-			talon = new CANTalon(RobotMap.CLIMBER_TALON);
+	private Loader() { 
+		if (EnabledSubsystems.LOADER_ENABLED) { 		
+			talon = new CANTalon(RobotMap.LOADER_TALON);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talon.setF(F);
@@ -42,28 +42,28 @@ public class Climber extends NRSubsystem {
 			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(true);
 			talon.setEncPosition(0);
-			talon.reverseSensor(false);
+			talon.reverseSensor(false); //TODO: Loader: Find phase
 			talon.enable();
 		}
 	}
 
-	public static Climber getInstance() {
+	public static Loader getInstance() {
 		init();
 		return singleton;
 	}
 
 	public synchronized static void init() {
 		if (singleton == null) {
-			singleton = new Climber();
-			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
+			singleton = new Loader();
+			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
 	/**
-	 * Sets motor speed of climber
+	 * Sets motor speed of  loader
 	 * 
 	 * @param speed
-	 *            the climber motor speed, 
+	 *            the faster loader motor speed, 
 	 *            
 	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
 	 *            If the talon mode is PercentVBus from -1 to 1
@@ -89,9 +89,9 @@ public class Climber extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
-			SmartDashboard.putNumber("Climber Current", talon.getOutputCurrent());
-			SmartDashboard.putNumber("Climber Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Climber Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
+			SmartDashboard.putNumber("Loader Current", talon.getOutputCurrent());
+			SmartDashboard.putNumber("Loader Voltage", talon.getOutputVoltage());
+			SmartDashboard.putString("Loader Speed", talon.getSpeed() + " : " + motorSetpoint);
 		}
 	}
 
@@ -103,10 +103,10 @@ public class Climber extends NRSubsystem {
 		setMotorSpeed(0);
 	}
 
-	public void setPID(double P, double I, double D, double F) {
+	public void setPID(double PHigh, double IHigh, double DHigh, double FHigh) {
 		if(talon != null) {
-			talon.setPID(P, I, D);
-			talon.setF(F);
+			talon.setPID(PHigh, IHigh, DHigh);
+			talon.setF(FHigh);
 		}
 	}
 	

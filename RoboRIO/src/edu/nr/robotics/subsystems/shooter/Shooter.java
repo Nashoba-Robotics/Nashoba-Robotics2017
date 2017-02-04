@@ -5,9 +5,7 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.DoNothingJoystickCommand;
-import edu.nr.lib.JoystickCommand;
 import edu.nr.lib.NRSubsystem;
-import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +23,7 @@ public class Shooter extends NRSubsystem {
 	private static final double HUNDRED_MS_PER_MIN = 600;
 	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
-	//TODO: Make final once tested using SmartDashboard
+	//TODO: Shooter: Find FPID values
 	public static double F = (RobotMap.MAX_SHOOTER_SPEED / HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P = 0;
 	public static double I = 0;
@@ -44,7 +42,7 @@ public class Shooter extends NRSubsystem {
 			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(false);
 			talon.setEncPosition(0);
-			talon.reverseSensor(false);
+			talon.reverseSensor(false); //TODO: Shooter: Find phase
 			talon.enable();
 		}
 	}

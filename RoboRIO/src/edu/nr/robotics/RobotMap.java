@@ -10,31 +10,34 @@ import edu.nr.robotics.subsystems.drive.Drive;
  */
 public class RobotMap {
 
-	// TODO: Get actual talon ports
+	// TODO: Generic: Get actual talon ports
 	// These are the talon ports
-	public static final int TALON_LEFT_F = 0;
-	public static final int TALON_LEFT_B = 0;
-	public static final int TALON_RIGHT_F = 0;
-	public static final int TALON_RIGHT_B = 0;
-	public static final int SHOOTER_TALON = 0;
-	public static final int CLIMBER_TALON = 0;
-	public static final int TURRET_TALON = 0;
-	public static final int INTAKE_LOW_TALON = 0;
-	public static final int INTAKE_HIGH_TALON = 0;
+	public static final int TALON_LEFT_F = -1;
+	public static final int TALON_LEFT_B = -1;
+	public static final int TALON_RIGHT_F = -1;
+	public static final int TALON_RIGHT_B = -1;
+	public static final int SHOOTER_TALON = -1;
+	public static final int CLIMBER_TALON = -1;
+	public static final int TURRET_TALON = -1;
+	public static final int LOADER_TALON = -1;
+	public static final int INTAKE_LOW_TALON = -1;
+	public static final int INTAKE_HIGH_TALON = -1;
+	public static final int HOOD_TALON = -1;
 
-	// TODO: Get actual Joystick ports
+	// TODO: Generic: Get actual Joystick ports
 	public static final int STICK_LEFT = 0;
 	public static final int STICK_RIGHT = 0;
 	
-	// TODO: Get actual max speed
+	// TODO: Drive: Get actual max speed
 	public static final double MAX_DRIVE_SPEED = 0; //In feet per second
 	
-	//TODO: Get actual subsystem max speeds
+	// TODO: Generic: Get actual subsystem max speeds
 	public static final double MAX_SHOOTER_SPEED = 0; //In rpm
 	public static final double MAX_CLIMBER_SPEED = 0; //In rpm
 	public static final double MAX_TURRET_SPEED = 0; //In rpm
 	public static final double MAX_LOW_INTAKE_SPEED = 0; //In rpm
 	public static final double MAX_HIGH_INTAKE_SPEED = 0; //In rpm
+	public static final double MAX_LOADER_SPEED = 0; //In rpm
 
 	// These are multipliers for each subsystem that allow for wiring changes
 	// Adding a negative will switch the motor direction
@@ -44,7 +47,7 @@ public class RobotMap {
 	
 	public static final Drive.driveMode driveMode = Drive.driveMode.arcadeDrive;
 	
-	//TODO: Get actual PCM ports
+	//TODO: Intake: Get actual PCM ports
 	public static final int INTAKE_ARM_PNEUMATIC = 0;
 	public static final int INTAKE_ARM_FORWARD = 0;
 	public static final int INTAKE_ARM_REVERSE = 0;

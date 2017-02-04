@@ -1,4 +1,4 @@
-package edu.nr.robotics.subsystems.turret;
+package edu.nr.robotics.subsystems.hood;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -10,11 +10,11 @@ import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Turret extends NRSubsystem {
+public class Hood extends NRSubsystem {
 
-	//TODO: Turret: Set up MagicMotion mode
+	//TODO: Hood: Set up MagicMotion mode
 	
-	public static Turret singleton;
+	public static Hood singleton;
 
 	private CANTalon talon;
 	
@@ -23,19 +23,19 @@ public class Turret extends NRSubsystem {
 	
 	private static final int TICKS_PER_REV = 256;
 
-	//TODO: Turret: Find FPID values
+	//TODO: Hood: Find FPID values
 	public static double F = 0;
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
 	
-	public static final int FORWARD_POSITION = 0; //TODO: Turret: Find forward position
-	public static final int REVERSE_POSITION = 0; //TODO: Turret: Find reverse position
+	public static final int TOP_POSITION = 0; //TODO: Hood: Find top position
+	public static final int BOTTOM_POSITION = 0; //TODO: Hood: Find bottom position
 
 	
-	private Turret() { 
-		if (EnabledSubsystems.TURRET_ENABLED) { 
-			talon = new CANTalon(RobotMap.TURRET_TALON);
+	private Hood() { 
+		if (EnabledSubsystems.HOOD_ENABLED) { 
+			talon = new CANTalon(RobotMap.HOOD_TALON);
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -46,30 +46,30 @@ public class Turret extends NRSubsystem {
 			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(true);
 			talon.setEncPosition(0);
-			talon.reverseSensor(false); //TODO: Turret: Find phase
+			talon.reverseSensor(false); //TODO: Hood: Find phase
 			talon.enable();
 		}
 	}
 
-	public static Turret getInstance() {
+	public static Hood getInstance() {
 		init();
 		return singleton;
 	}
 
 	public synchronized static void init() {
 		if (singleton == null) {
-			singleton = new Turret();
+			singleton = new Hood();
 			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
 	/**
-	 * Sets motor speed of turret.
+	 * Sets motor speed of hood.
 	 * 
 	 * If not in speed or percentVbus mode, this does nothing.
 	 * 
 	 * @param speed
-	 *            the turret motor speed, 
+	 *            the hood motor speed, 
 	 *            
 	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
 	 *            If the talon mode is PercentVbus, from -1 to 1
@@ -110,9 +110,9 @@ public class Turret extends NRSubsystem {
 	public void periodic() {
 		if(talon != null) {
 			if(talon.isFwdLimitSwitchClosed()) {
-				talon.setEncPosition(FORWARD_POSITION);
+				talon.setEncPosition(TOP_POSITION);
 			} else if(talon.isRevLimitSwitchClosed()) {
-				talon.setEncPosition(REVERSE_POSITION);
+				talon.setEncPosition(BOTTOM_POSITION);
 			} 
 		}
 
@@ -124,10 +124,10 @@ public class Turret extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
-			SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
-			SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
-			SmartDashboard.putString("Turret Position", talon.getPosition() + " : " + getInstance().positionSetpoint);
+			SmartDashboard.putNumber("Hood Current", talon.getOutputCurrent());
+			SmartDashboard.putNumber("Hood Voltage", talon.getOutputVoltage());
+			SmartDashboard.putString("Hood Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
+			SmartDashboard.putString("Hood Position", talon.getPosition() + " : " + getInstance().positionSetpoint);
 		}
 	}
 
