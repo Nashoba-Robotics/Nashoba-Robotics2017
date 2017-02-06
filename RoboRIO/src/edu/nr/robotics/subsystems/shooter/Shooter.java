@@ -19,7 +19,7 @@ public class Shooter extends NRSubsystem {
 	public double motorSetpoint = 0;
 
 	private static final int TICKS_PER_REV = 256; //TODO: Shooter: Get ticks per revolution
-	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
+	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
 	//TODO: Shooter: Find FPID values
 	public static double F = (RobotMap.MAX_SHOOTER_SPEED / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
@@ -46,7 +46,8 @@ public class Shooter extends NRSubsystem {
 	}
 
 	public static Shooter getInstance() {
-		init();
+		if (singleton == null)
+			init();
 		return singleton;
 	}
 

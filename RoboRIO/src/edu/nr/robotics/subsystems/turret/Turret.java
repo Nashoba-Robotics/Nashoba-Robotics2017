@@ -64,7 +64,7 @@ public class Turret extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Turret();
-			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
+			singleton.setJoystickCommand(new TurretJoystickCommand());
 		}
 	}
 
