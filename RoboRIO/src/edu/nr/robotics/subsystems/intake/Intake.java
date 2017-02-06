@@ -53,11 +53,11 @@ public class Intake extends NRSubsystem {
 	 *            from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		lowMotorSetpoint = speed;
-		highMotorSetpoint = speed;
+		lowMotorSetpoint = speed * RobotMap.LOW_INTAKE_DIRECTION;
+		highMotorSetpoint = speed * RobotMap.HIGH_INTAKE_DIRECTION;
 		if (lowTalon != null && highTalon != null) {
-			lowTalon.set(speed);
-			highTalon.set(speed);
+			lowTalon.set(lowMotorSetpoint);
+			highTalon.set(highMotorSetpoint);
 		}
 	}
 	

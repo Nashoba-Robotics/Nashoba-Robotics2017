@@ -64,9 +64,9 @@ public class Loader extends NRSubsystem {
 	 *            If the talon mode is PercentVBus from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		motorSetpoint = speed;
+		motorSetpoint = speed * RobotMap.LOADER_DIRECTION;
 		if (talon != null) {
-			talon.set(speed);
+			talon.set(motorSetpoint);
 		}
 	}
 	

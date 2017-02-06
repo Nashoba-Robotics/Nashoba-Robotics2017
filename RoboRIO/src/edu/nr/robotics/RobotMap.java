@@ -25,8 +25,8 @@ public class RobotMap {
 	public static final int HOOD_TALON = -1;
 
 	// TODO: Generic: Get actual Joystick ports
-	public static final int STICK_LEFT = 0;
-	public static final int STICK_RIGHT = 0;
+	public static final int STICK_LEFT = -1;
+	public static final int STICK_RIGHT = -1;
 	
 	// TODO: Drive: Get actual max speed
 	public static final double MAX_DRIVE_SPEED = 0; //In feet per second
@@ -48,6 +48,11 @@ public class RobotMap {
 	public static final int LEFT_DRIVE_DIRECTION = 1;
 	public static final int RIGHT_DRIVE_DIRECTION = 1;
 	public static final int SHOOTER_DIRECTION = 1;
+	public static final int HOOD_DIRECTION = 1;
+	public static final int HIGH_INTAKE_DIRECTION = 1;
+	public static final int LOW_INTAKE_DIRECTION = 1;
+	public static final int LOADER_DIRECTION = 1;
+	public static final int TURRET_DIRECTION = 1;
 	
 	public static final Drive.driveMode driveMode = Drive.driveMode.arcadeDrive;
 	

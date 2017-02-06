@@ -168,14 +168,12 @@ public class Drive extends NRSubsystem {
 	 *            the right motor speed in rpm
 	 */
 	public void setMotorSpeed(double left, double right) {
-		leftMotorSetpoint = left * RobotMap.LEFT_DRIVE_DIRECTION;// * rpm;
-		rightMotorSetpoint = right * RobotMap.RIGHT_DRIVE_DIRECTION;// * rpm;
+		leftMotorSetpoint = left * RobotMap.LEFT_DRIVE_DIRECTION;;
+		rightMotorSetpoint = right * RobotMap.RIGHT_DRIVE_DIRECTION;;
 
-		if (leftTalon != null) {
+		if (leftTalon != null && rightTalon != null) {
 			leftTalon.set(leftMotorSetpoint);
-		}
-		if (rightTalon != null) {
-			rightTalon.set(rightMotorSetpoint * MAX_RPM );
+			rightTalon.set(rightMotorSetpoint);
 		}
 	}
 

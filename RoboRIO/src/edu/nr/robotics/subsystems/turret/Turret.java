@@ -78,11 +78,11 @@ public class Turret extends NRSubsystem {
 	 *            If the talon mode is PercentVbus, from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		speedSetpoint = speed;
+		speedSetpoint = speed * RobotMap.TURRET_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.PercentVbus || mode == CANTalon.TalonControlMode.Speed) {
-				talon.set(speed);
+				talon.set(speedSetpoint);
 			}
 		}
 	}
@@ -96,11 +96,11 @@ public class Turret extends NRSubsystem {
 	 * 			The goal positions in rotations
 	 */
 	public void setPosition(double position) {
-		positionSetpoint = position;
+		positionSetpoint = position * RobotMap.TURRET_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.MotionMagic) {
-				talon.set(position);
+				talon.set(positionSetpoint);
 			}
 		}
 
