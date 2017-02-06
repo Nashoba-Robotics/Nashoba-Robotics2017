@@ -11,14 +11,23 @@ public class TurretSetPIDSmartDashboardCommand extends NRCommand {
 	
 	@Override
 	protected void onStart() {
-		SmartDashboard.putNumber("Turret P", SmartDashboard.getNumber("Turret P", Turret.P));
-		SmartDashboard.putNumber("Turret I", SmartDashboard.getNumber("Turret I", Turret.I));
-		SmartDashboard.putNumber("Turret D", SmartDashboard.getNumber("Turret D", Turret.D));
-		
-		Turret.getInstance().setPID(SmartDashboard.getNumber("Turret P", Turret.P), 
-								     SmartDashboard.getNumber("Turret I", Turret.I), 
-								     SmartDashboard.getNumber("Turret D", Turret.D));
+		if (Turret.getInstance().isMotionMagicMode()) {
+			SmartDashboard.putNumber("Turret P Motion Magic", SmartDashboard.getNumber("Turret P Motion Magic", Turret.P_MOTION_MAGIC));
+			SmartDashboard.putNumber("Turret I Motion Magic", SmartDashboard.getNumber("Turret I Motion Magic", Turret.I_MOTION_MAGIC));
+			SmartDashboard.putNumber("Turret D Motion Magic", SmartDashboard.getNumber("Turret D Motion Magic", Turret.D_MOTION_MAGIC));
+			
+			Turret.getInstance().setPID(SmartDashboard.getNumber("Turret P Motion Magic", Turret.P_MOTION_MAGIC), 
+								     SmartDashboard.getNumber("Turret I Motion Magic", Turret.I_MOTION_MAGIC), 
+								     SmartDashboard.getNumber("Turret D Motion Magic", Turret.D_MOTION_MAGIC));	
+		} else {
+			SmartDashboard.putNumber("Turret P Operator Control", SmartDashboard.getNumber("Turret P Operator Control", Turret.P_MOTION_MAGIC));
+			SmartDashboard.putNumber("Turret I Operator Control", SmartDashboard.getNumber("Turret I Operator Control", Turret.I_MOTION_MAGIC));
+			SmartDashboard.putNumber("Turret D Operator Control", SmartDashboard.getNumber("Turret D Operator Control", Turret.D_MOTION_MAGIC));
+			
+			Turret.getInstance().setPID(SmartDashboard.getNumber("Turret P Operator Control", Turret.P_OPERATOR_CONTROL), 
+								     SmartDashboard.getNumber("Turret I Operator Control", Turret.I_OPERATOR_CONTROL), 
+								     SmartDashboard.getNumber("Turret D Operator Control", Turret.D_OPERATOR_CONTROL));	
+		}
 	}
-    
 }
 

@@ -38,6 +38,10 @@ public class RobotMap {
 	public static final double MAX_LOW_INTAKE_SPEED = 0; //In rpm
 	public static final double MAX_HIGH_INTAKE_SPEED = 0; //In rpm
 	public static final double MAX_LOADER_SPEED = 0; //In rpm
+	public static final double MAX_HOOD_SPEED = 0; //In rpm
+	
+	public static final double MAX_HOOD_ACCELERATION = 0; //In rpm/s
+	public static final double MAX_TURRET_ACCELERATION = 0; //In rpm/s 
 
 	// These are multipliers for each subsystem that allow for wiring changes
 	// Adding a negative will switch the motor direction
@@ -51,4 +55,8 @@ public class RobotMap {
 	public static final int INTAKE_ARM_PNEUMATIC = 0;
 	public static final int INTAKE_ARM_FORWARD = 0;
 	public static final int INTAKE_ARM_REVERSE = 0;
+	
+	public static final int TICKS_PER_REV = 256;
+	public static final double HUNDRED_MS_PER_MIN = 600;
+	public static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 }

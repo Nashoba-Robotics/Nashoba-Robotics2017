@@ -66,7 +66,7 @@ public class Intake extends NRSubsystem {
 	 */
 	@Override
 	public void periodic() {
-
+		
 	}
 
 	/**

@@ -11,8 +11,6 @@ import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Hood extends NRSubsystem {
-
-	//TODO: Hood: Set up MagicMotion mode
 	
 	public static Hood singleton;
 
@@ -24,14 +22,19 @@ public class Hood extends NRSubsystem {
 	private static final int TICKS_PER_REV = 256;
 
 	//TODO: Hood: Find FPID values
-	public static double F = 0;
-	public static double P = 0;
-	public static double I = 0;
-	public static double D = 0;
+	public static double F = (RobotMap.MAX_HOOD_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.NATIVE_UNITS_PER_REV);
+	public static double P_MOTION_MAGIC = 0;
+	public static double I_MOTION_MAGIC = 0;
+	public static double D_MOTION_MAGIC = 0;
+	public static double P_OPERATOR_CONTROL = 0;
+	public static double I_OPERATOR_CONTROL = 0;
+	public static double D_OPERATOR_CONTROL = 0;
 	
 	public static final int TOP_POSITION = 0; //TODO: Hood: Find top position
 	public static final int BOTTOM_POSITION = 0; //TODO: Hood: Find bottom position
 
+	public static final int MOTION_MAGIC = 0;
+	public static final int OPERATOR_CONTROL = 1;
 	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
@@ -39,10 +42,11 @@ public class Hood extends NRSubsystem {
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			talon.setF(F);
-			talon.setP(P);
-			talon.setI(I);
-			talon.setD(D);
+			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
+			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
+			talon.setProfile(OPERATOR_CONTROL);
+			talon.setMotionMagicCruiseVelocity(RobotMap.MAX_HOOD_SPEED);
+			talon.setMotionMagicAcceleration(RobotMap.MAX_HOOD_ACCELERATION);
 			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(true);
 			talon.setEncPosition(0);
@@ -96,7 +100,7 @@ public class Hood extends NRSubsystem {
 		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.PercentVbus || mode == CANTalon.TalonControlMode.Speed) {
+			if(mode == CANTalon.TalonControlMode.MotionMagic) {
 				talon.set(position);
 			}
 		}
@@ -137,13 +141,17 @@ public class Hood extends NRSubsystem {
 	@Override
 	public void disable() {
 		setMotorSpeed(0);
+		setPosition(talon.getPosition());
 	}
 
 	public void setPID(double p, double i, double d) {
 		if(talon != null) {
 			talon.setPID(p, i, d);
 		}
-		
 	}
 
+	public boolean isMotionMagicMode() {
+		return (talon.getControlMode() == TalonControlMode.MotionMagic);
+	}
+	
 }
