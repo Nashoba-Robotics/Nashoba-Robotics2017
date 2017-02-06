@@ -46,7 +46,8 @@ public class Shooter extends NRSubsystem {
 	}
 
 	public static Shooter getInstance() {
-		init();
+		if(singleton == null)
+			init();
 		return singleton;
 	}
 

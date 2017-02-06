@@ -152,11 +152,17 @@ public class Turret extends NRSubsystem {
 	}
 
 	public boolean isMotionMagicMode() {
-		return (talon.getControlMode() == TalonControlMode.MotionMagic);
+		if(talon != null)
+			return (talon.getControlMode() == TalonControlMode.MotionMagic);
+		
+		return false;
 	}
 	
 	public double getPosition() {
-		return talon.getPosition();
+		if(talon != null)
+			return talon.getPosition();
+		
+		return 0;
 	}
 	
 }
