@@ -1,5 +1,10 @@
 package edu.nr.robotics.subsystems;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.StatusFrameRate;
@@ -28,6 +33,8 @@ import jaci.pathfinder.Waypoint;
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
 
 	public static boolean driveEnabled = true;
+
+	public boolean running = false;
 
 	TwoDimensionalMotionProfilerPathfinder profiler;
 
@@ -59,15 +66,16 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	// = 0.075;
 
 	// FOR TWO DIMENSIONAL
-	public static double ka = 0.00, kp = 0, kd = 0.0, /*kv = 0.167,*/ kp_theta = 0.01,
-			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1/39.37));
+	public static double ka = 1 / (RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * (1 / 39.37)), kp = 1.0,
+			kd = 0.1, /* kv = 0.167, */ kp_theta = 0.03,
+			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1 / 39.37));
 
 	// FOR ONE DIMENSIONAL
 	// public static final double ka = 0.01, kp = 0.0, kd = 0.0105, kv = 1 /
 	// (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254), kp_theta
 	// = 0.00035;
 
-	private Drive() {
+	private Drive() throws IOException {
 		if (driveEnabled) {
 			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
@@ -105,15 +113,16 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 			profiler = new TwoDimensionalMotionProfilerPathfinder(this, this, kv, ka, kp, kd, kp_theta,
 					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
-					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254/2, RobotMap.MAX_JERK / 2, ticksPerRev,
-					RobotMap.WHEEL_DIAMETER * 0.0254);
+					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5, 
+					RobotMap.MAX_JERK * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
+					ticksPerRev, RobotMap.WHEEL_DIAMETER * 0.0254);
 
 			SmartDashboard.putNumber("ka", ka);
 			SmartDashboard.putNumber("kv", kv);
 			SmartDashboard.putNumber("kd", kd);
 			SmartDashboard.putNumber("kp", kp);
 			SmartDashboard.putNumber("kp_theta", kp_theta);
-			
+
 			SmartDashboard.putNumber("X Waypoint", 0);
 			SmartDashboard.putNumber("Y Waypoint", 0);
 			SmartDashboard.putNumber("End Angle", 0);
@@ -126,18 +135,29 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 						SmartDashboard.putNumber("leftRPM", -talonLB.getSpeed());
 						SmartDashboard.putNumber("rightPos", talonRB.getPosition());
 						SmartDashboard.putNumber("leftPos", -talonLB.getPosition());
-
+	
 						SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw(AngleUnit.DEGREE));
-
-						//SmartDashboard.putString("Speed Right", Drive.getInstance().talonRB.getSpeed() + " : " + -Drive.getInstance().rightMotorSetPoint * RobotMap.MAX_RPS * 60);
-						//SmartDashboard.putString("Speed Left", Drive.getInstance().talonLB.getSpeed() + " : " + -Drive.getInstance().leftMotorSetPoint * RobotMap.MAX_RPS * 60);
-						
-						SmartDashboard.putString("Speed Right", Drive.getInstance().talonRB.getSpeed() + " : " + Drive.getInstance().talonRB.getSetpoint());
-						SmartDashboard.putString("Speed Left", Drive.getInstance().talonLB.getSpeed() + " : " + Drive.getInstance().talonLB.getSetpoint());
-						
-						//SmartDashboard.putString("Talon Position", (Drive.getInstance().pidGetLeft()) / 3.581 + ":" + -(Drive.getInstance().pidGetRight() - Drive.getInstance().profiler.initialPositionRight) / 3.581 );
-						
-						SmartDashboard.putString("Current", talonLB.getOutputCurrent() + " : " + talonLF.getOutputCurrent() + " : " + talonRF.getOutputCurrent() + " : " + talonRB.getOutputCurrent());
+	
+						//SmartDashboard.putString("Speed Right 2", Drive.getInstance().talonRB.getSpeed() + " : " +
+						//-Drive.getInstance().rightMotorSetPoint *
+						//RobotMap.MAX_RPS * 60);
+						//SmartDashboard.putString("Speed Left 2",
+						//Drive.getInstance().talonLB.getSpeed() + " : " +
+						//-Drive.getInstance().leftMotorSetPoint *
+						//RobotMap.MAX_RPS * 60);
+	
+						SmartDashboard.putString("Speed Right 2", Drive.getInstance().talonRB.getSpeed() + " : " + Drive.getInstance().talonRB.getSetpoint());
+						SmartDashboard.putString("Speed Left 2", Drive.getInstance().talonLB.getSpeed() + " : " + Drive.getInstance().talonLB.getSetpoint());
+	
+						// SmartDashboard.putString("Talon Position",
+						// (Drive.getInstance().pidGetLeft()) / 3.581 + ":" +
+						// -(Drive.getInstance().pidGetRight() -
+						// Drive.getInstance().profiler.initialPositionRight) /
+						// 3.581 );
+	
+						SmartDashboard.putString("Current",
+								talonLB.getOutputCurrent() + " : " + talonLF.getOutputCurrent() + " : " + talonRF.getOutputCurrent() + " : " + talonRB.getOutputCurrent());
+	
 						try {
 							java.util.concurrent.TimeUnit.MILLISECONDS.sleep(8);
 						} catch (InterruptedException e) {
@@ -147,6 +167,35 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 					}
 				}
 			}).start();
+
+			/*
+			FileWriter fw;
+			PrintWriter out;
+			BufferedWriter buffer;
+
+			try {
+				fw = new FileWriter("/home/lvuser/MotorSamples.csv", true);
+				buffer = new BufferedWriter(fw);
+				out = new PrintWriter(buffer);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						while (true) {
+							out.print(edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
+							out.print(",");
+							out.print(Drive.getInstance().talonLB.getSpeed());
+							out.print(",");
+							out.println(Drive.getInstance().talonRB.getSpeed());
+							out.flush();
+							edu.wpi.first.wpilibj.Timer.delay(0.01);
+						}
+					}
+				}).start();
+
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			*/
 		}
 	}
 
@@ -157,7 +206,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	public static void init() {
 		if (singleton == null) {
-			singleton = new Drive();
+			try {
+				singleton = new Drive();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -210,7 +263,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public void setMotorSpeed(double left, double right) {
 		leftMotorSetPoint = -left;
 		rightMotorSetPoint = right;
-		switch(Robot.getInstance().joystickChooser.getSelected()) {
+		switch (Robot.getInstance().joystickChooser.getSelected()) {
 		case off:
 			pidWrite(leftMotorSetPoint, rightMotorSetPoint);
 			break;
@@ -240,6 +293,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			c.cancel();
 		}
 		disableProfiler();
+
+		running = false;
 	}
 
 	@Override
@@ -261,7 +316,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		}
 
 	}
-	
 
 	@Override
 	public double pidGetRight() {
@@ -279,10 +333,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		profiler.setKV(SmartDashboard.getNumber("kv", 0));
 		profiler.setKP_theta(SmartDashboard.getNumber("kp_theta", 0));
 
-		Waypoint[] points = new Waypoint[] { 
-				
-				new Waypoint(0, 0, 0), 
-				new Waypoint(SmartDashboard.getNumber("X Waypoint", 0), SmartDashboard.getNumber("Y Waypoint", 0), Pathfinder.d2r(SmartDashboard.getNumber("End Angle", 0))) };
+		Waypoint[] points = new Waypoint[] {
+
+				new Waypoint(0, 0, 0),
+				new Waypoint(SmartDashboard.getNumber("X Waypoint", 0), SmartDashboard.getNumber("Y Waypoint", 0),
+						Pathfinder.d2r(SmartDashboard.getNumber("End Angle", 0))),
+
+		};
 
 		profiler.setTrajectory(points);
 		profiler.enable();
@@ -299,9 +356,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public void pidWrite(double left, double right) {
 		leftMotorSetPoint = -left;
-		rightMotorSetPoint  = right;
-		
-		System.out.println("Left: " + left + " right: " + right);
+		rightMotorSetPoint = right;
+
+		// System.out.println("Left: " + left + " right: " + right);
 
 		talonLB.set(left * RobotMap.MAX_RPS * 60);
 		talonRB.set(right * RobotMap.MAX_RPS * 60);

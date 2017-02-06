@@ -1,13 +1,23 @@
 package edu.nr.robotics.subsystems;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import edu.nr.lib.NRCommand;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.Robot;
 
 public class DriveJoystickCommand extends NRCommand {
 
+	
 	public DriveJoystickCommand() {
 		requires(Drive.getInstance());
+	}
+
+	@Override
+	protected void onStart() {
 	}
 
 	@Override
@@ -19,5 +29,9 @@ public class DriveJoystickCommand extends NRCommand {
 		case on:
 			Drive.getInstance().arcadeDrive(motorSpeedValues[0], motorSpeedValues[1], false);
 		}
+	}
+
+	@Override
+	protected void onEnd() {
 	}
 }

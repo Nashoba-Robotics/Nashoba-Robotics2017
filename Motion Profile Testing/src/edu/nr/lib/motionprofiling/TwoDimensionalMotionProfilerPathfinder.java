@@ -15,7 +15,6 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.followers.DistanceFollower;
-import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
 public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
@@ -24,7 +23,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	//In milliseconds
 	private final long period;
-	private static final long defaultPeriod = 7; //100 Hz 
+	private static final long defaultPeriod = 30; //100 Hz 
 		
 	private boolean enabled = false;
 	private DoublePIDOutput out;
@@ -67,7 +66,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		this.left = new DistanceFollower(modifier.getLeftTrajectory());
 		this.right = new DistanceFollower(modifier.getRightTrajectory());
 		timer = new Timer();
-		timer.schedule(this, 0, this.period);
+		timer.scheduleAtFixedRate(this, 0, this.period);
 		this.source.setPIDSourceType(PIDSourceType.kDisplacement);
 		this.ka = ka;
 		this.kp = kp;
@@ -81,6 +80,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		gyroCorrection.clearInitialValue();
 		this.wheelDiameter = wheelDiameter;
 		reset();
+		
+		//new Thread(this).start();
 	}
 	
 	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter) {
@@ -92,51 +93,62 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	@Override
 	public void run() {
-		//System.out.println("Running!");
+			//System.out.println("Running!");
 		
-		if(enabled) {
-			System.out.println("Enabled!");
-			double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/3.581 /*Rotations per meter*/);
-			double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight)/3.581 /*Rotations per meter*/);
-			
-			double currentHeading = gyroCorrection.getAngleErrorDegrees();
-			double desiredHeading = Pathfinder.r2d(left.getHeading());
-			
-			double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - currentHeading);
-			
-			double headingAdjustment = kp_theta * angleDifference;
-			
-			double outputLeft = prelimOutputLeft + headingAdjustment;
-			double outputRight = prelimOutputRight + headingAdjustment;
-			
-			int place = (int)((edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - timeSinceStart) * 1000 / this.period);
-			
-			out.pidWrite(outputLeft, outputRight);
-			
-			SmartDashboard.putNumber("Output Left", outputLeft);
-			SmartDashboard.putNumber("Output Right", outputRight);
-			
-			int spot = Math.min(place, modifier.getLeftTrajectory().length() - 1);
-			
-			SmartDashboard.putString("Motion Profiler Angle", Pathfinder.boundHalfDegrees(currentHeading)+ " : " + Pathfinder.boundHalfDegrees(desiredHeading) + " : " + Pathfinder.boundHalfDegrees(Pathfinder.r2d(modifier.getLeftTrajectory().get(spot).heading)));
-			
-			SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / 3.581 + " : " + modifier.getLeftTrajectory().get(spot).position);
-			SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / 3.581 + " : " + modifier.getRightTrajectory().get(spot).position);
-			
-			/*
-			if(place < modifier.getLeftTrajectory().length()) {
-				SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / 3.581 + " : " + modifier.getLeftTrajectory().get(place).x);
-				SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / 3.581 + " : " + modifier.getRightTrajectory().get(place).position);
-				//SmartDashboard.putString("Motion Profiler Right Position Testing", source.pidGetRight() + ":" + initialPositionRight);
-				//SmartDashboard.putString("Motion Profiler Right Position Testing Part 2", (source.pidGetRight()) / 3.581 + ":" + (initialPositionRight) / 3.581);
-			}
-			*/
-			
-			source.setPIDSourceType(PIDSourceType.kRate);
-			SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + -(outputLeft / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
-			SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight()  + ":" + (outputRight / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
-			source.setPIDSourceType(PIDSourceType.kDisplacement);
-		}
+			if(enabled) {
+				System.out.println("Enabled!");
+				//double prelimOutputLeft = 0;
+				//double prelimOutputRight = 0;
+				
+				//source.pidGetLeft();
+				//source.pidGetRight();
+				
+				double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/);
+				double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/);
+				
+				double currentHeading = -gyroCorrection.getAngleErrorDegrees();
+				double desiredHeading = Pathfinder.r2d(left.getHeading());
+				
+				double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - currentHeading);
+				
+				double headingAdjustment = -kp_theta * angleDifference;
+				//double headingAdjustment = 0;
+				
+				double outputLeft = prelimOutputLeft + headingAdjustment;
+				double outputRight = prelimOutputRight + headingAdjustment;
+				
+				out.pidWrite(outputLeft, outputRight);
+				
+				System.out.println("Time since last update: " + (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - lastTime));
+	
+				lastTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+				
+				SmartDashboard.putNumber("Output Left", outputLeft);
+				SmartDashboard.putNumber("Output Right", outputRight);
+				
+				int place = (int)((edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - timeSinceStart) * 1000 / this.period);
+				
+				int spot = Math.min(place, modifier.getLeftTrajectory().length() - 1);
+				
+				SmartDashboard.putString("Motion Profiler Angle", Pathfinder.boundHalfDegrees(currentHeading)+ " : " + Pathfinder.boundHalfDegrees(desiredHeading) + " : " + Pathfinder.boundHalfDegrees(Pathfinder.r2d(modifier.getLeftTrajectory().get(spot).heading)));
+				
+				SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / ((1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/) + " : " + modifier.getLeftTrajectory().get(spot).position);
+				SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / (1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/ + " : " + modifier.getRightTrajectory().get(spot).position);
+				
+				/*
+				if(place < modifier.getLeftTrajectory().length()) {
+					SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / 3.581 + " : " + modifier.getLeftTrajectory().get(place).x);
+					SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / 3.581 + " : " + modifier.getRightTrajectory().get(place).position);
+					//SmartDashboard.putString("Motion Profiler Right Position Testing", source.pidGetRight() + ":" + initialPositionRight);
+					//SmartDashboard.putString("Motion Profiler Right Position Testing Part 2", (source.pidGetRight()) / 3.581 + ":" + (initialPositionRight) / 3.581);
+				}
+				*/
+				
+				//source.setPIDSourceType(PIDSourceType.kRate);
+				//SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + -(outputLeft / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
+				//SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight()  + ":" + (outputRight / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
+				//source.setPIDSourceType(PIDSourceType.kDisplacement);
+			}		
 	}
 		
 	/**
@@ -171,7 +183,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		source.setPIDSourceType(type);
 		gyroCorrection.clearInitialValue();
 		timeSinceStart = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
-		
+		lastTime = timeSinceStart;
 	}
 	
 	/**

@@ -18,9 +18,9 @@ public class RobotMap {
 	public static final int talonLB = 1;
 	public static final int talonRB = 3;
 
-	public static final double WHEEL_DIAMETER = 3.5; //inches
+	public static final double WHEEL_DIAMETER = 3.82; //inches
 	
 	public static final double MAX_RPS = 13.33; 
-	public static final double MAX_ACC = 45;//RPS per second
-	public static final double MAX_JERK = 1000; //Total guess
+	public static final double MAX_ACC = 31.53;//RPS per second
+	public static final double MAX_JERK = 813.0; //No longer a total guess
 }
