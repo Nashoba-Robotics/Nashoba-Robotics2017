@@ -20,4 +20,9 @@ public abstract class JoystickCommand extends NRCommand {
 	 */
 	public abstract long getPeriodOfCheckingForSwitchToJoystick();
 
+	
+	@Override
+	public final boolean isFinishedNR() {
+		return false;
+	}
 }

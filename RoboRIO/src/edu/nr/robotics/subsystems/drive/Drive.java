@@ -20,12 +20,14 @@ public class Drive extends NRSubsystem {
 	private static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
 	private static final double MAX_RPM = RobotMap.MAX_DRIVE_SPEED / DISTANCE_PER_REV * 60;
 
+	private static final int TICKS_PER_REV = 256; //TODO: Drive: Get ticks per revolution
+	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
 
 	double leftMotorSetpoint = 0;
 	double rightMotorSetpoint = 0;
 
 	//TODO: Drive: Find FPID values
-	public static final double F = (MAX_RPM / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.NATIVE_UNITS_PER_REV);
+	public static final double F = (MAX_RPM / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static final double P = 0;
 	public static final double I = 0;
 	public static final double D = 0;
@@ -46,7 +48,7 @@ public class Drive extends NRSubsystem {
 			leftTalon.setP(P);
 			leftTalon.setI(I);
 			leftTalon.setD(D);
-			leftTalon.configEncoderCodesPerRev(RobotMap.TICKS_PER_REV);
+			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
 			leftTalon.reverseSensor(false);
@@ -65,7 +67,7 @@ public class Drive extends NRSubsystem {
 			rightTalon.setP(P);
 			rightTalon.setI(I);
 			rightTalon.setD(D);
-			rightTalon.configEncoderCodesPerRev(RobotMap.TICKS_PER_REV);
+			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
 			rightTalon.reverseSensor(false);
@@ -79,7 +81,8 @@ public class Drive extends NRSubsystem {
 	}
 
 	public static Drive getInstance() {
-		init();
+		if (singleton == null)
+			init();
 		return singleton;
 	}
 

@@ -20,6 +20,8 @@ public class OI implements SmartDashboardSource{
 	private Joystick driveRight;
 
 	private OI() {
+		//TODO: OI: Create buttons and operator joystick
+		
 		driveLeft = new Joystick(RobotMap.STICK_LEFT);
 		driveRight = new Joystick(RobotMap.STICK_RIGHT);
 
@@ -78,6 +80,22 @@ public class OI implements SmartDashboardSource{
 		return snapDriveJoysticks(driveRight.getY());
 	}
 
+	public double getIntakeValue() {
+		return 0; //TODO: OI: Get intake joystick values
+	}
+
+	public double getLoaderValue() {
+		return 0; //TODO: OI: Get loader joystick values
+	}
+	
+	public double getTurretValue() {
+		return 0; //TODO: OI: Get turret joystick values
+	}
+	
+	public double getHoodValue(){
+		return 0; //TODO: OI: Get hood joystick values
+	}
+
 	private static double snapDriveJoysticks(double value) {
 		if (Math.abs(value) < JOYSTICK_DEAD_ZONE) {
 			value = 0;
@@ -125,4 +143,19 @@ public class OI implements SmartDashboardSource{
 		return getDriveLeftXValue() != 0 || getDriveRightXValue() != 0 || getDriveLeftYValue() != 0 || getDriveRightYValue() != 0;
 	}
 
+	public boolean isIntakeNonZero() {
+		return getIntakeValue() != 0;
+	}
+
+	public boolean isLoaderNonZero() {
+		return getLoaderValue() != 0;
+	}
+
+	public boolean isTurretNonZero() {
+		return getTurretValue() != 0;
+	}
+	
+	public boolean isHoodNonZero() {
+		return getHoodValue() != 0;
+	}
 }

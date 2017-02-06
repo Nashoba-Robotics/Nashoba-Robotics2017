@@ -18,8 +18,11 @@ public class Shooter extends NRSubsystem {
 	
 	public double motorSetpoint = 0;
 
+	private static final int TICKS_PER_REV = 256; //TODO: Shooter: Get ticks per revolution
+	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
+
 	//TODO: Shooter: Find FPID values
-	public static double F = (RobotMap.MAX_SHOOTER_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.NATIVE_UNITS_PER_REV);
+	public static double F = (RobotMap.MAX_SHOOTER_SPEED / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
@@ -34,7 +37,7 @@ public class Shooter extends NRSubsystem {
 			talon.setP(P);
 			talon.setI(I);
 			talon.setD(D);
-			talon.configEncoderCodesPerRev(RobotMap.TICKS_PER_REV);
+			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(false);
 			talon.setEncPosition(0);
 			talon.reverseSensor(false); //TODO: Shooter: Find phase

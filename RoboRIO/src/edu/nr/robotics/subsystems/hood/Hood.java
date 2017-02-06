@@ -19,10 +19,11 @@ public class Hood extends NRSubsystem {
 	public double speedSetpoint = 0;
 	public double positionSetpoint = 0;
 	
-	private static final int TICKS_PER_REV = 256;
+	private static final int TICKS_PER_REV = 256; //TODO: Hood: Get ticks per revolution
+	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
 
 	//TODO: Hood: Find FPID values
-	public static double F = (RobotMap.MAX_HOOD_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.NATIVE_UNITS_PER_REV);
+	public static double F = (RobotMap.MAX_HOOD_SPEED / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -56,14 +57,15 @@ public class Hood extends NRSubsystem {
 	}
 
 	public static Hood getInstance() {
-		init();
+		if (singleton == null)
+			init();
 		return singleton;
 	}
 
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Hood();
-			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
+			singleton.setJoystickCommand(new HoodJoystickCommand());
 		}
 	}
 
@@ -152,6 +154,10 @@ public class Hood extends NRSubsystem {
 
 	public boolean isMotionMagicMode() {
 		return (talon.getControlMode() == TalonControlMode.MotionMagic);
+	}
+
+	public double getPosition() {
+		return talon.getPosition();
 	}
 	
 }

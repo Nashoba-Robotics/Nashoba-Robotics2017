@@ -17,9 +17,12 @@ public class Loader extends NRSubsystem {
 	private CANTalon talon;
 	
 	public double motorSetpoint = 0;
+
+	private static final int TICKS_PER_REV = 256; //TODO: Loader: Get ticks per revolution
+	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
 	
 	//TODO: Loader: Find good FPID values
-	public static double F = (RobotMap.MAX_LOADER_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.NATIVE_UNITS_PER_REV);
+	public static double F = (RobotMap.MAX_LOADER_SPEED / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
@@ -34,7 +37,7 @@ public class Loader extends NRSubsystem {
 			talon.setP(P);
 			talon.setI(I);
 			talon.setD(D);
-			talon.configEncoderCodesPerRev(RobotMap.TICKS_PER_REV);
+			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(true);
 			talon.setEncPosition(0);
 			talon.reverseSensor(false); //TODO: Loader: Find phase
@@ -43,14 +46,15 @@ public class Loader extends NRSubsystem {
 	}
 
 	public static Loader getInstance() {
-		init();
+		if (singleton == null)
+			init();
 		return singleton;
 	}
 
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Loader();
-			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
+			singleton.setJoystickCommand(new LoaderJoystickCommand());
 		}
 	}
 

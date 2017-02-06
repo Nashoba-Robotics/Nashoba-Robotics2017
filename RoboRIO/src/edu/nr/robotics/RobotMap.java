@@ -1,5 +1,8 @@
 package edu.nr.robotics;
 
+import java.util.ArrayList;
+
+import edu.nr.lib.NRSubsystem;
 import edu.nr.robotics.subsystems.drive.Drive;
 
 /**
@@ -61,7 +64,9 @@ public class RobotMap {
 	public static final int INTAKE_ARM_FORWARD = 0;
 	public static final int INTAKE_ARM_REVERSE = 0;
 	
-	public static final int TICKS_PER_REV = 256;
 	public static final double HUNDRED_MS_PER_MIN = 600;
-	public static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
+
+	public static final double INTAKE_RUN_SPEED = 0;
+	public static final double LOADER_RUN_SPEED = 0;
+
 }
