@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.shooter;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterSetPIDSmartDashboardCommand extends NRCommand {

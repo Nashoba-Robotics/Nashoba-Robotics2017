@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.drive;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveConstantSmartDashboardSpeedCommand extends NRCommand {

@@ -4,9 +4,9 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.nr.lib.DoNothingJoystickCommand;
 import edu.nr.lib.HistoricalCANTalon;
-import edu.nr.lib.NRSubsystem;
+import edu.nr.lib.commandbased.DoNothingJoystickCommand;
+import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

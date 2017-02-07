@@ -1,7 +1,7 @@
 package edu.nr.robotics.subsystems.drive;
 
-import edu.nr.lib.JoystickCommand;
 import edu.nr.lib.NRMath;
+import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.lib.interfaces.GyroCorrection;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;

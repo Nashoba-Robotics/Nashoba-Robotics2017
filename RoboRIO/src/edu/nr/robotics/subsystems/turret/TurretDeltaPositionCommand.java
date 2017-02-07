@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.turret;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 
 public class TurretDeltaPositionCommand extends NRCommand{
 

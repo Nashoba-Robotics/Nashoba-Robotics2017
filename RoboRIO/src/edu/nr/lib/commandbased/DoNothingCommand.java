@@ -1,4 +1,4 @@
-package edu.nr.lib;
+package edu.nr.lib.commandbased;
 
 public class DoNothingCommand extends NRCommand {
 

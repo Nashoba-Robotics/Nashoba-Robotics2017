@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.turret;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurretSetPIDSmartDashboardCommand extends NRCommand {

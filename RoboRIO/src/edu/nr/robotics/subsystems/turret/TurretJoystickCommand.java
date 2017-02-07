@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.turret;
 
-import edu.nr.lib.JoystickCommand;
+import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.robotics.OI;
 
 public class TurretJoystickCommand extends JoystickCommand {

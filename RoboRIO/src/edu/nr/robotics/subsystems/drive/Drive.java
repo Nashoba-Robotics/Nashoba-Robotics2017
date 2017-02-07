@@ -2,7 +2,7 @@ package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.HistoricalCANTalon;
 import edu.nr.lib.NRMath;
-import edu.nr.lib.NRSubsystem;
+import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 

@@ -1,7 +1,7 @@
 
 package edu.nr.robotics;
 
-import edu.nr.lib.DoNothingCommand;
+import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.wpi.first.wpilibj.CameraServer;

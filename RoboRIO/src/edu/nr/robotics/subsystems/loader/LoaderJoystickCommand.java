@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.loader;
 
-import edu.nr.lib.JoystickCommand;
+import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.robotics.OI;
 
 public class LoaderJoystickCommand extends JoystickCommand {
