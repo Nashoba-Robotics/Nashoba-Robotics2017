@@ -18,15 +18,24 @@ public class OI implements SmartDashboardSource{
 
 	private Joystick driveLeft;
 	private Joystick driveRight;
+	
+	private Joystick operatorLeft;
+	private Joystick operatorRight;
 
 	private OI() {
-		//TODO: OI: Create buttons and operator joystick
+		//TODO: OI: Create buttons
 		
 		driveLeft = new Joystick(RobotMap.STICK_LEFT);
 		driveRight = new Joystick(RobotMap.STICK_RIGHT);
+		
+		operatorLeft = new Joystick(RobotMap.STICK_OPERATOR_LEFT);
+		operatorRight = new Joystick(RobotMap.STICK_OPERATOR_RIGHT);
 
 		initDriveLeft();
 		initDriveRight();
+		
+		initOperatorLeft();
+		initOperatorRight();
 	}
 
 	public void initDriveLeft() {
@@ -34,6 +43,14 @@ public class OI implements SmartDashboardSource{
 	}
 
 	public void initDriveRight() {
+
+	}
+	
+	public void initOperatorLeft() {
+
+	}
+
+	public void initOperatorRight() {
 
 	}
 
@@ -81,19 +98,19 @@ public class OI implements SmartDashboardSource{
 	}
 
 	public double getIntakeValue() {
-		return 0; //TODO: OI: Get intake joystick values
+		return snapCoffinJoysticks(0); //TODO: OI: Get intake joystick values
 	}
 
 	public double getLoaderValue() {
-		return 0; //TODO: OI: Get loader joystick values
+		return snapCoffinJoysticks(0); //TODO: OI: Get loader joystick values
 	}
 	
 	public double getTurretValue() {
-		return 0; //TODO: OI: Get turret joystick values
+		return snapCoffinJoysticks(0); //TODO: OI: Get turret joystick values
 	}
 	
 	public double getHoodValue(){
-		return 0; //TODO: OI: Get hood joystick values
+		return snapCoffinJoysticks(0); //TODO: OI: Get hood joystick values
 	}
 
 	private static double snapDriveJoysticks(double value) {
