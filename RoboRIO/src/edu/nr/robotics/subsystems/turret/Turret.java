@@ -5,6 +5,7 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.DoNothingJoystickCommand;
+import edu.nr.lib.HistoricalCANTalon;
 import edu.nr.lib.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -14,12 +15,13 @@ public class Turret extends NRSubsystem {
 	
 	public static Turret singleton;
 
-	private CANTalon talon;
+	private HistoricalCANTalon talon;
 	
 	public double speedSetpoint = 0;
 	public double positionSetpoint = 0;
 
 	private static final int TICKS_PER_REV = 256; //TODO: Turret: Get ticks per revolution
+	public static final int TURRET_TICKS_PER_REV = 256; //TODO: Turret: Get ticks per revolution of actual turret
 	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
 
 	//TODO: Turret: Find FPID values
@@ -39,7 +41,7 @@ public class Turret extends NRSubsystem {
 	
 	private Turret() { 
 		if (EnabledSubsystems.TURRET_ENABLED) { 
-			talon = new CANTalon(RobotMap.TURRET_TALON);
+			talon = new HistoricalCANTalon(RobotMap.TURRET_TALON);
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -105,7 +107,32 @@ public class Turret extends NRSubsystem {
 				talon.set(positionSetpoint);
 			}
 		}
-
+	}
+	
+	/**
+	 * Gets the current position of the talon
+	 * 
+	 * @return current position of talon
+	 */
+	public double getPosition() {
+		if(talon != null)
+			return talon.getPosition();
+		return 0;
+	}
+	
+	public double getHistoricalPosition(double deltaTime) {
+		if (talon != null)
+			return talon.getHistoricalPosition(deltaTime);
+		return 0;
+	}
+	
+	/**
+	 * This sets the change in position of the turret in encoder ticks
+	 * 
+	 * @param deltaPosition
+	 */
+	public void setPositionDelta(double deltaPosition) {
+		getInstance().setPosition(getInstance().getPosition() + deltaPosition);
 	}
 	
 	/**
@@ -151,18 +178,16 @@ public class Turret extends NRSubsystem {
 		}
 	}
 
+	/**
+	 * Checks to see if the talon is in motion magic mode
+	 * 
+	 * @return is the talon in motion magic mode
+	 */
 	public boolean isMotionMagicMode() {
 		if(talon != null)
 			return (talon.getControlMode() == TalonControlMode.MotionMagic);
 		
 		return false;
-	}
-	
-	public double getPosition() {
-		if(talon != null)
-			return talon.getPosition();
-		
-		return 0;
 	}
 	
 }

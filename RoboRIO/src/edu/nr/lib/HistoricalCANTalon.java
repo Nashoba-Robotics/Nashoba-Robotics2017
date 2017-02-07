@@ -35,13 +35,12 @@ public class HistoricalCANTalon extends CANTalon implements Periodic, ISensorDat
     double period = 0.1; //In seconds
 
 	
-	public HistoricalCANTalon(int deviceNumber, String sensor_name) {
+	public HistoricalCANTalon(int deviceNumber) {
 		super(deviceNumber);
 		
 		this.curr_data = new TimestampedValue<EncoderPosition>(new EncoderPosition());
 		this.curr_data.setValid(true);
 		this.roborio = new RoboRIO();
-		this.sensor_name = sensor_name;
 		this.sensor_data_source_infos = new ArrayList<SensorDataSourceInfo>();
 		this.enc_callback_registered = false;
 		Timestamp ts = new Timestamp(0, Timestamp.TimestampResolution.Millisecond);
@@ -98,7 +97,6 @@ public class HistoricalCANTalon extends CANTalon implements Periodic, ISensorDat
 	TimestampedValue<EncoderPosition> curr_data;
 	long last_system_timestamp;
 	long last_sensor_timestamp;
-	String sensor_name;
 	ArrayList<ISensorDataSubscriber> tsq_subscribers;
 	boolean enc_callback_registered;
 	IQuantity[] active_sensor_data_quantities;
@@ -164,7 +162,7 @@ public class HistoricalCANTalon extends CANTalon implements Periodic, ISensorDat
 
 	@Override
 	public String getName() {
-		return sensor_name;
+		return "CANTalon";
 	}
 
 	@Override
@@ -203,6 +201,12 @@ public class HistoricalCANTalon extends CANTalon implements Periodic, ISensorDat
 	{
 		period = Math.min(periodMs / 1000.0, period);
 		super.setStatusFrameRateMs(stateFrame, periodMs);
+	}
+	
+	
+	public double getHistoricalPosition(double deltaTime) {
+		long encoderTimeStamp = (long) (this.last_write_timestamp - deltaTime);
+		return encoder_history.getPositionAtTime(encoderTimeStamp);
 	}
 
 

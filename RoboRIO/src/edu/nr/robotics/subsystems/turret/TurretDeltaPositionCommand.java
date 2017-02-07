@@ -10,9 +10,14 @@ public class TurretDeltaPositionCommand extends NRCommand{
 		super(Turret.getInstance());
 		this.deltaPosition = deltaPosition;
 	}
+
+	@Override
+	public void onExecute() {
+		Turret.getInstance().setPositionDelta(deltaPosition);
+	}
 	
 	@Override
-	public void onStart() {
-		new TurretPositionCommand(Turret.getInstance().getPosition() + deltaPosition).start();
+	public boolean isFinishedNR() {
+		return false;
 	}
 }

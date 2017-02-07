@@ -1,5 +1,6 @@
 package edu.nr.robotics.subsystems.drive;
 
+import edu.nr.lib.HistoricalCANTalon;
 import edu.nr.lib.NRMath;
 import edu.nr.lib.NRSubsystem;
 import edu.nr.robotics.RobotMap;
@@ -14,7 +15,7 @@ public class Drive extends NRSubsystem {
 
 	private static Drive singleton;
 
-	private CANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
+	private HistoricalCANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
 
 	private static final double WHEEL_DIAMETER = (4.0 / 12.0); // Measured in feet
 	private static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
@@ -40,7 +41,7 @@ public class Drive extends NRSubsystem {
 		//TODO: Drive: Find phase of motors
 		
 		if (EnabledSubsystems.DRIVE_ENABLED) {
-			leftTalon = new CANTalon(RobotMap.TALON_LEFT_F);
+			leftTalon = new HistoricalCANTalon(RobotMap.TALON_LEFT_F);
 
 			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -54,12 +55,12 @@ public class Drive extends NRSubsystem {
 			leftTalon.reverseSensor(false);
 			leftTalon.enable();
 
-			tempLeftTalon = new CANTalon(RobotMap.TALON_LEFT_B);
+			tempLeftTalon = new HistoricalCANTalon(RobotMap.TALON_LEFT_B);
 			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 
-			rightTalon = new CANTalon(RobotMap.TALON_RIGHT_F);
+			rightTalon = new HistoricalCANTalon(RobotMap.TALON_RIGHT_F);
 
 			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -73,7 +74,7 @@ public class Drive extends NRSubsystem {
 			rightTalon.reverseSensor(false);
 			rightTalon.enable();
 
-			tempRightTalon = new CANTalon(RobotMap.TALON_RIGHT_B);
+			tempRightTalon = new HistoricalCANTalon(RobotMap.TALON_RIGHT_B);
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
@@ -320,7 +321,7 @@ public class Drive extends NRSubsystem {
 		if (rightTalon != null)
 			rightTalon.clearIAccum();
 	}
-
+	
 	/**
 	 * Function that is periodically called once the Drive class is initialized
 	 */

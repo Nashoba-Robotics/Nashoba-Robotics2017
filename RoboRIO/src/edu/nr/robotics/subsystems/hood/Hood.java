@@ -99,7 +99,7 @@ public class Hood extends NRSubsystem {
 	 * 			The goal positions in rotations
 	 */
 	public void setPosition(double position) {
-		positionSetpoint = position * RobotMap.HOOD_DIRECTION;
+		positionSetpoint = position * TICKS_PER_REV * RobotMap.HOOD_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.MotionMagic) {
