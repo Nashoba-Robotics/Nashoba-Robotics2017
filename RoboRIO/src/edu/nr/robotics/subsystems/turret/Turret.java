@@ -11,8 +11,6 @@ import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Turret extends NRSubsystem {
-
-	//TODO: Turret: Set up MagicMotion mode
 	
 	public static Turret singleton;
 
@@ -21,8 +19,11 @@ public class Turret extends NRSubsystem {
 	public double speedSetpoint = 0;
 	public double positionSetpoint = 0;
 
+	private static final int TICKS_PER_REV = 256; //TODO: Turret: Get ticks per revolution
+	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
+
 	//TODO: Turret: Find FPID values
-	public static double F = (RobotMap.MAX_TURRET_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.NATIVE_UNITS_PER_REV);
+	public static double F = (RobotMap.MAX_TURRET_SPEED / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -46,7 +47,7 @@ public class Turret extends NRSubsystem {
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setMotionMagicCruiseVelocity(RobotMap.MAX_TURRET_SPEED);
 			talon.setMotionMagicAcceleration(RobotMap.MAX_TURRET_ACCELERATION);
-			talon.configEncoderCodesPerRev(RobotMap.TICKS_PER_REV);
+			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(true);
 			talon.setEncPosition(0);
 			talon.reverseSensor(false); //TODO: Turret: Find phase
@@ -55,14 +56,15 @@ public class Turret extends NRSubsystem {
 	}
 
 	public static Turret getInstance() {
-		init();
+		if (singleton == null)
+			init();
 		return singleton;
 	}
 
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Turret();
-			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
+			singleton.setJoystickCommand(new TurretJoystickCommand());
 		}
 	}
 
@@ -150,7 +152,17 @@ public class Turret extends NRSubsystem {
 	}
 
 	public boolean isMotionMagicMode() {
-		return (talon.getControlMode() == TalonControlMode.MotionMagic);
+		if(talon != null)
+			return (talon.getControlMode() == TalonControlMode.MotionMagic);
+		
+		return false;
+	}
+	
+	public double getPosition() {
+		if(talon != null)
+			return talon.getPosition();
+		
+		return 0;
 	}
 	
 }

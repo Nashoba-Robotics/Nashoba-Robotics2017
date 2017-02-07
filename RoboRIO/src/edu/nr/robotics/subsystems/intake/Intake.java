@@ -3,7 +3,6 @@ package edu.nr.robotics.subsystems.intake;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.nr.lib.DoNothingJoystickCommand;
 import edu.nr.lib.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -33,14 +32,16 @@ public class Intake extends NRSubsystem {
 	}
 
 	public static Intake getInstance() {
-		init();
+		if(singleton == null) {
+			init();
+		}
 		return singleton;
 	}
 
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Intake();
-			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
+			getInstance().setJoystickCommand(new IntakeJoystickCommand());
 		}
 	}
 

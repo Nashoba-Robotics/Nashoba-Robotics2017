@@ -29,4 +29,9 @@ public class DriveTurnConstantSmartDashboardSpeedCommand extends NRCommand {
 		Drive.getInstance().arcadeDrive(0, turnSpeed);
 	}
 	
+	@Override
+	public boolean isFinishedNR() {
+		return false;
+	}
+	
 }

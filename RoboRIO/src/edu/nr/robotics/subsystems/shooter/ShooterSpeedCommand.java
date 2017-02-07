@@ -1,27 +1,24 @@
 package edu.nr.robotics.subsystems.shooter;
 
 import edu.nr.lib.NRCommand;
-import edu.nr.lib.interfaces.SmartDashboardSource;
 
-public class ShooterSpeedCommand extends NRCommand implements SmartDashboardSource {
+public class ShooterSpeedCommand extends NRCommand {
 
-	public ShooterSpeedCommand() {
-		requires(Shooter.getInstance());
+	double speed;
+	
+	public ShooterSpeedCommand(double speed) {
+		super(Shooter.getInstance());
+		this.speed = speed;
 	}
 	
 	@Override
-	protected void onStart() {
-		
+	public void onExecute() {
+		Shooter.getInstance().setMotorSpeed(speed);
 	}
 	
 	@Override
-	protected void onExecute() {
-		
-	}
-	
-	@Override
-	public void smartDashboardInfo() {
-		
+	public boolean isFinishedNR() {
+		return false;
 	}
 
 }

@@ -32,4 +32,9 @@ public class DriveConstantSmartDashboardSpeedCommand extends NRCommand {
 		Drive.getInstance().tankDrive(leftSpeed, rightSpeed);
 	}
 	
+	@Override
+	public boolean isFinishedNR() {
+		return false;
+	}
+	
 }

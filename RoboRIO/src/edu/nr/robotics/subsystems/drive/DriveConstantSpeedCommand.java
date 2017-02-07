@@ -19,4 +19,9 @@ public class DriveConstantSpeedCommand extends NRCommand {
 		Drive.getInstance().tankDrive(leftSpeed, rightSpeed);
 	}
 	
+	@Override
+	public boolean isFinishedNR() {
+		return false;
+	}
+	
 }
