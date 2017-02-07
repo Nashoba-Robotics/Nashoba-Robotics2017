@@ -27,6 +27,7 @@ public class DriveTurnConstantSmartDashboardSpeedCommand extends NRCommand {
 	@Override
 	public void onExecute() {
 		Drive.getInstance().arcadeDrive(0, turnSpeed);
+		turnSpeed = SmartDashboard.getNumber(turnSpeedString, turnSpeed);
 	}
 	
 	@Override

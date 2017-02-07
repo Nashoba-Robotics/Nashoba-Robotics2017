@@ -30,6 +30,8 @@ public class DriveConstantSmartDashboardSpeedCommand extends NRCommand {
 	@Override
 	public void onExecute() {
 		Drive.getInstance().tankDrive(leftSpeed, rightSpeed);
+		leftSpeed = SmartDashboard.getNumber(leftSpeedString, leftSpeed);
+		rightSpeed = SmartDashboard.getNumber(rightSpeedString, rightSpeed);
 	}
 	
 	@Override
