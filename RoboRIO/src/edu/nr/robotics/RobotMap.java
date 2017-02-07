@@ -61,6 +61,10 @@ public class RobotMap {
 	public static final int INTAKE_ARM_FORWARD = 0;
 	public static final int INTAKE_ARM_REVERSE = 0;
 	
+	public static final int GEAR_MOVER_PNEUMATIC = 0;
+	public static final int GEAR_MOVER_FORWARD = 0;
+	public static final int GEAR_MOVER_REVERSE = 0;
+	
 	public static final int TICKS_PER_REV = 256;
 	public static final double HUNDRED_MS_PER_MIN = 600;
 	public static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;

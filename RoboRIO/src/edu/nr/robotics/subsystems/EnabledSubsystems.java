@@ -7,5 +7,6 @@ public class EnabledSubsystems {
 								TURRET_ENABLED = false,
 								INTAKE_ENABLED = false,
 								INTAKE_ARM_ENABLED = false,
+								GEAR_MOVER_ENABLED = false,
 								LOADER_ENABLED = false;
 }
