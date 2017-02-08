@@ -159,9 +159,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 								talonLB.getOutputCurrent() + " : " + talonLF.getOutputCurrent() + " : " + talonRF.getOutputCurrent() + " : " + talonRB.getOutputCurrent());
 	
 						try {
-							java.util.concurrent.TimeUnit.MILLISECONDS.sleep(8);
+							java.util.concurrent.TimeUnit.MILLISECONDS.sleep(50);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
