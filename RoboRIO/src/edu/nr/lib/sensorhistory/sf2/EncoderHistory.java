@@ -1,4 +1,4 @@
-package edu.nr.lib;
+package edu.nr.lib.sensorhistory.sf2;
 
 import java.util.ArrayList;
 
