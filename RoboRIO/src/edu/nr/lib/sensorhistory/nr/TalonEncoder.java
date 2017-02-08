@@ -44,6 +44,10 @@ public class TalonEncoder extends TimerTask {
 	 */
 	public double getPosition(long deltaTime) {
 
+		if(deltaTime == 0) {
+			return talon.getPosition();
+		}
+
 		if (data.size() == 0) {
 			return talon.getPosition();
 		} else if (data.size() == 1) {
@@ -86,6 +90,10 @@ public class TalonEncoder extends TimerTask {
 	 */
 	public double getVelocity(long deltaTime) {
 
+		if(deltaTime == 0) {
+			return talon.getSpeed();
+		}
+		
 		if (data.size() == 0) {
 			return talon.getSpeed();
 		} else if (data.size() == 1) {
