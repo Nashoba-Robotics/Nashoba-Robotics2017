@@ -74,6 +74,48 @@ public class TalonEncoder extends TimerTask {
 		Data second = data.get(up);
 		return interpolate(first.position, second.position, timestamp / (second.timestamp + first.timestamp));
 	}
+	
+
+
+	/**
+	 * Get the velocity at a time in the past.
+	 * 
+	 * @param deltaTime
+	 *            How long ago to look, in milliseconds
+	 * @return the velocity
+	 */
+	public double getVelocity(long deltaTime) {
+
+		if (data.size() == 0) {
+			return talon.getSpeed();
+		} else if (data.size() == 1) {
+			return data.get(0).velocity;
+		}
+
+		long timestamp = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() / 1000.0) - deltaTime;
+
+		int low = 0;
+		int up = data.size();
+		while (low < up)
+		// @loop_invariant 0 <= low && low <= up && up <= n;
+		// @loop_invariant low == 0 || A[low-1] < x;
+		// @loop_invariant up == n || A[up] >= x;
+		{
+			// int mid = (low + up)/2; CAUSES OVERFLOW
+			int mid = low + (up - low) / 2;
+			if (timestamp == data.get(mid).timestamp)
+				return data.get(mid).velocity;
+			else if (timestamp < data.get(mid).timestamp)
+				up = mid;
+			else
+				low = mid + 1;
+		}
+		low = up - 1; // This is so that low != up
+
+		Data first = data.get(low);
+		Data second = data.get(up);
+		return interpolate(first.velocity, second.velocity, timestamp / (second.timestamp + first.timestamp));
+	}
 
 	private double interpolate(double first, double second, double timeRatio) {
 		return first * (1 - timeRatio) + second * timeRatio;
