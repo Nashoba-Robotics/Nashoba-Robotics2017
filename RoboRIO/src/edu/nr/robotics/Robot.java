@@ -1,9 +1,13 @@
 
 package edu.nr.robotics;
 
-import edu.nr.lib.DoNothingCommand;
+import java.util.ArrayList;
+
+import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.interfaces.SmartDashboardSource;
+import edu.nr.lib.network.TCPServer;
+import edu.nr.lib.network.TCPServer.NetworkingDataType;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -33,6 +37,7 @@ public class Robot extends IterativeRobot {
 		CameraServer.getInstance().startAutomaticCapture();
 
 		autoChooserInit();
+		tcpServerInit();
 		OI.init();
 	}
 	
@@ -40,6 +45,14 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Do Nothing", new DoNothingCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
+	}
+	
+	public void tcpServerInit() {
+		ArrayList<NetworkingDataType> types = new ArrayList<>();
+		types.add(new NetworkingDataType('a', "angle"));
+		types.add(new NetworkingDataType('d', "distance"));
+		types.add(new NetworkingDataType('t', "time"));
+		TCPServer.init(types);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.drive;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTurnConstantSmartDashboardSpeedCommand extends NRCommand {
@@ -27,6 +27,7 @@ public class DriveTurnConstantSmartDashboardSpeedCommand extends NRCommand {
 	@Override
 	public void onExecute() {
 		Drive.getInstance().arcadeDrive(0, turnSpeed);
+		turnSpeed = SmartDashboard.getNumber(turnSpeedString, turnSpeed);
 	}
 	
 	@Override

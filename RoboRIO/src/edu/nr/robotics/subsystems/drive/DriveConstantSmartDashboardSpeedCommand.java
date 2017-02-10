@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.drive;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveConstantSmartDashboardSpeedCommand extends NRCommand {
@@ -30,6 +30,8 @@ public class DriveConstantSmartDashboardSpeedCommand extends NRCommand {
 	@Override
 	public void onExecute() {
 		Drive.getInstance().tankDrive(leftSpeed, rightSpeed);
+		leftSpeed = SmartDashboard.getNumber(leftSpeedString, leftSpeed);
+		rightSpeed = SmartDashboard.getNumber(rightSpeedString, rightSpeed);
 	}
 	
 	@Override

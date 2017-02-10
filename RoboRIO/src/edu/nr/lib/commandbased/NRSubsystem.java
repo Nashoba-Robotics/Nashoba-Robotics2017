@@ -1,4 +1,4 @@
-package edu.nr.lib;
+package edu.nr.lib.commandbased;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -45,7 +45,7 @@ public abstract class NRSubsystem extends Subsystem implements SmartDashboardSou
 	}
 	
 	/**
-	 * Chooses the default command when the Drive class is initialized
+	 * Chooses the default command when the class is initialized
 	 */
 	@Override
 	protected final void initDefaultCommand() {
@@ -59,7 +59,7 @@ public abstract class NRSubsystem extends Subsystem implements SmartDashboardSou
 			if(joystickCommand.shouldSwitchToJoystick()) {
 				Command currentCommand = getCurrentCommand();
 				if(currentCommand != joystickCommand) {
-					getCurrentCommand().cancel();
+					NRCommand.cancelCommand(getCurrentCommand());
 				}
 			}
 		}

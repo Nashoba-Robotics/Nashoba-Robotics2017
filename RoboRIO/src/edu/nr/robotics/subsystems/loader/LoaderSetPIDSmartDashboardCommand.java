@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.loader;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.robotics.subsystems.loader.Loader;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

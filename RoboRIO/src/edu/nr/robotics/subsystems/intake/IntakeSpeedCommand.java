@@ -1,6 +1,6 @@
 package edu.nr.robotics.subsystems.intake;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.NRCommand;
 
 public class IntakeSpeedCommand extends NRCommand {
 
