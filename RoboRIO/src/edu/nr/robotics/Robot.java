@@ -49,9 +49,9 @@ public class Robot extends IterativeRobot {
 	
 	public void tcpServerInit() {
 		ArrayList<NetworkingDataType> types = new ArrayList<>();
-		types.add(new NetworkingDataType('a', "angle"));
-		types.add(new NetworkingDataType('d', "distance"));
-		types.add(new NetworkingDataType('t', "time"));
+		types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
+		types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
+		types.add(new NetworkingDataType('t', "time")); //TODO: Coprocessor: Code timestamps
 		TCPServer.init(types);
 	}
 
