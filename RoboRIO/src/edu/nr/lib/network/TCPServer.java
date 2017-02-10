@@ -12,12 +12,15 @@ import java.util.Collection;
  * 
  * A TCP server that listens for data on a new thread.
  * 
- * It takes data in the following format: byte 0: identifier (character)
+ * It takes data in the following format: 
+ * byte 0: identifier (character)
  * byte 1-4: data (int)
  * 
- * It stores data in a NetworkingDataType according to the identifier.
+ * It stores data in a {@link NetworkingDataType} according to the identifier.
  * 
- * All values that could be sent to the server need to match the data types that are given it, or they will be ignored
+ * All values that could be sent to the server need to match the data types that are given it, or they will be ignored.
+ * 
+ * An object can listen to a {@link NetworkingDataType} by implementing {@link NetworkingDataTypeListener} and calling {@link NetworkingDataType#addListener}
  *
  */
 public class TCPServer implements Runnable {
@@ -42,7 +45,7 @@ public class TCPServer implements Runnable {
 	 * 
 	 * If the singleton already initialized, add the given data types to the singleton.
 	 * 
-	 * @param dataTypes A Collection of TCPServer.NetworkingDataType. All values that
+	 * @param dataTypes A Collection of {@link NetworkingDataType}. All values that
 	 *            		could be sent to the server need to match these data types (or others that are added later).
 	 *            
 	 *            		If this is null, no data types will be added initially.
@@ -244,6 +247,7 @@ public class TCPServer implements Runnable {
 							type.data = ((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
 									+ (data[3] & 0xFF);
 							m_hasData = true;
+							type.updateListeners();
 						} else {
 							inFromClient.read(new char[4], 0, 4);
 						}
@@ -256,8 +260,14 @@ public class TCPServer implements Runnable {
 		}
 	}
 
+	/**
+	 * A type of data that will be sent to the server. An object can listen to the data type by implementing {@link NetworkingDataTypeListener}.
+	 *
+	 */
 	public static class NetworkingDataType {
-
+		
+		ArrayList<NetworkingDataTypeListener> listeners;
+		
 		/**
 		 * Create a networking data type.
 		 * 
@@ -270,6 +280,8 @@ public class TCPServer implements Runnable {
 		public NetworkingDataType(char identifier, String name) {
 			this.identifier = identifier;
 			this.name = name;
+			
+			this.listeners = new ArrayList<>();
 		}
 
 		/**
@@ -287,6 +299,20 @@ public class TCPServer implements Runnable {
 		 * This is the actual data that is sent.
 		 */
 		private int data = 0;
+		
+		public void addListener(NetworkingDataTypeListener listener) {
+			listeners.add(listener);
+		}
+		
+		public void removeListener(NetworkingDataTypeListener listener) {
+			listeners.remove(listener);
+		}
+		
+		private void updateListeners() {
+			for(NetworkingDataTypeListener listener : listeners) {
+				listener.updateDataType(this, this.data);
+			}
+		}
 
 	}
 
