@@ -32,7 +32,7 @@ public class Drive extends NRSubsystem {
 	public static final double I = 0;
 	public static final double D = 0;
 	
-	public static enum driveMode {
+	public static enum DriveMode {
 		arcadeDrive, tankDrive
 	}
 	
@@ -40,7 +40,7 @@ public class Drive extends NRSubsystem {
 		//TODO: Drive: Find phase of motors
 		
 		if (EnabledSubsystems.DRIVE_ENABLED) {
-			leftTalon = new HistoricalCANTalon(RobotMap.TALON_LEFT_F);
+			leftTalon = new HistoricalCANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 
 			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -54,12 +54,12 @@ public class Drive extends NRSubsystem {
 			leftTalon.reverseSensor(false);
 			leftTalon.enable();
 
-			tempLeftTalon = new HistoricalCANTalon(RobotMap.TALON_LEFT_B);
+			tempLeftTalon = new HistoricalCANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
 			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 
-			rightTalon = new HistoricalCANTalon(RobotMap.TALON_RIGHT_F);
+			rightTalon = new HistoricalCANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
 
 			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -73,7 +73,7 @@ public class Drive extends NRSubsystem {
 			rightTalon.reverseSensor(false);
 			rightTalon.enable();
 
-			tempRightTalon = new HistoricalCANTalon(RobotMap.TALON_RIGHT_B);
+			tempRightTalon = new HistoricalCANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);

@@ -40,7 +40,7 @@ public class Turret extends NRSubsystem {
 	
 	private Turret() { 
 		if (EnabledSubsystems.TURRET_ENABLED) { 
-			talon = new HistoricalCANTalon(RobotMap.TURRET_TALON);
+			talon = new HistoricalCANTalon(RobotMap.TURRET_TALON_PORT);
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);

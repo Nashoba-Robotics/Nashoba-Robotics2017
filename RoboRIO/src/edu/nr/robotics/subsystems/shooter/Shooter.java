@@ -30,7 +30,7 @@ public class Shooter extends NRSubsystem {
 	
 	private Shooter() { 
 		if (EnabledSubsystems.SHOOTER_ENABLED) { 
-			talon = new CANTalon(RobotMap.SHOOTER_TALON);
+			talon = new CANTalon(RobotMap.SHOOTER_TALON_PORT);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talon.setF(F);

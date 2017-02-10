@@ -16,7 +16,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 
 	@Override
 	public void onExecute() {
-		if (RobotMap.driveMode == Drive.driveMode.arcadeDrive) {
+		if (RobotMap.driveMode == Drive.DriveMode.arcadeDrive) {
 			
 			//Get the joystick values
 			double moveValue = OI.getInstance().getArcadeMoveValue();
@@ -58,7 +58,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 
 	@Override
 	public boolean shouldSwitchToJoystick() {
-		if(RobotMap.driveMode == Drive.driveMode.arcadeDrive) {
+		if(RobotMap.driveMode == Drive.DriveMode.arcadeDrive) {
 			return OI.getInstance().getArcadeMoveValue() != 0 || OI.getInstance().getArcadeTurnValue() != 0;
 		} else {
 			return OI.getInstance().getTankLeftValue() != 0 || OI.getInstance().getTankRightValue() != 0;
