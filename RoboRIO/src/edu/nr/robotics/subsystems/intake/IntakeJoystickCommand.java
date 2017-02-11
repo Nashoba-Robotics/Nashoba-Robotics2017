@@ -18,12 +18,12 @@ public class IntakeJoystickCommand extends JoystickCommand {
 
 	@Override
 	public boolean shouldSwitchToJoystick() {
-		return OI.getInstance().isIntakeNonZero();
+		return false;
 	}
 
 	@Override
 	public long getPeriodOfCheckingForSwitchToJoystick() {
-		return joystickCheckPeriod;  
+		return Long.MAX_VALUE;  
 	}
 
 }

@@ -109,4 +109,8 @@ public class Shooter extends NRSubsystem {
 		}
 	}
 
+	public double getSpeed() {
+		return talon.getSpeed();
+	}
+
 }

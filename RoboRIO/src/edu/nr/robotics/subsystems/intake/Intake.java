@@ -6,6 +6,7 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
+import edu.nr.robotics.subsystems.intakeArm.IntakeArm;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends NRSubsystem {
@@ -46,7 +47,9 @@ public class Intake extends NRSubsystem {
 	}
 
 	/**
-	 * Sets motor speed of  intake
+	 * Sets motor speed of the intake.
+	 * 
+	 * If the intake arm is not deployed, the speed is always set to zero instead.
 	 * 
 	 * @param speed
 	 *            the intake motor speed, 
@@ -57,9 +60,18 @@ public class Intake extends NRSubsystem {
 		lowMotorSetpoint = speed * RobotMap.LOW_INTAKE_DIRECTION;
 		highMotorSetpoint = speed * RobotMap.HIGH_INTAKE_DIRECTION;
 		if (lowTalon != null && highTalon != null) {
-			lowTalon.set(lowMotorSetpoint);
-			highTalon.set(highMotorSetpoint);
+			if(IntakeArm.getInstance().isDeployed()) {
+				lowTalon.set(lowMotorSetpoint);
+				highTalon.set(highMotorSetpoint);
+			} else {
+				lowTalon.set(0);
+				highTalon.set(0);
+			}
 		}
+	}
+	
+	public void onIntakeArmRetract() {
+		setMotorSpeed(0);
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -53,7 +54,7 @@ public class Loader extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Loader();
-			singleton.setJoystickCommand(new LoaderJoystickCommand());
+			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 

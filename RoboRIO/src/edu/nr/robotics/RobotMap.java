@@ -1,5 +1,8 @@
 package edu.nr.robotics;
 
+import java.util.ArrayList;
+
+import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 
@@ -124,12 +127,33 @@ public class RobotMap {
 
 	/**
 	 * The speed in rotations per minute for the intake to run at during normal usage
+	 * 
+	 * TODO: Get run speed
 	 */
 	public static final double INTAKE_RUN_SPEED = 0;
+	
+	/**
+	 * The speed in rotations per minute for the intake to run at while attempting to "puke" all the balls.
+	 * 
+	 * Puking balls involves running the intake in reverse to clear any balls that are trapped in it.
+	 * 
+	 * TODO: Get puke speed
+	 */
+	public static final double INTAKE_PUKE_SPEED = 0;
 	
 	/**
 	 * The speed in rotations per minute for the loader to run at during normal usage
 	 */
 	public static final double LOADER_RUN_SPEED = 0;
+	
+	/**
+	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
+	 */
+	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 0;
+	
+	/**
+	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
+	 */
+	public static final double HOOD_POSITION_INCREMENT_VALUE = 0;
 
 }

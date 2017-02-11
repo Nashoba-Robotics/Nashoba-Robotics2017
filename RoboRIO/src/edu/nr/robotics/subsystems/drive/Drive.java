@@ -489,4 +489,24 @@ public class Drive extends NRSubsystem {
 		setMotorSpeed(0, 0);
 	}
 
+	public double getRightCurrent() {
+		if(rightTalon != null) {
+			return rightTalon.getOutputCurrent();
+		} else {
+			return 0;
+		}
+	}
+
+	public double getLeftCurrent() {
+		if(leftTalon != null) {
+			return leftTalon.getOutputCurrent();
+		} else {
+			return 0;
+		}
+	}
+
+	public double getAverageCurrent() {
+		return (getLeftCurrent() + getRightCurrent())/2;
+	}
+
 }
