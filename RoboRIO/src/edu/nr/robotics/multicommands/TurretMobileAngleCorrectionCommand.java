@@ -37,7 +37,7 @@ public class TurretMobileAngleCorrectionCommand extends NRCommand{
 		double histDistReal = Math.sqrt(Math.pow(histDist, 2) + Math.pow(h3, 2) - 2 * histDist * h3 * Math.cos(theta5 + histAngle));
 		double histAngleReal = 180 - Math.atan(xTurretOffset / yTurretOffset) - z1 * Math.sin(theta4) / h3 - histDist * Math.sin(theta5 + histAngle) / histDistReal;
 		
-		double histRobotOrientation = histAngle + Turret.getInstance().getHistoricalPosition(deltaTime) * 360;
+		double histRobotOrientation = histAngleReal + Turret.getInstance().getHistoricalPosition(deltaTime) * 360;
 		double deltaAngle = (NavX.getInstance().getYaw(AngleUnit.DEGREE) - NavX.getInstance().getHistoricalYaw(AngleUnit.DEGREE, deltaTime));
 		double curRobotOrientation = histRobotOrientation + deltaAngle;
 		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(deltaTime);
@@ -48,8 +48,8 @@ public class TurretMobileAngleCorrectionCommand extends NRCommand{
 		//Code until next break to get current distance
 		double theta1 = histRobotOrientation + 90;
 		double r = Math.max(histLeftPos, histRightPos) / deltaAngle - (0.5 * RobotMap.DRIVE_WHEEL_BASE);
-		double h = Math.sqrt(Math.pow(r, 2) + Math.pow(histDist, 2) - 2 * r * histDist * Math.cos(theta1));
-		double theta0 = Math.asin(histDist * Math.sin(theta1) / h) - deltaAngle;
+		double h = Math.sqrt(Math.pow(r, 2) + Math.pow(histDistReal, 2) - 2 * r * histDistReal * Math.cos(theta1));
+		double theta0 = Math.asin(histDistReal * Math.sin(theta1) / h) - deltaAngle;
 		double curDist = Math.sqrt(Math.pow(h, 2) + Math.pow(r, 2) - 2 * h * r * Math.cos(theta0));
 		double hyp = Math.sqrt(Math.pow(xTurretOffset, 2) + Math.pow(yTurretOffset, 2));
 		double theta3 = 180 - Math.atan(xTurretOffset / yTurretOffset) + curRobotOrientation;
@@ -69,7 +69,7 @@ public class TurretMobileAngleCorrectionCommand extends NRCommand{
 		double previousPosition = Turret.getInstance().getHistoricalPosition(deltaTime);
 		double currentPosition = Turret.getInstance().getPosition();
 		double deltaPosition = currentPosition - previousPosition;
-		double turretAdd3 = histAngle + deltaPosition; //In rotations
+		double turretAdd3 = histAngleReal + deltaPosition; //In rotations
 		
 		double turretAdd = turretAdd1 + turretAdd2 + turretAdd3;
 		turretAdd /= 360; // Changes turret add to rotations instead of angle

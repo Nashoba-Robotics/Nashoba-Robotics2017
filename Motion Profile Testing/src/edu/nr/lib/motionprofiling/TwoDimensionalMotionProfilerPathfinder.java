@@ -23,7 +23,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	//In milliseconds
 	private final long period;
-	private static final long defaultPeriod = 30; //33.33 Hz 
+	private static final long defaultPeriod = 10; //100 Hz 
 		
 	private boolean enabled = false;
 	private DoublePIDOutput out;
@@ -96,6 +96,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 			//System.out.println("Running!");
 		
 			if(enabled) {
+				lastTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+
 				System.out.println("Enabled!");
 				//double prelimOutputLeft = 0;
 				//double prelimOutputRight = 0;
@@ -119,9 +121,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				
 				out.pidWrite(outputLeft, outputRight);
 				
-				System.out.println("Time since last update: " + (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - lastTime));
-	
-				lastTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
+				
 				
 				SmartDashboard.putNumber("Output Left", outputLeft);
 				SmartDashboard.putNumber("Output Right", outputRight);
@@ -130,10 +130,12 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				
 				int spot = Math.min(place, modifier.getLeftTrajectory().length() - 1);
 				
-				SmartDashboard.putString("Motion Profiler Angle", Pathfinder.boundHalfDegrees(currentHeading)+ " : " + Pathfinder.boundHalfDegrees(desiredHeading) + " : " + Pathfinder.boundHalfDegrees(Pathfinder.r2d(modifier.getLeftTrajectory().get(spot).heading)));
+				if(spot > 0) {
+					SmartDashboard.putString("Motion Profiler Angle", Pathfinder.boundHalfDegrees(currentHeading)+ " : " + Pathfinder.boundHalfDegrees(desiredHeading) + " : " + Pathfinder.boundHalfDegrees(Pathfinder.r2d(modifier.getLeftTrajectory().get(spot).heading)));
+					SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / ((1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/) + " : " + modifier.getLeftTrajectory().get(spot).position);
+					SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / (1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/ + " : " + modifier.getRightTrajectory().get(spot).position);
+				}
 				
-				SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / ((1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/) + " : " + modifier.getLeftTrajectory().get(spot).position);
-				SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / (1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/ + " : " + modifier.getRightTrajectory().get(spot).position);
 				
 				/*
 				if(place < modifier.getLeftTrajectory().length()) {
@@ -148,7 +150,14 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				//SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + -(outputLeft / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
 				//SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight()  + ":" + (outputRight / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
 				//source.setPIDSourceType(PIDSourceType.kDisplacement);
-			}		
+				
+				double deltaT = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - lastTime;
+				
+				System.out.println("Time since last update: " + deltaT);
+	
+				SmartDashboard.putNumber("Delta T", deltaT);
+
+			}
 	}
 		
 	/**

@@ -79,7 +79,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (driveEnabled) {
 			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
-			talonLB.changeControlMode(TalonControlMode.Speed);
+			talonLB.changeControlMode(TalonControlMode.PercentVbus);
 			talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonLB.setF(turn_F_LEFT);
 			talonLB.setP(turn_P_LEFT);
@@ -91,7 +91,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 			talonRB = new CANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
-			talonRB.changeControlMode(TalonControlMode.Speed);
+			talonRB.changeControlMode(TalonControlMode.PercentVbus);
 			talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talonRB.setF(turn_F_RIGHT);
 			talonRB.setP(turn_P_RIGHT);
@@ -165,7 +165,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 						}
 					}
 				}
-			}).start();
+			});//.start();*/
 
 			/*
 			FileWriter fw;
@@ -278,7 +278,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			break;
 		}
 	}
-
+	
 	@Override
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveJoystickCommand());
