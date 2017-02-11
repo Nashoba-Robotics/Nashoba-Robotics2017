@@ -45,4 +45,9 @@ public class NavX {
 		return 0;
 	}
 	
+	public void reset() {
+		ahrs.reset();
+		ahrs.resetDisplacement();
+	}
+	
 }

@@ -22,6 +22,7 @@ import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
 import edu.nr.lib.motionprofiling.OneDimensionalTrajectorySimple;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
+import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinderModified;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -36,7 +37,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	public boolean running = false;
 
-	TwoDimensionalMotionProfilerPathfinder profiler;
+	TwoDimensionalMotionProfilerPathfinderModified profiler;
 
 	private static Drive singleton;
 
@@ -57,7 +58,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public final double turn_I_RIGHT = 0;
 	public final double turn_D_RIGHT = 0;
 
-	private static final int ticksPerRev = 256;
+	public static final int ticksPerRev = 256;
 
 	PIDSourceType type = PIDSourceType.kRate;
 
@@ -67,7 +68,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	// FOR TWO DIMENSIONAL
 	public static double ka = 1 / (RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * (1 / 39.37)), kp = 1.0,
-			kd = 0.1, /* kv = 0.167, */ kp_theta = 0.03,
+			ki = 0, kd = 0.1, /* kv = 0.167, */ kp_theta = 0.03,
 			kv = 1 / (RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * (1 / 39.37));
 
 	// FOR ONE DIMENSIONAL
@@ -111,7 +112,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonRF.changeControlMode(TalonControlMode.Follower);
 			talonRF.set(talonRB.getDeviceID());
 
-			profiler = new TwoDimensionalMotionProfilerPathfinder(this, this, kv, ka, kp, kd, kp_theta,
+			profiler = new TwoDimensionalMotionProfilerPathfinderModified(this, this, kv, ka, kp, ki, kd, kp_theta,
 					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
 					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5, 
 					RobotMap.MAX_JERK * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
@@ -120,6 +121,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			SmartDashboard.putNumber("ka", ka);
 			SmartDashboard.putNumber("kv", kv);
 			SmartDashboard.putNumber("kd", kd);
+			SmartDashboard.putNumber("ki", ki);
 			SmartDashboard.putNumber("kp", kp);
 			SmartDashboard.putNumber("kp_theta", kp_theta);
 
@@ -328,6 +330,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public void enableProfiler() {
 		profiler.setKA(SmartDashboard.getNumber("ka", 0));
 		profiler.setKP(SmartDashboard.getNumber("kp", 0));
+		profiler.setKI(SmartDashboard.getNumber("ki", 0));
 		profiler.setKD(SmartDashboard.getNumber("kd", 0));
 		profiler.setKV(SmartDashboard.getNumber("kv", 0));
 		profiler.setKP_theta(SmartDashboard.getNumber("kp_theta", 0));

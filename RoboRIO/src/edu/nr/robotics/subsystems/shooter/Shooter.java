@@ -127,5 +127,15 @@ public class Shooter extends NRSubsystem {
 	public boolean isAutoAlign() {
 		return autoAlign;
 	}
+	
+	/**
+	 * Sets the autoAlign mode to true or false 
+	 * 
+	 * @param autoAlign
+	 * 		Is the subsystem going to be auto-aligned
+	 */
+	public void setAutoAlign(boolean autoAlign) {
+		this.autoAlign = autoAlign;
+	}
 
 }

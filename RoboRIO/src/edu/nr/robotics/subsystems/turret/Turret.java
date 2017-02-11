@@ -38,6 +38,8 @@ public class Turret extends NRSubsystem {
 	public static final int MOTION_MAGIC = 0;
 	public static final int OPERATOR_CONTROL = 1;
 	
+	private boolean autoAlign = false;
+	
 	private Turret() { 
 		if (EnabledSubsystems.TURRET_ENABLED) { 
 			talon = new HistoricalCANTalon(RobotMap.TURRET_TALON_PORT);
@@ -187,6 +189,25 @@ public class Turret extends NRSubsystem {
 			return (talon.getControlMode() == TalonControlMode.MotionMagic);
 		
 		return false;
+	}
+	
+	/**
+	 * Used to see is the hood angle is being influenced by camera or by operator
+	 * 
+	 * @return is the shooter speed in autonomous mode
+	 */
+	public boolean isAutoAlign() {
+		return autoAlign;
+	}
+	
+	/**
+	 * Sets the autoAlign mode to true or false 
+	 * 
+	 * @param autoAlign
+	 * 		Is the subsystem going to be auto-aligned
+	 */
+	public void setAutoAlign(boolean autoAlign) {
+		this.autoAlign = autoAlign;
 	}
 	
 }
