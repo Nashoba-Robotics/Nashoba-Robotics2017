@@ -230,6 +230,40 @@ public class Drive extends NRSubsystem {
 	}
 
 	/**
+	 * Gets the current position of the talon
+	 * 
+	 * @return current position of talon
+	 */
+	public double getLeftPosition() {
+		if(leftTalon != null)
+			return leftTalon.getPosition();
+		return 0;
+	}
+	
+	public double getHistoricalLeftPosition(double deltaTime) {
+		if (leftTalon != null)
+			return leftTalon.getHistoricalPosition(deltaTime);
+		return 0;
+	}
+	
+	/**
+	 * Gets the current position of the talon
+	 * 
+	 * @return current position of talon
+	 */
+	public double getRightPosition() {
+		if(rightTalon != null)
+			return rightTalon.getPosition();
+		return 0;
+	}
+	
+	public double getHistoricalRightPosition(double deltaTime) {
+		if (rightTalon != null)
+			return rightTalon.getHistoricalPosition(deltaTime);
+		return 0;
+	}
+	
+	/**
 	 * Get the distance the left encoder has driven since the last reset
 	 * 
 	 * @return The distance the left encoder has driven since the last reset.
@@ -260,7 +294,7 @@ public class Drive extends NRSubsystem {
 	 */
 	public double getEncoderLeftSpeed() {
 		if (leftTalon != null)
-			return leftTalon.getEncVelocity() / 4;
+			return leftTalon.getSpeed();
 		return 0;
 	}
 
@@ -272,7 +306,7 @@ public class Drive extends NRSubsystem {
 	 */
 	public double getEncoderRightSpeed() {
 		if (rightTalon != null)
-			return rightTalon.getEncVelocity() / 4;
+			return rightTalon.getSpeed();
 		return 0;
 	}
 

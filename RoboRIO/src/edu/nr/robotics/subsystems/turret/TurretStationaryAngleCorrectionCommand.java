@@ -2,9 +2,9 @@ package edu.nr.robotics.subsystems.turret;
 
 import edu.nr.lib.commandbased.NRCommand;
 
-public class TurretStillAngleCorrectionCommand extends NRCommand{
+public class TurretStationaryAngleCorrectionCommand extends NRCommand{
 
-	public TurretStillAngleCorrectionCommand() {
+	public TurretStationaryAngleCorrectionCommand() {
 		super(Turret.getInstance());
 	}
 	
@@ -12,11 +12,13 @@ public class TurretStillAngleCorrectionCommand extends NRCommand{
 	public void onExecute() {
 		long angle = 0; //TODO: TurretStillAngleCorrectionCommand: Get angle from data
 		angle /= 360; //Puts angle into rotations
-		long timeStamp = 0;//TODO: TurretStillAngleCorrectionCommand: Get time stamp from data;
-		double previousPosition = Turret.getInstance().getHistoricalPosition(timeStamp);
+		long timeStamp = 0;//TODO: TurretStillAngleCorrectionCommand: Get time stamp from data
+		long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000);
+		double deltaTime = currentTime - timeStamp;
+		double previousPosition = Turret.getInstance().getHistoricalPosition(deltaTime);
 		double currentPosition = Turret.getInstance().getPosition();
 		double deltaPosition = currentPosition - previousPosition;
-		double angleToGo = angle - deltaPosition; //In rotations
+		double angleToGo = angle + deltaPosition; //In rotations
 		Turret.getInstance().setPositionDelta(angleToGo);
 	}
 	

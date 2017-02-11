@@ -33,6 +33,12 @@ public class RobotMap {
 	// TODO: Drive: Get actual max speed
 	public static final double MAX_DRIVE_SPEED = 0; //In feet per second
 	
+	// TODO: Drive: Get actual wheel diameter
+	public static final double DRIVE_WHEEL_DIAMETER = 0; // In inches
+	
+	// TODO: Drive: Get distance between left and right wheels
+	public static final double DRIVE_WHEEL_BASE = 0; //In inches
+	
 	// TODO: Generic: Get actual subsystem max speeds
 	public static final double MAX_SHOOTER_SPEED = 0; //In rpm
 	public static final double MAX_CLIMBER_SPEED = 0; //In rpm
