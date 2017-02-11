@@ -497,4 +497,12 @@ public class Drive extends NRSubsystem {
 		return (getLeftCurrent() + getRightCurrent())/2;
 	}
 
+	public void switchGear() {
+		if(currentGear == Gear.low) {
+			switchToHighGear();
+		} else {
+			switchToLowGear();
+		}
+	}
+
 }
