@@ -12,7 +12,7 @@ public class OI implements SmartDashboardSource{
 
 	private static final double JOYSTICK_DEAD_ZONE = 0.15;
 
-	public double driveSpeedMultiplier = 1;
+	private double driveSpeedMultiplier = 1;
 
 	private static OI singleton;
 
@@ -95,6 +95,10 @@ public class OI implements SmartDashboardSource{
 
 	public double getDriveRightYValue() {
 		return snapDriveJoysticks(driveRight.getY());
+	}
+	
+	public double getDriveSpeedMultiplier() {
+		return driveSpeedMultiplier * (driveLeft.getButton(Joystick.ButtonType.kTrigger) ? -1 : 1);
 	}
 
 	public double getIntakeValue() {

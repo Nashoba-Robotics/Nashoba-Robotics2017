@@ -37,7 +37,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 			} else {
 				gyroCorrection.clearInitialValue();
 			}
-			Drive.getInstance().arcadeDrive(moveValue * OI.getInstance().driveSpeedMultiplier, rotateValue * OI.getInstance().driveSpeedMultiplier);
+			Drive.getInstance().arcadeDrive(moveValue * OI.getInstance().getDriveSpeedMultiplier(), rotateValue * OI.getInstance().getDriveSpeedMultiplier());
 		} else {
 			// Get values of the joysticks
 			double left = OI.getInstance().getTankLeftValue();
@@ -51,8 +51,8 @@ public class DriveJoystickCommand extends JoystickCommand {
 			// control while permitting full power
 			right = right * right * right;
 			left = left * left * left;
-			Drive.getInstance().tankDrive(OI.getInstance().driveSpeedMultiplier * left,
-					-OI.getInstance().driveSpeedMultiplier * right);
+			Drive.getInstance().tankDrive(OI.getInstance().getDriveSpeedMultiplier() * left,
+					-OI.getInstance().getDriveSpeedMultiplier() * right);
 		}
 	}
 
