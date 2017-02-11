@@ -445,14 +445,19 @@ public class Drive extends NRSubsystem {
 	public void switchToHighGear() {
 		//TODO: Drive: Switch to high gear
 		
-		setProfile(HIGH_GEAR_PROFILE);
-		
+		if(currentGear != Gear.high) {
+			setProfile(HIGH_GEAR_PROFILE);
+			currentGear = Gear.high;
+		}
 	}
 	
 	public void switchToLowGear() {
 		//TODO: Drive: Switch to low gear
 		
-		setProfile(LOW_GEAR_PROFILE);
+		if(currentGear != Gear.low) {
+			setProfile(LOW_GEAR_PROFILE);
+			currentGear = Gear.low;
+		}
 	}
 	
 	/**
