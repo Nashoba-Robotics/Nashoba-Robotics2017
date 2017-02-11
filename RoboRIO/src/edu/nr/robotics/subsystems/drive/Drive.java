@@ -16,25 +16,81 @@ public class Drive extends NRSubsystem {
 
 	private HistoricalCANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
 
-	private static final double WHEEL_DIAMETER = (4.0 / 12.0); // Measured in feet
+	/**
+	 * The diameter of the wheel, in feet
+	 */
+	private static final double WHEEL_DIAMETER = (4.0 / 12.0); //TODO: Drive: Get wheel diameter
+	
+	/**
+	 * The distance the wheel travels in a single revolution, in feet
+	 * 
+	 * This is equivalent to the circumference of the wheel
+	 */
 	private static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
-	private static final double MAX_RPM = RobotMap.MAX_DRIVE_SPEED / DISTANCE_PER_REV * 60;
+	
+	/**
+	 * The number of seconds per minute. This is used to convert from feet per second to rpm.
+	 * 
+	 * If you're actually looking at this JavaDoc, you're a bit silly...
+	 */
+	private static final double SECONDS_PER_MINUTE = 60;
+	
+	/**
+	 * The maximum speed of the robot in low gear, in rotations per minute
+	 */
+	private static final double MAX_LOW_GEAR_RPM = RobotMap.MAX_DRIVE_LOW_GEAR_SPEED / DISTANCE_PER_REV * SECONDS_PER_MINUTE;
 
+	/**
+	 * The maximum speed of the robot in high gear, in rotations per minute
+	 */
+	private static final double MAX_HIGH_GEAR_RPM = RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED / DISTANCE_PER_REV * SECONDS_PER_MINUTE;
+
+	/**
+	 * The number of encoder ticks per wheel revolution
+	 */
 	private static final int TICKS_PER_REV = 256; //TODO: Drive: Get ticks per revolution
+	
+	/**
+	 * The number of CANTalon "Native Units" per revolution
+	 */
 	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
 
+	/**
+	 * The speed that the left drivetrain is currently supposed to be running at, in rotations per minute
+	 */
 	double leftMotorSetpoint = 0;
+	
+	/**
+	 * The speed that the right drivetrain is currently supposed to be running at, in rotations per minute
+	 */
 	double rightMotorSetpoint = 0;
 
 	//TODO: Drive: Find FPID values
-	public static final double F = (MAX_RPM / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
-	public static final double P = 0;
-	public static final double I = 0;
-	public static final double D = 0;
+	public static final double F_LOW_GEAR = (MAX_LOW_GEAR_RPM / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static final double P_LOW_GEAR = 0;
+	public static final double I_LOW_GEAR = 0;
+	public static final double D_LOW_GEAR = 0;
+
+	//TODO: Drive: Find FPID values
+	public static final double F_HIGH_GEAR = (MAX_HIGH_GEAR_RPM / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static final double P_HIGH_GEAR = 0;
+	public static final double I_HIGH_GEAR = 0;
+	public static final double D_HIGH_GEAR = 0;
 	
 	public static enum DriveMode {
 		arcadeDrive, tankDrive
 	}
+	
+	public static enum Gear {
+		high, low
+	}
+
+	private static int HIGH_GEAR_PROFILE = 0;
+	private static int LOW_GEAR_PROFILE = 1;
+	
+	private static int DEFAULT_PROFILE = LOW_GEAR_PROFILE; //TODO: Drive: What should the default gearing be?
+	
+	private Gear currentGear = Gear.low;
 	
 	private Drive() {
 		//TODO: Drive: Find phase of motors
@@ -44,10 +100,17 @@ public class Drive extends NRSubsystem {
 
 			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			leftTalon.setF(F);
-			leftTalon.setP(P);
-			leftTalon.setI(I);
-			leftTalon.setD(D);
+			leftTalon.setProfile(LOW_GEAR_PROFILE);
+			leftTalon.setF(F_LOW_GEAR);
+			leftTalon.setP(P_LOW_GEAR);
+			leftTalon.setI(I_LOW_GEAR);
+			leftTalon.setD(D_LOW_GEAR);
+			leftTalon.setProfile(HIGH_GEAR_PROFILE);
+			leftTalon.setF(F_HIGH_GEAR);
+			leftTalon.setP(P_HIGH_GEAR);
+			leftTalon.setI(I_HIGH_GEAR);
+			leftTalon.setD(D_HIGH_GEAR);
+			leftTalon.setProfile(DEFAULT_PROFILE);
 			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
@@ -63,10 +126,17 @@ public class Drive extends NRSubsystem {
 
 			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			rightTalon.setF(F);
-			rightTalon.setP(P);
-			rightTalon.setI(I);
-			rightTalon.setD(D);
+			rightTalon.setProfile(LOW_GEAR_PROFILE);
+			rightTalon.setF(F_LOW_GEAR);
+			rightTalon.setP(P_LOW_GEAR);
+			rightTalon.setI(I_LOW_GEAR);
+			rightTalon.setD(D_LOW_GEAR);
+			rightTalon.setProfile(HIGH_GEAR_PROFILE);
+			rightTalon.setF(F_HIGH_GEAR);
+			rightTalon.setP(P_HIGH_GEAR);
+			rightTalon.setI(I_HIGH_GEAR);
+			rightTalon.setD(D_HIGH_GEAR);
+			rightTalon.setProfile(DEFAULT_PROFILE);
 			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
@@ -266,31 +336,29 @@ public class Drive extends NRSubsystem {
 	/**
 	 * Get the distance the left encoder has driven since the last reset
 	 * 
-	 * @return The distance the left encoder has driven since the last reset.
+	 * @return The distance the left encoder has driven since the last reset, in rotations.
 	 */
 	public double getEncoderLeftDistance() {
 		if (leftTalon != null)
-			return leftTalon.getEncPosition() / 4;
+			return leftTalon.getPosition();
 		return 0;
 	}
 
 	/**
 	 * Get the distance the right encoder has driven since the last reset
 	 * 
-	 * @return The distance the right encoder has driven since the last reset as
-	 *         scaled by the value from setDistancePerPulse().
+	 * @return The distance the right encoder has driven since the last reset, in rotations.
 	 */
 	public double getEncoderRightDistance() {
 		if (rightTalon != null)
-			return rightTalon.getEncPosition() / 4;
+			return rightTalon.getPosition();
 		return 0;
 	}
 
 	/**
-	 * Get the current rate of the left encoder. Units are distance per second
-	 * as scaled by the value from setDistancePerPulse().
+	 * Get the current rate of the left encoder. Units are rotations per minute
 	 * 
-	 * @return The current rate of the encoder
+	 * @return The current speed of the encoder
 	 */
 	public double getEncoderLeftSpeed() {
 		if (leftTalon != null)
@@ -299,10 +367,9 @@ public class Drive extends NRSubsystem {
 	}
 
 	/**
-	 * Get the current rate of the right encoder. Units are distance per second
-	 * as scaled by the value from setDistancePerPulse().
+	 * Get the current rate of the right encoder. Units are rotations per minute
 	 * 
-	 * @return The current rate of the encoder
+	 * @return The current speed of the encoder
 	 */
 	public double getEncoderRightSpeed() {
 		if (rightTalon != null)
@@ -314,15 +381,14 @@ public class Drive extends NRSubsystem {
 	 * Gets the average distance of the encoders
 	 * 
 	 * @return The average distance the encoders have driven since the last
-	 *         reset as scaled by the value from setDistancePerPulse().
+	 *         reset in rotations.
 	 */
 	public double getEncoderAverageDistance() {
 		return (getEncoderLeftDistance() + getEncoderRightDistance()) / 2;
 	}
 
 	/**
-	 * Get the average current rate of the encoders. Units are distance per
-	 * second as scaled by the value from setDistancePerPulse().
+	 * Get the average current rate of the encoders. Units are rotations per minute
 	 * 
 	 * @return The current average rate of the encoders
 	 */
@@ -331,28 +397,62 @@ public class Drive extends NRSubsystem {
 	}
 
 	/**
-	 * Sets the PID values for both talons
+	 * Sets the PID values for both talons for the given gear.
+	 * 
+	 * If izone or closed loop ramp rate are being used, this sets them to zero.
 	 * 
 	 * @param p Corrects for errors in velocity
 	 * @param i Integral error
 	 * @param d Smooths corrections
 	 * @param f Feed forward gain
+	 * @param gear Which gear to use (high or low)
 	 */
-	public void setPID(double p, double i, double d, double f) {
-		if (leftTalon != null)
-			leftTalon.setPID(p, i, d, f, 0, 0, 0);
-		if (rightTalon != null)
-			rightTalon.setPID(p, i, d, f, 0, 0, 0);
+	public void setPID(double p, double i, double d, double f, Gear gear) {
+		if(gear == Gear.high) {
+			if (leftTalon != null) 
+				leftTalon.setPID(p, i, d, f, 0, 0, HIGH_GEAR_PROFILE);
+			if (rightTalon != null)
+				rightTalon.setPID(p, i, d, f, 0, 0, HIGH_GEAR_PROFILE);
+		} else {
+			if (leftTalon != null)
+				leftTalon.setPID(p, i, d, f, 0, 0, LOW_GEAR_PROFILE);
+			if (rightTalon != null)
+				rightTalon.setPID(p, i, d, f, 0, 0, LOW_GEAR_PROFILE);
+		}
 	}
 
 	/**
-	 * Resets talons
+	 * Resets talon integral accumulation
 	 */
 	public void resetTalons() {
 		if (leftTalon != null)
 			leftTalon.clearIAccum();
 		if (rightTalon != null)
 			rightTalon.clearIAccum();
+	}
+	
+	/**
+	 * Sets the current talon profile
+	 * @param profile
+	 */
+	private void setProfile(int profile) {
+		if(leftTalon != null) 
+			leftTalon.setProfile(profile);
+		if(rightTalon != null)
+			rightTalon.setProfile(profile);
+	}
+	
+	public void switchToHighGear() {
+		//TODO: Drive: Switch to high gear
+		
+		setProfile(HIGH_GEAR_PROFILE);
+		
+	}
+	
+	public void switchToLowGear() {
+		//TODO: Drive: Switch to low gear
+		
+		setProfile(LOW_GEAR_PROFILE);
 	}
 	
 	/**

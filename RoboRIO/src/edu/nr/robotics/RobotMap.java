@@ -31,12 +31,17 @@ public class RobotMap {
 	public static final int STICK_OPERATOR_LEFT = 0;
 	public static final int STICK_OPERATOR_RIGHT = 0;
 	
-	// TODO: Drive: Get actual max speed
+	// TODO: Drive: Get actual max speeds
 	/**
-	 * The max driving speed of the robot, in feet per second
+	 * The max driving speed of the robot in low gear, in feet per second
 	 */
-	public static final double MAX_DRIVE_SPEED = 0;
-	
+	public static final double MAX_DRIVE_LOW_GEAR_SPEED = 0;
+
+	/**
+	 * The max driving speed of the robot in high gear, in feet per second
+	 */
+	public static final double MAX_DRIVE_HIGH_GEAR_SPEED = 0;
+
 	// TODO: Drive: Get actual wheel diameter
 	public static final double DRIVE_WHEEL_DIAMETER = 0; // In inches
 	
