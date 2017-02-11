@@ -41,17 +41,24 @@ public class Robot extends IterativeRobot {
 		OI.init();
 	}
 	
+	/**
+	 * Initialize an autonomous mode selector. The selector is sent to SmartDashboard to be set.
+	 * 
+	 * Set a default choice by calling {@link SendableChooser#addDefault} and set other choices by calling {@link SendableChooser#addObject}
+	 */
 	public void autoChooserInit() {
 		chooser.addDefault("Do Nothing", new DoNothingCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 	
+	/**
+	 * Initialize the {@link TCPServer}
+	 */
 	public void tcpServerInit() {
 		ArrayList<NetworkingDataType> types = new ArrayList<>();
-		types.add(new NetworkingDataType('a', "angle"));
-		types.add(new NetworkingDataType('d', "distance"));
-		types.add(new NetworkingDataType('t', "time"));
+		types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
+		types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
+		types.add(new NetworkingDataType('t', "time")); //TODO: Coprocessor: Code timestamps
 		TCPServer.init(types);
 	}
 

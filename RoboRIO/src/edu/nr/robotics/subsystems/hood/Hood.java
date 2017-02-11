@@ -38,7 +38,7 @@ public class Hood extends NRSubsystem {
 	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
-			talon = new CANTalon(RobotMap.HOOD_TALON);
+			talon = new CANTalon(RobotMap.HOOD_TALON_PORT);
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);

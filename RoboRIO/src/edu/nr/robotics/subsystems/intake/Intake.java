@@ -19,12 +19,12 @@ public class Intake extends NRSubsystem {
 	
 	private Intake() { 
 		if (EnabledSubsystems.INTAKE_ENABLED) { 
-			lowTalon = new CANTalon(RobotMap.INTAKE_LOW_TALON);
+			lowTalon = new CANTalon(RobotMap.INTAKE_LOW_TALON_PORT);
 			lowTalon.changeControlMode(TalonControlMode.PercentVbus);
 			lowTalon.enableBrakeMode(true);
 			lowTalon.enable();
 		
-			highTalon = new CANTalon(RobotMap.INTAKE_HIGH_TALON);
+			highTalon = new CANTalon(RobotMap.INTAKE_HIGH_TALON_PORT);
 			highTalon.changeControlMode(TalonControlMode.PercentVbus);
 			highTalon.enableBrakeMode(true);
 			highTalon.enable();

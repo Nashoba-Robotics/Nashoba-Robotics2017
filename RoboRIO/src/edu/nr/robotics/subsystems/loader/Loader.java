@@ -29,7 +29,7 @@ public class Loader extends NRSubsystem {
 	
 	private Loader() { 
 		if (EnabledSubsystems.LOADER_ENABLED) { 		
-			talon = new CANTalon(RobotMap.LOADER_TALON);
+			talon = new CANTalon(RobotMap.LOADER_TALON_PORT);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talon.setF(F);

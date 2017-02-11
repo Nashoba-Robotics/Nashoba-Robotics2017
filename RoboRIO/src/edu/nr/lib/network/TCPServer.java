@@ -10,14 +10,19 @@ import java.util.Collection;
 
 /**
  * 
- * A TCP server that listens for data on a new thread.
+ * A TCP server that listens for data on a new thread on a given port.
+ * Not all ports are allowed to be used by the radio, so this should be accounted for.
+ * The 2017 game manual (as of team update 10) allows ports 5800-5810 for non-preallocated team use. 
  * 
- * It takes data in the following format: byte 0: identifier (character)
- * byte 1-4: data (int)
+ * It takes data in the following format: 
+ * byte 0: identifier (character)
+ * byte 1-4: data (integer)
  * 
- * It stores data in a NetworkingDataType according to the identifier.
+ * It stores data in a {@link NetworkingDataType} according to the identifier.
  * 
- * All values that could be sent to the server need to match the data types that are given it, or they will be ignored
+ * All values that could be sent to the server need to match the data types that are given it, or they will be ignored.
+ * 
+ * An object can listen to a {@link NetworkingDataType} by implementing {@link NetworkingDataTypeListener} and calling {@link NetworkingDataType#addListener}
  *
  */
 public class TCPServer implements Runnable {
@@ -28,21 +33,33 @@ public class TCPServer implements Runnable {
 	
 	private static TCPServer singleton;
 	
+	private int port;
+	private static final int defaultPort = 5800; // Allowed for "Team Use" in 2017 game manual
+	
 	/**
-	 * Initialize the singleton
+	 * Initialize the singleton without any default {@link NetworkingDataType}s or port number.
 	 */
-	public static void init() {
+	public synchronized static void init() {
 		if(singleton == null) {
-			singleton = new TCPServer(null);
+			singleton = new TCPServer(null, defaultPort);
 		}
 	}
 	
 	/**
-	 * Initialize the singleton with the given data types.
+	 * Initialize the singleton without any default {@link NetworkingDataType}s and with the given port.
+	 */
+	public synchronized static void init(int port) {
+		if(singleton == null) {
+			singleton = new TCPServer(null, port);
+		}
+	}
+	
+	/**
+	 * Initialize the singleton with the given {@link NetworkingDataType}s and default port.
 	 * 
 	 * If the singleton already initialized, add the given data types to the singleton.
 	 * 
-	 * @param dataTypes A Collection of TCPServer.NetworkingDataType. All values that
+	 * @param dataTypes A Collection of {@link NetworkingDataType}. All values that
 	 *            		could be sent to the server need to match these data types (or others that are added later).
 	 *            
 	 *            		If this is null, no data types will be added initially.
@@ -50,7 +67,29 @@ public class TCPServer implements Runnable {
 	public static void init(Collection<? extends NetworkingDataType> dataTypes) {
 		if(dataTypes != null) {
 			if(singleton == null) {
-				singleton = new TCPServer(dataTypes);
+				singleton = new TCPServer(dataTypes, defaultPort);
+			} else {
+				singleton.addDataTypes(dataTypes);
+			}
+		} else {
+			init();
+		}
+	}
+	
+	/**
+	 * Initialize the singleton with the given {@link NetworkingDataType}s and given port.
+	 * 
+	 * If the singleton already initialized, add the given data types to the singleton.
+	 * 
+	 * @param dataTypes A Collection of {@link NetworkingDataType}. All values that
+	 *            		could be sent to the server need to match these data types (or others that are added later).
+	 *            
+	 *            		If this is null, no data types will be added initially.
+	 */
+	public static void init(Collection<? extends NetworkingDataType> dataTypes, int port) {
+		if(dataTypes != null) {
+			if(singleton == null) {
+				singleton = new TCPServer(dataTypes, port);
 			} else {
 				singleton.addDataTypes(dataTypes);
 			}
@@ -65,7 +104,7 @@ public class TCPServer implements Runnable {
 	}
 	
 	/**
-	 * Has the robot received data yet?
+	 * Has the server received data yet?
 	 * 
 	 * Once this becomes true, it never becomes false
 	 */
@@ -74,7 +113,7 @@ public class TCPServer implements Runnable {
 	}
 
 	/**
-	 * Is the robot connected to a client?
+	 * Is the server connected to a client?
 	 */
 	public boolean isConnected() {
 		return m_isConnected;
@@ -85,17 +124,26 @@ public class TCPServer implements Runnable {
 	/**
 	 * Create a TCP server on a new thread.
 	 * 
+	 * It listens on the given port
+	 * 
 	 * @param dataTypes
-	 *            A Collection of TCPServer.NetworkingDataType. All values that
+	 *            A Collection of {@link NetworkingDataType}. All values that
 	 *            could be sent to the server need to match these data types (or others that are added later).
 	 *            
 	 *            If this is null, no data types will be added initially.
+	 * @param port
+	 * 			  The port to listen to. Not all ports are allowed to be used by the radio, so this should be accounted for.
+	 * 
+	 * 			  The 2017 game manual (as of team update 10) allows ports 5800-5810 for non-preallocated team use.
 	 */
-	private TCPServer(Collection<? extends NetworkingDataType> dataTypes) {
+	private TCPServer(Collection<? extends NetworkingDataType> dataTypes, int port) {
+		this.port = port;
+		
 		data = new ArrayList<>();
 		if(dataTypes != null) {
 			data.addAll(dataTypes);
 		}
+		
 		new Thread(this).start();
 	}
 	
@@ -110,7 +158,7 @@ public class TCPServer implements Runnable {
 	}
 	
 	/**
-	 * Add the given data type to the list to listen for.
+	 * Add the given {@link NetworkingDataType} to the list to listen for.
 	 * 
 	 * If the data type overlaps with one already in the list, then it is not added.
 	 * 
@@ -134,13 +182,13 @@ public class TCPServer implements Runnable {
 	}
 	
 	/**
-	 * Add the given data types to the list to listen for.
+	 * Add the given {@link NetworkingDataType}s to the list to listen for.
 	 * 
 	 * If a data type overlaps with one already in the list, then it is not added.
 	 * 
 	 * Overlap happens if either the name or identifier matches any already existing name or identifier.
 	 * 
-	 * @param dataTypes The collection of NetworkingDataTypes to add
+	 * @param dataTypes The collection of {@link NetworkingDataType} to add
 	 * @return false if there is no overlap, true if there is overlap for at least one data type (or dataTypes is null).
 	 */
 	public boolean addDataTypes(Collection<? extends NetworkingDataType> dataTypes) {
@@ -160,7 +208,7 @@ public class TCPServer implements Runnable {
 	/**
 	 * Get the data type that matches the identifier
 	 * 
-	 * @param identifier a character that matches a NetworkingDataType
+	 * @param identifier a character that matches a {@link NetworkingDataType}
 	 * @return the data that matches the identifier, or null if none do
 	 */
 	public NetworkingDataType getType(char identifier) {
@@ -175,7 +223,7 @@ public class TCPServer implements Runnable {
 	/**
 	 * Get the data type that matches the name
 	 * 
-	 * @param identifier a character that matches a NetworkingDataType
+	 * @param identifier a character that matches a {@link NetworkingDataType}
 	 * @return the data that matches the identifier, or null if none do
 	 */
 	public NetworkingDataType getType(String name) {
@@ -190,7 +238,7 @@ public class TCPServer implements Runnable {
 	/**
 	 * Get the data type that matches the identifier
 	 * 
-	 * @param identifier a character that matches a NetworkingDataType
+	 * @param identifier a character that matches a {@link NetworkingDataType}
 	 * @return the data that matches the identifier, or 0 if none do
 	 */
 	public int getValue(char identifier) {
@@ -205,7 +253,7 @@ public class TCPServer implements Runnable {
 	/**
 	 * Get the data type that matches the name
 	 * 
-	 * @param name a name that matches a NetworkingDataType
+	 * @param name a name that matches a {@link NetworkingDataType}
 	 * @return the type that matches the name, or 0 if none do
 	 */
 	public int getValue(String name) {
@@ -222,8 +270,7 @@ public class TCPServer implements Runnable {
 		while (true) {
 			try {
 				@SuppressWarnings("resource")
-				ServerSocket socket = new ServerSocket(5800); 
-				// Allowed for "Team Use" in 2017 game manual
+				ServerSocket socket = new ServerSocket(port); 
 				
 				while (true) {
 					m_isConnected = false;
@@ -244,6 +291,7 @@ public class TCPServer implements Runnable {
 							type.data = ((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
 									+ (data[3] & 0xFF);
 							m_hasData = true;
+							type.updateListeners();
 						} else {
 							inFromClient.read(new char[4], 0, 4);
 						}
@@ -256,8 +304,14 @@ public class TCPServer implements Runnable {
 		}
 	}
 
+	/**
+	 * A type of data that will be sent to the server. An object can listen to the data type by implementing {@link NetworkingDataTypeListener}.
+	 *
+	 */
 	public static class NetworkingDataType {
-
+		
+		ArrayList<NetworkingDataTypeListener> listeners;
+		
 		/**
 		 * Create a networking data type.
 		 * 
@@ -270,6 +324,8 @@ public class TCPServer implements Runnable {
 		public NetworkingDataType(char identifier, String name) {
 			this.identifier = identifier;
 			this.name = name;
+			
+			this.listeners = new ArrayList<>();
 		}
 
 		/**
@@ -287,6 +343,20 @@ public class TCPServer implements Runnable {
 		 * This is the actual data that is sent.
 		 */
 		private int data = 0;
+		
+		public void addListener(NetworkingDataTypeListener listener) {
+			listeners.add(listener);
+		}
+		
+		public void removeListener(NetworkingDataTypeListener listener) {
+			listeners.remove(listener);
+		}
+		
+		private void updateListeners() {
+			for(NetworkingDataTypeListener listener : listeners) {
+				listener.updateDataType(this, this.data);
+			}
+		}
 
 	}
 
