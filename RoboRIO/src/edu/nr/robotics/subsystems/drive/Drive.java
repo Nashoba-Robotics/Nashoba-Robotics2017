@@ -15,35 +15,23 @@ public class Drive extends NRSubsystem {
 	private static Drive singleton;
 
 	private HistoricalCANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
-
-	/**
-	 * The diameter of the wheel, in feet
-	 */
-	private static final double WHEEL_DIAMETER = (4.0 / 12.0); //TODO: Drive: Get wheel diameter
 	
 	/**
 	 * The distance the wheel travels in a single revolution, in feet
 	 * 
 	 * This is equivalent to the circumference of the wheel
 	 */
-	private static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
-	
-	/**
-	 * The number of seconds per minute. This is used to convert from feet per second to rpm.
-	 * 
-	 * If you're actually looking at this JavaDoc, you're a bit silly...
-	 */
-	private static final double SECONDS_PER_MINUTE = 60;
+	private static final double DISTANCE_PER_REV = Math.PI * RobotMap.DRIVE_WHEEL_DIAMETER;
 	
 	/**
 	 * The maximum speed of the robot in low gear, in rotations per minute
 	 */
-	private static final double MAX_LOW_GEAR_RPM = RobotMap.MAX_DRIVE_LOW_GEAR_SPEED / DISTANCE_PER_REV * SECONDS_PER_MINUTE;
+	private static final double MAX_LOW_GEAR_RPM = RobotMap.MAX_DRIVE_LOW_GEAR_SPEED / DISTANCE_PER_REV * RobotMap.SECONDS_PER_MINUTE;
 
 	/**
 	 * The maximum speed of the robot in high gear, in rotations per minute
 	 */
-	private static final double MAX_HIGH_GEAR_RPM = RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED / DISTANCE_PER_REV * SECONDS_PER_MINUTE;
+	private static final double MAX_HIGH_GEAR_RPM = RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED / DISTANCE_PER_REV * RobotMap.SECONDS_PER_MINUTE;
 
 	/**
 	 * The number of encoder ticks per wheel revolution
