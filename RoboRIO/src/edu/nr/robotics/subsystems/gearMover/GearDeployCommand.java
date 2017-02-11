@@ -8,9 +8,9 @@ import edu.nr.lib.commandbased.NRCommand;
  * This should be done at the beginning of autonomous and then hopefully never touched again. It will also be controlled by a button.
  *
  */
-public class DeployGearCommand extends NRCommand {
+public class GearDeployCommand extends NRCommand {
 
-	public DeployGearCommand() {
+	public GearDeployCommand() {
 		super(GearMover.getInstance());
 	}
 	

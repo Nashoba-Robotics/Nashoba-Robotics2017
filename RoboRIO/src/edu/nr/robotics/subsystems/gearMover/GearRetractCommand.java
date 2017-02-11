@@ -2,9 +2,9 @@ package edu.nr.robotics.subsystems.gearMover;
 
 import edu.nr.lib.commandbased.NRCommand;
 
-public class RetractGearCommand extends NRCommand {
+public class GearRetractCommand extends NRCommand {
 
-	public RetractGearCommand() {
+	public GearRetractCommand() {
 		super(GearMover.getInstance());
 	}
 	
