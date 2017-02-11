@@ -26,7 +26,7 @@ public class Robot extends SampleRobot {
 	public void robotInit() {
 		shooterTalon = new CANTalon(RobotMap.shooterTalon);
 		shooterTalon.enableBrakeMode(false);
-		shooterTalon.changeControlMode(TalonControlMode.Speed);
+		shooterTalon.changeControlMode(TalonControlMode.PercentVbus);
 		shooterTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		shooterTalon.setF(turn_F_SHOOTER);
 		shooterTalon.setP(turn_P_SHOOTER);
@@ -36,7 +36,7 @@ public class Robot extends SampleRobot {
 		
 		shooterTalon.reverseSensor(true);
 		
-		SmartDashboard.putNumber("Goal Shooter Speed", 0);	
+		SmartDashboard.putNumber("Goal Shooter Speed", SmartDashboard.getNumber("Goal Shooter Speed", 0));	
 	}
 
 	public void setMotorSpeed(double speed) {
