@@ -1,6 +1,7 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.commandbased.CancelCommand;
+import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
@@ -19,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
-public class OI implements SmartDashboardSource{
+public class OI implements SmartDashboardSource, Periodic {
 
 	private static final double JOYSTICK_DEAD_ZONE = 0.15;
 
@@ -215,5 +216,12 @@ public class OI implements SmartDashboardSource{
 	
 	public boolean isHoodNonZero() {
 		return getHoodValue() != 0;
+	}
+
+	@Override
+	public void periodic() {
+		
+		
+		
 	}
 }

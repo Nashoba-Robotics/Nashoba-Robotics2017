@@ -27,6 +27,7 @@ public class Shooter extends NRSubsystem {
 	public static double I = 0;
 	public static double D = 0;
 
+	private boolean autoAlign = false;
 	
 	private Shooter() { 
 		if (EnabledSubsystems.SHOOTER_ENABLED) { 
@@ -109,8 +110,22 @@ public class Shooter extends NRSubsystem {
 		}
 	}
 
+	/**
+	 * Gets the speed of the shooter
+	 * 
+	 * @return speed of the shooter in rpm
+	 */
 	public double getSpeed() {
 		return talon.getSpeed();
+	}
+	
+	/**
+	 * Used to see is the shooter speed is being influenced by camera or by operator
+	 * 
+	 * @return is the shooter speed in autonomous mode
+	 */
+	public boolean isAutoAlign() {
+		return autoAlign;
 	}
 
 }

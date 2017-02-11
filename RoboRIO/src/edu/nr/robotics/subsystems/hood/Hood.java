@@ -36,6 +36,8 @@ public class Hood extends NRSubsystem {
 	public static final int MOTION_MAGIC = 0;
 	public static final int OPERATOR_CONTROL = 1;
 	
+	private boolean autoAlign = false;
+	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
 			talon = new CANTalon(RobotMap.HOOD_TALON_PORT);
@@ -157,6 +159,15 @@ public class Hood extends NRSubsystem {
 
 	public double getPosition() {
 		return talon.getPosition();
+	}
+	
+	/**
+	 * Used to see is the hood angle is being influenced by camera or by operator
+	 * 
+	 * @return is the shooter speed in autonomous mode
+	 */
+	public boolean isAutoAlign() {
+		return autoAlign;
 	}
 	
 }
