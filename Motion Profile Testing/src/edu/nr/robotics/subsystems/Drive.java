@@ -125,11 +125,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			SmartDashboard.putNumber("kp", kp);
 			SmartDashboard.putNumber("kp_theta", kp_theta);
 
-			SmartDashboard.putNumber("X Waypoint 1", 0);
-			SmartDashboard.putNumber("X Waypoint 2", 0);
-			SmartDashboard.putNumber("Y Waypoint 1", 0);
-			SmartDashboard.putNumber("Y Waypoint 2", 0);
-			SmartDashboard.putNumber("End Angle 1", 0);
+			SmartDashboard.putNumber("X Waypoint 1", 2.5);
+			SmartDashboard.putNumber("X Waypoint 2", 5);
+			SmartDashboard.putNumber("Y Waypoint 1", 1.5);
+			SmartDashboard.putNumber("Y Waypoint 2", 3);
+			SmartDashboard.putNumber("End Angle 1", 45);
 			SmartDashboard.putNumber("End Angle 2", 0);
 
 			new Thread(new Runnable() {
@@ -172,19 +172,19 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 				}
 			}).start();
 
-			/*
+			
 			FileWriter fw;
 			PrintWriter out;
 			BufferedWriter buffer;
 
 			try {
-				fw = new FileWriter("/home/lvuser/MotorSamples.csv", true);
+				fw = new FileWriter("/home/lvuser/MotorSamplesWithWeight.csv", true);
 				buffer = new BufferedWriter(fw);
 				out = new PrintWriter(buffer);
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						while (true) {
+						while (running) {
 							out.print(edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
 							out.print(",");
 							out.print(Drive.getInstance().talonLB.getSpeed());
@@ -199,7 +199,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			*/
+			
 		}
 	}
 
@@ -208,7 +208,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		return singleton;
 	}
 
-	public static void init() {
+	public synchronized static void init() {
 		if (singleton == null) {
 			try {
 				singleton = new Drive();
@@ -341,16 +341,16 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		Waypoint[] points = new Waypoint[] {
 
 				new Waypoint(0, 0, 0),
-				new Waypoint(0.25, 0, 0),
-				//new Waypoint(SmartDashboard.getNumber("X Waypoint 1", 0), SmartDashboard.getNumber("Y Waypoint 1", 0),
-				//		Pathfinder.d2r(SmartDashboard.getNumber("End Angle 1", 0))),
-				//new Waypoint(SmartDashboard.getNumber("X Waypoint 2", 0), SmartDashboard.getNumber("Y Waypoint 2", 0),
-				//		Pathfinder.d2r(SmartDashboard.getNumber("End Angle 2", 0)))
-				new Waypoint(2.5, 1.75, Pathfinder.d2r(60)),
-				new Waypoint(4.75, 3.5, 0),
-				new Waypoint(5.0, 3.5, 0)
+				//new Waypoint(0.25, 0, 0),
+				new Waypoint(SmartDashboard.getNumber("X Waypoint 1", 2.5), SmartDashboard.getNumber("Y Waypoint 1", 1.5),
+						Pathfinder.d2r(SmartDashboard.getNumber("End Angle 1", 45))),
+				new Waypoint(SmartDashboard.getNumber("X Waypoint 2", 5), SmartDashboard.getNumber("Y Waypoint 2", 3),
+						Pathfinder.d2r(SmartDashboard.getNumber("End Angle 2", 0)))
+				//new Waypoint(2.5, 1.75, Pathfinder.d2r(60)),
+				//new Waypoint(4.75, 3.5, 0),
+				//new Waypoint(5.0, 3.5, 0)
 		};
-
+		
 		profiler.setTrajectory(points);
 		profiler.enable();
 	}
