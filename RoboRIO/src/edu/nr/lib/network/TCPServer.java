@@ -31,26 +31,47 @@ public class TCPServer implements Runnable {
 
 	private boolean m_isConnected = false;
 	
-	private static TCPServer singleton;
+	private static TCPServer turret_singleton;
+	private static TCPServer gear_singleton;
 	
 	private int port;
-	private static final int defaultPort = 5800; // Allowed for "Team Use" in 2017 game manual
+	public static final int defaultPort = 5800; // Allowed for "Team Use" in 2017 game manual
+	
+	public enum Num {
+		turret, gear
+	}
 	
 	/**
 	 * Initialize the singleton without any default {@link NetworkingDataType}s or port number.
 	 */
-	public synchronized static void init() {
-		if(singleton == null) {
-			singleton = new TCPServer(null, defaultPort);
+	public static void init(Num num) {
+		if(num == Num.turret) {
+			if(turret_singleton == null) {
+				turret_singleton = new TCPServer(null, defaultPort);
+			}
+		} else {
+			if(num == Num.gear) {
+				if(gear_singleton == null) {
+					gear_singleton = new TCPServer(null, defaultPort);
+				}
+			}
 		}
 	}
 	
 	/**
 	 * Initialize the singleton without any default {@link NetworkingDataType}s and with the given port.
 	 */
-	public synchronized static void init(int port) {
-		if(singleton == null) {
-			singleton = new TCPServer(null, port);
+	public synchronized static void init(Num num, int port) {
+		if(num == Num.turret) {
+			if(turret_singleton == null) {
+				turret_singleton = new TCPServer(null, port);
+			}
+		} else {
+			if(num == Num.gear) {
+				if(gear_singleton == null) {
+					gear_singleton = new TCPServer(null, port);
+				}
+			}
 		}
 	}
 	
@@ -64,15 +85,25 @@ public class TCPServer implements Runnable {
 	 *            
 	 *            		If this is null, no data types will be added initially.
 	 */
-	public static void init(Collection<? extends NetworkingDataType> dataTypes) {
+	public static void init(Num num, Collection<? extends NetworkingDataType> dataTypes) {
 		if(dataTypes != null) {
-			if(singleton == null) {
-				singleton = new TCPServer(dataTypes, defaultPort);
+			if(num == Num.turret) {
+				if(turret_singleton == null) {
+					turret_singleton = new TCPServer(dataTypes, defaultPort);
+				} else {
+					turret_singleton.addDataTypes(dataTypes);
+				}
 			} else {
-				singleton.addDataTypes(dataTypes);
+				if(num == Num.gear) {
+					if(gear_singleton == null) {
+						gear_singleton = new TCPServer(dataTypes, defaultPort);
+					} else {
+						gear_singleton.addDataTypes(dataTypes);
+					}
+				} 
 			}
 		} else {
-			init();
+			init(num);
 		}
 	}
 	
@@ -86,23 +117,42 @@ public class TCPServer implements Runnable {
 	 *            
 	 *            		If this is null, no data types will be added initially.
 	 */
-	public static void init(Collection<? extends NetworkingDataType> dataTypes, int port) {
+	public static void init(Num num, Collection<? extends NetworkingDataType> dataTypes, int port) {
 		if(dataTypes != null) {
-			if(singleton == null) {
-				singleton = new TCPServer(dataTypes, port);
+			if(num == Num.turret) {
+				if(turret_singleton == null) {
+					turret_singleton = new TCPServer(dataTypes, port);
+				} else {
+					turret_singleton.addDataTypes(dataTypes);
+				}
 			} else {
-				singleton.addDataTypes(dataTypes);
+				if(num == Num.gear) {
+					if(gear_singleton == null) {
+						gear_singleton = new TCPServer(dataTypes, port);
+					} else {
+						gear_singleton.addDataTypes(dataTypes);
+					}
+				} 
 			}
 		} else {
-			init();
+			init(num);
 		}
 	}
 	
-	public static TCPServer getInstance() {
-		init();
-		return singleton;
+	public static TCPServer getInstance(Num num) {
+		init(num);
+		
+		if(num == Num.turret) {
+			return turret_singleton;
+		} else {
+			if(num == Num.gear) {
+				return gear_singleton;
+			} else {
+				return null;
+			}
+		}
 	}
-	
+		
 	/**
 	 * Has the server received data yet?
 	 * 
