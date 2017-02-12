@@ -2,9 +2,6 @@ package edu.nr.robotics.multicommands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-/**
- *
- */
 public class GearPegAlignCommand extends CommandGroup {
 
     public GearPegAlignCommand() {

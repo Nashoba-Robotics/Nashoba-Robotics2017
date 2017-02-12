@@ -13,6 +13,7 @@ public class HoodDeltaPositionCommand extends NRCommand{
 	
 	@Override
 	public void onStart() {
+		Hood.getInstance().setAutoAlign(false);
 		Hood.getInstance().setPosition(Hood.getInstance().getPosition() + deltaPosition);
 	}
 }

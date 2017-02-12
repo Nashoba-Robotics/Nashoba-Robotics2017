@@ -54,6 +54,7 @@ public class Hood extends NRSubsystem {
 			talon.setEncPosition(0);
 			talon.reverseSensor(false); //TODO: Hood: Find phase
 			talon.enable();
+			getInstance().setAutoAlign(true);
 		}
 	}
 

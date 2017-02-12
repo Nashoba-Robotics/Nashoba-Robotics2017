@@ -8,6 +8,7 @@ import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.NetworkingDataType;
+import edu.nr.robotics.subsystems.shooter.Shooter;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -84,8 +85,6 @@ public class Robot extends IterativeRobot {
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
-	
-		
 	}
 
 	/**

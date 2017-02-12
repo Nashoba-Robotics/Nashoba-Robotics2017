@@ -43,6 +43,7 @@ public class Shooter extends NRSubsystem {
 			talon.setEncPosition(0);
 			talon.reverseSensor(false); //TODO: Shooter: Find phase
 			talon.enable();
+			getInstance().setAutoAlign(true);
 		}
 	}
 
@@ -76,7 +77,7 @@ public class Shooter extends NRSubsystem {
 	}
 	
 	/**
-	 * Function that is periodically called once the Shooter class is initialized
+	 * Method that is periodically called once the Shooter class is initialized
 	 */
 	@Override
 	public void periodic() {

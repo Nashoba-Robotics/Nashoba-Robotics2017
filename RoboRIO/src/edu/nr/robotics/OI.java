@@ -4,6 +4,7 @@ import edu.nr.lib.commandbased.CancelCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.interfaces.SmartDashboardSource;
+import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
@@ -37,6 +38,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int INCREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
 	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
 	
+	private static final int ENABLE_AUTO_TRACKING_BUTTON_NUMBER = -1;
 	
 	private static final int GEAR_TOGGLE_BUTTON_NUMBER = -1;
 
@@ -102,7 +104,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 
 	public void initOperatorRight() {
-
+		new JoystickButton(operatorRight, ENABLE_AUTO_TRACKING_BUTTON_NUMBER).whenPressed(new EnableAutoTrackingCommand());
 	}
 
 	public static OI getInstance() {

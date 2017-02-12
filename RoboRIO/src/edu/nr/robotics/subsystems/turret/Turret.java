@@ -55,6 +55,7 @@ public class Turret extends NRSubsystem {
 			talon.setEncPosition(0);
 			talon.reverseSensor(false); //TODO: Turret: Find phase
 			talon.enable();
+			getInstance().setAutoAlign(true);
 		}
 	}
 
