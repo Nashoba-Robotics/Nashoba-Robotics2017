@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
-import jaci.pathfinder.followers.DistanceFollower;
 import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
@@ -63,15 +62,12 @@ private final Timer timer;
         this.points = new Waypoint[] {
 				new Waypoint(0,0,0),
 				new Waypoint(1,0,0)
-
         };
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
 		this.modifier = new TankModifier(trajectory).modify(0.67948718);
 		this.left = new EncoderFollower(modifier.getLeftTrajectory());
 		this.right = new EncoderFollower(modifier.getRightTrajectory());
-		Drive.getInstance();
 		this.left.configureEncoder(Drive.getInstance().talonLB.getEncPosition(), this.encoderTicksPerRevolution, RobotMap.WHEEL_DIAMETER);
-		Drive.getInstance();
 		this.right.configureEncoder(Drive.getInstance().talonRB.getEncPosition(), this.encoderTicksPerRevolution, RobotMap.WHEEL_DIAMETER);
 		timer = new Timer();
 		timer.scheduleAtFixedRate(this, 0, this.period);
@@ -109,8 +105,8 @@ private final Timer timer;
 
 				System.out.println("Enabled!");
 
-				double outputLeft = left.calculate(Drive.getInstance().talonLB.getEncPosition());
-				double outputRight = right.calculate(Drive.getInstance().talonRB.getEncPosition());
+				double prelimOutputLeft = left.calculate((int)((source.pidGetLeft() - initialPositionLeft) * this.encoderTicksPerRevolution));
+				double prelimOutputRight = -right.calculate((int)(-(source.pidGetRight() - initialPositionRight) * this.encoderTicksPerRevolution));
 				
 				double gyroHeading = NavX.getInstance().getYaw(AngleUnit.DEGREE);
 				double desiredHeading = Pathfinder.r2d(left.getHeading());
@@ -118,17 +114,20 @@ private final Timer timer;
 				double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - gyroHeading);
 				double turn = -kp_theta * angleDifference;
 				
-				out.pidWrite(outputLeft + turn, outputRight - turn);
+				double outputLeft = prelimOutputLeft + turn;
+				double outputRight = prelimOutputRight - turn;
 				
-				SmartDashboard.putNumber("Output Left", outputLeft + turn);
-				SmartDashboard.putNumber("Output Right", outputRight - turn);
+				out.pidWrite(outputLeft, outputRight);
+				
+				SmartDashboard.putNumber("Output Left", outputLeft);
+				SmartDashboard.putNumber("Output Right", outputRight);
 				
 				int place = (int)((edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - timeSinceStart) * 1000 / this.period);
 				
 				int spot = Math.min(place, modifier.getLeftTrajectory().length() - 1);
 				
 				if(spot > 0) {
-					SmartDashboard.putString("Motion Profiler Angle", Pathfinder.boundHalfDegrees(gyroHeading)+ " : " + Pathfinder.boundHalfDegrees(desiredHeading) + " : " + Pathfinder.boundHalfDegrees(Pathfinder.r2d(modifier.getLeftTrajectory().get(spot).heading)));
+					SmartDashboard.putString("Motion Profiler Angle", -Pathfinder.boundHalfDegrees(gyroHeading) + " : " + Pathfinder.boundHalfDegrees(desiredHeading) + " : " + Pathfinder.boundHalfDegrees(Pathfinder.r2d(modifier.getLeftTrajectory().get(spot).heading)));
 					SmartDashboard.putString("Motion Profiler X Left String",(source.pidGetLeft() - initialPositionLeft) / ((1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/) + " : " + modifier.getLeftTrajectory().get(spot).position);
 					SmartDashboard.putString("Motion Profiler X Right String", -(source.pidGetRight() - initialPositionRight) / (1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/ + " : " + modifier.getRightTrajectory().get(spot).position);
 				}

@@ -5,6 +5,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.nr.lib.AngleGyroCorrection;
+import edu.nr.lib.AngleUnit;
+import edu.nr.lib.NavX;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.interfaces.GyroCorrection;
@@ -23,7 +25,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	//In milliseconds
 	private final long period;
-	private static final long defaultPeriod = 10; //100 Hz 
+	private static final long defaultPeriod = 20; //50 Hz 
 		
 	private boolean enabled = false;
 	private DoublePIDOutput out;
@@ -59,7 +61,6 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
         this.points = new Waypoint[] {
 				new Waypoint(0,0,0),
 				new Waypoint(1,0,0)
-
         };
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
 		this.modifier = new TankModifier(trajectory).modify(0.67948718);
@@ -109,7 +110,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/);
 				double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (RobotMap.WHEEL_DIAMETER * Math.PI * .0254)) /*Rotations per meter*/);
 				
-				double currentHeading = -gyroCorrection.getAngleErrorDegrees();
+				double currentHeading = -NavX.getInstance().getYaw(AngleUnit.DEGREE);
+				//double currentHeading = -gyroCorrection.getAngleErrorDegrees();
 				double desiredHeading = Pathfinder.r2d(left.getHeading());
 				
 				double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - currentHeading);
@@ -192,6 +194,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		gyroCorrection.clearInitialValue();
 		timeSinceStart = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 		lastTime = timeSinceStart;
+		NavX.getInstance().reset();
 	}
 	
 	/**
@@ -225,6 +228,10 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	public void setKP(double kp) {
 		this.kp = kp;
+	}
+	
+	public void setKI(double ki) {
+		this.ki = ki;
 	}
 	
 	public void setKD(double kd) {
