@@ -16,9 +16,9 @@ public class TurretMobileAngleCorrectionCommand extends NRCommand{
 	
 	@Override
 	public void onExecute() {
-		long timeStamp = TCPServer.getInstance().getValue('t');
-		long histAngle = TCPServer.getInstance().getValue('a');
-		long histDist = TCPServer.getInstance().getValue('d');
+		long timeStamp = TCPServer.getInstance(TCPServer.Num.turret).getValue('t');
+		long histAngle = TCPServer.getInstance(TCPServer.Num.turret).getValue('a');
+		long histDist = TCPServer.getInstance(TCPServer.Num.turret).getValue('d');
 		long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000);
 		long deltaTime = currentTime - timeStamp;
 		
