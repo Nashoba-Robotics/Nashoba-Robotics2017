@@ -12,9 +12,9 @@ public class TurretStationaryAngleCorrectionCommand extends NRCommand{
 	
 	@Override
 	public void onExecute() {
-		long angle = TCPServer.getInstance(Num.turret).getValue('a'); //TODO: TurretStillAngleCorrectionCommand: Get angle from data
+		long angle = Num.turret.getInstance().getValue('a'); //TODO: TurretStillAngleCorrectionCommand: Get angle from data
 		angle /= 360; //Puts angle into rotations
-		long timeStamp = TCPServer.getInstance(Num.turret).getValue('t');//TODO: TurretStillAngleCorrectionCommand: Get time stamp from data
+		long timeStamp = Num.turret.getInstance().getValue('t');//TODO: TurretStillAngleCorrectionCommand: Get time stamp from data
 		long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000);
 		double deltaTime = currentTime - timeStamp;
 		double previousPosition = Turret.getInstance().getHistoricalPosition(deltaTime);
