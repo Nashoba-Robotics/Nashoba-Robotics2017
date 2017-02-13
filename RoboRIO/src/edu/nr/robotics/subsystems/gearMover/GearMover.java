@@ -6,6 +6,7 @@ import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GearMover extends NRSubsystem {
 	public static GearMover singleton;
@@ -67,7 +68,12 @@ public class GearMover extends NRSubsystem {
 
 	@Override
 	public void smartDashboardInfo() {
-
+		if(EnabledSubsystems.GEAR_MOVER_SMARTDASHBOARD_BASIC_ENABLED) {
+				
+		}
+		if(EnabledSubsystems.GEAR_MOVER_SMARTDASHBOARD_COMPLEX_ENABLED) {
+			
+		}
 	}
 
 	@Override

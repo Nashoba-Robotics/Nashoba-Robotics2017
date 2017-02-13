@@ -88,12 +88,16 @@ public class Intake extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (lowTalon != null && highTalon != null) {
-			SmartDashboard.putNumber("Low Intake Current", lowTalon.getOutputCurrent());
-			SmartDashboard.putNumber("High Intake Current", highTalon.getOutputCurrent());
-			SmartDashboard.putNumber("Low Intake Voltage", lowTalon.getOutputVoltage());
-			SmartDashboard.putNumber("High Intake Voltage", highTalon.getOutputVoltage());
-			SmartDashboard.putString("Low Intake Speed", lowTalon.getSpeed() + " : " + getInstance().lowMotorSetpoint);
-			SmartDashboard.putString("High Intake Speed", highTalon.getSpeed() + " : " + getInstance().highMotorSetpoint);
+			if(EnabledSubsystems.INTAKE_SMARTDASHBOARD_BASIC_ENABLED){
+				SmartDashboard.putNumber("Low Intake Current", lowTalon.getOutputCurrent());
+				SmartDashboard.putNumber("High Intake Current", highTalon.getOutputCurrent());
+				SmartDashboard.putString("Low Intake Speed", lowTalon.getSpeed() + " : " + getInstance().lowMotorSetpoint);
+				SmartDashboard.putString("High Intake Speed", highTalon.getSpeed() + " : " + getInstance().highMotorSetpoint);	
+			}
+			if(EnabledSubsystems.INTAKE_SMARTDASHBOARD_COMPLEX_ENABLED){
+				SmartDashboard.putNumber("Low Intake Voltage", lowTalon.getOutputVoltage());
+				SmartDashboard.putNumber("High Intake Voltage", highTalon.getOutputVoltage());
+			}
 		}
 	}
 
