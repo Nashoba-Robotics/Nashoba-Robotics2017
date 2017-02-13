@@ -158,10 +158,14 @@ public class Turret extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
-			SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
-			SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
-			SmartDashboard.putString("Turret Position", talon.getPosition() + " : " + getInstance().positionSetpoint);
+			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_BASIC_ENABLED){
+				SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
+				SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
+				SmartDashboard.putString("Turret Position", talon.getPosition() + " : " + getInstance().positionSetpoint);	
+			}
+			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_COMPLEX_ENABLED){
+				SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
+			}
 		}
 	}
 

@@ -12,8 +12,8 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		long distance = TCPServer.getInstance(Num.turret).getValue('d');
-		long timeStamp = TCPServer.getInstance(Num.turret).getValue('t');
+		long distance = Num.turret.getInstance().getValue('d');
+		long timeStamp = Num.turret.getInstance().getValue('t');
 		long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000);
 		double deltaTime = currentTime - timeStamp;
 		double previousPosition = Hood.getInstance().getHistoricalPosition(deltaTime);

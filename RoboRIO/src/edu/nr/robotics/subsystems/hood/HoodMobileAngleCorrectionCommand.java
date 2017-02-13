@@ -16,9 +16,9 @@ public class HoodMobileAngleCorrectionCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		long timeStamp = TCPServer.getInstance(TCPServer.Num.turret).getValue('t');
-		long histAngle = TCPServer.getInstance(TCPServer.Num.turret).getValue('a');
-		long histDist = TCPServer.getInstance(TCPServer.Num.turret).getValue('d');
+		long timeStamp = TCPServer.Num.turret.getInstance().getValue('t');
+		long histAngle = TCPServer.Num.turret.getInstance().getValue('a');
+		long histDist = TCPServer.Num.turret.getInstance().getValue('d');
 		long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000);
 		long deltaTime = currentTime - timeStamp;
 		

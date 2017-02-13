@@ -30,128 +30,95 @@ public class TCPServer implements Runnable {
 	private boolean m_hasData = false;
 
 	private boolean m_isConnected = false;
-	
-	private static TCPServer turret_singleton;
-	private static TCPServer gear_singleton;
-	
-	private int port;
-	public static final int defaultPort = 5800; // Allowed for "Team Use" in 2017 game manual
-	
-	public enum Num {
-		turret, gear
-	}
-	
-	/**
-	 * Initialize the singleton without any default {@link NetworkingDataType}s or port number.
-	 */
-	public static void init(Num num) {
-		if(num == Num.turret) {
-			if(turret_singleton == null) {
-				turret_singleton = new TCPServer(null, defaultPort);
-			}
-		} else {
-			if(num == Num.gear) {
-				if(gear_singleton == null) {
-					gear_singleton = new TCPServer(null, defaultPort);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Initialize the singleton without any default {@link NetworkingDataType}s and with the given port.
-	 */
-	public synchronized static void init(Num num, int port) {
-		if(num == Num.turret) {
-			if(turret_singleton == null) {
-				turret_singleton = new TCPServer(null, port);
-			}
-		} else {
-			if(num == Num.gear) {
-				if(gear_singleton == null) {
-					gear_singleton = new TCPServer(null, port);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Initialize the singleton with the given {@link NetworkingDataType}s and default port.
-	 * 
-	 * If the singleton already initialized, add the given data types to the singleton.
-	 * 
-	 * @param dataTypes A Collection of {@link NetworkingDataType}. All values that
-	 *            		could be sent to the server need to match these data types (or others that are added later).
-	 *            
-	 *            		If this is null, no data types will be added initially.
-	 */
-	public static void init(Num num, Collection<? extends NetworkingDataType> dataTypes) {
-		if(dataTypes != null) {
-			if(num == Num.turret) {
-				if(turret_singleton == null) {
-					turret_singleton = new TCPServer(dataTypes, defaultPort);
-				} else {
-					turret_singleton.addDataTypes(dataTypes);
-				}
-			} else {
-				if(num == Num.gear) {
-					if(gear_singleton == null) {
-						gear_singleton = new TCPServer(dataTypes, defaultPort);
-					} else {
-						gear_singleton.addDataTypes(dataTypes);
-					}
-				} 
-			}
-		} else {
-			init(num);
-		}
-	}
-	
-	/**
-	 * Initialize the singleton with the given {@link NetworkingDataType}s and given port.
-	 * 
-	 * If the singleton already initialized, add the given data types to the singleton.
-	 * 
-	 * @param dataTypes A Collection of {@link NetworkingDataType}. All values that
-	 *            		could be sent to the server need to match these data types (or others that are added later).
-	 *            
-	 *            		If this is null, no data types will be added initially.
-	 */
-	public static void init(Num num, Collection<? extends NetworkingDataType> dataTypes, int port) {
-		if(dataTypes != null) {
-			if(num == Num.turret) {
-				if(turret_singleton == null) {
-					turret_singleton = new TCPServer(dataTypes, port);
-				} else {
-					turret_singleton.addDataTypes(dataTypes);
-				}
-			} else {
-				if(num == Num.gear) {
-					if(gear_singleton == null) {
-						gear_singleton = new TCPServer(dataTypes, port);
-					} else {
-						gear_singleton.addDataTypes(dataTypes);
-					}
-				} 
-			}
-		} else {
-			init(num);
-		}
-	}
-	
-	public static TCPServer getInstance(Num num) {
-		init(num);
 		
-		if(num == Num.turret) {
-			return turret_singleton;
-		} else {
-			if(num == Num.gear) {
-				return gear_singleton;
-			} else {
-				return null;
+	private int port;
+	
+	/**
+	 * Allowed for "Team Use" in 2017 game manual
+	 */
+	public static final int defaultPort = 5800;
+	
+	/**
+	 * Which server to connect to.
+	 */
+	public enum Num {
+		turret, gear;
+		
+		private TCPServer singleton;
+		
+		/**
+		 * Initialize the singleton without any default {@link NetworkingDataType}s or port number.
+		 */
+		public synchronized void init() {
+			if(singleton == null) {
+				singleton = new TCPServer(null, defaultPort);
 			}
 		}
+		
+		/**
+		 * Initialize the singleton without any default {@link NetworkingDataType}s and with the given port.
+		 */
+		public synchronized void init(int port) {
+			if(singleton == null) {
+				singleton = new TCPServer(null, port);
+			}
+		}
+		
+
+		/**
+		 * Initialize the singleton with the given {@link NetworkingDataType}s and default port.
+		 * 
+		 * If the singleton already initialized, add the given data types to the singleton.
+		 * 
+		 * @param dataTypes A Collection of {@link NetworkingDataType}. All values that
+		 *            		could be sent to the server need to match these data types (or others that are added later).
+		 *            
+		 *            		If this is null, no data types will be added initially.
+		 */
+		public synchronized void init(Collection<? extends NetworkingDataType> dataTypes) {
+			if(dataTypes != null) {
+				if(singleton == null) {
+					singleton = new TCPServer(null, defaultPort);
+				} else {
+					singleton.addDataTypes(dataTypes);
+				}
+			} else {
+				init();
+			}
+		}
+		
+		
+		/**
+		 * Initialize the singleton with the given {@link NetworkingDataType}s and given port.
+		 * 
+		 * If the singleton already initialized, add the given data types to the singleton.
+		 * 
+		 * @param dataTypes A Collection of {@link NetworkingDataType}. All values that
+		 *            		could be sent to the server need to match these data types (or others that are added later).
+		 *            
+		 *            		If this is null, no data types will be added initially.
+		 */
+		public synchronized void init(Collection<? extends NetworkingDataType> dataTypes, int port) {
+			if(dataTypes != null) {
+				if(singleton == null) {
+					singleton = new TCPServer(null, port);
+				} else {
+					singleton.addDataTypes(dataTypes);
+				}
+			} else {
+				init();
+			}
+
+		}
+		
+		public synchronized TCPServer getInstance() {
+			init();
+			
+			return singleton;
+		}
+
 	}
+	
 		
 	/**
 	 * Has the server received data yet?

@@ -62,13 +62,13 @@ public class Robot extends IterativeRobot {
 		turret_cam_types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
 		turret_cam_types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
 		turret_cam_types.add(new NetworkingDataType('t', "time")); //TODO: Coprocessor: Code timestamps
-		TCPServer.init(Num.turret, turret_cam_types, TCPServer.defaultPort);
+		Num.turret.init(turret_cam_types, TCPServer.defaultPort);
 		
 		ArrayList<NetworkingDataType> gear_cam_types = new ArrayList<>();
 		gear_cam_types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
 		gear_cam_types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
 		gear_cam_types.add(new NetworkingDataType('t', "time")); //TODO: Coprocessor: Code timestamps
-		TCPServer.init(Num.gear, gear_cam_types, TCPServer.defaultPort + 1);
+		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 	}
 
 	/**

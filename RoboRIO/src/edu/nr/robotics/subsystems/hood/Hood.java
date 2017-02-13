@@ -148,10 +148,14 @@ public class Hood extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
-			SmartDashboard.putNumber("Hood Current", talon.getOutputCurrent());
-			SmartDashboard.putNumber("Hood Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Hood Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
-			SmartDashboard.putString("Hood Position", talon.getPosition() + " : " + getInstance().positionSetpoint);
+			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_BASIC_ENABLED) {
+				SmartDashboard.putNumber("Hood Current", talon.getOutputCurrent());
+				SmartDashboard.putString("Hood Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
+				SmartDashboard.putString("Hood Position", talon.getPosition() + " : " + getInstance().positionSetpoint);				
+			}
+			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_COMPLEX_ENABLED) {
+				SmartDashboard.putNumber("Hood Voltage", talon.getOutputVoltage());
+			}
 		}
 	}
 
