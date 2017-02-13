@@ -12,15 +12,15 @@ public class GearMover extends NRSubsystem {
 
 	public DoubleSolenoid GearMover;
 	public DoubleSolenoid GearGetPosition;
-	
+
 	public enum GearMoverState {
 		DEPLOYED, RETRACTED
 	}
-	
+
 	public enum GearGetPositionState {
 		DEPLOYED, RETRACTED
 	}
-	
+
 	public GearMoverState currentGearMoverState = GearMoverState.RETRACTED;
 	public GearGetPositionState currentGearGetPositionState = GearGetPositionState.RETRACTED;
 
@@ -54,7 +54,7 @@ public class GearMover extends NRSubsystem {
 		GearGetPosition.set(Value.kForward);
 		currentGearGetPositionState = GearGetPositionState.DEPLOYED;
 	}
-	
+
 	public void retractGearGetPositionIn() {
 		GearGetPosition.set(Value.kReverse);
 		currentGearGetPositionState = GearGetPositionState.RETRACTED;
@@ -79,6 +79,22 @@ public class GearMover extends NRSubsystem {
 	public void disable() {
 		GearMover.set(Value.kOff);
 		GearGetPosition.set(Value.kOff);
+	}
+
+	public boolean gearMoverIsDeployed() {
+		return currentGearMoverState == GearMoverState.DEPLOYED;
+	}
+
+	public boolean gearMoverIsRetracted() {
+		return currentGearMoverState == GearMoverState.RETRACTED;
+	}
+
+	public boolean gearGetPositionIsDeployed() {
+		return currentGearGetPositionState == GearGetPositionState.DEPLOYED;
+	}
+
+	public boolean gearGetPositionIsRetracted() {
+		return currentGearGetPositionState == GearGetPositionState.RETRACTED;
 	}
 
 }
