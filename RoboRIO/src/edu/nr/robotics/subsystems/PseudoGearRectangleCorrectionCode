@@ -1,0 +1,52 @@
+if (goodRectangle.length > 2) {
+
+	int maxHeight = 0;
+	int maxHeightIndex = -1;
+
+	for(int i = 0; i < goodRectangle.length; i++) {
+		if (goodRectangle[i].height > maxHeight) {
+			maxHeight = goodRectangle[i].height;
+			maxHeightIndex = i;
+		}
+	}	
+
+	int bottomRect = 0;
+	int bottomRectIndex = -1;
+
+	for(int i = 0; i < goodRectangle.length; i++) {
+		if (i != maxHeightIndex) {
+			if (goodRectangle[i].y > bottomRect) {
+				bottomRect = goodRectangle[i].y;
+				bottomRectIndex = i;
+			}
+		}
+	}
+
+	int topRectIndex = -1;
+
+	for(int i = 0; i < goodRectangle.length; i++) {
+		if (i != maxHeightIndex && i != bottomRectIndex) {
+			topRectIndex = i;
+		}
+	}
+
+	int leftRectIndex = -1;
+	int rightRectIndex = -1;
+
+	Rect newRect = new Rect();
+	if (goodRectangle[topRectIndex].x < goodRectangle[bottomRectIndex].x) {
+		newRect.x = goodRectangle[topRectIndex].x;
+		leftRectIndex = topRectIndex;
+		rightRectIndex = bottomRectIndex;
+	} else {
+		newRect.x = goodRectangle[bottomRectIndex].x;
+		leftRectIndex = bottomRectIndex;
+		rightRectIndex = topRectIndex;
+	}
+	newRect.y = goodRectangle[topRectIndex].y;
+	newRect.width = goodRectangle[rightRectIndex].x + goodRectangle[rightRectIndex].width - goodRectangle[leftRectIndex].x
+	newRect.height = goodRectangle[bottomRectIndex].height + goodRectangle[bottomRectIndex].y - goodRectangle[topRectIndex].y;
+
+	goodRectangleUpdate = [goodRectangle[maxHeightIndex], newRect];
+}
+

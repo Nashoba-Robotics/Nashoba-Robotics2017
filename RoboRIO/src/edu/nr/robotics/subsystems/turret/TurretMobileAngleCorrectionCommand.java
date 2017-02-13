@@ -1,4 +1,4 @@
-package edu.nr.robotics.multicommands;
+package edu.nr.robotics.subsystems.turret;
 
 import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
@@ -6,12 +6,11 @@ import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.drive.Drive;
-import edu.nr.robotics.subsystems.turret.Turret;
 
 public class TurretMobileAngleCorrectionCommand extends NRCommand{
 
 	public TurretMobileAngleCorrectionCommand() {
-		
+		super(Turret.getInstance());
 	}
 	
 	@Override
@@ -22,18 +21,17 @@ public class TurretMobileAngleCorrectionCommand extends NRCommand{
 		long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000);
 		long deltaTime = currentTime - timeStamp;
 		
-		//Camera offsets are offset from turret when turret is at 0 degrees (facing driving direction of robot)
-		double yCameraOffset = 0; //TODO: TurretMobileAngleCorrectionCommand: get y camera offset
-		double xCameraOffset = 0; //TODO: TurretMobileAngleCorrectionCommand: get x camera offset
-		double xTurretOffset = -7;
-		double yTurretOffset = -5.465;
+		double yCameraOffset = RobotMap.Y_CAMERA_OFFSET;
+		double xCameraOffset = RobotMap.X_CAMERA_OFFSET;
+		double xTurretOffset = RobotMap.X_TURRET_OFFSET;
+		double yTurretOffset = RobotMap.Y_TURRET_OFFSET;
 		
 		//Manipulates camera angle as if on center of robot
 		double z1 = Math.sqrt(Math.pow(xCameraOffset, 2) + Math.pow(yCameraOffset, 2));
 		double theta4 = 180 - Math.atan(yCameraOffset / xCameraOffset) - Math.atan(xTurretOffset / yTurretOffset);
 		double h4 = Math.sqrt(Math.pow(xTurretOffset, 2) + Math.pow(yTurretOffset, 2));
 		double h3 = Math.sqrt(Math.pow(h4, 2) + Math.pow(z1, 2) - 2 * h4 * z1 * Math.cos(theta4));
-		double theta5 = Turret.getInstance().getHistoricalPosition(deltaTime) - Math.atan(yCameraOffset / xCameraOffset);
+		double theta5 = Turret.getInstance().getHistoricalPosition(deltaTime) * 360 - Math.atan(yCameraOffset / xCameraOffset);
 		double theta6 = 90 - theta5 - Math.asin(h4 * Math.sin(theta4) / h3);
 		double histDistReal = Math.sqrt(Math.pow(histDist, 2) + Math.pow(h3, 2) - 2 * histDist * h3 * Math.cos(theta6 + histAngle));
 		double histAngleReal = 180 - Math.atan(xTurretOffset / yTurretOffset) - z1 * Math.sin(theta4) / h3 - histDist * Math.sin(theta6 + histAngle) / histDistReal;
@@ -41,11 +39,11 @@ public class TurretMobileAngleCorrectionCommand extends NRCommand{
 		double histRobotOrientation = histAngleReal + Turret.getInstance().getHistoricalPosition(deltaTime) * 360;
 		double deltaAngle = (NavX.getInstance().getYaw(AngleUnit.DEGREE) - NavX.getInstance().getHistoricalYaw(AngleUnit.DEGREE, deltaTime));
 		double curRobotOrientation = histRobotOrientation + deltaAngle;
-		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(deltaTime);
-		double histRightPos = Drive.getInstance().getHistoricalRightPosition(deltaTime);
+		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(deltaTime) * 360;
+		double histRightPos = Drive.getInstance().getHistoricalRightPosition(deltaTime) * 360;
 		
 		//Gets additional angle for turret to turn based on current turret position
-		double turretAdd1 = -1 * (curRobotOrientation + Turret.getInstance().getPosition());
+		double turretAdd1 = -1 * (curRobotOrientation + Turret.getInstance().getPosition() * 360);
 		
 		//Code until next break to get current distance and turret orientation
 		double theta1 = histRobotOrientation + 90;
@@ -68,14 +66,14 @@ public class TurretMobileAngleCorrectionCommand extends NRCommand{
 		double turretAdd2 = 180 - Math.asin(curDistReal * Math.sin(curTurretOrientation) / e);
 		
 		//Code until next break gets additional angle for turret to turn based on turret movement
-		double previousPosition = Turret.getInstance().getHistoricalPosition(deltaTime);
-		double currentPosition = Turret.getInstance().getPosition();
+		double previousPosition = Turret.getInstance().getHistoricalPosition(deltaTime) * 360;
+		double currentPosition = Turret.getInstance().getPosition() * 360;
 		double deltaPosition = currentPosition - previousPosition;
-		double turretAdd3 = histAngleReal + deltaPosition; //In rotations
+		double turretAdd3 = histAngleReal + deltaPosition;
 		
 		//Sets the change in position of the turret
 		double turretAdd = turretAdd1 + turretAdd2 + turretAdd3;
-		turretAdd /= 360; // Changes turret add to rotations instead of angle
+		turretAdd /= 360; // Changes from angle to rotations
 		Turret.getInstance().setPositionDelta(turretAdd);
 	}
 	
