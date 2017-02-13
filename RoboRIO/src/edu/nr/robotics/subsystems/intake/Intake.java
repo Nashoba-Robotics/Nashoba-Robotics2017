@@ -60,7 +60,7 @@ public class Intake extends NRSubsystem {
 		lowMotorSetpoint = speed * RobotMap.LOW_INTAKE_DIRECTION;
 		highMotorSetpoint = speed * RobotMap.HIGH_INTAKE_DIRECTION;
 		if (lowTalon != null && highTalon != null) {
-			if(IntakeArm.getInstance().isDeployed()) {
+			if(IntakeArm.getInstance().intakeArmIsDeployed()) {
 				lowTalon.set(lowMotorSetpoint);
 				highTalon.set(highMotorSetpoint);
 			} else {
