@@ -21,15 +21,15 @@ public interface DoublePIDSource {
   public PIDSourceType getPIDSourceType();
 
   /**
-   * Get the result to use in PIDController
+   * Get the left side result to use in PIDController
    *$
    * @return the result to use in PIDController
    */
   public double pidGetLeft();
 
   /**
-   * Get the result to use in PIDController
-   *$
+   * Get the right side result to use in PIDController
+   *
    * @return the result to use in PIDController
    */
   public double pidGetRight();

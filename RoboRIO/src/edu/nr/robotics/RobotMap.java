@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -119,6 +120,10 @@ public class RobotMap {
 	public static final int GEAR_MOVER_PNEUMATIC = 0;
 	public static final int GEAR_MOVER_FORWARD = 0;
 	public static final int GEAR_MOVER_REVERSE = 0;
+	
+	public static final int GEAR_GET_POSITION_PNEUMATIC = 0;
+	public static final int GEAR_GET_POSITION_FORWARD = 0;
+	public static final int GEAR_GET_POSITION_REVERSE = 0;
 	
 	/**
 	 * The number of hundred of millisecond periods per minute

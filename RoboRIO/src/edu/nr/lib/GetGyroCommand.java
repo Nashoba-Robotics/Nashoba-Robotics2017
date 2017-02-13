@@ -4,13 +4,13 @@ import edu.nr.lib.commandbased.NRCommand;
 
 public class GetGyroCommand extends NRCommand {
 	
-	AngleGyroCorrection gyro;
+	NavXGyroCorrection gyro;
 	
 	protected void onStart() {
-		gyro = new AngleGyroCorrection(AngleUnit.DEGREE);
+		gyro = new NavXGyroCorrection(AngleUnit.DEGREE);
 	}
 
-	public AngleGyroCorrection getCorrection() {
+	public NavXGyroCorrection getCorrection() {
 		return gyro;
 	}
 }
