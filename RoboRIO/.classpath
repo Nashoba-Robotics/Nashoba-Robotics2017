@@ -14,5 +14,6 @@
 			<attribute name="javadoc_location" value="file:/C:/Users/Nashoba%20Robotics/wpilib/user/java/docs/CTRLib/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="var" path="USERLIBS_DIR/TalonSRXLibJava.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
