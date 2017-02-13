@@ -11,11 +11,8 @@ import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmRetractCommand;
-import edu.nr.robotics.subsystems.loader.LoaderSpeedCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterDeltaSpeedCommand;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Joystick.ButtonType;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

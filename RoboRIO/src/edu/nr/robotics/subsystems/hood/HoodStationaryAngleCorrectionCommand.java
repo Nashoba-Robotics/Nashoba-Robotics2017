@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.Num;
 
 public class HoodStationaryAngleCorrectionCommand extends NRCommand {

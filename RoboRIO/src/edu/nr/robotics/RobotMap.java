@@ -1,11 +1,7 @@
 package edu.nr.robotics;
 
-import java.util.ArrayList;
-
-import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into

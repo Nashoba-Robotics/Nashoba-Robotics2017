@@ -4,7 +4,6 @@ import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.robotics.subsystems.hood.Hood;
 import edu.nr.robotics.subsystems.shooter.Shooter;
 import edu.nr.robotics.subsystems.turret.Turret;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class EnableAutoTrackingCommand extends NRCommand {
 

@@ -9,7 +9,6 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.NetworkingDataType;
 import edu.nr.lib.network.TCPServer.Num;
-import edu.nr.robotics.subsystems.shooter.Shooter;
 import edu.nr.robotics.subsystems.turret.TurretMobileAngleCorrectionCommand;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -61,13 +60,13 @@ public class Robot extends IterativeRobot {
 		ArrayList<NetworkingDataType> turret_cam_types = new ArrayList<>();
 		turret_cam_types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
 		turret_cam_types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
-		turret_cam_types.add(new NetworkingDataType('t', "time")); //TODO: Coprocessor: Code timestamps
+		turret_cam_types.add(new NetworkingDataType('t', "time"));
 		Num.turret.init(turret_cam_types, TCPServer.defaultPort);
 		
 		ArrayList<NetworkingDataType> gear_cam_types = new ArrayList<>();
 		gear_cam_types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
 		gear_cam_types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
-		gear_cam_types.add(new NetworkingDataType('t', "time")); //TODO: Coprocessor: Code timestamps
+		gear_cam_types.add(new NetworkingDataType('t', "time"));
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 	}
 
