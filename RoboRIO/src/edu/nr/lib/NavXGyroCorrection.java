@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.nr.lib.NavX;
 
-public class AngleGyroCorrection extends GyroCorrection implements PIDSource {
+public class NavXGyroCorrection extends GyroCorrection implements PIDSource {
 
 	private double initialAngle;
 	double goalAngle;
@@ -16,7 +16,7 @@ public class AngleGyroCorrection extends GyroCorrection implements PIDSource {
 	
 	AngleUnit unit;
 	
-	public AngleGyroCorrection(double angle, NavX navx, AngleUnit unit) {
+	public NavXGyroCorrection(double angle, NavX navx, AngleUnit unit) {
 		if(navx == null) {
 			navx = NavX.getInstance();
 		}
@@ -28,23 +28,23 @@ public class AngleGyroCorrection extends GyroCorrection implements PIDSource {
 		type = PIDSourceType.kDisplacement;
 	}
 	
-	public AngleGyroCorrection(double angle, AngleUnit unit) {
+	public NavXGyroCorrection(double angle, AngleUnit unit) {
 		this(angle, NavX.getInstance(), unit);
 	}
 	
-	public AngleGyroCorrection(AngleUnit unit) {
+	public NavXGyroCorrection(AngleUnit unit) {
 		this(0, unit);
 	}
 	
-	public AngleGyroCorrection(NavX navx) {
+	public NavXGyroCorrection(NavX navx) {
 		this(0, navx, AngleUnit.DEGREE);
 	}
 	
-	public AngleGyroCorrection() {
+	public NavXGyroCorrection() {
 		this(0, AngleUnit.DEGREE);
 	}
 	
-	public AngleGyroCorrection(NavX navx, AngleUnit unit) {
+	public NavXGyroCorrection(NavX navx, AngleUnit unit) {
 		this(0, navx, unit);
 	}
 
