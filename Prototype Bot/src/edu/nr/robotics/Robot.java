@@ -1,5 +1,7 @@
 package edu.nr.robotics;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.SampleRobot;
 
 import com.ctre.CANTalon;
@@ -20,7 +22,8 @@ public class Robot extends SampleRobot {
 	public double turn_D_SHOOTER = 0;
 
 	private static final int ticksPerRev = 256;
-
+	
+	Joystick stick;
 
 	@Override
 	public void robotInit() {
@@ -36,6 +39,8 @@ public class Robot extends SampleRobot {
 		
 		shooterTalon.reverseSensor(true);
 		
+		stick = new Joystick(0);
+		
 		SmartDashboard.putNumber("Goal Shooter Speed", SmartDashboard.getNumber("Goal Shooter Speed", 0));	
 	}
 
@@ -49,8 +54,8 @@ public class Robot extends SampleRobot {
 
 	@Override
 	public void operatorControl() {
-		while (isOperatorControl() && isEnabled()) {
-			setMotorSpeed(SmartDashboard.getNumber("Goal Shooter Speed", 0));
+		while (isOperatorControl() && isEnabled()) { 
+			setMotorSpeed(stick.getAxis(AxisType.kX));//SmartDashboard.getNumber("Goal Shooter Speed", 0));
 			Timer.delay(0.005); // wait for a motor update time
 		}
 	}

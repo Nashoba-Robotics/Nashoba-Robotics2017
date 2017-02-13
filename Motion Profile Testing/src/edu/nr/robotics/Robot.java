@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	public void disabledInit() {
-		//Drive.getInstance().running = false;
+		Drive.getInstance().running = false;
 	}
 
 	public void disabledPeriodic() {
@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		//Drive.getInstance().running = true;
+		Drive.getInstance().running = true;
 		
 	}
 
