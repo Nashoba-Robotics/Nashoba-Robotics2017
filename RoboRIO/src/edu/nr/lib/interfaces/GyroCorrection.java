@@ -8,7 +8,7 @@ public abstract class GyroCorrection
 	/**
 	 * Get the speed that the robot should turn at, capped at {@value #MAX_ANGLE_CORRECTION_SPEED}. It is based linearly off of kP_theta. 
 	 * @param kP_theta The factor the angle should be changed by.
-	 * @return A speed, from -{@value #MAX_ANGLE_CORRECTION_SPEED} to {@value #MAX_ANGLE_CORRECTION_SPEED}.
+	 * @return A speed, on a scale from -1 to 1, from -{@value #MAX_ANGLE_CORRECTION_SPEED} to {@value #MAX_ANGLE_CORRECTION_SPEED}.
 	 */
 	public double getTurnValue(double kP_theta)
 	{
