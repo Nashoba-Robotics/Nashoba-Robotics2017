@@ -171,5 +171,16 @@ public class RobotMap {
 	 * If you're actually looking at this JavaDoc, you're probably not from the United States of America
 	 */
 	public static final double INCHES_PER_FOOT = 12;
+	
+	/**
+	 * Offsets of camera and turret used for shooting on move calculations
+	 * 
+	 * Turret offsets are how far the turret is from the center of the robot
+	 * Camera offsets are offset from turret when turret is at 0 degrees (facing driving direction of robot)
+	 */
+	public static final double Y_CAMERA_OFFSET = 0; //TODO: Turret: Get y camera offset
+	public static final double X_CAMERA_OFFSET = 0; //TODO: Turret: Get x camera offset
+	public static final double X_TURRET_OFFSET = 5.465;
+	public static final double Y_TURRET_OFFSET = -7;
 
 }

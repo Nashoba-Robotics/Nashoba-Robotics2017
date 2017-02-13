@@ -340,6 +340,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 		Waypoint[] points = new Waypoint[] {
 
+				//Field waypoint on side would be (2.945, +-(1.868++), -45)
+				
 				new Waypoint(0, 0, 0),
 				//new Waypoint(0.25, 0, 0),
 				new Waypoint(SmartDashboard.getNumber("X Waypoint 1", 2.5), SmartDashboard.getNumber("Y Waypoint 1", 1.5),

@@ -5,6 +5,7 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.lib.sensorhistory.sf2.HistoricalCANTalon;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,7 +14,7 @@ public class Hood extends NRSubsystem {
 	
 	public static Hood singleton;
 
-	private CANTalon talon;
+	private HistoricalCANTalon talon;
 	
 	public double speedSetpoint = 0;
 	public double positionSetpoint = 0;
@@ -40,7 +41,7 @@ public class Hood extends NRSubsystem {
 	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
-			talon = new CANTalon(RobotMap.HOOD_TALON_PORT);
+			talon = new HistoricalCANTalon(RobotMap.HOOD_TALON_PORT);
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -93,9 +94,9 @@ public class Hood extends NRSubsystem {
 	}
 	
 	/**
-	 * Set the goal position of the robot. 
+	 * Set the goal position of the hood. 
 	 * 
-	 * If the robot is not in position mode, this does nothing.
+	 * If the hood is not in position mode, this does nothing.
 	 * 
 	 * @param position
 	 * 			The goal positions in rotations
@@ -109,6 +110,21 @@ public class Hood extends NRSubsystem {
 			}
 		}
 
+	}
+	
+	public double getHistoricalPosition(double deltaTime) {
+		if (talon != null)
+			return talon.getHistoricalPosition(deltaTime);
+		return 0;
+	}
+	
+	/**
+	 * This sets the change in position of the turret in encoder ticks
+	 * 
+	 * @param deltaPosition
+	 */
+	public void setPositionDelta(double deltaPosition) {
+		getInstance().setPosition(getInstance().getPosition() + deltaPosition);
 	}
 	
 	/**
@@ -179,6 +195,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public void setAutoAlign(boolean autoAlign) {
 		this.autoAlign = autoAlign;
+		new HoodMobileAngleCorrectionCommand().start();
 	}
 	
 }
