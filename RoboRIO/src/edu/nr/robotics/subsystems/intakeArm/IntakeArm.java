@@ -7,6 +7,7 @@ import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeArm extends NRSubsystem {
 	public static IntakeArm singleton;
@@ -60,6 +61,12 @@ public class IntakeArm extends NRSubsystem {
 
 	@Override
 	public void smartDashboardInfo() {
+		if(EnabledSubsystems.INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED){
+			
+		}
+		if(EnabledSubsystems.INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED){
+			
+		}
 
 	}
 

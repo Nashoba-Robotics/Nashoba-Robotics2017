@@ -88,9 +88,13 @@ public class Loader extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
-			SmartDashboard.putNumber("Loader Current", talon.getOutputCurrent());
-			SmartDashboard.putNumber("Loader Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Loader Speed", talon.getSpeed() + " : " + motorSetpoint);
+			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_BASIC_ENABLED){
+				SmartDashboard.putNumber("Loader Current", talon.getOutputCurrent());
+				SmartDashboard.putString("Loader Speed", talon.getSpeed() + " : " + motorSetpoint);
+			}
+			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_COMPLEX_ENABLED){
+				SmartDashboard.putNumber("Loader Voltage", talon.getOutputVoltage());
+			}
 		}
 	}
 
