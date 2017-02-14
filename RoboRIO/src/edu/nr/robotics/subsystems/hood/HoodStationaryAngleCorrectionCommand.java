@@ -3,6 +3,8 @@ package edu.nr.robotics.subsystems.hood;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.Num;
+import edu.nr.robotics.RobotMap;
+import edu.nr.robotics.subsystems.turret.Turret;
 
 public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 
@@ -12,21 +14,27 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
+		long angle = TCPServer.getInstance(Num.turret).getValue('a');
 		long distance = TCPServer.getInstance(Num.turret).getValue('d');
-		long timeStamp = TCPServer.getInstance(Num.turret).getValue('t');
-		long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000);
-		double deltaTime = currentTime - timeStamp;
-		double previousPosition = Hood.getInstance().getHistoricalPosition(deltaTime);
-		double currentPosition = Hood.getInstance().getPosition();
-		double deltaPosition = currentPosition - previousPosition;
 		
-		//TODO: Hood: Map distance to up/down angle and put function in here
-		double angle = 0; //See ToDo above
-		angle /= 360; //Puts angle in rotations
-		angle = angle - Hood.getInstance().getHistoricalPosition(deltaTime);
-		double angleToGo = angle + deltaPosition;
-		Hood.getInstance().setPositionDelta(angleToGo);
+		//Manipulates camera as if on center of robot
+		double z1 = Math.sqrt(Math.pow(RobotMap.X_CAMERA_OFFSET, 2) + Math.pow(RobotMap.Y_CAMERA_OFFSET, 2));
+		double theta4 = 180 - Math.atan(RobotMap.Y_CAMERA_OFFSET / RobotMap.X_CAMERA_OFFSET) - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
+		double h4 = Math.sqrt(Math.pow(RobotMap.X_TURRET_OFFSET, 2) + Math.pow(RobotMap.Y_TURRET_OFFSET, 2));
+		double h3 = Math.sqrt(Math.pow(h4, 2) + Math.pow(z1, 2) - 2 * h4 * z1 * Math.cos(theta4));
+		double theta5 = Turret.getInstance().getPosition() * RobotMap.DEGREES_PER_ROTATION - Math.atan(RobotMap.Y_CAMERA_OFFSET / RobotMap.X_CAMERA_OFFSET);
+		double theta6 = 90 - theta5 - Math.asin(h4 * Math.sin(theta4) / h3);
+		double distCenter = Math.sqrt(Math.pow(distance, 2) + Math.pow(h3, 2) - 2 * distance * h3 * Math.cos(theta6 + angle));
+		double angleCenter = 180 - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET) - z1 * Math.sin(theta4) / h3 - distance * Math.sin(theta6 + angle) / distCenter;
 		
+		//Manipulates camera as if on center of turret
+		double theta1 = 180 - angleCenter - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
+		double distReal = Math.sqrt(Math.pow(distCenter, 2) + Math.pow(h4, 2) - 2 * distCenter * h4 * Math.cos(theta1));
+		
+		//TODO: Hood: Map distance of turret to angle of hood in degrees
+		double hoodAngle = 0;
+		hoodAngle /= RobotMap.DEGREES_PER_ROTATION; //Changes degrees to rotations
+		Hood.getInstance().setPosition(hoodAngle);
 	}
 	
 	@Override

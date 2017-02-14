@@ -209,7 +209,6 @@ public class Turret extends NRSubsystem {
 	 */
 	public void setAutoAlign(boolean autoAlign) {
 		this.autoAlign = autoAlign;
-		new TurretMobileAngleCorrectionCommand().start();
 	}
 	
 }

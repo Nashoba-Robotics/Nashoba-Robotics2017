@@ -16,10 +16,6 @@ public class ShooterDeltaSpeedCommand extends NRCommand {
 	public void onStart() {
 		Shooter.getInstance().setAutoAlign(false);
 		initialSpeed = Shooter.getInstance().getSpeed();
-	}
-	
-	@Override
-	public void onExecute() {
 		Shooter.getInstance().setMotorSpeed(initialSpeed + speedDelta);
 	}
 

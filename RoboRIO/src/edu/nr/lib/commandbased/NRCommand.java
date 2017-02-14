@@ -20,6 +20,14 @@ public class NRCommand extends Command {
 		this.subsystems = subsystems;
 		requires(subsystems);
 	}
+	
+	public NRCommand(NRSubsystem[] subsystems) {
+		super();
+		for (int i = 0; i < subsystems.length; i++) {
+			this.subsystems.add(subsystems[i]);
+		}
+		requires(this.subsystems);
+	}
 
 	/**
 	 * Constructor used to set this commands visible name in SmartDashboard

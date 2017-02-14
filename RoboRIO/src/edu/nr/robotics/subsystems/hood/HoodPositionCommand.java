@@ -12,12 +12,7 @@ public class HoodPositionCommand extends NRCommand{
 	}
 
 	@Override
-	public void onExecute() {
+	public void onStart() {
 		Hood.getInstance().setPosition(position);
-	}
-	
-	@Override
-	public boolean isFinishedNR() {
-		return false;
 	}
 }

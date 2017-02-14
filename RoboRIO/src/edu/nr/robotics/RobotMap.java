@@ -159,20 +159,6 @@ public class RobotMap {
 	public static final double HOOD_POSITION_INCREMENT_VALUE = 0;
 
 	/**
-	 * The number of seconds per minute. This is used to convert from feet per second to rpm.
-	 * 
-	 * If you're actually looking at this JavaDoc, you're a bit silly...
-	 */
-	public static final double SECONDS_PER_MINUTE = 60;
-	
-	/**
-	 * The number of inches per foot.
-	 * 
-	 * If you're actually looking at this JavaDoc, you're probably not from the United States of America
-	 */
-	public static final double INCHES_PER_FOOT = 12;
-	
-	/**
 	 * Offsets of camera and turret used for shooting on move calculations
 	 * 
 	 * Turret offsets are how far the turret is from the center of the robot
@@ -182,5 +168,29 @@ public class RobotMap {
 	public static final double X_CAMERA_OFFSET = 0; //TODO: Turret: Get x camera offset
 	public static final double X_TURRET_OFFSET = 5.465;
 	public static final double Y_TURRET_OFFSET = -7;
+	
+	/**
+	 * The number of seconds per minute. This is used to convert from feet per second to rpm.
+	 * 
+	 * If you're actually looking at this JavaDoc, you're a bit silly...
+	 */
+	public static final double SECONDS_PER_MINUTE = 60;
+	
+	/**
+	 * The number of milliseconds per second. Used when comparing time stamps
+	 */
+	public static final double MILLISECONDS_PER_SECOND = 1000;
+	
+	/**
+	 * The number of inches per foot.
+	 * 
+	 * If you're actually looking at this JavaDoc, you're probably not from the United States of America
+	 */
+	public static final double INCHES_PER_FOOT = 12;
+	
+	/**
+	 * The number of degrees per rotation. This is used in move calculations to change rotations to degrees
+	 */
+	public static final double DEGREES_PER_ROTATION = 360;
 
 }

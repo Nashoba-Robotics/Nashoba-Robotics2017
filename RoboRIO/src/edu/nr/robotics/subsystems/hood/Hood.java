@@ -195,7 +195,6 @@ public class Hood extends NRSubsystem {
 	 */
 	public void setAutoAlign(boolean autoAlign) {
 		this.autoAlign = autoAlign;
-		new HoodMobileAngleCorrectionCommand().start();
 	}
 	
 }
