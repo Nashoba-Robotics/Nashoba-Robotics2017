@@ -9,6 +9,7 @@ import edu.nr.robotics.subsystems.shooter.ShooterAutoAlignCommand;
 import edu.nr.robotics.subsystems.turret.Turret;
 import edu.nr.robotics.subsystems.turret.TurretAutoAlignCommand;
 
+
 public class EnableAutoTrackingCommand extends NRCommand{
 
 	public EnableAutoTrackingCommand() {

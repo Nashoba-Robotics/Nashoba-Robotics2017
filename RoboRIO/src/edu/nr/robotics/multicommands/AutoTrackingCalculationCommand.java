@@ -24,9 +24,9 @@ public class AutoTrackingCalculationCommand extends NRCommand {
 	@Override
 	public void onExecute() {
 		if (Shooter.getInstance().isAutoAlign() || Turret.getInstance().isAutoAlign() || Hood.getInstance().isAutoAlign()) {
-			long timeStamp = TCPServer.getInstance(TCPServer.Num.turret).getValue('t');
-			long histAngle = TCPServer.getInstance(TCPServer.Num.turret).getValue('a');
-			long histDist = TCPServer.getInstance(TCPServer.Num.turret).getValue('d');
+			long timeStamp = TCPServer.Num.turret.getInstance().getValue('t');
+			long histAngle = TCPServer.Num.turret.getInstance().getValue('a');
+			long histDist = TCPServer.Num.turret.getInstance().getValue('d');
 			long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * RobotMap.MILLISECONDS_PER_SECOND);
 			long deltaTime = currentTime - timeStamp;
 			

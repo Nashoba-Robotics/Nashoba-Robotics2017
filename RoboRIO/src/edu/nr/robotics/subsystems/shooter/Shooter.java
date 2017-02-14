@@ -90,9 +90,13 @@ public class Shooter extends NRSubsystem {
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
-			SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
-			SmartDashboard.putNumber("Shooter Voltage", talon.getOutputVoltage());
-			SmartDashboard.putString("Shooter Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
+			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_BASIC_ENABLED){
+				SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
+				SmartDashboard.putString("Shooter Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);	
+			}
+			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED){
+				SmartDashboard.putNumber("Shooter Voltage", talon.getOutputVoltage());
+			}
 		}
 	}
 

@@ -1,8 +1,5 @@
 package edu.nr.robotics;
 
-import java.util.ArrayList;
-
-import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 
@@ -119,6 +116,10 @@ public class RobotMap {
 	public static final int GEAR_MOVER_PNEUMATIC = 0;
 	public static final int GEAR_MOVER_FORWARD = 0;
 	public static final int GEAR_MOVER_REVERSE = 0;
+	
+	public static final int GEAR_GET_POSITION_PNEUMATIC = 0;
+	public static final int GEAR_GET_POSITION_FORWARD = 0;
+	public static final int GEAR_GET_POSITION_REVERSE = 0;
 	
 	/**
 	 * The number of hundred of millisecond periods per minute

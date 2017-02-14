@@ -12,23 +12,23 @@ public class IntakeArm extends NRSubsystem {
 	public static IntakeArm singleton;
 
 	private DoubleSolenoid intakeArm;
-	
-	public enum State {
+
+	public enum IntakeArmState {
 		DEPLOYED, RETRACTED
 	}
-	
+
 	/**
 	 * The current state of the intake arm, either retracted or deployed.
 	 * 
 	 * The default is retracted, since that is how the robot will start.
 	 */
-	public State currentState = State.RETRACTED;
+	public IntakeArmState currentIntakeArmState = IntakeArmState.RETRACTED;
 
 	private IntakeArm() {
 		if (EnabledSubsystems.INTAKE_ARM_ENABLED) {
 			intakeArm = new DoubleSolenoid(RobotMap.INTAKE_ARM_PNEUMATIC, RobotMap.INTAKE_ARM_FORWARD,
 					RobotMap.INTAKE_ARM_REVERSE);
-			//TODO: IntakeArm: Check solenoid for current state
+			// TODO: IntakeArm: Check solenoid for current state
 
 		}
 	}
@@ -42,15 +42,15 @@ public class IntakeArm extends NRSubsystem {
 
 	public void deployIntakeArm() {
 		intakeArm.set(Value.kForward);
-		currentState = State.DEPLOYED;
+		currentIntakeArmState = IntakeArmState.DEPLOYED;
 	}
 
 	public void retractIntakeArm() {
-		
+
 		Intake.getInstance().onIntakeArmRetract();
-		
+
 		intakeArm.set(Value.kReverse);
-		currentState = State.RETRACTED;
+		currentIntakeArmState = IntakeArmState.RETRACTED;
 	}
 
 	public static IntakeArm getInstance() {
@@ -60,6 +60,12 @@ public class IntakeArm extends NRSubsystem {
 
 	@Override
 	public void smartDashboardInfo() {
+		if(EnabledSubsystems.INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED){
+			
+		}
+		if(EnabledSubsystems.INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED){
+			
+		}
 
 	}
 
@@ -72,12 +78,12 @@ public class IntakeArm extends NRSubsystem {
 		intakeArm.set(Value.kOff);
 	}
 
-	public boolean isDeployed() {
-		return currentState == State.DEPLOYED;
+	public boolean intakeArmIsDeployed() {
+		return currentIntakeArmState == IntakeArmState.DEPLOYED;
 	}
 
-	public boolean isRetracted() {
-		return currentState == State.RETRACTED;
+	public boolean intakeArmIsRetracted() {
+		return currentIntakeArmState == IntakeArmState.RETRACTED;
 	}
 
 }

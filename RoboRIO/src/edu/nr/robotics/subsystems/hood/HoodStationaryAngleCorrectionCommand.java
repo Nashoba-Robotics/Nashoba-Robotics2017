@@ -14,8 +14,8 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		long angle = TCPServer.getInstance(Num.turret).getValue('a');
-		long distance = TCPServer.getInstance(Num.turret).getValue('d');
+		long angle = TCPServer.Num.turret.getInstance().getValue('a');
+		long distance = TCPServer.Num.turret.getInstance().getValue('d');
 		
 		//Manipulates camera as if on center of robot
 		double z1 = Math.sqrt(Math.pow(RobotMap.X_CAMERA_OFFSET, 2) + Math.pow(RobotMap.Y_CAMERA_OFFSET, 2));
