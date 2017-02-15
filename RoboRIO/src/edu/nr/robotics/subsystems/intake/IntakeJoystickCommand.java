@@ -4,8 +4,6 @@ import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.robotics.OI;
 
 public class IntakeJoystickCommand extends JoystickCommand {
-
-	public long joystickCheckPeriod = 0; //TODO: Intake: Find period of checking for switching to joystick control
 	
 	public IntakeJoystickCommand() {
 		super(Intake.getInstance());
@@ -13,7 +11,9 @@ public class IntakeJoystickCommand extends JoystickCommand {
 	
 	@Override
 	public void onExecute() {
-		Intake.getInstance().setMotorSpeed(OI.getInstance().getIntakeValue());
+		if (OI.getInstance().isShooterOn()) {
+			Intake.getInstance().setMotorSpeed(OI.getInstance().getIntakeValue());
+		}
 	}
 
 	@Override

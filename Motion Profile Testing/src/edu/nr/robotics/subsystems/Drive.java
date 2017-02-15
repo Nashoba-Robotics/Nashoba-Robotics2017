@@ -15,14 +15,13 @@ import edu.nr.lib.DoNothingCommand;
 import edu.nr.lib.NRMath;
 import edu.nr.lib.NRSubsystem;
 import edu.nr.lib.NavX;
-import edu.nr.lib.Periodic;
-import edu.nr.lib.SmartDashboardSource;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
 import edu.nr.lib.motionprofiling.OneDimensionalTrajectorySimple;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinderModified;
+import edu.nr.lib.sensorhistory.HistoricalCANTalon;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -41,10 +40,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	private static Drive singleton;
 
-	public CANTalon talonLF;
-	public CANTalon talonRF;
-	public CANTalon talonLB;
-	public CANTalon talonRB;
+	public HistoricalCANTalon talonLF;
+	public HistoricalCANTalon talonRF;
+	public HistoricalCANTalon talonLB;
+	public HistoricalCANTalon talonRB;
 
 	public double leftMotorSetPoint = 0;
 	public double rightMotorSetPoint = 0;
@@ -78,7 +77,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	private Drive() throws IOException {
 		if (driveEnabled) {
-			talonLB = new CANTalon(RobotMap.talonLB);
+			talonLB = new HistoricalCANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
 			talonLB.changeControlMode(TalonControlMode.Speed);
 			talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -90,7 +89,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonLB.reverseSensor(true);
 			talonLB.setStatusFrameRateMs(StatusFrameRate.Feedback, 1);
 
-			talonRB = new CANTalon(RobotMap.talonRB);
+			talonRB = new HistoricalCANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
 			talonRB.changeControlMode(TalonControlMode.Speed);
 			talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -102,12 +101,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonRB.reverseSensor(false);
 			talonRB.setStatusFrameRateMs(StatusFrameRate.Feedback, 1);
 
-			talonLF = new CANTalon(RobotMap.talonLF);
+			talonLF = new HistoricalCANTalon(RobotMap.talonLF);
 			talonLF.enableBrakeMode(true);
 			talonLF.changeControlMode(TalonControlMode.Follower);
 			talonLF.set(talonLB.getDeviceID());
 
-			talonRF = new CANTalon(RobotMap.talonRF);
+			talonRF = new HistoricalCANTalon(RobotMap.talonRF);
 			talonRF.enableBrakeMode(true);
 			talonRF.changeControlMode(TalonControlMode.Follower);
 			talonRF.set(talonRB.getDeviceID());
@@ -151,6 +150,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 						//-Drive.getInstance().leftMotorSetPoint *
 						//RobotMap.MAX_RPS * 60);
 	
+						
+						//getHistoricalPosition(double deltaTime)
+						
+						final int DELTA_TIME = 100;
+						SmartDashboard.putString("Current Position", Drive.getInstance().talonLB.getHistoricalPosition(0) + ":" + Drive.getInstance().talonLB.getHistoricalPosition(DELTA_TIME));
+						
 						SmartDashboard.putString("Speed Right 2", Drive.getInstance().talonRB.getSpeed() + " : " + Drive.getInstance().talonRB.getSetpoint());
 						SmartDashboard.putString("Speed Left 2", Drive.getInstance().talonLB.getSpeed() + " : " + Drive.getInstance().talonLB.getSetpoint());
 	
