@@ -1,6 +1,7 @@
 package edu.nr.robotics.subsystems.shooter;
 
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.robotics.OI;
 
 public class ShooterSpeedCommand extends NRCommand {
 
@@ -12,8 +13,18 @@ public class ShooterSpeedCommand extends NRCommand {
 	}
 	
 	@Override
-	public void onStart() {
-		Shooter.getInstance().setMotorSpeed(speed);
+	public void onExecute() {
+		Shooter.getInstance().setAutoAlign(false);
+		if (OI.getInstance().isShooterOn()) {
+			Shooter.getInstance().setMotorSpeed(speed);
+		} else {
+			Shooter.getInstance().setMotorSpeed(0);
+		}
+	}
+	
+	@Override
+	public boolean isFinishedNR() {
+		return false;
 	}
 
 }

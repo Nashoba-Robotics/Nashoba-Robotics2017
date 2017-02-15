@@ -146,19 +146,33 @@ public class RobotMap {
 	
 	/**
 	 * The speed in rotations per minute for the loader to run at during normal usage
+	 *
+	 * TODO: Get loader run speed
 	 */
 	public static final double LOADER_RUN_SPEED = 0;
 	
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
+	 *
+	 * TODO: Get shooter speed increment value
 	 */
 	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 0;
 	
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
+	 *
+	 * TODO: Get hood position increment value
 	 */
 	public static final double HOOD_POSITION_INCREMENT_VALUE = 0;
 
+	/**
+	 * The angle the turret will automatically turn to start the match in degrees
+	 * 
+	 * TODO: Get preset turret angles for red and blue sides
+	 */
+	public static final double PRESET_TURRET_ANGLE_RED = 0;
+	public static final double PRESET_TURRET_ANGLE_BLUE = 0;
+	
 	/**
 	 * Offsets of camera and turret used for shooting on move calculations
 	 * 
