@@ -87,9 +87,10 @@ public class Hood extends NRSubsystem {
 		speedSetpoint = speed * RobotMap.HOOD_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.PercentVbus || mode == CANTalon.TalonControlMode.Speed) {
-				talon.set(speedSetpoint);
+			if(mode == CANTalon.TalonControlMode.MotionMagic) {
+				talon.changeControlMode(TalonControlMode.Speed);
 			}
+			talon.set(speedSetpoint);
 		}
 	}
 	
@@ -105,7 +106,10 @@ public class Hood extends NRSubsystem {
 		positionSetpoint = position * TICKS_PER_REV * RobotMap.HOOD_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.MotionMagic) {
+			if(mode == CANTalon.TalonControlMode.Speed) {
+				talon.changeControlMode(TalonControlMode.MotionMagic);
+				talon.set(positionSetpoint);
+			} else if(mode == CANTalon.TalonControlMode.MotionMagic) {
 				talon.set(positionSetpoint);
 			}
 		}
@@ -124,7 +128,16 @@ public class Hood extends NRSubsystem {
 	 * @param deltaPosition
 	 */
 	public void setPositionDelta(double deltaPosition) {
-		getInstance().setPosition(getInstance().getPosition() + deltaPosition);
+		positionSetpoint = getInstance().getPosition() + deltaPosition * TICKS_PER_REV * RobotMap.HOOD_DIRECTION;
+		if (talon != null) {
+			CANTalon.TalonControlMode mode = talon.getControlMode();
+			if(mode == CANTalon.TalonControlMode.Speed) {
+				talon.changeControlMode(TalonControlMode.MotionMagic);
+				getInstance().setPosition(getInstance().getPosition() + deltaPosition);
+			} else if(mode == CANTalon.TalonControlMode.MotionMagic) {
+				getInstance().setPosition(getInstance().getPosition() + deltaPosition);
+			}
+		}
 	}
 	
 	/**

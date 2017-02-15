@@ -2,15 +2,19 @@ package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.NRMath;
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.lib.interfaces.DoublePIDOutput;
+import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.sensorhistory.sf2.HistoricalCANTalon;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
+
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive extends NRSubsystem {
+public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
 
 	private static Drive singleton;
 
@@ -41,7 +45,7 @@ public class Drive extends NRSubsystem {
 	/**
 	 * The number of CANTalon "Native Units" per revolution
 	 */
-	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
+	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
 	/**
 	 * The speed that the left drivetrain is currently supposed to be running at, in rotations per minute
@@ -79,6 +83,8 @@ public class Drive extends NRSubsystem {
 	private static int DEFAULT_PROFILE = LOW_GEAR_PROFILE; //TODO: Drive: What should the default gearing be?
 	
 	private Gear currentGear = Gear.low;
+	
+	PIDSourceType type = PIDSourceType.kRate;
 	
 	private Drive() {
 		//TODO: Drive: Find phase of motors
@@ -448,6 +454,10 @@ public class Drive extends NRSubsystem {
 		}
 	}
 	
+	public Gear getCurrentGear() {
+		return currentGear;
+	}
+	
 	/**
 	 * Function that is periodically called once the Drive class is initialized
 	 */
@@ -506,6 +516,48 @@ public class Drive extends NRSubsystem {
 			switchToHighGear();
 		} else {
 			switchToLowGear();
+		}
+	}
+
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
+		type = pidSource;
+	}
+
+	@Override
+	public PIDSourceType getPIDSourceType() {
+		return type;
+	}
+
+	@Override
+	public double pidGetLeft() {
+		if (type == PIDSourceType.kRate) {
+			return getInstance().getEncoderLeftSpeed() / RobotMap.SECONDS_PER_MINUTE;
+		} else {
+			return getInstance().getLeftPosition();
+		}
+	}
+
+	@Override
+	public double pidGetRight() {
+		if (type == PIDSourceType.kRate) {
+			return getInstance().getEncoderRightSpeed() / RobotMap.SECONDS_PER_MINUTE;
+		} else {
+			return getInstance().getRightPosition();
+		}
+	}
+
+	@Override
+	public void pidWrite(double outputLeft, double outputRight) {
+		leftMotorSetpoint = outputLeft;
+		rightMotorSetpoint = outputRight;
+
+		if(currentGear == Gear.low) {
+			leftTalon.set(leftMotorSetpoint * RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);
+			rightTalon.set(rightMotorSetpoint * RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);
+		} else {
+			leftTalon.set(leftMotorSetpoint * RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+			rightTalon.set(rightMotorSetpoint * RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
 		}
 	}
 

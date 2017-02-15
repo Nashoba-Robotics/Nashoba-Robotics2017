@@ -87,9 +87,10 @@ public class Turret extends NRSubsystem {
 		speedSetpoint = speed * RobotMap.TURRET_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.PercentVbus || mode == CANTalon.TalonControlMode.Speed) {
-				talon.set(speedSetpoint);
+			if(mode == CANTalon.TalonControlMode.MotionMagic) {
+				talon.changeControlMode(TalonControlMode.Speed);
 			}
+			talon.set(speedSetpoint);
 		}
 	}
 	
@@ -102,10 +103,13 @@ public class Turret extends NRSubsystem {
 	 * 			The goal positions in rotations
 	 */
 	public void setPosition(double position) {
-		positionSetpoint = position * RobotMap.TURRET_DIRECTION;
+		positionSetpoint = position * TICKS_PER_REV * RobotMap.HOOD_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.MotionMagic) {
+			if(mode == CANTalon.TalonControlMode.Speed) {
+				talon.changeControlMode(TalonControlMode.MotionMagic);
+				talon.set(positionSetpoint);
+			} else if(mode == CANTalon.TalonControlMode.MotionMagic) {
 				talon.set(positionSetpoint);
 			}
 		}
@@ -134,7 +138,16 @@ public class Turret extends NRSubsystem {
 	 * @param deltaPosition
 	 */
 	public void setPositionDelta(double deltaPosition) {
-		getInstance().setPosition(getInstance().getPosition() + deltaPosition);
+		positionSetpoint = getInstance().getPosition() + deltaPosition * TICKS_PER_REV * RobotMap.HOOD_DIRECTION;
+		if (talon != null) {
+			CANTalon.TalonControlMode mode = talon.getControlMode();
+			if(mode == CANTalon.TalonControlMode.Speed) {
+				talon.changeControlMode(TalonControlMode.MotionMagic);
+				getInstance().setPosition(getInstance().getPosition() + deltaPosition);
+			} else if(mode == CANTalon.TalonControlMode.MotionMagic) {
+				getInstance().setPosition(getInstance().getPosition() + deltaPosition);
+			}
+		}
 	}
 	
 	/**

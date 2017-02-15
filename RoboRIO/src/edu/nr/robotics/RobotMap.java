@@ -47,6 +47,13 @@ public class RobotMap {
 	 */
 	public static final double MAX_DRIVE_HIGH_GEAR_SPEED = 0;
 	
+	/**
+	 * The max driving acceleration in 
+	 * 
+	 * TODO: Get max acceleration of the drive train in feet / second / second
+	 */
+	public static final double MAX_DRIVE_ACCELERATION = 0;
+	
 	// TODO: Drive: Get distance between left and right wheels
 	public static final double DRIVE_WHEEL_BASE = 0; //In inches
 	
@@ -183,6 +190,12 @@ public class RobotMap {
 	public static final double X_CAMERA_OFFSET = 0; //TODO: Turret: Get x camera offset
 	public static final double X_TURRET_OFFSET = 5.465;
 	public static final double Y_TURRET_OFFSET = -7;
+	
+	/**
+	 * The autonomous distance from the wall to the center peg in inches.
+	 * The distance is the distance the robot needs to drive and not the true distance
+	 */
+	public static final double DISTANCE_TO_CENTER_PEG = 0;
 	
 	/**
 	 * The number of seconds per minute. This is used to convert from feet per second to rpm.

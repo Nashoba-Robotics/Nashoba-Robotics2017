@@ -12,8 +12,6 @@ public class ClimbCommand extends NRCommand {
 		super(Drive.getInstance());
 	}
 	
-	//TODO: Climber: Make climb command
-	
 	@Override
 	public void onExecute() {
 		if(Drive.getInstance().getRightCurrent() > MAX_CURRENT) {
