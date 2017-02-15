@@ -33,6 +33,8 @@ public class TCPServer implements Runnable {
 		
 	private int port;
 	
+	private Num num;
+	
 	/**
 	 * Allowed for "Team Use" in 2017 game manual
 	 */
@@ -51,7 +53,7 @@ public class TCPServer implements Runnable {
 		 */
 		public synchronized void init() {
 			if(singleton == null) {
-				singleton = new TCPServer(null, defaultPort);
+				singleton = new TCPServer(null, defaultPort, this);
 			}
 		}
 		
@@ -60,7 +62,7 @@ public class TCPServer implements Runnable {
 		 */
 		public synchronized void init(int port) {
 			if(singleton == null) {
-				singleton = new TCPServer(null, port);
+				singleton = new TCPServer(null, port, this);
 			}
 		}
 		
@@ -78,7 +80,7 @@ public class TCPServer implements Runnable {
 		public synchronized void init(Collection<? extends NetworkingDataType> dataTypes) {
 			if(dataTypes != null) {
 				if(singleton == null) {
-					singleton = new TCPServer(null, defaultPort);
+					singleton = new TCPServer(null, defaultPort, this);
 				} else {
 					singleton.addDataTypes(dataTypes);
 				}
@@ -101,7 +103,7 @@ public class TCPServer implements Runnable {
 		public synchronized void init(Collection<? extends NetworkingDataType> dataTypes, int port) {
 			if(dataTypes != null) {
 				if(singleton == null) {
-					singleton = new TCPServer(null, port);
+					singleton = new TCPServer(null, port, this);
 				} else {
 					singleton.addDataTypes(dataTypes);
 				}
@@ -153,8 +155,10 @@ public class TCPServer implements Runnable {
 	 * 
 	 * 			  The 2017 game manual (as of team update 10) allows ports 5800-5810 for non-preallocated team use.
 	 */
-	private TCPServer(Collection<? extends NetworkingDataType> dataTypes, int port) {
+	private TCPServer(Collection<? extends NetworkingDataType> dataTypes, int port, Num num) {
 		this.port = port;
+		
+		this.num = num;
 		
 		data = new ArrayList<>();
 		if(dataTypes != null) {
@@ -291,10 +295,10 @@ public class TCPServer implements Runnable {
 				
 				while (true) {
 					m_isConnected = false;
-					System.out.println("Trying to connect");
+					System.out.println("Trying to connect to " + num);
 					Socket connectionSocket = socket.accept();
 					m_isConnected = true;
-					System.out.println("Connected!");
+					System.out.println("Connected to " + num + "!" );
 					BufferedReader inFromClient = new BufferedReader(
 							new InputStreamReader(connectionSocket.getInputStream()));
 					while (!connectionSocket.isClosed()) {
@@ -309,6 +313,7 @@ public class TCPServer implements Runnable {
 									+ (data[3] & 0xFF);
 							m_hasData = true;
 							type.updateListeners();
+							System.out.println("Read from " + num + "\t\t" + firstCharacter + " value: " + type.data);
 						} else {
 							inFromClient.read(new char[4], 0, 4);
 						}
