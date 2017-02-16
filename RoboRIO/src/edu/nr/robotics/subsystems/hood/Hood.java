@@ -5,7 +5,7 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.commandbased.NRSubsystem;
-import edu.nr.lib.sensorhistory.sf2.HistoricalCANTalon;
+import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +14,8 @@ public class Hood extends NRSubsystem {
 	
 	public static Hood singleton;
 
-	private HistoricalCANTalon talon;
+	private CANTalon talon;
+	private TalonEncoder encoder;
 	
 	public double speedSetpoint = 0;
 	public double positionSetpoint = 0;
@@ -41,7 +42,7 @@ public class Hood extends NRSubsystem {
 	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
-			talon = new HistoricalCANTalon(RobotMap.HOOD_TALON_PORT);
+			talon = new CANTalon(RobotMap.HOOD_TALON_PORT);
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -116,9 +117,9 @@ public class Hood extends NRSubsystem {
 
 	}
 	
-	public double getHistoricalPosition(double deltaTime) {
-		if (talon != null)
-			return talon.getHistoricalPosition(deltaTime);
+	public double getHistoricalPosition(long deltaTime) {
+		if (encoder != null)
+			return encoder.getPosition(deltaTime);
 		return 0;
 	}
 	

@@ -29,7 +29,8 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	public static final double DISTANCE_FROM_ENDPOINT = 0; // On the path the distance away from the path endpoint that we want to stay straight for
 	
 	// TODO: MotionProfileToSideGearCommand: Get thresholds to finish motion profiling
-	public static final double PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
+	//time in milliseconds
+	public static final long PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
 	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
 	
 	public MotionProfileToSideGearCommand(double forwardDistance, double sideDistance, double endHeading) {

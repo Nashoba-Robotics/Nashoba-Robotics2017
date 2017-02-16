@@ -1,4 +1,4 @@
-package edu.nr.lib.sensorhistory.nr;
+package edu.nr.lib.sensorhistory;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -32,7 +32,7 @@ public class TalonEncoder extends TimerTask {
 	@Override
 	public void run() {
 		data.add(new Data(talon.getPosition(), talon.getSpeed(),
-				(long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() / 1000.0)));
+				(long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000.0)));
 	}
 
 	/**
@@ -54,10 +54,10 @@ public class TalonEncoder extends TimerTask {
 			return data.get(0).position;
 		}
 
-		long timestamp = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() / 1000.0) - deltaTime;
+		long timestamp = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000.0) - deltaTime;
 
 		int low = 0;
-		int up = data.size();
+		int up = data.size()-1;
 		while (low < up)
 		// @loop_invariant 0 <= low && low <= up && up <= n;
 		// @loop_invariant low == 0 || A[low-1] < x;
@@ -73,10 +73,20 @@ public class TalonEncoder extends TimerTask {
 				low = mid + 1;
 		}
 		low = up - 1; // This is so that low != up
-
+		
+		if(low == -1) {
+			//We haven't been running for long enough.
+			return data.get(up).velocity;
+		}
+		
 		Data first = data.get(low);
 		Data second = data.get(up);
+		if(first.timestamp == second.timestamp) {
+			System.out.println("The timestamps are equal in " + this + ". This is weird and unexpected...");
+			return 0;
+		}
 		return interpolate(first.position, second.position, timestamp / (second.timestamp + first.timestamp));
+		
 	}
 	
 
@@ -100,10 +110,10 @@ public class TalonEncoder extends TimerTask {
 			return data.get(0).velocity;
 		}
 
-		long timestamp = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() / 1000.0) - deltaTime;
+		long timestamp = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000.0) - deltaTime;
 
 		int low = 0;
-		int up = data.size();
+		int up = data.size()-1;
 		while (low < up)
 		// @loop_invariant 0 <= low && low <= up && up <= n;
 		// @loop_invariant low == 0 || A[low-1] < x;
@@ -120,8 +130,17 @@ public class TalonEncoder extends TimerTask {
 		}
 		low = up - 1; // This is so that low != up
 
+		if(low == -1) {
+			//We haven't been running for long enough.
+			return data.get(up).velocity;
+		}
+		
 		Data first = data.get(low);
 		Data second = data.get(up);
+		if(first.timestamp == second.timestamp) {
+			System.out.println("The timestamps are equal in " + this + ". This is weird and unexpected...");
+			return 0;
+		}
 		return interpolate(first.velocity, second.velocity, timestamp / (second.timestamp + first.timestamp));
 	}
 
