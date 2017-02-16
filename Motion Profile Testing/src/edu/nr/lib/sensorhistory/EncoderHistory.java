@@ -73,7 +73,7 @@ public class EncoderHistory implements ISensorDataSubscriber {
 		ArrayList<SensorDataSourceInfo> sensor_data_source_infos = new ArrayList<SensorDataSourceInfo>();
 		enc.getSensorDataSource().getSensorDataSourceInfos(sensor_data_source_infos);
 		for (SensorDataSourceInfo item : sensor_data_source_infos) {
-			if (item.getName().equalsIgnoreCase("Encoder")) {
+			if (item.getName().equalsIgnoreCase("CANTalon")) {
 				encoder_quantity_index = index;
 			}
 			if (item.getName().equalsIgnoreCase("Timestamp")) {
@@ -84,7 +84,7 @@ public class EncoderHistory implements ISensorDataSubscriber {
 
 		if (encoder_quantity_index == -1) {
 			throw new IllegalArgumentException("The provided ISensorInfo (enc_sensor) object"
-					+ "must contain a SensorDataSourceInfo object named 'Encoder'.");
+					+ "must contain a SensorDataSourceInfo object named 'CANTalon'.");
 		}
 
 		if (history_length_num_samples > MAX_ORIENTATION_HISTORY_LENGTH_NUM_SAMPLES) {
