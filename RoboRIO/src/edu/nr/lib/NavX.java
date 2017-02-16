@@ -83,5 +83,10 @@ public class NavX implements Periodic {
             last_write_timestamp = Timer.getFPGATimestamp();
     	}
    	}
+
+	public void reset() {
+		ahrs.reset();
+		ahrs.resetDisplacement();
+	}
 	
 }

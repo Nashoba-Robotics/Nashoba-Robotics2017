@@ -113,4 +113,8 @@ public class Loader extends NRSubsystem {
 		}
 	}
 	
+	public boolean isRunning() {
+		return getInstance().motorSetpoint > RobotMap.LOADER_RUNNING_THRESHOLD;
+	}
+	
 }

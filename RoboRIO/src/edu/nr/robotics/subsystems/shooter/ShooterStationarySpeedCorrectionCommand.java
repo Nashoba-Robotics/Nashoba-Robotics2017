@@ -1,16 +1,17 @@
-package edu.nr.robotics.subsystems.turret;
+package edu.nr.robotics.subsystems.shooter;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.network.TCPServer;
-import edu.nr.lib.network.TCPServer.Num;
 import edu.nr.robotics.RobotMap;
+import edu.nr.robotics.subsystems.hood.Hood;
+import edu.nr.robotics.subsystems.turret.Turret;
 
-public class TurretStationaryAngleCorrectionCommand extends NRCommand{
+public class ShooterStationarySpeedCorrectionCommand extends NRCommand {
 
-	static double turretAngle;
+	static double shooterSpeed = 0;
 	
-	public TurretStationaryAngleCorrectionCommand() {
-		super(Turret.getInstance());
+	public ShooterStationarySpeedCorrectionCommand() {
+		super(Shooter.getInstance());
 	}
 	
 	@Override
@@ -31,11 +32,10 @@ public class TurretStationaryAngleCorrectionCommand extends NRCommand{
 		//Manipulates camera as if on center of turret
 		double theta1 = 180 - angleCenter - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
 		double distReal = Math.sqrt(Math.pow(distCenter, 2) + Math.pow(h4, 2) - 2 * distCenter * h4 * Math.cos(theta1));
-		double theta2 = distCenter * Math.sin(theta1) / distReal;
-		double angleReal = theta2 - 90 + Math.atan(RobotMap.Y_TURRET_OFFSET / RobotMap.X_TURRET_OFFSET);
 		
-		turretAngle = angleReal / 360; //Puts angle into rotations
-		Turret.getInstance().setPosition(turretAngle);
+		//TODO: Shooter: Map distance of turret to speed of shooter in rpm
+		shooterSpeed = 0;
+		Shooter.getInstance().setMotorSpeed(shooterSpeed);
 	}
 	
 	@Override
@@ -43,7 +43,7 @@ public class TurretStationaryAngleCorrectionCommand extends NRCommand{
 		return false;
 	}
 	
-	public static double getTurretAngle() {
-		return turretAngle;
+	public static double getShooterSpeed() {
+		return shooterSpeed;
 	}
 }

@@ -3,7 +3,7 @@ package edu.nr.lib.interfaces;
 public abstract class GyroCorrection
 {
 	public static final double DEFAULT_KP_THETA = 0.05, MAX_ANGLE_CORRECTION_SPEED = 0.2;
-	private boolean initialized = false;
+	protected boolean initialized = false;
 	
 	/**
 	 * Get the speed that the robot should turn at, capped at {@value #MAX_ANGLE_CORRECTION_SPEED}. It is based linearly off of kP_theta. 

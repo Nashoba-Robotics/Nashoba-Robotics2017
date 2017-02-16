@@ -103,7 +103,7 @@ public class Turret extends NRSubsystem {
 	 * 			The goal positions in rotations
 	 */
 	public void setPosition(double position) {
-		positionSetpoint = position * TICKS_PER_REV * RobotMap.HOOD_DIRECTION;
+		positionSetpoint = position * TICKS_PER_REV * RobotMap.TURRET_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed) {
@@ -138,7 +138,7 @@ public class Turret extends NRSubsystem {
 	 * @param deltaPosition
 	 */
 	public void setPositionDelta(double deltaPosition) {
-		positionSetpoint = getInstance().getPosition() + deltaPosition * TICKS_PER_REV * RobotMap.HOOD_DIRECTION;
+		positionSetpoint = getInstance().getPosition() + deltaPosition * TICKS_PER_REV * RobotMap.TURRET_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed) {

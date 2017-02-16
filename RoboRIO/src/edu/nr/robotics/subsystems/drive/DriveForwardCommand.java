@@ -11,16 +11,19 @@ import edu.nr.robotics.subsystems.drive.Drive.Gear;
 
 public class DriveForwardCommand extends NRCommand {
 
+	// TODO: DriveForwardCommand: Make this read from file instead of create trajectory
+	
 	OneDimensionalMotionProfiler profiler;
-	double distance;
+	double distance; //Used as rotations below, inches as input
 	
 	//These are the one-dimensional motion profiling values
+	// TODO: DriveForwardCommand: Find the correct constants for one-dimensional motion profiling
 	public static final double KA = 0;
 	public static final double KP = 0;
 	public static final double KV = 0;
 	public static final double KD = 0;
 	public static final double KP_THETA = 0;
-	public static final long period = 0;
+	public static final long period = 0; //Number of times per second to run
 	public static final double MAX_SPEED_PERCENTAGE = 0;
 	
 	public DriveForwardCommand(double inches) {
@@ -32,10 +35,10 @@ public class DriveForwardCommand extends NRCommand {
 	public void onStart() {
 		profiler = new OneDimensionalMotionProfilerTwoMotor(Drive.getInstance(), Drive.getInstance(), KV, KA, KP, KD, KP_THETA, period);
 		if (Drive.getInstance().getCurrentGear() == Gear.low) {
-			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance , RobotMap.MAX_DRIVE_LOW_GEAR_SPEED / RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI), RobotMap.MAX_DRIVE_LOW_GEAR_SPEED / RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI) * MAX_SPEED_PERCENTAGE, RobotMap.MAX_DRIVE_ACCELERATION / RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI)));
+			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance , RobotMap.MAX_DRIVE_LOW_GEAR_SPEED * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI), RobotMap.MAX_DRIVE_LOW_GEAR_SPEED * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI) * MAX_SPEED_PERCENTAGE, RobotMap.MAX_DRIVE_ACCELERATION * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI)));
 		} else {
-			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance, RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED / RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI), RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED / RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI) * MAX_SPEED_PERCENTAGE, RobotMap.MAX_DRIVE_ACCELERATION / RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI)));
-			profiler.enable();
+			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance, RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI), RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI) * MAX_SPEED_PERCENTAGE, RobotMap.MAX_DRIVE_ACCELERATION * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI)));
 		}
+		profiler.enable();
 	}
 }

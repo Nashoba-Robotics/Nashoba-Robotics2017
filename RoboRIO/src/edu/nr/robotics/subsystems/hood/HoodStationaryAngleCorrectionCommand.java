@@ -8,6 +8,8 @@ import edu.nr.robotics.subsystems.turret.Turret;
 
 public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 
+	static double hoodAngle = 0;
+	
 	public HoodStationaryAngleCorrectionCommand() {
 		super(Hood.getInstance());
 	}
@@ -32,7 +34,7 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 		double distReal = Math.sqrt(Math.pow(distCenter, 2) + Math.pow(h4, 2) - 2 * distCenter * h4 * Math.cos(theta1));
 		
 		//TODO: Hood: Map distance of turret to angle of hood in degrees
-		double hoodAngle = 0;
+		hoodAngle = 0;
 		hoodAngle /= RobotMap.DEGREES_PER_ROTATION; //Changes degrees to rotations
 		Hood.getInstance().setPosition(hoodAngle);
 	}
@@ -40,5 +42,9 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 	@Override
 	public boolean isFinishedNR() {
 		return false;
+	}
+	
+	public static double getHoodAngle() {
+		return hoodAngle;
 	}
 }

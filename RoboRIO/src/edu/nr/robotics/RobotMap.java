@@ -48,11 +48,18 @@ public class RobotMap {
 	public static final double MAX_DRIVE_HIGH_GEAR_SPEED = 0;
 	
 	/**
-	 * The max driving acceleration in 
+	 * The max driving acceleration in feet/sec/sec
 	 * 
 	 * TODO: Get max acceleration of the drive train in feet / second / second
 	 */
 	public static final double MAX_DRIVE_ACCELERATION = 0;
+	
+	/**
+	 * The max drive jerk in feet/sec/sec/sec
+	 * 
+	 * TODO: Get max jerk of the drive train
+	 */
+	public static final double MAX_DRIVE_JERK = 0;
 	
 	// TODO: Drive: Get distance between left and right wheels
 	public static final double DRIVE_WHEEL_BASE = 0; //In inches
@@ -194,8 +201,40 @@ public class RobotMap {
 	/**
 	 * The autonomous distance from the wall to the center peg in inches.
 	 * The distance is the distance the robot needs to drive and not the true distance
+	 * 
+	 * TODO: Get the distance from the robot to the center peg in auto
 	 */
 	public static final double DISTANCE_TO_CENTER_PEG = 0;
+	
+	/**
+	 * The dimensions to the pegs in auto that would be used in inches or degrees
+	 * 
+	 * TODO: Find the distaces to the side pegs that would be used
+	 */
+	public static final double FORWARD_DISTANCE_TO_SIDE_PEG = 0;
+	public static final double SIDE_DISTANCE_TO_LEFT_PEG = 0;
+	public static final double SIDE_DISTANCE_TO_RIGHT_PEG = 0;
+	public static final double ANGLE_TO_SIDE_PEG = 45;
+	
+	/**
+	 * The threshold of degrees the hood needs to be within to shoot in degrees
+	 */
+	public static final double SHOOT_HOOD_THRESHOLD = 0;
+	
+	/**
+	 * The threshold of degrees the turret needs to be within to shoot in degrees
+	 */
+	public static final double SHOOT_TURRET_THRESHOLD = 0;
+	
+	/**
+	 * The threshold of rpm the shooter needs to be within to shoot in rpm
+	 */
+	public static final double SHOOT_SHOOTER_THRESHOLD = 0;
+	
+	/**
+	 * If the loader is running faster than this percentage, then it is running
+	 */
+	public static final double LOADER_RUNNING_THRESHOLD = 0;
 	
 	/**
 	 * The number of seconds per minute. This is used to convert from feet per second to rpm.
@@ -215,6 +254,11 @@ public class RobotMap {
 	 * If you're actually looking at this JavaDoc, you're probably not from the United States of America
 	 */
 	public static final double INCHES_PER_FOOT = 12;
+	
+	/**
+	 * The number of inches in a meter. Used for two-dimensional motion profiling
+	 */
+	public static final double INCHES_PER_METER = 39.37;
 	
 	/**
 	 * The number of degrees per rotation. This is used in move calculations to change rotations to degrees

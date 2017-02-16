@@ -9,6 +9,14 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.NetworkingDataType;
 import edu.nr.lib.network.TCPServer.Num;
+import edu.nr.robotics.auton.CenterGearAndShootAutoCommand;
+import edu.nr.robotics.auton.DriveToLeftGearAutoCommand;
+import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
+import edu.nr.robotics.auton.DriveToRightGearAutoCommand;
+import edu.nr.robotics.auton.HopperAndShootAutoCommand;
+import edu.nr.robotics.auton.LeftGearAndShootAutoCommand;
+import edu.nr.robotics.auton.LeftGearHopperAndShootAutoCommand;
+import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -28,7 +36,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
+	SendableChooser<Command> autoChooser = new SendableChooser<>();
+	
+	public static SideOfField side;
+	SendableChooser<SideOfField> sideChooser = new SendableChooser<>();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -49,8 +60,19 @@ public class Robot extends IterativeRobot {
 	 * Set a default choice by calling {@link SendableChooser#addDefault} and set other choices by calling {@link SendableChooser#addObject}
 	 */
 	public void autoChooserInit() {
-		chooser.addDefault("Do Nothing", new DoNothingCommand());
-		SmartDashboard.putData("Auto mode", chooser);
+		autoChooser.addDefault("Do Nothing", new DoNothingCommand());
+		autoChooser.addObject("Right Gear", new DriveToRightGearAutoCommand());
+		autoChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
+		autoChooser.addObject("Left Gear", new DriveToLeftGearAutoCommand());
+		autoChooser.addObject("Hopper and Shoot", new HopperAndShootAutoCommand());
+		autoChooser.addObject("Left Gear and Shoot", new LeftGearAndShootAutoCommand());
+		autoChooser.addObject("Center Gear and Shoot", new CenterGearAndShootAutoCommand());
+		autoChooser.addObject("Left Gear and Hopper Shoot", new LeftGearHopperAndShootAutoCommand());
+		SmartDashboard.putData("Auto mode", autoChooser);
+		
+		sideChooser.addDefault("Red", SideOfField.red);
+		sideChooser.addObject("Blue", SideOfField.blue);
+		SmartDashboard.putData("Side of field", sideChooser);
 	}
 	
 	/**
@@ -87,11 +109,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		autonomousCommand = autoChooser.getSelected();
+		side = sideChooser.getSelected();
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		
 	}
 
 	/**
