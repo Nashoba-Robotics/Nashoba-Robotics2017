@@ -55,7 +55,9 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int GET_GEAR_IN_BUTTON_NUMBER = -1;
 	private static final int GET_GEAR_OUT_BUTTON_NUMBER = -1;
 	
-	private static final int GEAR_TOGGLE_BUTTON_NUMBER = -1;
+	private static final int DRIVE_GEAR_TOGGLE_BUTTON_NUMBER = -1;
+	
+	private static final int DRIVE_REVERSE_BUTTON_NUMBER = 1;
 
 	private double driveSpeedMultiplier = 1;
 
@@ -70,9 +72,9 @@ public class OI implements SmartDashboardSource, Periodic {
 	private JoystickButton intakeSwitch;
 	private JoystickButton shooterSwitch;
 
-	private OI() {
-		//TODO: OI: Create buttons
-		
+	private JoystickButton driveReverse;
+	
+	private OI() {		
 		driveLeft = new Joystick(RobotMap.STICK_LEFT);
 		driveRight = new Joystick(RobotMap.STICK_RIGHT);
 		
@@ -88,22 +90,26 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	public void initDriveLeft() {
 		
-		new JoystickButton(driveLeft, GEAR_TOGGLE_BUTTON_NUMBER).toggleWhenPressed(new NRCommand(Drive.getInstance()) {
+
+	}
+
+	public void initDriveRight() {
+		
+		driveReverse = new JoystickButton(driveRight, DRIVE_REVERSE_BUTTON_NUMBER);
+
+		new JoystickButton(driveLeft, DRIVE_GEAR_TOGGLE_BUTTON_NUMBER).whenPressed(new NRCommand(Drive.getInstance()) {
 			@Override
 			public void onStart() {
 				Drive.getInstance().switchGear();
 			}
 		});
-		
-		new JoystickButton(driveLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
-
-	}
-
-	public void initDriveRight() {
 
 	}
 	
 	public void initOperatorLeft() {
+		
+		new JoystickButton(operatorLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
+
 		
 		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenPressed(new IntakeSpeedCommand(RobotMap.INTAKE_PUKE_SPEED));
 		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenReleased(new IntakeJoystickCommand());
@@ -136,7 +142,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorRight, GET_GEAR_IN_BUTTON_NUMBER).whenPressed(new GearGetPositionInCommand());
 		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new GearGetPositionOutCommand());
 		
-		//TODO: See what to do with loader when shoot button is pressed
+		//TODO: Loader: See what to do with loader when shoot button is pressed
 		//new JoystickButton(operatorRight, SHOOT_BUTTON_NUMBER).();
 	}
 
@@ -184,7 +190,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public double getDriveSpeedMultiplier() {
-		return driveSpeedMultiplier * (driveLeft.getButton(Joystick.ButtonType.kTrigger) ? -1 : 1);
+		return driveSpeedMultiplier * (driveReverse.get() ? -1 : 1);
 	}
 
 	/**
