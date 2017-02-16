@@ -3,7 +3,6 @@ package edu.nr.robotics.multicommands;
 import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -65,19 +64,19 @@ public class AutoTrackingCalculationCommand extends NRCommand {
 			double timeUntilMake = 0; //TODO: Turret: Map turret distance to ball time in air and add time it takes for turret to move to spot and ball to shoot
 			double p = speed * (timeUntilMake);
 			double e = Math.sqrt(Math.pow(curDistReal, 2) + Math.pow(p, 2) - 2 * curDistReal * p * Math.cos(curTurretOrientation));
-			double turretAngle = 180 - Math.asin(curDistReal * Math.sin(curTurretOrientation) / e);
+			AutoTrackingCalculationCommand.turretAngle = 180 - Math.asin(curDistReal * Math.sin(curTurretOrientation) / e);
 			//Sets the change in position of the turret
-			turretAngle /= RobotMap.DEGREES_PER_ROTATION; // Changes from angle to rotations
+			AutoTrackingCalculationCommand.turretAngle /= RobotMap.DEGREES_PER_ROTATION; // Changes from angle to rotations
 			
 			//What the distance of the shot will map as due to forward/backward motion
 			double feltDist = vertSpeed * timeUntilMake;
 			//TODO: Hood: Map feltDist to hood angle
-			this.hoodAngle = 0;
+			AutoTrackingCalculationCommand.hoodAngle = 0;
 			//Sets the position of the hood
-			hoodAngle /= RobotMap.DEGREES_PER_ROTATION; // Changes from angle to rotations
+			AutoTrackingCalculationCommand.hoodAngle /= RobotMap.DEGREES_PER_ROTATION; // Changes from angle to rotations
 			
 			//TODO: Shooter: Map feltDist to shooter speed in rpm
-			this.shooterSpeed = 0;
+			AutoTrackingCalculationCommand.shooterSpeed = 0;
 		}
 	}
 	

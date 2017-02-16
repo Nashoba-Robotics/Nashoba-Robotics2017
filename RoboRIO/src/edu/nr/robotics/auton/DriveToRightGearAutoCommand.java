@@ -3,7 +3,6 @@ package edu.nr.robotics.auton;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.MotionProfileToSideGearCommand;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class DriveToRightGearAutoCommand extends RequiredAutoCommand {
 

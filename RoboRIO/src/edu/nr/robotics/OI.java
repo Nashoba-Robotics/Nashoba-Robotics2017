@@ -1,7 +1,6 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.commandbased.CancelAllCommand;
-import edu.nr.lib.commandbased.CancelCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.interfaces.SmartDashboardSource;
@@ -13,7 +12,6 @@ import edu.nr.robotics.subsystems.gearMover.GearGetPositionInCommand;
 import edu.nr.robotics.subsystems.gearMover.GearGetPositionOutCommand;
 import edu.nr.robotics.subsystems.gearMover.GearRetractCommand;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
-import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.intake.IntakeJoystickCommand;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;

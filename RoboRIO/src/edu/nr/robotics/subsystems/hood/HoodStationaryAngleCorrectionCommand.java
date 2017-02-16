@@ -2,7 +2,6 @@ package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.network.TCPServer;
-import edu.nr.lib.network.TCPServer.Num;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.turret.Turret;
 
