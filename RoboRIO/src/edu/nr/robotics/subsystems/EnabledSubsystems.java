@@ -29,4 +29,7 @@ public class EnabledSubsystems {
 								LOADER_SMARTDASHBOARD_COMPLEX_ENABLED = false,
 								SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED = false,
 								TURRET_SMARTDASHBOARD_COMPLEX_ENABLED = false;
+
+
+	public static final boolean DRIVE_GEAR_ENABLED = false;
 }

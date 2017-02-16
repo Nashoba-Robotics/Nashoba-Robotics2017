@@ -135,6 +135,10 @@ public class RobotMap {
 	public static final int GEAR_GET_POSITION_FORWARD = 0;
 	public static final int GEAR_GET_POSITION_REVERSE = 0;
 	
+	public static final int DRIVE_GEAR_SWITCHER_PCM = 0;
+	public static final int DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL = 0;
+	public static final int DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL = 0;
+	
 	/**
 	 * The number of hundred of millisecond periods per minute
 	 * 

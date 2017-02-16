@@ -11,7 +11,9 @@ import edu.nr.robotics.subsystems.EnabledSubsystems;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
@@ -19,6 +21,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private static Drive singleton;
 
 	private HistoricalCANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
+	
+	private DoubleSolenoid gearSwitcher;
 	
 	/**
 	 * The distance the wheel travels in a single revolution, in feet
@@ -76,6 +80,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public static enum Gear {
 		high, low
 	}
+	
+	//TODO: Drive: Find which gear directions are forward/reverse	
+	private static Value GEAR_HIGH_VALUE = Value.kForward;
+	private static Value GEAR_LOW_VALUE = Value.kReverse;
 
 	private static int HIGH_GEAR_PROFILE = 0;
 	private static int LOW_GEAR_PROFILE = 1;
@@ -141,6 +149,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
+		}
+		if(EnabledSubsystems.DRIVE_GEAR_ENABLED) {
+			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM,
+											  RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL,
+											  RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 		}
 	}
 
@@ -436,21 +449,23 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.setProfile(profile);
 	}
 	
-	public void switchToHighGear() {
-		//TODO: Drive: Switch to high gear
-		
+	public void switchToHighGear() {		
 		if(currentGear != Gear.high) {
 			setProfile(HIGH_GEAR_PROFILE);
 			currentGear = Gear.high;
+			if(gearSwitcher != null) {
+				gearSwitcher.set(GEAR_HIGH_VALUE);
+			}
 		}
 	}
 	
-	public void switchToLowGear() {
-		//TODO: Drive: Switch to low gear
-		
+	public void switchToLowGear() {		
 		if(currentGear != Gear.low) {
 			setProfile(LOW_GEAR_PROFILE);
 			currentGear = Gear.low;
+			if(gearSwitcher != null) {
+				gearSwitcher.set(GEAR_LOW_VALUE);
+			}
 		}
 	}
 	

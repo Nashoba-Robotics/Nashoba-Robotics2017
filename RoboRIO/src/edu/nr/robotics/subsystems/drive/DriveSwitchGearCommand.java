@@ -13,6 +13,7 @@ public class DriveSwitchGearCommand extends NRCommand {
 		this.gear = gear;
 	}
 	
+	//TODO: Drive: Does gear need to stop moving, then wait, then switch?
 	public void onStart() {
 		if(gear == Gear.high) {
 			Drive.getInstance().switchToHighGear();
