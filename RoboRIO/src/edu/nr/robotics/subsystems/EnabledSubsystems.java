@@ -8,7 +8,8 @@ public class EnabledSubsystems {
 								INTAKE_ENABLED 		= false,
 								INTAKE_ARM_ENABLED 	= false,
 								GEAR_MOVER_ENABLED 	= false,
-								LOADER_ENABLED 		= false;
+								LOADER_ENABLED 		= false,
+								AGITATOR_ENABLED 	= false;
 	
 	//These start the subsystem in dumb mode. Changing them later ignores this.
 	public static final boolean DRIVE_DUMB_ENABLED	 	= false,
@@ -17,7 +18,8 @@ public class EnabledSubsystems {
 								TURRET_DUMB_ENABLED 	= false;
 	
 	
-	public static final boolean DRIVE_SMARTDASHBOARD_BASIC_ENABLED 		= false,
+	public static final boolean AGITATOR_SMARTDASHBOARD_BASIC_ENABLED 	= false,
+								DRIVE_SMARTDASHBOARD_BASIC_ENABLED 		= false,
 								HOOD_SMARTDASHBOARD_BASIC_ENABLED 		= false,
 								GEAR_MOVER_SMARTDASHBOARD_BASIC_ENABLED = false,
 								INTAKE_SMARTDASHBOARD_BASIC_ENABLED 	= false,
@@ -27,7 +29,8 @@ public class EnabledSubsystems {
 								TURRET_SMARTDASHBOARD_BASIC_ENABLED 	= false;
 
 
-	public static final boolean DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
+	public static final boolean AGITATOR_SMARTDASHBOARD_COMPLEX_ENABLED		= false,
+								DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								HOOD_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								GEAR_MOVER_SMARTDASHBOARD_COMPLEX_ENABLED 	= false,
 								INTAKE_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,

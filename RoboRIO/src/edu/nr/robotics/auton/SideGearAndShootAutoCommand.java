@@ -7,6 +7,7 @@ import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
+import edu.nr.robotics.subsystems.loader.LoaderShootCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterStationarySpeedCorrectionCommand;
 import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 
@@ -26,6 +27,7 @@ public class SideGearAndShootAutoCommand extends RequiredAutoCommand {
 		addParallel(new HoodStationaryAngleCorrectionCommand());
 		addParallel(new TurretStationaryAngleCorrectionCommand());
 		addParallel(new ShooterStationarySpeedCorrectionCommand());
-		addSequential(new AutoDecideShootCommand());
+		addParallel(new AutoDecideShootCommand());
+		addSequential(new LoaderShootCommand());
 	}
 }

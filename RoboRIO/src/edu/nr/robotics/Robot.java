@@ -17,7 +17,10 @@ import edu.nr.robotics.auton.HopperAndShootAutoCommand;
 import edu.nr.robotics.auton.SideGearAndShootAutoCommand;
 import edu.nr.robotics.auton.GearHopperAndShootAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
+import edu.nr.robotics.multicommands.AutoDecideShootCommand;
 import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.subsystems.EnabledSubsystems;
+import edu.nr.robotics.subsystems.agitator.AgitatorRunCommand;
 import edu.nr.robotics.subsystems.drive.CSVSaver;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
@@ -140,6 +143,7 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 		
 		new AutoTrackingCalculationCommand().start();
+		new AutoDecideShootCommand().start();
 	}
 
 	/**

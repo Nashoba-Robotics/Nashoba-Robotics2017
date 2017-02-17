@@ -9,6 +9,7 @@ import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardCommand;
 import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleCommand;
 import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
+import edu.nr.robotics.subsystems.loader.LoaderShootCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterStationarySpeedCorrectionCommand;
 import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 import edu.wpi.first.wpilibj.Timer;
@@ -50,6 +51,7 @@ public class GearHopperAndShootAutoCommand extends CommandGroup {
 		addParallel(new HoodStationaryAngleCorrectionCommand());
 		addParallel(new TurretStationaryAngleCorrectionCommand());
 		addParallel(new ShooterStationarySpeedCorrectionCommand());
-		addSequential(new AutoDecideShootCommand());
+		addParallel(new AutoDecideShootCommand());
+		addSequential(new LoaderShootCommand());
 	}
 }
