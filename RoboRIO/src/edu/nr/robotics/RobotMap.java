@@ -319,5 +319,7 @@ public class RobotMap {
 	 */
 	public static final double RIGHT_ANGLE = 90;
 
+	public static final int MAGNETIC_NATIVE_UNITS_PER_REV = 4096;
+
 
 }
