@@ -212,13 +212,39 @@ public class RobotMap {
 	
 	/**
 	 * The dimensions to the pegs in auto that would be used in inches or degrees
+	 * The angle to the side peg assumes
 	 * 
 	 * TODO: Find the distaces to the side pegs that would be used
 	 */
 	public static final double FORWARD_DISTANCE_TO_SIDE_PEG = 0;
-	public static final double SIDE_DISTANCE_TO_LEFT_PEG = 0;
-	public static final double SIDE_DISTANCE_TO_RIGHT_PEG = 0;
+	public static final double SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG = 0;
+	public static final double SIDE_DISTANCE_TO_NON_SHOOTER_SIDE_PEG = 0;
 	public static final double ANGLE_TO_SIDE_PEG = 45;
+	
+	/**
+	 * The dimensions to the hopper in auto that would be used in inches or degrees
+	 * The angle to the hopper is assuming hopper is on left and positive is right
+	 * 
+	 * TODO: Find the distances to the hoppers that would be used
+	 */
+	public static final double FORWARD_DISTANCE_WALL_TO_HOPPER = 0;
+	public static final double SIDE_DISTANCE_WALL_TO_HOPPER = 0;
+	public static final double ANGLE_WALL_TO_HOPPER = 0;
+	
+	/**
+	 * The thresholds to finish motion profiling
+	 * 
+	 * TODO: MotionProfileToSideGearCommand: Get thresholds to finish motion profiling
+	 */
+	public static final double PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
+	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
+
+	/**
+	 * Degrees in which the robot needs to be to stop DrivePIDTurnAngleCommand
+	 * 
+	 * TODO: DrivePIDTurnAngleCommand: Get threshold to finish turning
+	 */
+	public static final double DRIVE_PID_TURN_ANGLE_THRESHOLD = 0;
 	
 	/**
 	 * The threshold of degrees the hood needs to be within to shoot in degrees

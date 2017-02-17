@@ -1,8 +1,9 @@
-package edu.nr.robotics.subsystems.drive;
+package edu.nr.robotics.auton;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
 import edu.nr.robotics.RobotMap;
+import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
@@ -27,11 +28,6 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	public static final long period = 0; //Number of times per second to run
 	public static final double MAX_SPEED_PERCENTAGE = 0;
 	public static final double DISTANCE_FROM_ENDPOINT = 0; // On the path the distance away from the path endpoint that we want to stay straight for
-	
-	// TODO: MotionProfileToSideGearCommand: Get thresholds to finish motion profiling
-	//time in milliseconds
-	public static final long PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
-	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
 	
 	public MotionProfileToSideGearCommand(double forwardDistance, double sideDistance, double endHeading) {
 		super(Drive.getInstance());
@@ -62,7 +58,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	
 	@Override
 	public boolean isFinishedNR() {
-		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition(PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD)
+		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD)
 			return true;
 		return false;
 	}
