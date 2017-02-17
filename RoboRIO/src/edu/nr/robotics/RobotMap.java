@@ -174,14 +174,14 @@ public class RobotMap {
 	 *
 	 * TODO: Get shooter speed increment value
 	 */
-	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 0;
+	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 100;
 	
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
 	 *
 	 * TODO: Get hood position increment value
 	 */
-	public static final double HOOD_POSITION_INCREMENT_VALUE = 0;
+	public static final double HOOD_POSITION_INCREMENT_VALUE = 0.5;
 
 	/**
 	 * The angle the turret will automatically turn to start the match in degrees
