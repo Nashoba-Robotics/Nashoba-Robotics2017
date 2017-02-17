@@ -4,21 +4,27 @@ import edu.nr.lib.NRMath;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
-import edu.nr.lib.sensorhistory.sf2.HistoricalCANTalon;
+import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 
+import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
 
 	private static Drive singleton;
 
-	private HistoricalCANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
+	private CANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
+	private TalonEncoder leftEncoder, rightEncoder;
+	
+	private DoubleSolenoid gearSwitcher;
 	
 	/**
 	 * The distance the wheel travels in a single revolution, in feet
@@ -76,6 +82,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public static enum Gear {
 		high, low
 	}
+	
+	//TODO: Drive: Find which gear directions are forward/reverse	
+	private static Value GEAR_HIGH_VALUE = Value.kForward;
+	private static Value GEAR_LOW_VALUE = Value.kReverse;
 
 	private static int HIGH_GEAR_PROFILE = 0;
 	private static int LOW_GEAR_PROFILE = 1;
@@ -90,7 +100,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		//TODO: Drive: Find phase of motors
 		
 		if (EnabledSubsystems.DRIVE_ENABLED) {
-			leftTalon = new HistoricalCANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
+			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 
 			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -110,13 +120,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			leftTalon.setEncPosition(0);
 			leftTalon.reverseSensor(false);
 			leftTalon.enable();
+			
+			leftEncoder = new TalonEncoder(leftTalon);
 
-			tempLeftTalon = new HistoricalCANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
+			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
 			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 
-			rightTalon = new HistoricalCANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
+			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
 
 			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -136,11 +148,18 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.setEncPosition(0);
 			rightTalon.reverseSensor(false);
 			rightTalon.enable();
+			
+			rightEncoder = new TalonEncoder(rightTalon);
 
-			tempRightTalon = new HistoricalCANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
+			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
+		}
+		if(EnabledSubsystems.DRIVE_GEAR_ENABLED) {
+			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM,
+											  RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL,
+											  RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 		}
 	}
 
@@ -239,8 +258,24 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		rightMotorSetpoint = right * RobotMap.RIGHT_DRIVE_DIRECTION;;
 
 		if (leftTalon != null && rightTalon != null) {
-			leftTalon.set(leftMotorSetpoint);
-			rightTalon.set(rightMotorSetpoint);
+			if(leftTalon.getControlMode() == TalonControlMode.Speed) {
+				if(this.currentGear == Gear.high) {
+					leftTalon.set(leftMotorSetpoint / RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+				} else {
+					leftTalon.set(leftMotorSetpoint / RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);					
+				}
+			} else {
+				leftTalon.set(leftMotorSetpoint);
+			}
+			if(rightTalon.getControlMode() == TalonControlMode.Speed) {
+				if(this.currentGear == Gear.high) {
+					rightTalon.set(rightMotorSetpoint / RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+				} else {
+					rightTalon.set(rightMotorSetpoint / RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);					
+				}
+			} else {
+				rightTalon.set(rightMotorSetpoint);
+			}
 		}
 	}
 
@@ -304,12 +339,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		return 0;
 	}
 	
-	public double getHistoricalLeftPosition(double deltaTime) {
-		if (leftTalon != null)
-			return leftTalon.getHistoricalPosition(deltaTime);
-		return 0;
-	}
-	
 	/**
 	 * Gets the current position of the talon
 	 * 
@@ -321,9 +350,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		return 0;
 	}
 	
-	public double getHistoricalRightPosition(double deltaTime) {
-		if (rightTalon != null)
-			return rightTalon.getHistoricalPosition(deltaTime);
+	public double getHistoricalLeftPosition(long deltaTime) {
+		if (leftEncoder != null)
+			return leftEncoder.getPosition(deltaTime);
+		return 0;
+	}
+	
+	public double getHistoricalRightPosition(long deltaTime) {
+		if (rightEncoder != null)
+			return rightEncoder.getPosition(deltaTime);
 		return 0;
 	}
 	
@@ -370,7 +405,19 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			return rightTalon.getSpeed();
 		return 0;
 	}
-
+	
+	public double getHistoricalLeftSpeed(long deltaTime) {
+		if (leftEncoder != null)
+			return leftEncoder.getVelocity(deltaTime);
+		return 0;
+	}
+	
+	public double getHistoricalRightSpeed(long deltaTime) {
+		if (rightEncoder != null)
+			return rightEncoder.getVelocity(deltaTime);
+		return 0;
+	}
+	
 	/**
 	 * Gets the average distance of the encoders
 	 * 
@@ -436,21 +483,37 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.setProfile(profile);
 	}
 	
-	public void switchToHighGear() {
-		//TODO: Drive: Switch to high gear
-		
+	public void switchToHighGear() {		
 		if(currentGear != Gear.high) {
 			setProfile(HIGH_GEAR_PROFILE);
 			currentGear = Gear.high;
+			if(gearSwitcher != null) {
+				gearSwitcher.set(GEAR_HIGH_VALUE);
+			}
 		}
 	}
 	
-	public void switchToLowGear() {
-		//TODO: Drive: Switch to low gear
-		
+	public void switchToLowGear() {		
 		if(currentGear != Gear.low) {
 			setProfile(LOW_GEAR_PROFILE);
 			currentGear = Gear.low;
+			if(gearSwitcher != null) {
+				gearSwitcher.set(GEAR_LOW_VALUE);
+			}
+		}
+	}
+	
+	public void startDumbDrive() {
+		if(leftTalon != null && rightTalon != null) {
+			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
+			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
+		}
+	}
+	
+	public void endDumbDrive() {
+		if(leftTalon != null && rightTalon != null) {
+			leftTalon.changeControlMode(TalonControlMode.Speed);
+			rightTalon.changeControlMode(TalonControlMode.Speed);
 		}
 	}
 	

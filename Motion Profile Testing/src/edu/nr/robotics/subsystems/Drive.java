@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
+import edu.nr.lib.sensorhistory.TalonEncoder;
 
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
 
@@ -40,20 +41,23 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	private static Drive singleton;
 
-	public HistoricalCANTalon talonLF;
-	public HistoricalCANTalon talonRF;
-	public HistoricalCANTalon talonLB;
-	public HistoricalCANTalon talonRB;
+	public CANTalon talonLF;
+	public CANTalon talonRF;
+	public CANTalon talonLB;
+	public CANTalon talonRB;
+	
+	public TalonEncoder encRight;
+	public TalonEncoder encLeft;
 
 	public double leftMotorSetPoint = 0;
 	public double rightMotorSetPoint = 0;
 
 	public final double turn_F_LEFT = 0.873;
 	public final double turn_F_RIGHT = 0.966;
-	public final double turn_P_LEFT = 2.5;
+	public final double turn_P_LEFT = 0; //2.5 when on ground
 	public final double turn_I_LEFT = 0;
 	public final double turn_D_LEFT = 0;
-	public final double turn_P_RIGHT = 2.5;
+	public final double turn_P_RIGHT = 0; //2.5 when on ground
 	public final double turn_I_RIGHT = 0;
 	public final double turn_D_RIGHT = 0;
 
@@ -77,7 +81,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	private Drive() throws IOException {
 		if (driveEnabled) {
-			talonLB = new HistoricalCANTalon(RobotMap.talonLB);
+			talonLB = new CANTalon(RobotMap.talonLB);
 			talonLB.enableBrakeMode(true);
 			talonLB.changeControlMode(TalonControlMode.Speed);
 			talonLB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -89,7 +93,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonLB.reverseSensor(true);
 			talonLB.setStatusFrameRateMs(StatusFrameRate.Feedback, 1);
 
-			talonRB = new HistoricalCANTalon(RobotMap.talonRB);
+			talonRB = new CANTalon(RobotMap.talonRB);
 			talonRB.enableBrakeMode(true);
 			talonRB.changeControlMode(TalonControlMode.Speed);
 			talonRB.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -101,12 +105,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			talonRB.reverseSensor(false);
 			talonRB.setStatusFrameRateMs(StatusFrameRate.Feedback, 1);
 
-			talonLF = new HistoricalCANTalon(RobotMap.talonLF);
+			talonLF = new CANTalon(RobotMap.talonLF);
 			talonLF.enableBrakeMode(true);
 			talonLF.changeControlMode(TalonControlMode.Follower);
 			talonLF.set(talonLB.getDeviceID());
 
-			talonRF = new HistoricalCANTalon(RobotMap.talonRF);
+			talonRF = new CANTalon(RobotMap.talonRF);
 			talonRF.enableBrakeMode(true);
 			talonRF.changeControlMode(TalonControlMode.Follower);
 			talonRF.set(talonRB.getDeviceID());
@@ -116,7 +120,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5, 
 					RobotMap.MAX_JERK * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
 					ticksPerRev, RobotMap.WHEEL_DIAMETER * 0.0254);
-
+			
+			encLeft = new TalonEncoder(talonLB);
+			encRight = new TalonEncoder(talonRB);
+			
 			SmartDashboard.putNumber("ka", ka);
 			SmartDashboard.putNumber("kv", kv);
 			SmartDashboard.putNumber("kd", kd);
@@ -149,12 +156,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 						//Drive.getInstance().talonLB.getSpeed() + " : " +
 						//-Drive.getInstance().leftMotorSetPoint *
 						//RobotMap.MAX_RPS * 60);
-	
 						
-						//getHistoricalPosition(double deltaTime)
-						
-						final int DELTA_TIME = 100;
-						SmartDashboard.putString("Current Position", Drive.getInstance().talonLB.getHistoricalPosition(0) + ":" + Drive.getInstance().talonLB.getHistoricalPosition(DELTA_TIME));
+						int deltaTime = 1000;
+						SmartDashboard.putString("Current Position L", encLeft.getPosition(deltaTime) + " : " + talonLB.getPosition());
+						SmartDashboard.putString("Current Position R", encRight.getPosition(deltaTime) + " : " + talonRB.getPosition());
 						
 						SmartDashboard.putString("Speed Right 2", Drive.getInstance().talonRB.getSpeed() + " : " + Drive.getInstance().talonRB.getSetpoint());
 						SmartDashboard.putString("Speed Left 2", Drive.getInstance().talonLB.getSpeed() + " : " + Drive.getInstance().talonLB.getSetpoint());

@@ -28,7 +28,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	public static final long period = 0; //Number of times per second to run
 	public static final double MAX_SPEED_PERCENTAGE = 0;
 	public static final double DISTANCE_FROM_ENDPOINT = 0; // On the path the distance away from the path endpoint that we want to stay straight for
-		
+	
 	public MotionProfileToSideGearCommand(double forwardDistance, double sideDistance, double endHeading) {
 		super(Drive.getInstance());
 		this.forwardDistance = forwardDistance / RobotMap.INCHES_PER_METER;
@@ -58,7 +58,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	
 	@Override
 	public boolean isFinishedNR() {
-		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition(RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD)
+		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD)
 			return true;
 		return false;
 	}

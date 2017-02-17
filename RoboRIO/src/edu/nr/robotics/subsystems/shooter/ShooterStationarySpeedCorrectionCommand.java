@@ -3,7 +3,6 @@ package edu.nr.robotics.subsystems.shooter;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.robotics.RobotMap;
-import edu.nr.robotics.subsystems.hood.Hood;
 import edu.nr.robotics.subsystems.turret.Turret;
 
 public class ShooterStationarySpeedCorrectionCommand extends NRCommand {

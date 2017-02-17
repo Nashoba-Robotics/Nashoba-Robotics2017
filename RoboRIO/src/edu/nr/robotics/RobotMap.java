@@ -135,6 +135,10 @@ public class RobotMap {
 	public static final int GEAR_GET_POSITION_FORWARD = 0;
 	public static final int GEAR_GET_POSITION_REVERSE = 0;
 	
+	public static final int DRIVE_GEAR_SWITCHER_PCM = 0;
+	public static final int DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL = 0;
+	public static final int DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL = 0;
+	
 	/**
 	 * The number of hundred of millisecond periods per minute
 	 * 
@@ -170,14 +174,14 @@ public class RobotMap {
 	 *
 	 * TODO: Get shooter speed increment value
 	 */
-	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 0;
+	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 100;
 	
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
 	 *
 	 * TODO: Get hood position increment value
 	 */
-	public static final double HOOD_POSITION_INCREMENT_VALUE = 0;
+	public static final double HOOD_POSITION_INCREMENT_VALUE = 0.5;
 
 	/**
 	 * The angle the turret will automatically turn to start the match in degrees

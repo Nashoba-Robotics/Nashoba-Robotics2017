@@ -1,10 +1,8 @@
 package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfiler;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
-import edu.nr.lib.motionprofiling.OneDimensionalTrajectoryPremade;
 import edu.nr.lib.motionprofiling.OneDimensionalTrajectorySimple;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
@@ -49,7 +47,7 @@ public class DriveForwardCommand extends NRCommand {
 	
 	@Override
 	public boolean isFinishedNR() {
-		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition(PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD)
+		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD)
 			return true;
 		return false;
 	}

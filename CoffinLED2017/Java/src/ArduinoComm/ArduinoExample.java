@@ -67,7 +67,7 @@ public class ArduinoExample implements SerialPortEventListener {
 		display = GUI.getInstance();
 		
 		CommPortIdentifier portId = null;
-		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
+		Enumeration<?> portEnum = CommPortIdentifier.getPortIdentifiers();
 		// First, Find an instance of serial port as set in PORT_NAMES.
 		// aka: fund the arduino
 		while (portEnum.hasMoreElements()) {
@@ -181,7 +181,7 @@ public class ArduinoExample implements SerialPortEventListener {
 		TextField inText;
 		String lastEntry = "";
 		int outLine = 0, inLine = 0, index = 0;
-		ArrayList cmdBuffer = new ArrayList();
+		ArrayList<String> cmdBuffer = new ArrayList<String>();
 
 		// make the GUI
 		public void initalize() {

@@ -5,7 +5,7 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.commandbased.NRSubsystem;
-import edu.nr.lib.sensorhistory.sf2.HistoricalCANTalon;
+import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +14,8 @@ public class Turret extends NRSubsystem {
 	
 	public static Turret singleton;
 
-	private HistoricalCANTalon talon;
+	private CANTalon talon;
+	private TalonEncoder encoder;
 	
 	public double speedSetpoint = 0;
 	public double positionSetpoint = 0;
@@ -42,7 +43,7 @@ public class Turret extends NRSubsystem {
 	
 	private Turret() { 
 		if (EnabledSubsystems.TURRET_ENABLED) { 
-			talon = new HistoricalCANTalon(RobotMap.TURRET_TALON_PORT);
+			talon = new CANTalon(RobotMap.TURRET_TALON_PORT);
 			
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -126,9 +127,9 @@ public class Turret extends NRSubsystem {
 		return 0;
 	}
 	
-	public double getHistoricalPosition(double deltaTime) {
-		if (talon != null)
-			return talon.getHistoricalPosition(deltaTime);
+	public double getHistoricalPosition(long deltaTime) {
+		if (encoder != null)
+			return encoder.getPosition(deltaTime);
 		return 0;
 	}
 	

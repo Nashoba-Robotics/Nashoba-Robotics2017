@@ -58,7 +58,7 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 		
 		@Override
 		public boolean isFinishedNR() {
-			if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition(RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD)
+			if (Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) RobotMap.PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition((long) RobotMap.PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < RobotMap.PROFILE_POSITION_THRESHOLD)
 				return true;
 			return false;
 		}
