@@ -503,6 +503,20 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		}
 	}
 	
+	public void startDumbDrive() {
+		if(leftTalon != null && rightTalon != null) {
+			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
+			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
+		}
+	}
+	
+	public void endDumbDrive() {
+		if(leftTalon != null && rightTalon != null) {
+			leftTalon.changeControlMode(TalonControlMode.Speed);
+			rightTalon.changeControlMode(TalonControlMode.Speed);
+		}
+	}
+	
 	public Gear getCurrentGear() {
 		return currentGear;
 	}
