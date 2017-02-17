@@ -18,6 +18,9 @@ import edu.nr.robotics.auton.SideGearAndShootAutoCommand;
 import edu.nr.robotics.auton.GearHopperAndShootAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.subsystems.drive.CSVSaver;
+import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
+import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -52,6 +55,7 @@ public class Robot extends IterativeRobot {
 		autoChooserInit();
 		tcpServerInit();
 		OI.init();
+		smartDashboardInit();
 	}
 	
 	/**
@@ -73,6 +77,11 @@ public class Robot extends IterativeRobot {
 		sideChooser.addDefault("Red", SideOfField.red);
 		sideChooser.addObject("Blue", SideOfField.blue);
 		SmartDashboard.putData("Side of field", sideChooser);
+	}
+	
+	public void smartDashboardInit() {
+		SmartDashboard.putData(new CSVSaverEnable());
+		SmartDashboard.putData(new CSVSaverDisable());
 	}
 	
 	/**
