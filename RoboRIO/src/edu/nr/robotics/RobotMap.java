@@ -1,5 +1,8 @@
 package edu.nr.robotics;
 
+import java.util.ArrayList;
+
+import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 
@@ -170,6 +173,14 @@ public class RobotMap {
 	public static final double LOADER_RUN_SPEED = 0;
 	
 	/**
+	 * The speed in rotations per minute for the loader to run at while going in reverse
+	 *
+	 * TODO: Get loader reverse speed
+	 */
+	public static final double LOADER_REVERSE_SPEED = 0;
+
+	
+	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
 	 *
 	 * TODO: Get shooter speed increment value
@@ -307,5 +318,6 @@ public class RobotMap {
 	 * Number of degrees in a right angle
 	 */
 	public static final double RIGHT_ANGLE = 90;
+
 
 }
