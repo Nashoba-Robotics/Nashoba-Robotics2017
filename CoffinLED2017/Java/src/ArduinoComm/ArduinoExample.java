@@ -60,6 +60,9 @@ public class ArduinoExample implements SerialPortEventListener {
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
 
+	private String[] statuses = {"Shooter Speed", "Hood Angle", "Turret Angle"};
+	private String[] abrev = {"SP", "HA", "TA"};
+	
 	public void initialize() {
 		
 
@@ -104,6 +107,8 @@ public class ArduinoExample implements SerialPortEventListener {
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
+		
+		RobotListener();//set the event listener for the robot vars
 	}
 
 	/**
@@ -155,6 +160,52 @@ public class ArduinoExample implements SerialPortEventListener {
 		// ones.
 	}
 
+	
+	//talk to the robot
+	public void RobotListener() {
+		
+		Network.getInstance().setOnMessageReceivedListener(new Network.OnMessageReceivedListener() {
+
+			@Override
+			public void onMessageReceived(String key, Object value) {
+				//read the values
+				ArrayList<Double> values = new ArrayList<Double>();
+				for(int i = 0; i < statuses.length; i++) {
+					values.add(Network.getInstance().getNumber(statuses[i]));
+				}
+				
+				//sp, ha, ta
+				String[] sendStr = new String[values.size()];
+				String col = "0";
+				for(int i = 0; i < values.size(); i++) {
+					if(i > 1) col = "8";
+					sendStr[i] = "lcdPrint("
+					+ Integer.toString(i%2)
+					+ ", "
+					+ col
+					+ ", "
+					+ abrev[0]
+					+ ":"
+					+ Double.toString(values.get(0))
+					+ ");";//"lcdPrint(0, 0, SP:1.2123);
+				}
+				
+				//send the data
+				for(int i = 0; i < values.size(); i++) {
+					if (verify(sendStr[i])) {
+						sendStr(sendStr[i]);
+						GUI.getInstance().appendIn(sendStr[i]);
+					}else {
+						GUI.getInstance().appendIn("***Please end with a ';' : " + sendStr[i] + "***");
+					}
+				}
+			}
+			
+		});
+	}
+	
+	
+	
 	// the GUI class/obj
 	private static class GUI extends Frame {
 		
