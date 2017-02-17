@@ -157,10 +157,6 @@ public class ArduinoExample implements SerialPortEventListener {
 
 	// the GUI class/obj
 	private static class GUI extends Frame {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
 		
 		// make it a singleton
 		private static GUI singleton;

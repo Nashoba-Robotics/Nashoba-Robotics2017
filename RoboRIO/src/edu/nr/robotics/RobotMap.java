@@ -267,6 +267,14 @@ public class RobotMap {
 	public static final double LOADER_RUNNING_THRESHOLD = 0;
 	
 	/**
+	 * The distances the robot would need to go from the gear to the hopper in inches
+	 * 
+	 *  TODO: General: Find distance robot needs to drive from gear to hopper
+	 */
+	public static final double GEAR_TO_HOPPER_SIDE_DIST = 0;
+	public static final double GEAR_TO_HOPPER_FORWARD_DIST = 0;
+	
+	/**
 	 * The number of seconds per minute. This is used to convert from feet per second to rpm.
 	 * 
 	 * If you're actually looking at this JavaDoc, you're a bit silly...
@@ -294,5 +302,10 @@ public class RobotMap {
 	 * The number of degrees per rotation. This is used in move calculations to change rotations to degrees
 	 */
 	public static final double DEGREES_PER_ROTATION = 360;
+	
+	/**
+	 * Number of degrees in a right angle
+	 */
+	public static final double RIGHT_ANGLE = 90;
 
 }
