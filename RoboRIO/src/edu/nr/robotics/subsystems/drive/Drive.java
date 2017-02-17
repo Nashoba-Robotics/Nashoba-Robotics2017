@@ -102,7 +102,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (EnabledSubsystems.DRIVE_ENABLED) {
 			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 
-			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
+			if(EnabledSubsystems.DRIVE_DUMB_ENABLED) {
+				leftTalon.changeControlMode(TalonControlMode.PercentVbus);
+			} else {
+				leftTalon.changeControlMode(TalonControlMode.Speed);
+			}
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			leftTalon.setProfile(LOW_GEAR_PROFILE);
 			leftTalon.setF(F_LOW_GEAR);
@@ -130,7 +134,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
 
-			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
+			if(EnabledSubsystems.DRIVE_DUMB_ENABLED) {
+				rightTalon.changeControlMode(TalonControlMode.PercentVbus);
+			} else {
+				rightTalon.changeControlMode(TalonControlMode.Speed);
+			}
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			rightTalon.setProfile(LOW_GEAR_PROFILE);
 			rightTalon.setF(F_LOW_GEAR);

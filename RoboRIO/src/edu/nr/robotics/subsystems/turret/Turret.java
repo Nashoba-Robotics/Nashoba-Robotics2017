@@ -45,7 +45,11 @@ public class Turret extends NRSubsystem {
 		if (EnabledSubsystems.TURRET_ENABLED) { 
 			talon = new CANTalon(RobotMap.TURRET_TALON_PORT);
 			
-			talon.changeControlMode(TalonControlMode.PercentVbus);
+			if(EnabledSubsystems.TURRET_DUMB_ENABLED) {
+				talon.changeControlMode(TalonControlMode.PercentVbus);
+			} else {
+				talon.changeControlMode(TalonControlMode.Speed);
+			}
 			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
