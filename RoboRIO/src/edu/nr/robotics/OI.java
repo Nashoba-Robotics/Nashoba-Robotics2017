@@ -65,7 +65,6 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER = -1;
 	private static final int INTAKE_SWITCH_BUTTON_NUMBER = -1;
 	private static final int SHOOTER_SWITCH_BUTTON_NUMBER = -1;
-	//TODO: Code dumb drive
 	private static final int DUMB_DRIVE_SWITCH_BUTTON_NUMBER = -1;
 	private static final int INCREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
 	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
