@@ -33,7 +33,7 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	
 	//TODO: OI: Get button numbers
-	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = -1;
+	/*private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = -1;
 	
 	private static final int PUKE_BUTTON_NUMBER = -1;
 	private static final int DEPLOY_INTAKE_BUTTON_NUMBER = -1;
@@ -53,9 +53,34 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int GEAR_DEPLOY_BUTTON_NUMBER = -1;
 	private static final int GEAR_RETRACT_BUTTON_NUMBER = -1;
 	private static final int GET_GEAR_IN_BUTTON_NUMBER = -1;
+	private static final int GET_GEAR_OUT_BUTTON_NUMBER = -1;*/
+	
+	//Old driver station buttons numbers:
+	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = -1;
+	
+	private static final int PUKE_BUTTON_NUMBER = -1;
+	private static final int DEPLOY_INTAKE_BUTTON_NUMBER = -1;
+	private static final int RETRACT_INTAKE_BUTTON_NUMBER = -1;
+	private static final int INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER = -1;
+	private static final int DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER = -1;
+	private static final int INTAKE_SWITCH_BUTTON_NUMBER = -1;
+	private static final int SHOOTER_SWITCH_BUTTON_NUMBER = -1;
+	//TODO: Code dumb drive
+	private static final int DUMB_DRIVE_SWITCH_BUTTON_NUMBER = -1;
+	private static final int INCREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
+	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
+	private static final int SHOOT_BUTTON_NUMBER = -1;
+	
+	private static final int ENABLE_AUTO_TRACKING_BUTTON_NUMBER = -1;
+	private static final int PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER = -1;
+	private static final int PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER = -1;
+	private static final int CANCEL_ALL_BUTTON_NUMBER = -1;
+	private static final int GEAR_DEPLOY_BUTTON_NUMBER = -1;
+	private static final int GEAR_RETRACT_BUTTON_NUMBER = -1;
+	private static final int GET_GEAR_IN_BUTTON_NUMBER = -1;
 	private static final int GET_GEAR_OUT_BUTTON_NUMBER = -1;
 	
-	private static final int DRIVE_GEAR_TOGGLE_BUTTON_NUMBER = -1;
+	private static final int DRIVE_GEAR_TOGGLE_BUTTON_NUMBER = 1;
 	
 	private static final int DRIVE_REVERSE_BUTTON_NUMBER = 1;
 
@@ -126,6 +151,8 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(RobotMap.HOOD_POSITION_INCREMENT_VALUE));
 		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(-RobotMap.HOOD_POSITION_INCREMENT_VALUE));
 		
+		//TODO: Loader: See what to do with loader when shoot button is pressed
+		//new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).();
 	}
 
 	public void initOperatorRight() {
@@ -142,8 +169,6 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorRight, GET_GEAR_IN_BUTTON_NUMBER).whenPressed(new GearGetPositionInCommand());
 		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new GearGetPositionOutCommand());
 		
-		//TODO: Loader: See what to do with loader when shoot button is pressed
-		//new JoystickButton(operatorRight, SHOOT_BUTTON_NUMBER).();
 	}
 
 	public static OI getInstance() {

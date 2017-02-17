@@ -258,8 +258,24 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		rightMotorSetpoint = right * RobotMap.RIGHT_DRIVE_DIRECTION;;
 
 		if (leftTalon != null && rightTalon != null) {
-			leftTalon.set(leftMotorSetpoint);
-			rightTalon.set(rightMotorSetpoint);
+			if(leftTalon.getControlMode() == TalonControlMode.Speed) {
+				if(this.currentGear == Gear.high) {
+					leftTalon.set(leftMotorSetpoint / RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+				} else {
+					leftTalon.set(leftMotorSetpoint / RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);					
+				}
+			} else {
+				leftTalon.set(leftMotorSetpoint);
+			}
+			if(rightTalon.getControlMode() == TalonControlMode.Speed) {
+				if(this.currentGear == Gear.high) {
+					rightTalon.set(rightMotorSetpoint / RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+				} else {
+					rightTalon.set(rightMotorSetpoint / RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);					
+				}
+			} else {
+				rightTalon.set(rightMotorSetpoint);
+			}
 		}
 	}
 
