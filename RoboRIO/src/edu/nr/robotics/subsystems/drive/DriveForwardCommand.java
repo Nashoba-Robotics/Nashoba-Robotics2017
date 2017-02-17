@@ -26,6 +26,11 @@ public class DriveForwardCommand extends NRCommand {
 	public static final long period = 0; //Number of times per second to run
 	public static final double MAX_SPEED_PERCENTAGE = 0;
 	
+	// TODO: DriveForwardCommand: Get thresholds to finish motion profiling
+	public static final double PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
+	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
+
+	
 	public DriveForwardCommand(double inches) {
 		super(Drive.getInstance());
 		this.distance = inches / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI);
@@ -40,5 +45,12 @@ public class DriveForwardCommand extends NRCommand {
 			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance, RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI), RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI) * MAX_SPEED_PERCENTAGE, RobotMap.MAX_DRIVE_ACCELERATION * RobotMap.INCHES_PER_FOOT / (RobotMap.DRIVE_WHEEL_DIAMETER * Math.PI)));
 		}
 		profiler.enable();
+	}
+	
+	@Override
+	public boolean isFinishedNR() {
+		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(PROFILE_TIME_THRESHOLD) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalLeftPosition(PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getLeftPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(PROFILE_TIME_THRESHOLD) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD && Math.abs(Drive.getInstance().getHistoricalRightPosition(PROFILE_TIME_THRESHOLD * 2) - Drive.getInstance().getRightPosition()) < PROFILE_POSITION_THRESHOLD)
+			return true;
+		return false;
 	}
 }

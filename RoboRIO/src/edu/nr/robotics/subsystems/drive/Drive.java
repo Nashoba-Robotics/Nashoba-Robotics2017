@@ -40,7 +40,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The number of encoder ticks per wheel revolution
 	 */
-	static final int TICKS_PER_REV = 256; //TODO: Drive: Get ticks per revolution
+	public static final int TICKS_PER_REV = 256; //TODO: Drive: Get ticks per revolution
 	
 	/**
 	 * The number of CANTalon "Native Units" per revolution

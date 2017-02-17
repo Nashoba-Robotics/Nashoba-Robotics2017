@@ -10,12 +10,12 @@ import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.NetworkingDataType;
 import edu.nr.lib.network.TCPServer.Num;
 import edu.nr.robotics.auton.CenterGearAndShootAutoCommand;
-import edu.nr.robotics.auton.DriveToLeftGearAutoCommand;
+import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
-import edu.nr.robotics.auton.DriveToRightGearAutoCommand;
+import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.HopperAndShootAutoCommand;
-import edu.nr.robotics.auton.LeftGearAndShootAutoCommand;
-import edu.nr.robotics.auton.LeftGearHopperAndShootAutoCommand;
+import edu.nr.robotics.auton.SideGearAndShootAutoCommand;
+import edu.nr.robotics.auton.GearHopperAndShootAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -61,13 +61,13 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autoChooserInit() {
 		autoChooser.addDefault("Do Nothing", new DoNothingCommand());
-		autoChooser.addObject("Right Gear", new DriveToRightGearAutoCommand());
+		autoChooser.addObject("Right Gear", new DriveToNonShooterSideGearAutoCommand());
 		autoChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
-		autoChooser.addObject("Left Gear", new DriveToLeftGearAutoCommand());
+		autoChooser.addObject("Left Gear", new DriveToShooterSideGearAutoCommand());
 		autoChooser.addObject("Hopper and Shoot", new HopperAndShootAutoCommand());
-		autoChooser.addObject("Left Gear and Shoot", new LeftGearAndShootAutoCommand());
+		autoChooser.addObject("Left Gear and Shoot", new SideGearAndShootAutoCommand());
 		autoChooser.addObject("Center Gear and Shoot", new CenterGearAndShootAutoCommand());
-		autoChooser.addObject("Left Gear and Hopper Shoot", new LeftGearHopperAndShootAutoCommand());
+		autoChooser.addObject("Left Gear and Hopper Shoot", new GearHopperAndShootAutoCommand());
 		SmartDashboard.putData("Auto mode", autoChooser);
 		
 		sideChooser.addDefault("Red", SideOfField.red);
