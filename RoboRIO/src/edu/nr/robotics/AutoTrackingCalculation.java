@@ -19,12 +19,13 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	private int lastSeenDistance;
 	
 	private long timeOfLastData;
+	
 	/**
 	 * The amount of time to wait without a picture before sweeping
 	 * 
 	 * TODO: General: Determine the max wait time before sweeping turret
 	 */
-	public static final long MAX_TRACKING_WAIT_TIME = 0;
+	public static final long MIN_TRACKING_WAIT_TIME = 0;
 	
 	private static AutoTrackingCalculation singleton;
 	
@@ -119,6 +120,6 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	}
 	
 	public boolean canSeeTarget() {
-		return (getCurrentTimeMillis() - timeOfLastData) < AutoTrackingCalculation.MAX_TRACKING_WAIT_TIME;
+		return (getCurrentTimeMillis() - timeOfLastData) < AutoTrackingCalculation.MIN_TRACKING_WAIT_TIME;
 	}
 }

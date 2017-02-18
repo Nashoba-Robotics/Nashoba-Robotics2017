@@ -103,6 +103,7 @@ public class Robot extends IterativeRobot {
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 		
 		AutoTrackingCalculation.init();
+		GearAlignCalculation.init();
 	}
 
 	/**
