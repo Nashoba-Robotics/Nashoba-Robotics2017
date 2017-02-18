@@ -101,7 +101,8 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 	private JoystickButton intakeSwitch;
 	private JoystickButton shooterSwitch;
-
+	private JoystickButton dumbDriveSwitch;
+	
 	private JoystickButton driveReverse;
 	
 	// TODO: OI: Get actual Joystick ports
@@ -166,14 +167,16 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 	public void initOperatorLeft() {
 		
-		new JoystickButton(operatorLeft, DUMB_DRIVE_SWITCH_BUTTON_NUMBER).whenPressed(new NRCommand(Drive.getInstance()) {
+		dumbDriveSwitch = new JoystickButton(operatorLeft, DUMB_DRIVE_SWITCH_BUTTON_NUMBER);
+		
+		dumbDriveSwitch.whenPressed(new NRCommand(Drive.getInstance()) {
 			@Override
 			public void onStart() {
 				Drive.getInstance().startDumbDrive();
 			}
 		});
 
-		new JoystickButton(operatorLeft, DUMB_DRIVE_SWITCH_BUTTON_NUMBER).whenReleased(new NRCommand(Drive.getInstance()) {
+		dumbDriveSwitch.whenReleased(new NRCommand(Drive.getInstance()) {
 			@Override
 			public void onStart() {
 				Drive.getInstance().endDumbDrive();
@@ -356,5 +359,9 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 	public boolean isIntakeOn() {
 		return !intakeSwitch.get();
+	}
+
+	public boolean shouldDumbDrive() {
+		return dumbDriveSwitch.get();
 	}
 }

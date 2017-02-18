@@ -1,6 +1,7 @@
 package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.robotics.OI;
 
 public class ClimbCommand extends NRCommand {
 
@@ -10,7 +11,7 @@ public class ClimbCommand extends NRCommand {
 	/**
 	 * Percent voltage
 	 */
-	private static final double CLIMB_SPEED = 0; //TODO: Climber: Find climb speed
+	private static final double CLIMB_VOLTAGE = 0; //TODO: Climber: Find climb speed
 
 	public ClimbCommand() {
 		super(Drive.getInstance());
@@ -26,13 +27,15 @@ public class ClimbCommand extends NRCommand {
 		if(Drive.getInstance().getRightCurrent() > MAX_CURRENT) {
 			Drive.getInstance().setMotorSpeedInPercent(0, 0);
 		} else if(Drive.getInstance().getRightCurrent() < MIN_CURRENT) {
-			Drive.getInstance().setMotorSpeedInPercent(0, CLIMB_SPEED);
+			Drive.getInstance().setMotorSpeedInPercent(0, CLIMB_VOLTAGE);
 		}
 	}
 	
 	@Override
 	public void onEnd() {
-		Drive.getInstance().endDumbDrive();
+		if(!OI.getInstance().shouldDumbDrive()) {
+			Drive.getInstance().endDumbDrive();
+		}
 	}
 	
 	@Override
