@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.agitator;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.subsystems.loader.Loader;
 
 public class AgitatorSpeedCommand extends NRCommand {
 
