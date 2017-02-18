@@ -13,7 +13,8 @@ public class Loader extends NRSubsystem {
 
 	public static Loader singleton;
 
-	private CANTalon talon;
+	private CANTalon talonLow;
+	private CANTalon talonHigh;
 	
 	public double motorSetpoint = 0;
 
@@ -33,10 +34,15 @@ public class Loader extends NRSubsystem {
 		
 	private Loader() { 
 		if (EnabledSubsystems.LOADER_ENABLED) { 		
-			talon = new CANTalon(RobotMap.LOADER_TALON_PORT);
-			talon.changeControlMode(TalonControlMode.PercentVbus);
-			talon.enableBrakeMode(false);
-			talon.enable();
+			talonLow = new CANTalon(RobotMap.LOADER_LOW_TALON_PORT);
+			talonLow.changeControlMode(TalonControlMode.PercentVbus);
+			talonLow.enableBrakeMode(false);
+			talonLow.enable();
+			
+			talonHigh = new CANTalon(RobotMap.LOADER_HIGH_TALON_PORT);
+			talonHigh.changeControlMode(TalonControlMode.PercentVbus);
+			talonHigh.enableBrakeMode(false);
+			talonHigh.enable();
 		}
 	}
 
@@ -61,8 +67,9 @@ public class Loader extends NRSubsystem {
 	 */
 	public void setMotorSpeed(double speed) {
 		motorSetpoint = speed;
-		if (talon != null) {
-			talon.set(motorSetpoint);
+		if (talonLow != null && talonHigh != null) {
+			talonLow.set(motorSetpoint);
+			talonHigh.set(motorSetpoint);
 		}
 	}
 	
@@ -79,12 +86,14 @@ public class Loader extends NRSubsystem {
 	 */
 	@Override
 	public void smartDashboardInfo() {
-		if (talon != null) {
+		if (talonLow != null && talonHigh != null) {
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_BASIC_ENABLED){
-				SmartDashboard.putNumber("Loader Current", talon.getOutputCurrent());
+				SmartDashboard.putNumber("Loader Low Motor Current", talonLow.getOutputCurrent());
+				SmartDashboard.putNumber("Loader High Motor Current", talonHigh.getOutputCurrent());
 			}
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_COMPLEX_ENABLED){
-				SmartDashboard.putNumber("Loader Voltage", talon.getOutputVoltage());
+				SmartDashboard.putNumber("Loader Low Motor Voltage", talonLow.getOutputVoltage());
+				SmartDashboard.putNumber("Loader High Motor Voltage", talonHigh.getOutputVoltage());
 			}
 		}
 	}

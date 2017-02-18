@@ -17,7 +17,8 @@ public class RobotMap {
 	public static final int SHOOTER_TALON_PORT = -1;
 	public static final int CLIMBER_TALON_PORT = -1;
 	public static final int TURRET_TALON_PORT = -1;
-	public static final int LOADER_TALON_PORT = -1;
+	public static final int LOADER_LOW_TALON_PORT = -1;
+	public static final int LOADER_HIGH_TALON_PORT = -1;
 	public static final int AGITATOR_TALON_PORT = -1;
 	public static final int INTAKE_LOW_TALON_PORT = -1;
 	public static final int INTAKE_HIGH_TALON_PORT = -1;
