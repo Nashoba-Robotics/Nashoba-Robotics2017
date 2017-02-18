@@ -2,7 +2,7 @@ package edu.nr.robotics.subsystems.shooter;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.robotics.OI;
-import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.multicommands.AutoTrackingCalculation;
 
 public class ShooterAutoAlignCommand extends NRCommand {
 
@@ -18,7 +18,7 @@ public class ShooterAutoAlignCommand extends NRCommand {
 	@Override
 	public void onExecute() {
 		if (OI.getInstance().isShooterOn()) {
-			Shooter.getInstance().setMotorSpeed(AutoTrackingCalculationCommand.getShooterSpeed());
+			Shooter.getInstance().setMotorSpeed(AutoTrackingCalculation.getInstance().getShooterSpeed());
 		} else {
 			Shooter.getInstance().setMotorSpeed(0);
 		}

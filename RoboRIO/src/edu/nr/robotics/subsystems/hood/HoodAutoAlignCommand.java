@@ -1,7 +1,7 @@
 package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.multicommands.AutoTrackingCalculation;
 
 public class HoodAutoAlignCommand extends NRCommand{
 
@@ -16,7 +16,7 @@ public class HoodAutoAlignCommand extends NRCommand{
 	
 	@Override
 	public void onExecute() {
-		Hood.getInstance().setPosition(AutoTrackingCalculationCommand.getHoodAngle());
+		Hood.getInstance().setPosition(AutoTrackingCalculation.getInstance().getHoodAngle());
 	}
 	
 	@Override

@@ -3,7 +3,7 @@ package edu.nr.robotics.auton;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.multicommands.AutoDecideShootCommand;
-import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.multicommands.AutoTrackingCalculation;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardCommand;
 import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
@@ -15,7 +15,6 @@ public class DriveToMiddleGearAutoCommand extends RequiredAutoCommand {
 
 	public DriveToMiddleGearAutoCommand() {
 		super();
-		addParallel(new AutoTrackingCalculationCommand());
 		addParallel(new EnableAutoTrackingCommand());
 		addSequential(new DriveForwardCommand(RobotMap.DISTANCE_TO_CENTER_PEG));
 		if (Robot.autoShoot) {

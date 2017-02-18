@@ -3,7 +3,7 @@ package edu.nr.robotics.auton;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.multicommands.AutoDecideShootCommand;
-import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.multicommands.AutoTrackingCalculation;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardCommand;
@@ -45,7 +45,6 @@ public class GearHopperAutoCommand extends CommandGroup {
 		} else {
 			addSequential(new DrivePIDTurnAngleCommand(RobotMap.RIGHT_ANGLE));
 		}
-		addParallel(new AutoTrackingCalculationCommand());
 		addParallel(new EnableAutoTrackingCommand());
 		addSequential(new DriveForwardCommand(RobotMap.GEAR_TO_HOPPER_SIDE_DIST - BACKWARD_DRIVE_DISTANCE * Math.sin(RobotMap.ANGLE_TO_SIDE_PEG)));
 		if (Robot.autoShoot)

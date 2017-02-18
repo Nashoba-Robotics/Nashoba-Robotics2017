@@ -1,7 +1,7 @@
 package edu.nr.robotics.subsystems.turret;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.multicommands.AutoTrackingCalculation;
 
 public class TurretAutoAlignCommand extends NRCommand {
 
@@ -16,7 +16,7 @@ public class TurretAutoAlignCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		Turret.getInstance().setMotorSpeed(AutoTrackingCalculationCommand.getTurretAngle());
+		Turret.getInstance().setMotorSpeed(AutoTrackingCalculation.getInstance().getTurretAngle());
 	}
 	
 	@Override

@@ -16,7 +16,7 @@ import edu.nr.robotics.auton.DriveToHopperAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.multicommands.AutoDecideShootCommand;
-import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
+import edu.nr.robotics.multicommands.AutoTrackingCalculation;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -102,6 +102,8 @@ public class Robot extends IterativeRobot {
 		gear_cam_types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
 		gear_cam_types.add(new NetworkingDataType('t', "time"));
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
+		
+		AutoTrackingCalculation.init();
 	}
 
 	/**
@@ -143,7 +145,6 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		
-		new AutoTrackingCalculationCommand().start();
 		new AutoDecideShootCommand().start();
 	}
 

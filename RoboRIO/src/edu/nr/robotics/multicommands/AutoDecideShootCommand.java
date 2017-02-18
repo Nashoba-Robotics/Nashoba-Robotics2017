@@ -21,9 +21,9 @@ public class AutoDecideShootCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		if (Math.abs(AutoTrackingCalculationCommand.getHoodAngle() - Hood.getInstance().getPosition()) < RobotMap.SHOOT_HOOD_THRESHOLD / RobotMap.DEGREES_PER_ROTATION
-				&& Math.abs(AutoTrackingCalculationCommand.getShooterSpeed() - Shooter.getInstance().getSpeed()) < RobotMap.SHOOT_SHOOTER_THRESHOLD
-				&& Math.abs(AutoTrackingCalculationCommand.getTurretAngle() - Turret.getInstance().getPosition()) < RobotMap.SHOOT_TURRET_THRESHOLD / RobotMap.DEGREES_PER_ROTATION) {
+		if (Math.abs(AutoTrackingCalculation.getInstance().getHoodAngle() - Hood.getInstance().getPosition()) < RobotMap.SHOOT_HOOD_THRESHOLD / RobotMap.DEGREES_PER_ROTATION
+				&& Math.abs(AutoTrackingCalculation.getInstance().getShooterSpeed() - Shooter.getInstance().getSpeed()) < RobotMap.SHOOT_SHOOTER_THRESHOLD
+				&& Math.abs(AutoTrackingCalculation.getInstance().getTurretAngle() - Turret.getInstance().getPosition()) < RobotMap.SHOOT_TURRET_THRESHOLD / RobotMap.DEGREES_PER_ROTATION) {
 			if (!Loader.getInstance().isRunning()) {
 				shoot = true;
 			}
