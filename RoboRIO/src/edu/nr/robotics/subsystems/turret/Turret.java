@@ -39,6 +39,8 @@ public class Turret extends NRSubsystem {
 	
 	private boolean autoAlign = false;
 	
+	public int turretTrackDirection = 1;
+	
 	private Turret() { 
 		if (EnabledSubsystems.TURRET_ENABLED) { 
 			talon = new CANTalon(RobotMap.TURRET_TALON_PORT);
@@ -159,8 +161,10 @@ public class Turret extends NRSubsystem {
 		if(talon != null) {
 			if(talon.isFwdLimitSwitchClosed()) {
 				talon.setEncPosition(FORWARD_POSITION);
+				getInstance().turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {
 				talon.setEncPosition(REVERSE_POSITION);
+				getInstance().turretTrackDirection = 1;
 			} 
 		}
 
