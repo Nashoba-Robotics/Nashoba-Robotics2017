@@ -209,5 +209,6 @@ public class Robot extends IterativeRobot {
 		
 		Periodic.runAll();
 		SmartDashboardSource.runAll();
+		SmartDashboard.putData(RobotDiagram.getInstance());
 	}
 }
