@@ -11,7 +11,15 @@ import edu.nr.robotics.subsystems.turret.Turret;
 public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		
 	double turretAngle = 0;
+	
+	/**
+	 * Degrees
+	 */
 	double hoodAngle = 0;
+	
+	/**
+	 * RPM
+	 */
 	double shooterSpeed = 0;
 	
 	private long lastSeenTimeStamp;
@@ -94,23 +102,30 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		
 		//What the distance of the shot will map as due to forward/backward motion
 		double feltDist = vertSpeed * timeUntilMake;
-		//TODO: Hood: Map feltDist to hood angle
+		//TODO: Hood: Map feltDist to hood angle in degrees
 		hoodAngle = 0;
-		//Sets the position of the hood
-		hoodAngle /= Units.DEGREES_PER_ROTATION; // Changes from angle to rotations
 		
 		//TODO: Shooter: Map feltDist to shooter speed in rpm
 		shooterSpeed = 0;
 	}
 	
+	/**
+	 * @return Turret angle in degrees
+	 */
 	public double getTurretAngle() {
 		return turretAngle;
 	}
 
+	/**
+	 * @return Hood angle in degrees
+	 */
 	public double getHoodAngle() {
 		return hoodAngle;
 	}
 	
+	/**
+	 * @return Shooter speed in rpm
+	 */
 	public double getShooterSpeed() {
 		return shooterSpeed;
 	}

@@ -4,9 +4,13 @@ import edu.nr.lib.commandbased.NRCommand;
 
 public class HoodDeltaPositionCommand extends NRCommand{
 
+	// degrees
 	double deltaPosition;
 	double goalPosition;
 	
+	/**
+	 * @param deltaPosition Degrees
+	 */
 	public HoodDeltaPositionCommand(double deltaPosition) {
 		super(Hood.getInstance());
 		this.deltaPosition = deltaPosition;
@@ -14,7 +18,6 @@ public class HoodDeltaPositionCommand extends NRCommand{
 	
 	@Override
 	public void onStart() {
-		Hood.getInstance().setAutoAlign(false);
 		goalPosition = Hood.getInstance().getPosition() + deltaPosition;
 		Hood.getInstance().setPosition(goalPosition);
 	}

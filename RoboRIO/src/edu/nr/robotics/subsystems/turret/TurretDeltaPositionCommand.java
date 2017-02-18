@@ -6,6 +6,10 @@ public class TurretDeltaPositionCommand extends NRCommand{
 
 	double deltaPosition;
 	
+	/**
+	 * 
+	 * @param deltaPosition degrees
+	 */
 	public TurretDeltaPositionCommand(double deltaPosition) {
 		super(Turret.getInstance());
 		this.deltaPosition = deltaPosition;

@@ -6,6 +6,9 @@ public class HoodSpeedCommand extends NRCommand{
 
 	double speed;
 	
+	/**
+	 * Degrees per second
+	 */
 	public HoodSpeedCommand(double speed) {
 		super(Hood.getInstance());
 		this.speed = speed;
@@ -13,7 +16,7 @@ public class HoodSpeedCommand extends NRCommand{
 	
 	@Override
 	public void onStart() {
-		Hood.getInstance().setMotorSpeed(speed);
+		Hood.getInstance().setMotorSpeedInDegreesPerSecond(speed);
 	}
 	
 	@Override

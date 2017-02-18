@@ -15,6 +15,11 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 	}
 	
 	@Override
+	public void onStart() {
+		Hood.getInstance().setAutoAlign(true);
+	}
+	
+	@Override
 	public void onExecute() {
 		double angle = TCPServer.Num.turret.getInstance().getValue('a');
 		double distance = TCPServer.Num.turret.getInstance().getValue('d');
@@ -35,7 +40,6 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 		
 		//TODO: Hood: Map distance of turret to angle of hood in degrees
 		hoodAngle = 0;
-		hoodAngle /= Units.DEGREES_PER_ROTATION; //Changes degrees to rotations
 		Hood.getInstance().setPosition(hoodAngle);
 	}
 	
@@ -44,6 +48,14 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 		return false;
 	}
 	
+	@Override
+	public void onEnd() {
+		Hood.getInstance().setAutoAlign(false);
+	}
+	
+	/**
+	 * @return Degrees
+	 */
 	public static double getHoodAngle() {
 		return hoodAngle;
 	}

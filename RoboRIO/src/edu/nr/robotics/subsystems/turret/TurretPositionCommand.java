@@ -4,8 +4,11 @@ import edu.nr.lib.commandbased.NRCommand;
 
 public class TurretPositionCommand extends NRCommand{
 
-	double position; //In rotations
+	double position; //In degrees
 	
+	/**
+	 * @param position in degrees
+	 */
 	public TurretPositionCommand(double position) {
 		super(Turret.getInstance());
 		this.position = position;

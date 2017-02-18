@@ -20,7 +20,7 @@ public class EnableAutoTrackingCommand extends NRCommand{
 	@Override
 	public void onExecute() {
 		if (!AutoTrackingCalculation.getInstance().canSeeTarget()) {
-			Turret.getInstance().setMotorSpeed(Turret.MAX_TURRET_SPEED * Turret.MAX_TRACKING_PERCENTAGE * Turret.getInstance().turretTrackDirection);
+			Turret.getInstance().setMotorSpeedInDegreesPerSecond(Turret.MAX_SPEED * Turret.MAX_TRACKING_PERCENTAGE * Turret.getInstance().turretTrackDirection);
 		}
 	}
 	

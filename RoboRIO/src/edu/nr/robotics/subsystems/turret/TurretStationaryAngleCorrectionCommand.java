@@ -7,10 +7,18 @@ import edu.nr.robotics.RobotMap;
 
 public class TurretStationaryAngleCorrectionCommand extends NRCommand{
 
+	/**
+	 * degrees
+	 */
 	static double turretAngle;
 	
 	public TurretStationaryAngleCorrectionCommand() {
 		super(Turret.getInstance());
+	}
+	
+	@Override
+	public void onStart() {
+		Turret.getInstance().setAutoAlign(true);
 	}
 	
 	@Override
@@ -32,9 +40,7 @@ public class TurretStationaryAngleCorrectionCommand extends NRCommand{
 		double theta1 = 180 - angleCenter - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
 		double distReal = Math.sqrt(Math.pow(distCenter, 2) + Math.pow(h4, 2) - 2 * distCenter * h4 * Math.cos(theta1));
 		double theta2 = distCenter * Math.sin(theta1) / distReal;
-		double angleReal = theta2 - 90 + Math.atan(RobotMap.Y_TURRET_OFFSET / RobotMap.X_TURRET_OFFSET);
-		
-		turretAngle = angleReal / 360; //Puts angle into rotations
+		turretAngle = theta2 - 90 + Math.atan(RobotMap.Y_TURRET_OFFSET / RobotMap.X_TURRET_OFFSET);
 		Turret.getInstance().setPosition(turretAngle);
 	}
 	
@@ -43,6 +49,15 @@ public class TurretStationaryAngleCorrectionCommand extends NRCommand{
 		return false;
 	}
 	
+	@Override
+	public void onEnd() {
+		Turret.getInstance().setAutoAlign(false);
+	}
+	
+	/**
+	 * 
+	 * @return degrees
+	 */
 	public static double getTurretAngle() {
 		return turretAngle;
 	}

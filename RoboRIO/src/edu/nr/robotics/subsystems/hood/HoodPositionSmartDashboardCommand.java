@@ -9,5 +9,5 @@ public class HoodPositionSmartDashboardCommand extends NRCommand {
 		SmartDashboard.putNumber("Hood Position Setpoint", SmartDashboard.getNumber("Hood Position Setpoint", 0));
 		new HoodPositionCommand(SmartDashboard.getNumber("Hood Position Setpoint", 0)).start();
 	}
-	
+
 }

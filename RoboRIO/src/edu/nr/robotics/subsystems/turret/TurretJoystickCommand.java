@@ -5,7 +5,7 @@ import edu.nr.robotics.OI;
 
 public class TurretJoystickCommand extends JoystickCommand {
 
-	public long joystickCheckPeriod = 0; //TODO: Turret: Find period of checking for switching to joystick control
+	public long joystickCheckPeriod = 100;
 	
 	public TurretJoystickCommand() {
 		super(Turret.getInstance());
@@ -13,7 +13,7 @@ public class TurretJoystickCommand extends JoystickCommand {
 
 	@Override
 	public void onExecute() {
-		Turret.getInstance().setMotorSpeed(OI.getInstance().getTurretValue());
+		Turret.getInstance().setMotorSpeedInPercent(OI.getInstance().getTurretValue());
 	}
 
 	@Override

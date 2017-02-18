@@ -15,22 +15,22 @@ import edu.wpi.first.wpilibj.tables.ITable;
 public class RobotDiagram implements NamedSendable {
 
 	private static RobotDiagram singleton;
-	
+
 	public static RobotDiagram getInstance() {
-		if(singleton == null) {
+		if (singleton == null) {
 			init();
 		}
 		return singleton;
 	}
-	
+
 	public synchronized static void init() {
-		if(singleton == null) {
+		if (singleton == null) {
 			singleton = new RobotDiagram();
 		}
 	}
-	
+
 	private ITable table;
-	
+
 	private RobotDiagram() {
 	}
 
@@ -39,23 +39,35 @@ public class RobotDiagram implements NamedSendable {
 		this.table = subtable;
 		if (table != null) {
 			table.putNumber("Shooter Speed", Shooter.getInstance().getSpeed());
-			table.putNumber("Hood Angle", Hood.getInstance().getPosition() * Units.DEGREES_PER_ROTATION);
-			table.putNumber("Turret Angle", Turret.getInstance().getPosition() * Units.DEGREES_PER_ROTATION);
+			table.putNumber("Hood Angle", Hood.getInstance().getPosition());
+			table.putNumber("Turret Angle", Turret.getInstance().getPosition());
 			table.putNumber("Match Time", DriverStation.getInstance().getMatchTime());
 			table.putBoolean("Can Gear See", GearAlignCalculation.getInstance().canSeeTarget());
 
 			table.putBoolean("Drive High Gear", Drive.getInstance().getCurrentGear() == Drive.Gear.high);
 
-			table.putBoolean("Hood Good", Math.abs(HoodStationaryAngleCorrectionCommand.getHoodAngle() - Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD / Units.DEGREES_PER_ROTATION || Math.abs(AutoTrackingCalculation.getInstance().getHoodAngle() - Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD / Units.DEGREES_PER_ROTATION);
-			table.putBoolean("Turret Good", Math.abs(TurretStationaryAngleCorrectionCommand.getTurretAngle() - Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD / Units.DEGREES_PER_ROTATION || Math.abs(AutoTrackingCalculation.getInstance().getTurretAngle() - Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD / Units.DEGREES_PER_ROTATION);
-			table.putBoolean("Shooter Good", Math.abs(AutoTrackingCalculation.getInstance().getShooterSpeed() - Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD || Math.abs(ShooterStationarySpeedCorrectionCommand.getShooterSpeed() - Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD);
-		
+			table.putBoolean("Hood Good",
+					Math.abs(HoodStationaryAngleCorrectionCommand.getHoodAngle()
+							- Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD
+							|| Math.abs(AutoTrackingCalculation.getInstance().getHoodAngle()
+									- Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD);
+			table.putBoolean("Turret Good",
+					Math.abs(TurretStationaryAngleCorrectionCommand.getTurretAngle()
+							- Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD
+							|| Math.abs(AutoTrackingCalculation.getInstance().getTurretAngle()
+									- Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD);
+			table.putBoolean("Shooter Good",
+					Math.abs(AutoTrackingCalculation.getInstance().getShooterSpeed()
+							- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD
+							|| Math.abs(ShooterStationarySpeedCorrectionCommand.getShooterSpeed()
+									- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD);
+
 			table.putBoolean("Hood Autotracking", Hood.getInstance().isAutoAlign());
 			table.putBoolean("Turret Autotracking", Turret.getInstance().isAutoAlign());
 			table.putBoolean("Shooter Autotracking", Shooter.getInstance().isAutoAlign());
-		
+
 		}
-		
+
 	}
 
 	@Override
@@ -72,5 +84,5 @@ public class RobotDiagram implements NamedSendable {
 	public String getName() {
 		return "Robot Diagram";
 	}
-	
+
 }

@@ -18,13 +18,18 @@ public class Turret extends NRSubsystem {
 	private CANTalon talon;
 	private TalonEncoder encoder;
 	
-	public double speedSetpoint = 0;
-	public double positionSetpoint = 0;
-
-	public static final int TURRET_TICKS_PER_REV = 256; //TODO: Turret: Get ticks per revolution of actual turret
+	/**
+	 * Degrees per second
+	 */
+	private double speedSetpoint = 0;
+	
+	/**
+	 * Degrees
+	 */
+	private double positionSetpoint = 0;
 
 	//TODO: Turret: Find FPID values
-	public static double F = (Turret.MAX_TURRET_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double F = (Turret.MAX_SPEED / Units.DEGREES_PER_ROTATION / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -35,30 +40,37 @@ public class Turret extends NRSubsystem {
 	public static final int FORWARD_POSITION = 0; //TODO: Turret: Find forward position
 	public static final int REVERSE_POSITION = 0; //TODO: Turret: Find reverse position
 	
-	public static final int MOTION_MAGIC = 0;
-	public static final int OPERATOR_CONTROL = 1;
+	//Profiles
+	private static final int MOTION_MAGIC = 0;
+	private static final int OPERATOR_CONTROL = 1;
 	
 	private boolean autoAlign = false;
 	
 	public int turretTrackDirection = 1;
 
 	/**
-	 * The number of turret rotations around the goal position that we can be at
+	 * The number of degrees around the goal position that we can be at
 	 * TODO: Turret: Find the position threshold
 	 */
 	public static final double POSITION_THRESHOLD = 0;
 
 	/**
 	 * The threshold of degrees the turret needs to be within to shoot in degrees
+	 * TODO: Turret: Get shoot threshold
 	 */
 	public static final double SHOOT_THRESHOLD = 0;
 
+	/**
+	 * The angle the turret will automatically turn to start the match in degrees
+	 * 
+	 * TODO: Get preset turret angle for blue side
+	 */
 	public static final double PRESET_ANGLE_BLUE = 0;
 
 	/**
 	 * The angle the turret will automatically turn to start the match in degrees
 	 * 
-	 * TODO: Get preset turret angles for red and blue sides
+	 * TODO: Get preset turret angle for red side
 	 */
 	public static final double PRESET_ANGLE_RED = 0;
 
@@ -70,16 +82,16 @@ public class Turret extends NRSubsystem {
 	public static final double MAX_TRACKING_PERCENTAGE = 0;
 
 	/**
-	 * The max acceleration of the turret, in rotations per minute per second
+	 * The max acceleration of the turret, in degrees per second per second
 	 * TODO: Turret: Find max acceleration
 	 */
-	public static final double MAX_TURRET_ACCELERATION = 0;
+	public static final double MAX_ACCELERATION = 0;
 
 	/**
-	 * The max speed of the turret, in rotations per minute
+	 * The max speed of the turret, in degrees per second
 	 * TODO: Turret: Find max speed
 	 */
-	public static final double MAX_TURRET_SPEED = 0;
+	public static final double MAX_SPEED = 0;
 	
 	private Turret() { 
 		if (EnabledSubsystems.TURRET_ENABLED) { 
@@ -93,12 +105,12 @@ public class Turret extends NRSubsystem {
 			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(Turret.MAX_TURRET_SPEED);
-			talon.setMotionMagicAcceleration(Turret.MAX_TURRET_ACCELERATION);
+			talon.setMotionMagicCruiseVelocity(Turret.MAX_SPEED / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
+			talon.setMotionMagicAcceleration(Turret.MAX_ACCELERATION / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Turret: Find phase
 			talon.enable();
-			getInstance().setAutoAlign(true);
+			setAutoAlign(true);
 		}
 	}
 
@@ -114,83 +126,98 @@ public class Turret extends NRSubsystem {
 			singleton.setJoystickCommand(new TurretJoystickCommand());
 		}
 	}
-
+	
 	/**
-	 * Sets motor speed of turret.
-	 * 
-	 * If not in speed or percentVbus mode, this does nothing.
+	 * Sets motor speed of hood.
 	 * 
 	 * @param speed
-	 *            the turret motor speed, 
-	 *            
-	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
-	 *            If the talon mode is PercentVbus, from -1 to 1
+	 *            the hood motor speed, from -1 to 1
 	 */
-	public void setMotorSpeed(double speed) {
+	public void setMotorSpeedInPercent(double speed) {
+		setMotorSpeedInDegreesPerSecond(speed * MAX_SPEED);
+	}
+
+	/**
+	 * Sets motor speed of hood.
+	 * 
+	 * @param speed
+	 *            the hood motor speed, from -{@value #MAX_SPEED} to {@value #MAX_SPEED}
+	 */
+	public void setMotorSpeedInDegreesPerSecond(double speed) {
 		speedSetpoint = speed;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.MotionMagic) {
-				talon.changeControlMode(TalonControlMode.Speed);
+				if(EnabledSubsystems.HOOD_DUMB_ENABLED) {
+					talon.changeControlMode(TalonControlMode.PercentVbus);
+				} else {
+					talon.changeControlMode(TalonControlMode.Speed);
+				}
 			}
-			talon.set(speedSetpoint);
+			if(mode == CANTalon.TalonControlMode.PercentVbus) {
+				talon.set(speedSetpoint / MAX_SPEED);
+			} else {
+				talon.set(speedSetpoint);				
+			}
 		}
 	}
 	
 	/**
-	 * Set the goal position of the robot. 
-	 * 
-	 * If the robot is not in position mode, this does nothing.
+	 * Set the goal position of the turret. 
 	 * 
 	 * @param position
-	 * 			The goal positions in rotations
+	 * 			The goal positions in degrees
 	 */
 	public void setPosition(double position) {
 		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.Speed) {
+			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
-				talon.set(positionSetpoint);
-			} else if(mode == CANTalon.TalonControlMode.MotionMagic) {
-				talon.set(positionSetpoint);
 			}
+			talon.set(positionSetpoint);
 		}
+
+	}
+	
+	/**
+	 * Set the goal position delta of the turret. 
+	 * 
+	 * @param position
+	 * 			The goal positions delta in degrees
+	 */
+	public void setPositionDelta(double position) {
+		positionSetpoint = position + getPosition();
+		if (talon != null) {
+			CANTalon.TalonControlMode mode = talon.getControlMode();
+			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
+				talon.changeControlMode(TalonControlMode.MotionMagic);
+			}
+			talon.set(positionSetpoint + getPosition());
+		}
+
 	}
 	
 	/**
 	 * Gets the current position of the talon
 	 * 
-	 * @return current position of talon
+	 * @return current position of talon in degrees
 	 */
 	public double getPosition() {
 		if(talon != null)
-			return talon.getPosition();
-		return 0;
-	}
-	
-	public double getHistoricalPosition(long deltaTime) {
-		if (encoder != null)
-			return encoder.getPosition(deltaTime);
+			return talon.getPosition() * Units.DEGREES_PER_ROTATION;
 		return 0;
 	}
 	
 	/**
-	 * This sets the change in position of the turret in revolutions
-	 * 
-	 * @param deltaPosition
+	 * Get the historical value of the talon
+	 * @param deltaTime how long ago to look, in milliseconds
+	 * @return in degrees
 	 */
-	public void setPositionDelta(double deltaPosition) {
-		positionSetpoint = getInstance().getPosition() + deltaPosition;
-		if (talon != null) {
-			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.Speed) {
-				talon.changeControlMode(TalonControlMode.MotionMagic);
-				getInstance().setPosition(getInstance().getPosition() + deltaPosition);
-			} else if(mode == CANTalon.TalonControlMode.MotionMagic) {
-				getInstance().setPosition(getInstance().getPosition() + deltaPosition);
-			}
-		}
+	public double getHistoricalPosition(long deltaTime) {
+		if (encoder != null)
+			return encoder.getPosition(deltaTime) * Units.DEGREES_PER_ROTATION;
+		return 0;
 	}
 	
 	/**
@@ -218,8 +245,8 @@ public class Turret extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
-				SmartDashboard.putString("Turret Position", talon.getPosition() + " : " + getInstance().positionSetpoint);	
+				SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + speedSetpoint);
+				SmartDashboard.putString("Turret Position", talon.getPosition() + " : " + positionSetpoint);	
 			}
 			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
@@ -232,8 +259,8 @@ public class Turret extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		setMotorSpeed(0);
-		setPosition(talon.getPosition());
+		setMotorSpeedInPercent(0);
+		setPosition(getPosition());
 	}
 
 	public void setPID(double p, double i, double d) {

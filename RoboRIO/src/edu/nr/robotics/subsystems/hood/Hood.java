@@ -13,16 +13,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Hood extends NRSubsystem {
 	
-	public static Hood singleton;
+	private static Hood singleton;
 
 	private CANTalon talon;
 	private TalonEncoder encoder;
 	
-	public double speedSetpoint = 0;
-	public double positionSetpoint = 0;
+	/**
+	 * Degrees per second
+	 */
+	private double speedSetpoint = 0;
+	
+	/**
+	 * Degrees
+	 */
+	private double positionSetpoint = 0;
 	
 	//TODO: Hood: Find FPID values
-	public static double F = (Hood.MAX_HOOD_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double F = (Hood.MAX_SPEED / Units.DEGREES_PER_ROTATION / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV );
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -30,36 +37,46 @@ public class Hood extends NRSubsystem {
 	public static double I_OPERATOR_CONTROL = 0;
 	public static double D_OPERATOR_CONTROL = 0;
 	
-	public static final int TOP_POSITION = 0; //TODO: Hood: Find top position
-	public static final int BOTTOM_POSITION = 0; //TODO: Hood: Find bottom position
+	/**
+	 * Degrees
+	 * TODO: Hood: Find top position
+	 */
+	private static final int TOP_POSITION = 0;
+	
+	/**
+	 * Degrees
+	 */
+	private static final int BOTTOM_POSITION = 0;
 
-	public static final int MOTION_MAGIC = 0;
-	public static final int OPERATOR_CONTROL = 1;
+	//CANTalon PID Profile numbers
+	private static final int MOTION_MAGIC = 0;
+	private static final int OPERATOR_CONTROL = 1;
 	
 	private boolean autoAlign = false;
 
 	/**
-	 * The number of hood rotations around the goal position that we can be at
+	 * The number of hood degrees around the goal position that we can be at
 	 * TODO: Hood: Find the position threshold
 	 */
 	public static final double POSITION_THRESHOLD = 0;
 
 	/**
-	 * The threshold of degrees the hood needs to be within to shoot in degrees
+	 * The threshold of degrees the hood needs to be within to shoot in rotations
+	 * TODO: Hood: Find shoot threshold
 	 */
 	public static final double SHOOT_THRESHOLD = 0;
 
 	/**
-	 * The max acceleration of the hood, in rotations per minute per second
+	 * The max acceleration of the hood, in degrees per second per second
 	 * TODO: Hood: Find max acceleration
 	 */
-	public static final double MAX_HOOD_ACCELERATION = 0;
+	public static final double MAX_ACCELERATION = 0;
 
 	/**
-	 * The max speed of the hood, in rotations per minute
+	 * The max speed of the hood, in degrees per second
 	 * TODO: Hood: Find max speed
 	 */
-	public static final double MAX_HOOD_SPEED = 0;
+	public static final double MAX_SPEED = 0;
 	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
@@ -70,16 +87,15 @@ public class Hood extends NRSubsystem {
 			} else {
 				talon.changeControlMode(TalonControlMode.Speed);
 			}
-			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setProfile(OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(Hood.MAX_HOOD_SPEED);
-			talon.setMotionMagicAcceleration(Hood.MAX_HOOD_ACCELERATION);
+			talon.setMotionMagicCruiseVelocity(MAX_SPEED / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
+			talon.setMotionMagicAcceleration(MAX_ACCELERATION / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Hood: Find phase
 			talon.enable();
-			getInstance().setAutoAlign(true);
 		}
 	}
 
@@ -95,54 +111,68 @@ public class Hood extends NRSubsystem {
 			singleton.setJoystickCommand(new HoodJoystickCommand());
 		}
 	}
+	
+	/**
+	 * Sets motor speed of hood.
+	 * 
+	 * @param speed
+	 *            the hood motor speed, from -1 to 1
+	 */
+	public void setMotorSpeedInPercent(double speed) {
+		setMotorSpeedInDegreesPerSecond(speed * MAX_SPEED);
+	}
 
 	/**
 	 * Sets motor speed of hood.
 	 * 
-	 * If not in speed or percentVbus mode, this does nothing.
-	 * 
 	 * @param speed
-	 *            the hood motor speed, 
-	 *            
-	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
-	 *            If the talon mode is PercentVbus, from -1 to 1
+	 *            the hood motor speed, from -{@value #MAX_SPEED} to {@value #MAX_SPEED}
 	 */
-	public void setMotorSpeed(double speed) {
+	public void setMotorSpeedInDegreesPerSecond(double speed) {
 		speedSetpoint = speed;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.MotionMagic) {
-				talon.changeControlMode(TalonControlMode.Speed);
+				if(EnabledSubsystems.HOOD_DUMB_ENABLED) {
+					talon.changeControlMode(TalonControlMode.PercentVbus);
+				} else {
+					talon.changeControlMode(TalonControlMode.Speed);
+				}
 			}
-			talon.set(speedSetpoint);
+			if(mode == CANTalon.TalonControlMode.PercentVbus) {
+				talon.set(speedSetpoint / MAX_SPEED);
+			} else {
+				talon.set(speedSetpoint);				
+			}
 		}
 	}
 	
 	/**
 	 * Set the goal position of the hood. 
 	 * 
-	 * If the hood is not in position mode, this does nothing.
-	 * 
 	 * @param position
-	 * 			The goal positions in rotations
+	 * 			The goal positions in degrees
 	 */
 	public void setPosition(double position) {
 		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.Speed) {
+			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
-				talon.set(positionSetpoint);
-			} else if(mode == CANTalon.TalonControlMode.MotionMagic) {
-				talon.set(positionSetpoint);
 			}
+			talon.set(positionSetpoint);
 		}
 
 	}
 	
+	/**
+	 * Get the position at a time in the past.
+	 * @param deltaTime How long ago to look, in milliseconds
+	 * @return The position in degrees
+	 */
 	public double getHistoricalPosition(long deltaTime) {
 		if (encoder != null)
-			return encoder.getPosition(deltaTime);
+			return encoder.getPosition(deltaTime) * Units.DEGREES_PER_ROTATION;
 		return 0;
 	}
 	
@@ -152,6 +182,7 @@ public class Hood extends NRSubsystem {
 	@Override
 	public void periodic() {
 		if(talon != null) {
+			//TODO: Hood: Is forward limit switch top or bottom?
 			if(talon.isFwdLimitSwitchClosed()) {
 				talon.setEncPosition(TOP_POSITION);
 			} else if(talon.isRevLimitSwitchClosed()) {
@@ -183,8 +214,8 @@ public class Hood extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		setMotorSpeed(0);
-		setPosition(talon.getPosition());
+		setMotorSpeedInPercent(0);
+		setPosition(getPosition());
 	}
 
 	public void setPID(double p, double i, double d) {
@@ -194,11 +225,20 @@ public class Hood extends NRSubsystem {
 	}
 
 	public boolean isMotionMagicMode() {
-		return (talon.getControlMode() == TalonControlMode.MotionMagic);
+		if(talon != null) {
+			return talon.getControlMode() == TalonControlMode.MotionMagic;
+		}
+		return false;
 	}
 
+	/**
+	 * @return Position in degrees
+	 */
 	public double getPosition() {
-		return talon.getPosition();
+		if(talon != null) {
+			return talon.getPosition() * Units.DEGREES_PER_ROTATION;
+		}
+		return 0;
 	}
 	
 	/**

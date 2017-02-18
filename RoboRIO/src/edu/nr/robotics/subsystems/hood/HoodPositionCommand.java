@@ -2,10 +2,14 @@ package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
 
-public class HoodPositionCommand extends NRCommand{
+public class HoodPositionCommand extends NRCommand {
 
 	double position;
-	
+
+	/**
+	 * @param position
+	 *            Degrees
+	 */
 	public HoodPositionCommand(double position) {
 		super(Hood.getInstance());
 		this.position = position;
@@ -15,10 +19,11 @@ public class HoodPositionCommand extends NRCommand{
 	public void onStart() {
 		Hood.getInstance().setPosition(position);
 	}
-	
+
 	@Override
 	public boolean isFinishedNR() {
-		return Hood.getInstance().getPosition() < position + Hood.POSITION_THRESHOLD && Hood.getInstance().getPosition() > position - Hood.POSITION_THRESHOLD;
+		return Hood.getInstance().getPosition() < position + Hood.POSITION_THRESHOLD
+				&& Hood.getInstance().getPosition() > position - Hood.POSITION_THRESHOLD;
 	}
 
 }

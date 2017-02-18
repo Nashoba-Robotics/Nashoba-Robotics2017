@@ -6,6 +6,10 @@ public class TurretSpeedCommand extends NRCommand {
 
 	double speed;
 	
+	/**
+	 * 
+	 * @param speed in degrees per second
+	 */
 	public TurretSpeedCommand(double speed) {
 		super(Turret.getInstance());
 		this.speed = speed;
@@ -13,7 +17,7 @@ public class TurretSpeedCommand extends NRCommand {
 	
 	@Override
 	public void onStart() {
-		Turret.getInstance().setMotorSpeed(speed);
+		Turret.getInstance().setMotorSpeedInDegreesPerSecond(speed);
 	}
 	
 	@Override

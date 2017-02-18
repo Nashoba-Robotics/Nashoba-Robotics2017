@@ -16,7 +16,7 @@ public class TurretAutoAlignCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		Turret.getInstance().setMotorSpeed(AutoTrackingCalculation.getInstance().getTurretAngle());
+		Turret.getInstance().setPosition(AutoTrackingCalculation.getInstance().getTurretAngle());
 	}
 	
 	@Override

@@ -40,7 +40,7 @@ public class TalonEncoder extends TimerTask {
 	 * 
 	 * @param deltaTime
 	 *            How long ago to look, in milliseconds
-	 * @return the position
+	 * @return the position in rotations
 	 */
 	public double getPosition(long deltaTime) {
 
@@ -96,7 +96,7 @@ public class TalonEncoder extends TimerTask {
 	 * 
 	 * @param deltaTime
 	 *            How long ago to look, in milliseconds
-	 * @return the velocity
+	 * @return the velocity in rpm
 	 */
 	public double getVelocity(long deltaTime) {
 

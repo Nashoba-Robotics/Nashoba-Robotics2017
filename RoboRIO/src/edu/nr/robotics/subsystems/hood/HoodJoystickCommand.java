@@ -5,7 +5,10 @@ import edu.nr.robotics.OI;
 
 public class HoodJoystickCommand extends JoystickCommand{
 
-public long joystickCheckPeriod = 0; //TODO: Hood: Find period of checking for switching to joystick control
+	/**
+	 * Milliseconds
+	 */
+	public long joystickCheckPeriod = 100;
 	
 	public HoodJoystickCommand() {
 		super(Hood.getInstance());
@@ -13,7 +16,7 @@ public long joystickCheckPeriod = 0; //TODO: Hood: Find period of checking for s
 
 	@Override
 	public void onExecute() {
-		Hood.getInstance().setMotorSpeed(OI.getInstance().getHoodValue());
+		Hood.getInstance().setMotorSpeedInPercent(OI.getInstance().getHoodValue());
 	}
 
 	@Override

@@ -27,11 +27,13 @@ public class Units {
 	 */
 	public static final double RIGHT_ANGLE = 90;
 	public static final int MAGNETIC_NATIVE_UNITS_PER_REV = 4096;
+	public static final double HUNDRED_MS_PER_SECOND = 10;
 	/**
 	 * The number of hundred of millisecond periods per minute
 	 * 
 	 * This is used to calculate the feedforward value for a velocity feedback PID that is running on a CANTalon.
 	 */
-	public static final double HUNDRED_MS_PER_MIN = 600;
+	public static final double HUNDRED_MS_PER_MIN = HUNDRED_MS_PER_SECOND * SECONDS_PER_MINUTE;
+
 
 }
