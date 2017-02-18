@@ -3,6 +3,8 @@ package edu.nr.robotics.subsystems.agitator;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.commandbased.DoNothingCommand;
+import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -34,7 +36,7 @@ public class Agitator extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Agitator();
-			getInstance().setJoystickCommand(new AgitatorJoystickCommand());
+			getInstance().setJoystickCommand(new AgitatorRunCommand());
 		}
 	}
 	

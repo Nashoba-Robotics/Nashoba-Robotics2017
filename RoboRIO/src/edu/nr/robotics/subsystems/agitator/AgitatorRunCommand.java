@@ -1,19 +1,21 @@
 package edu.nr.robotics.subsystems.agitator;
 
-import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.commandbased.JoystickCommand;
 
-public class AgitatorRunCommand extends NRCommand {
-
-	double percent;
+public class AgitatorRunCommand extends JoystickCommand {
 	
-	public AgitatorRunCommand(double percent) {
+	public AgitatorRunCommand() {
 		super(Agitator.getInstance());
-		this.percent = percent;
 	}
 
 	@Override
-	public void onExecute() {
-		Agitator.getInstance().setMotorSpeed(percent);
+	protected boolean shouldSwitchToJoystick() {
+		return false;
+	}
+
+	@Override
+	protected long getPeriodOfCheckingForSwitchToJoystick() {
+		return Long.MAX_VALUE;
 	}
 	
 }

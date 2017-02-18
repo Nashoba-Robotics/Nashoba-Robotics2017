@@ -13,6 +13,8 @@ import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 
 public class AutoDecideShootCommand extends NRCommand {
 	
+	private static boolean shoot = false;
+	
 	public AutoDecideShootCommand() {
 		super();
 	}
@@ -23,19 +25,25 @@ public class AutoDecideShootCommand extends NRCommand {
 				&& Math.abs(AutoTrackingCalculationCommand.getShooterSpeed() - Shooter.getInstance().getSpeed()) < RobotMap.SHOOT_SHOOTER_THRESHOLD
 				&& Math.abs(AutoTrackingCalculationCommand.getTurretAngle() - Turret.getInstance().getPosition()) < RobotMap.SHOOT_TURRET_THRESHOLD / RobotMap.DEGREES_PER_ROTATION) {
 			if (!Loader.getInstance().isRunning()) {
-				new LoaderRunCommand().start();
+				shoot = true;
 			}
 		} else if (Math.abs(HoodStationaryAngleCorrectionCommand.getHoodAngle() - Hood.getInstance().getPosition()) < RobotMap.SHOOT_HOOD_THRESHOLD / RobotMap.DEGREES_PER_ROTATION
 				&& Math.abs(ShooterStationarySpeedCorrectionCommand.getShooterSpeed() - Shooter.getInstance().getSpeed()) < RobotMap.SHOOT_SHOOTER_THRESHOLD
 				&& Math.abs(TurretStationaryAngleCorrectionCommand.getTurretAngle() - Turret.getInstance().getPosition()) < RobotMap.SHOOT_TURRET_THRESHOLD / RobotMap.DEGREES_PER_ROTATION) {
 			if (!Loader.getInstance().isRunning()) {
-				new LoaderRunCommand().start();
+				shoot = true;
 			}
+		} else {
+			shoot = false;
 		}
 	}
 	
 	@Override
 	public boolean isFinishedNR() {
 		return false;
+	}
+	
+	public static boolean canShoot() {
+		return shoot;
 	}
 }
