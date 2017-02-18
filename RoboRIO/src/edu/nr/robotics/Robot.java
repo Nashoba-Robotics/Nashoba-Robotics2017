@@ -20,6 +20,7 @@ import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -44,6 +45,8 @@ public class Robot extends IterativeRobot {
 	
 	public static SideOfField side;
 	SendableChooser<SideOfField> sideChooser = new SendableChooser<>();
+	
+	public static Compressor robotCompressor = new Compressor();
 	
 	/**
 	 * This function is run when the robot is first started up and should be
