@@ -63,7 +63,6 @@ public class Agitator extends NRSubsystem {
 		if (talon != null) {
 			if (EnabledSubsystems.AGITATOR_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putNumber("Agitator Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Agitator Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);
 			} else if (EnabledSubsystems.AGITATOR_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putNumber("Agitator Voltage", talon.getOutputVoltage());
 			}
