@@ -12,7 +12,7 @@ public class HoodSpeedCommand extends NRCommand{
 	}
 	
 	@Override
-	public void onExecute() {
+	public void onStart() {
 		Hood.getInstance().setMotorSpeed(speed);
 	}
 	

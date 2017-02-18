@@ -1,7 +1,7 @@
 package edu.nr.robotics.subsystems.turret;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.multicommands.AutoTrackingCalculation;
+import edu.nr.robotics.AutoTrackingCalculation;
 
 public class TurretAutoAlignCommand extends NRCommand {
 

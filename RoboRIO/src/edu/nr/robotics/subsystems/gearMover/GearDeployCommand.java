@@ -14,4 +14,8 @@ public class GearDeployCommand extends NRCommand {
 		super(GearMover.getInstance());
 	}
 	
+	public void onStart() {
+		GearMover.getInstance().deployGearMover();
+	}
+	
 }

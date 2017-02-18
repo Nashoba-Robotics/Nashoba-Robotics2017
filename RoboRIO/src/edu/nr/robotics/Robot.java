@@ -15,7 +15,6 @@ import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToHopperAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
-import edu.nr.robotics.multicommands.AutoTrackingCalculation;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.wpi.first.wpilibj.CameraServer;

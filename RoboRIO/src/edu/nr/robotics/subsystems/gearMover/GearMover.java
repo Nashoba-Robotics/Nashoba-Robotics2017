@@ -50,12 +50,12 @@ public class GearMover extends NRSubsystem {
 		currentGearMoverState = GearMoverState.RETRACTED;
 	}
 
-	public void deployGearGetPositionOut() {
+	public void outGearGetPosition() {
 		GearGetPosition.set(Value.kForward);
 		currentGearGetPositionState = GearGetPositionState.DEPLOYED;
 	}
 
-	public void retractGearGetPositionIn() {
+	public void inGearGetPosition() {
 		GearGetPosition.set(Value.kReverse);
 		currentGearGetPositionState = GearGetPositionState.RETRACTED;
 	}

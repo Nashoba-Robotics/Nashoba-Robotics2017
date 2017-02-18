@@ -9,7 +9,7 @@ public class GearGetPositionInCommand extends NRCommand {
 	}
 	
 	public void onStart() {
-		GearMover.getInstance().retractGearGetPositionIn();
+		GearMover.getInstance().inGearGetPosition();
 	}
 	
 }

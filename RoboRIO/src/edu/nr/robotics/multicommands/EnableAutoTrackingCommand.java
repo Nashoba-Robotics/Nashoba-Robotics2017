@@ -2,6 +2,7 @@ package edu.nr.robotics.multicommands;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.robotics.AutoTrackingCalculation;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.hood.Hood;
 import edu.nr.robotics.subsystems.hood.HoodAutoAlignCommand;

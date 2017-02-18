@@ -8,6 +8,6 @@ public class StartLoaderPukeCommand extends CommandGroup {
 
 	public StartLoaderPukeCommand() {
 		addParallel(new LoaderReverseCommand());
-		addSequential(new AgitatorStopCommand());
+		addSequential(new AgitatorStopCommand()); //TODO: Agitator: When loader is reversing, should agitator stop or reverse?
 	}
 }

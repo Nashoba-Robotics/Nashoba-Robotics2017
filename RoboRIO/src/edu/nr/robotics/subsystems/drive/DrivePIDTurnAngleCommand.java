@@ -12,9 +12,13 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 	double initialAngle = 0;
 	double finishAngle = 0;
 	
-	//TODO: Get p value for PIDTurnCommand
+	//TODO: PIDTurnCommand: Get p value 
 	public static final double P = 0;
 	
+	/**
+	 * 
+	 * @param angle in degrees
+	 */
 	public DrivePIDTurnAngleCommand(double angle) {
 		super(Drive.getInstance());
 		this.angle = angle;
@@ -26,13 +30,18 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 		finishAngle = initialAngle + angle;
 	}
 	
+	private double getAngleError() {
+		return finishAngle - NavX.getInstance().getYaw(AngleUnit.DEGREE);
+	}
+	
 	@Override
 	public void onExecute() {
-		Drive.getInstance().arcadeDrive(0, P * (finishAngle - NavX.getInstance().getYaw(AngleUnit.DEGREE)) / (finishAngle - initialAngle));
+		double turn = P * getAngleError();
+		Drive.getInstance().arcadeDrive(0, turn);
 	}
 	
 	@Override
 	public boolean isFinishedNR() {
-		return Math.abs(finishAngle - NavX.getInstance().getYaw(AngleUnit.DEGREE)) < RobotMap.DRIVE_PID_TURN_ANGLE_THRESHOLD;
+		return Math.abs(getAngleError()) < RobotMap.DRIVE_PID_TURN_ANGLE_THRESHOLD;
 	}
 }

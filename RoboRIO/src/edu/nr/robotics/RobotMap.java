@@ -255,7 +255,7 @@ public class RobotMap {
 	/**
 	 * The thresholds to finish motion profiling
 	 * 
-	 * TODO: MotionProfileToSideGearCommand: Get thresholds to finish motion profiling
+	 * TODO: Motion Profiling: Get thresholds to finish motion profiling
 	 */
 	public static final double PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
 	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
@@ -337,6 +337,18 @@ public class RobotMap {
 	public static final double RIGHT_ANGLE = 90;
 
 	public static final int MAGNETIC_NATIVE_UNITS_PER_REV = 4096;
+
+	/**
+	 * The number of turret rotations around the goal position that we can be at
+	 * TODO: Turret: Find the position threshold
+	 */
+	public static final double TURRET_POSITION_THRESHOLD = 0;
+
+	/**
+	 * The number of turret rotations around the goal position that we can be at
+	 * TODO: Hood: Find the position threshold
+	 */
+	public static final double HOOD_POSITION_THRESHOLD = 0;
 
 
 }

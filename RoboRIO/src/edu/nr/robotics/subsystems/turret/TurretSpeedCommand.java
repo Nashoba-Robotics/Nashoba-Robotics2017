@@ -12,7 +12,7 @@ public class TurretSpeedCommand extends NRCommand {
 	}
 	
 	@Override
-	public void onExecute() {
+	public void onStart() {
 		Turret.getInstance().setMotorSpeed(speed);
 	}
 	

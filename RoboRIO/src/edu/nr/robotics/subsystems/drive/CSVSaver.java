@@ -38,7 +38,7 @@ public class CSVSaver {
 		BufferedWriter buffer;
 
 		try {
-			fw = new FileWriter("/home/lvuser/MotorSamplesWithWeight.csv", true);
+			fw = new FileWriter("/home/lvuser/driveData.csv", true);
 			buffer = new BufferedWriter(fw);
 			out = new PrintWriter(buffer);
 			new Thread(new Runnable() {

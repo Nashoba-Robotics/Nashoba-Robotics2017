@@ -9,12 +9,8 @@ public class HoodStopCommand extends NRCommand{
 	}
 
 	@Override
-	public void onExecute() {
+	public void onStart() {
 		Hood.getInstance().disable();
 	}
 	
-	@Override
-	public boolean isFinishedNR() {
-		return false;
-	}
 }

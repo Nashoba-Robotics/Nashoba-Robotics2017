@@ -67,7 +67,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 
 	@Override
 	public long getPeriodOfCheckingForSwitchToJoystick() {
-		return 100; // TODO: Drive: Find the best period for checking DriveJoystickCommand
+		return 100;
 	}
 
 }
