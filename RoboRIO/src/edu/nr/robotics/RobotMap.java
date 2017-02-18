@@ -201,6 +201,13 @@ public class RobotMap {
 	public static final double HOOD_POSITION_INCREMENT_VALUE = 0.5;
 
 	/**
+	 * The percentage of max speed the turret will go when tracking
+	 * 
+	 * TODO: Turret: Determine the percentage of max speed the turret will go when tracking
+	 */
+	public static final double MAX_TURRET_TRACKING_PERCENTAGE = 0;
+	
+	/**
 	 * The angle the turret will automatically turn to start the match in degrees
 	 * 
 	 * TODO: Get preset turret angles for red and blue sides
@@ -290,6 +297,13 @@ public class RobotMap {
 	 */
 	public static final double GEAR_TO_HOPPER_SIDE_DIST = 0;
 	public static final double GEAR_TO_HOPPER_FORWARD_DIST = 0;
+	
+	/**
+	 * The amount of time to wait without a picture before sweeping
+	 * 
+	 * TODO: General: Determine the max wait time before sweeping turret
+	 */
+	public static final long MAX_TRACKING_WAIT_TIME = 0;
 	
 	/**
 	 * The number of seconds per minute. This is used to convert from feet per second to rpm.

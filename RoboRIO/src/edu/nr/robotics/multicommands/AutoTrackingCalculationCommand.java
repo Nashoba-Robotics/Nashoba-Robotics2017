@@ -12,6 +12,8 @@ import edu.nr.robotics.subsystems.turret.Turret;
 
 public class AutoTrackingCalculationCommand extends NRCommand {
 	
+	static long deltaTime = 0;
+	
 	static double turretAngle = 0;
 	static double hoodAngle = 0;
 	static double shooterSpeed = 0;
@@ -27,7 +29,7 @@ public class AutoTrackingCalculationCommand extends NRCommand {
 			long histAngle = TCPServer.Num.turret.getInstance().getValue('a');
 			long histDist = TCPServer.Num.turret.getInstance().getValue('d');
 			long currentTime = (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * RobotMap.MILLISECONDS_PER_SECOND);
-			long deltaTime = currentTime - timeStamp;
+			deltaTime = currentTime - timeStamp;
 			
 			//Code until break manipulates camera angle as if on center of robot
 			double z1 = Math.sqrt(Math.pow(RobotMap.X_CAMERA_OFFSET, 2) + Math.pow(RobotMap.Y_CAMERA_OFFSET, 2));
@@ -95,5 +97,9 @@ public class AutoTrackingCalculationCommand extends NRCommand {
 	
 	public static double getShooterSpeed() {
 		return shooterSpeed;
+	}
+	
+	public static boolean canSeeTarget() {
+		return deltaTime < RobotMap.MAX_TRACKING_WAIT_TIME;
 	}
 }
