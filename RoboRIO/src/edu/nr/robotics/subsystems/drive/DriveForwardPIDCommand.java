@@ -79,6 +79,6 @@ public class DriveForwardPIDCommand extends NRCommand {
 		double leftError = startingPositionLeft + distance - Drive.getInstance().getLeftPosition();
 		double rightError = startingPositionRight + distance - Drive.getInstance().getRightPosition();
 		
-		return Math.abs(leftError) < Drive.PROFILE_POSITION_THRESHOLD && Math.abs(rightError) < Drive.PROFILE_POSITION_THRESHOLD;
+		return Math.abs(leftError) <= Drive.PROFILE_POSITION_THRESHOLD && Math.abs(rightError) <= Drive.PROFILE_POSITION_THRESHOLD;
 	}
 }

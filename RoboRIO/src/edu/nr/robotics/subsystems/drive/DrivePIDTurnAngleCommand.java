@@ -48,6 +48,6 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 	
 	@Override
 	public boolean isFinishedNR() {
-		return Math.abs(getAngleError()) < DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD;
+		return Math.abs(getAngleError()) <= DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD;
 	}
 }
