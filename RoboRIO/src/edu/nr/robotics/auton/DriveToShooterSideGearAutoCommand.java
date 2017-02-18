@@ -2,7 +2,6 @@ package edu.nr.robotics.auton;
 
 import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
-import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
