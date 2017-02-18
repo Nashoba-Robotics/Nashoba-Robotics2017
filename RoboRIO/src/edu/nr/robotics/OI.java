@@ -16,6 +16,8 @@ import edu.nr.robotics.subsystems.intake.IntakeJoystickCommand;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmRetractCommand;
+import edu.nr.robotics.subsystems.loader.LoaderRunCommand;
+import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterDeltaSpeedCommand;
 import edu.nr.robotics.subsystems.turret.TurretPositionCommand;
 import edu.wpi.first.wpilibj.Joystick;
@@ -163,8 +165,8 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(RobotMap.HOOD_POSITION_INCREMENT_VALUE));
 		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(-RobotMap.HOOD_POSITION_INCREMENT_VALUE));
 		
-		//TODO: Loader: See what to do with loader when shoot button is pressed
-		//new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).();
+		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenPressed(new LoaderRunCommand());
+		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenReleased(new LoaderStopCommand());
 	}
 
 	public void initOperatorRight() {

@@ -1,5 +1,8 @@
 package edu.nr.robotics;
 
+import java.util.ArrayList;
+
+import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 
@@ -175,6 +178,13 @@ public class RobotMap {
 	 * The percent voltage for the agitator to run at when turned on
 	 */
 	public static final double AGITATOR_RUN_SPEED = 0;
+
+	/**
+	 * The speed in rotations per minute for the loader to run at while going in reverse
+	 *
+	 * TODO: Get loader reverse speed
+	 */
+	public static final double LOADER_REVERSE_SPEED = 0;
 	
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
@@ -314,5 +324,6 @@ public class RobotMap {
 	 * Number of degrees in a right angle
 	 */
 	public static final double RIGHT_ANGLE = 90;
+
 
 }
