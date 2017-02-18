@@ -18,9 +18,10 @@ public class Agitator extends NRSubsystem {
 	public double motorSetpoint = 0;
 
 	/**
-	 * The percent voltage for the agitator to run at when turned on
+	 * The percent voltage (-1 to 1) for the agitator to run at when turned on
 	 */
-	public static final double RUN_SPEED = 0;
+	public static final double RUN_PERCENT = 0;
+	public static final double REVERSE_PERCENT = -RUN_PERCENT;
 	
 	private Agitator() {
 		if (EnabledSubsystems.AGITATOR_ENABLED) {
@@ -40,7 +41,7 @@ public class Agitator extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Agitator();
-			getInstance().setJoystickCommand(new DoNothingJoystickCommand(getInstance()));
+			getInstance().setJoystickCommand(new AgitatorRunCommand());
 		}
 	}
 	
@@ -51,7 +52,7 @@ public class Agitator extends NRSubsystem {
 	 *            the agitator motor speed in percent voltage, 
 	 *            from -1 to 1
 	 */
-	public void setMotorSpeed(double percent) {
+	public void setMotorVoltagePercent(double percent) {
 		motorSetpoint = percent;
 		if (talon != null) {
 			talon.set(motorSetpoint);
@@ -76,7 +77,7 @@ public class Agitator extends NRSubsystem {
 
 	@Override
 	public void disable() {
-		setMotorSpeed(0);
+		setMotorVoltagePercent(0);
 	}
 
 }
