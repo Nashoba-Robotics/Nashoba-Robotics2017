@@ -557,6 +557,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 				SmartDashboard.putString("Drive Voltage", leftTalon.getOutputVoltage() + " : " + rightTalon.getOutputVoltage());
 				SmartDashboard.putNumber("Drive Left Position", getLeftPosition());
 				SmartDashboard.putNumber("Drive Right Position", getRightPosition());
+				SmartDashboard.putString("Current Drive Gear", getCurrentGear().toString());
 			}
 		}
 	}
