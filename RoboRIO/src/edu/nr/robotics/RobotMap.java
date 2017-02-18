@@ -26,6 +26,7 @@ public class RobotMap {
 	public static final int CLIMBER_TALON_PORT = -1;
 	public static final int TURRET_TALON_PORT = -1;
 	public static final int LOADER_TALON_PORT = -1;
+	public static final int AGITATOR_TALON_PORT = -1;
 	public static final int INTAKE_LOW_TALON_PORT = -1;
 	public static final int INTAKE_HIGH_TALON_PORT = -1;
 	public static final int HOOD_TALON_PORT = -1;
@@ -107,6 +108,7 @@ public class RobotMap {
 
 	// These are multipliers for each subsystem that allow for wiring changes
 	// Adding a negative will switch the motor direction
+	public static final int AGITATOR_DIRECTION = 1;
 	public static final int LEFT_DRIVE_DIRECTION = 1;
 	public static final int RIGHT_DRIVE_DIRECTION = 1;
 	public static final int SHOOTER_DIRECTION = 1;
@@ -168,6 +170,11 @@ public class RobotMap {
 	 * TODO: Get loader run speed
 	 */
 	public static final double LOADER_RUN_SPEED = 0;
+	
+	/**
+	 * The percent voltage for the agitator to run at when turned on
+	 */
+	public static final double AGITATOR_RUN_SPEED = 0;
 	
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
