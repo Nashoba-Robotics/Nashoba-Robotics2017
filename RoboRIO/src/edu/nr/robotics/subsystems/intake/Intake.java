@@ -15,24 +15,31 @@ public class Intake extends NRSubsystem {
 
 	private CANTalon lowTalon, highTalon;
 	
+	/**
+	 * Percent
+	 */
 	public double lowMotorSetpoint = 0;
+	
+	/**
+	 * Percent
+	 */
 	public double highMotorSetpoint = 0;
 
 	/**
-	 * The speed in rotations per minute for the intake to run at while attempting to "puke" all the balls.
+	 * The percent voltage for the intake to run at while attempting to "puke" all the balls.
 	 * 
 	 * Puking balls involves running the intake in reverse to clear any balls that are trapped in it.
 	 * 
 	 * TODO: Get puke speed
 	 */
-	public static final double PUKE_SPEED = 0;
+	public static final double PUKE_VOLTAGE = 0;
 
 	/**
-	 * The speed in rotations per minute for the intake to run at during normal usage
+	 * The percent voltage for the intake to run at during normal usage
 	 * 
 	 * TODO: Get run speed
 	 */
-	public static final double RUN_SPEED = 0;
+	public static final double RUN_VOLTAGE = 0;
 	
 	private Intake() { 
 		if (EnabledSubsystems.INTAKE_ENABLED) { 
@@ -67,12 +74,12 @@ public class Intake extends NRSubsystem {
 	 * 
 	 * If the intake arm is not deployed, the speed is always set to zero instead.
 	 * 
-	 * @param speed
+	 * @param percent
 	 *            the intake motor voltage, from -1 to 1
 	 */
-	public void setMotorSpeed(double speed) {
-		lowMotorSetpoint = speed;
-		highMotorSetpoint = speed;
+	public void setMotorVoltage(double percent) {
+		lowMotorSetpoint = percent;
+		highMotorSetpoint = percent;
 		if (lowTalon != null && highTalon != null) {
 			if(IntakeArm.getInstance().intakeArmIsDeployed()) {
 				lowTalon.set(lowMotorSetpoint);
@@ -85,7 +92,7 @@ public class Intake extends NRSubsystem {
 	}
 	
 	public void onIntakeArmRetract() {
-		setMotorSpeed(0);
+		disable();
 	}
 	
 	/**
@@ -105,8 +112,6 @@ public class Intake extends NRSubsystem {
 			if(EnabledSubsystems.INTAKE_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Low Intake Current", lowTalon.getOutputCurrent());
 				SmartDashboard.putNumber("High Intake Current", highTalon.getOutputCurrent());
-				SmartDashboard.putString("Low Intake Speed", lowTalon.getSpeed() + " : " + getInstance().lowMotorSetpoint);
-				SmartDashboard.putString("High Intake Speed", highTalon.getSpeed() + " : " + getInstance().highMotorSetpoint);	
 			}
 			if(EnabledSubsystems.INTAKE_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Low Intake Voltage", lowTalon.getOutputVoltage());
@@ -120,7 +125,7 @@ public class Intake extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		setMotorSpeed(0);
+		setMotorVoltage(0);
 	}
 	
 }

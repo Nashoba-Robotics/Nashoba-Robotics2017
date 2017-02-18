@@ -11,9 +11,7 @@ public class IntakeJoystickCommand extends JoystickCommand {
 	
 	@Override
 	public void onExecute() {
-		if (OI.getInstance().isShooterOn()) {
-			Intake.getInstance().setMotorSpeed(OI.getInstance().getIntakeValue());
-		}
+		Intake.getInstance().setMotorVoltage(OI.getInstance().getIntakeValue());
 	}
 
 	@Override

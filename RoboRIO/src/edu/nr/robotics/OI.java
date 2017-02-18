@@ -2,6 +2,7 @@ package edu.nr.robotics;
 
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.CancelAllCommand;
+import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.interfaces.SmartDashboardSource;
@@ -187,8 +188,8 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
 
 		
-		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenPressed(new IntakeSpeedCommand(Intake.PUKE_SPEED));
-		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenReleased(new IntakeJoystickCommand());
+		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenPressed(new IntakeSpeedCommand(Intake.PUKE_VOLTAGE));
+		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Intake.getInstance()));
 		
 		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmDeployCommand());
 		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
@@ -278,7 +279,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	 * @return The speed, in rotations per minute
 	 */
 	public double getIntakeValue() {
-		return intakeSwitch.get() ? Intake.RUN_SPEED : 0;
+		return intakeSwitch.get() ? Intake.RUN_VOLTAGE : 0;
 	}
 	
 	public double getTurretValue() {

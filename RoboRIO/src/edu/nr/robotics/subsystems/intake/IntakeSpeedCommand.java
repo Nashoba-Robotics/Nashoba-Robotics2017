@@ -6,6 +6,10 @@ public class IntakeSpeedCommand extends NRCommand {
 
 	double speed;
 	
+	/**
+	 * 
+	 * @param speed Percent voltage
+	 */
 	public IntakeSpeedCommand(double speed) {
 		super(Intake.getInstance());
 		this.speed = speed;
@@ -13,7 +17,7 @@ public class IntakeSpeedCommand extends NRCommand {
 	
 	@Override
 	public void onStart() {
-		Intake.getInstance().setMotorSpeed(speed);
+		Intake.getInstance().setMotorVoltage(speed);
 	}
 	
 	@Override
