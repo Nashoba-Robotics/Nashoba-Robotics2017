@@ -9,19 +9,14 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.NetworkingDataType;
 import edu.nr.lib.network.TCPServer.Num;
-import edu.nr.robotics.auton.CenterGearAndShootAutoCommand;
 import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
 import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
-import edu.nr.robotics.auton.HopperAndShootAutoCommand;
-import edu.nr.robotics.auton.SideGearAndShootAutoCommand;
-import edu.nr.robotics.auton.GearHopperAndShootAutoCommand;
+import edu.nr.robotics.auton.DriveToHopperAutoCommand;
+import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.multicommands.AutoDecideShootCommand;
 import edu.nr.robotics.multicommands.AutoTrackingCalculationCommand;
-import edu.nr.robotics.subsystems.EnabledSubsystems;
-import edu.nr.robotics.subsystems.agitator.AgitatorRunCommand;
-import edu.nr.robotics.subsystems.drive.CSVSaver;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -42,11 +37,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	Command autonomousCommand;
-	SendableChooser<Command> autoChooser = new SendableChooser<>();
+	SendableChooser<Command> autoSpotChooser = new SendableChooser<>();
+	SendableChooser<Boolean> autoShootChooser = new SendableChooser<>();
+	
+	public static boolean autoShoot;
 	
 	public static SideOfField side;
 	SendableChooser<SideOfField> sideChooser = new SendableChooser<>();
-
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -67,15 +65,17 @@ public class Robot extends IterativeRobot {
 	 * Set a default choice by calling {@link SendableChooser#addDefault} and set other choices by calling {@link SendableChooser#addObject}
 	 */
 	public void autoChooserInit() {
-		autoChooser.addDefault("Do Nothing", new DoNothingCommand());
-		autoChooser.addObject("Right Gear", new DriveToNonShooterSideGearAutoCommand());
-		autoChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
-		autoChooser.addObject("Left Gear", new DriveToShooterSideGearAutoCommand());
-		autoChooser.addObject("Hopper and Shoot", new HopperAndShootAutoCommand());
-		autoChooser.addObject("Left Gear and Shoot", new SideGearAndShootAutoCommand());
-		autoChooser.addObject("Center Gear and Shoot", new CenterGearAndShootAutoCommand());
-		autoChooser.addObject("Left Gear and Hopper Shoot", new GearHopperAndShootAutoCommand());
-		SmartDashboard.putData("Auto mode", autoChooser);
+		autoSpotChooser.addDefault("Do Nothing", new DoNothingCommand());
+		autoSpotChooser.addObject("Non Shooter Gear", new DriveToNonShooterSideGearAutoCommand());
+		autoSpotChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
+		autoSpotChooser.addObject("Shooter Gear", new DriveToShooterSideGearAutoCommand());
+		autoSpotChooser.addObject("Hopper", new DriveToHopperAutoCommand());
+		autoSpotChooser.addObject("Gear and Hopper", new GearHopperAutoCommand());
+		SmartDashboard.putData("Auto Destination", autoSpotChooser);
+		
+		autoShootChooser.addDefault("Shoot", Boolean.TRUE);
+		autoShootChooser.addObject("No Shoot", Boolean.FALSE);
+		SmartDashboard.putData("Shooting", autoShootChooser);
 		
 		sideChooser.addDefault("Red", SideOfField.red);
 		sideChooser.addObject("Blue", SideOfField.blue);
@@ -121,7 +121,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = autoChooser.getSelected();
+		autonomousCommand = autoSpotChooser.getSelected();
+		autoShoot = autoShootChooser.getSelected();
 		side = sideChooser.getSelected();
 
 		// schedule the autonomous command (example)

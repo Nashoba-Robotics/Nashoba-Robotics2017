@@ -15,15 +15,15 @@ import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class GearHopperAndShootAutoCommand extends CommandGroup {
+public class GearHopperAutoCommand extends CommandGroup {
 
-	//TODO: GearHopperAndShootAutoCommand: Get distance to drive backward after gear is dropped off
+	//TODO: GearHopperAutoCommand: Get distance to drive backward after gear is dropped off
 	static final double BACKWARD_DRIVE_DISTANCE = 0; //Will be negative
 	
-	// TODO: GearHopperAndShootAutoCommand: Get time to delay while gear is dropped off
+	// TODO: GearHopperAutoCommand: Get time to delay while gear is dropped off
 	static final double GEAR_SECONDS_TO_DELAY = 0; // In seconds
 	
-	public GearHopperAndShootAutoCommand() {
+	public GearHopperAutoCommand() {
 		super();
 		if (Robot.side == SideOfField.blue) {
 			addSequential(new MotionProfileToSideGearCommand(RobotMap.FORWARD_DISTANCE_TO_SIDE_PEG, RobotMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG, RobotMap.ANGLE_TO_SIDE_PEG));
@@ -48,10 +48,7 @@ public class GearHopperAndShootAutoCommand extends CommandGroup {
 		addParallel(new AutoTrackingCalculationCommand());
 		addParallel(new EnableAutoTrackingCommand());
 		addSequential(new DriveForwardCommand(RobotMap.GEAR_TO_HOPPER_SIDE_DIST - BACKWARD_DRIVE_DISTANCE * Math.sin(RobotMap.ANGLE_TO_SIDE_PEG)));
-		addParallel(new HoodStationaryAngleCorrectionCommand());
-		addParallel(new TurretStationaryAngleCorrectionCommand());
-		addParallel(new ShooterStationarySpeedCorrectionCommand());
-		addParallel(new AutoDecideShootCommand());
-		addSequential(new LoaderShootCommand());
+		if (Robot.autoShoot)
+			addSequential(new AutoShootCommand());
 	}
 }

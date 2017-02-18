@@ -13,9 +13,9 @@ public class RequiredAutoCommand extends CommandGroup {
 		addParallel(new GearDeployCommand());
 		addParallel(new HoodPositionCommand(0));
 		if (Robot.side == SideOfField.blue) {
-			addParallel(new TurretPositionCommand(Turret.REVERSE_POSITION));
+			addSequential(new TurretPositionCommand(Turret.REVERSE_POSITION));
 		} else {
-			addParallel(new TurretPositionCommand(Turret.FORWARD_POSITION));
+			addSequential(new TurretPositionCommand(Turret.FORWARD_POSITION));
 		}
 	}
 }
