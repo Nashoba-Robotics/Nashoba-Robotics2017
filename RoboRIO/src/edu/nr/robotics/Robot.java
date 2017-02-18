@@ -96,19 +96,32 @@ public class Robot extends IterativeRobot {
 	 */
 	public void tcpServerInit() {
 		ArrayList<NetworkingDataType> turret_cam_types = new ArrayList<>();
-		turret_cam_types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
-		turret_cam_types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
-		turret_cam_types.add(new NetworkingDataType('t', "time"));
+		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle");
+		NetworkingDataType turretDistance = new NetworkingDataType('d', "distance");
+		NetworkingDataType turretTimeStamp = new NetworkingDataType('t', "time");
+		turret_cam_types.add(turretAngle); //TODO: Coprocessor: Get angle sign and units
+		turret_cam_types.add(turretDistance); //TODO: Coprocessor: Get distance unit
+		turret_cam_types.add(turretTimeStamp);
 		Num.turret.init(turret_cam_types, TCPServer.defaultPort);
 		
 		ArrayList<NetworkingDataType> gear_cam_types = new ArrayList<>();
-		gear_cam_types.add(new NetworkingDataType('a', "angle")); //TODO: Coprocessor: Get angle sign and units
-		gear_cam_types.add(new NetworkingDataType('d', "distance")); //TODO: Coprocessor: Get distance unit
+		NetworkingDataType gearAngle = new NetworkingDataType('a', "angle");
+		NetworkingDataType gearDistance = new NetworkingDataType('d', "distance");
+		gear_cam_types.add(gearAngle); //TODO: Coprocessor: Get angle sign and units
+		gear_cam_types.add(gearDistance); //TODO: Coprocessor: Get distance unit
 		gear_cam_types.add(new NetworkingDataType('t', "time"));
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 		
 		AutoTrackingCalculation.init();
 		GearAlignCalculation.init();
+		
+		turretAngle.addListener(AutoTrackingCalculation.getInstance());
+		turretDistance.addListener(AutoTrackingCalculation.getInstance());
+		turretTimeStamp.addListener(AutoTrackingCalculation.getInstance());
+		
+		gearAngle.addListener(GearAlignCalculation.getInstance());
+		gearDistance.addListener(GearAlignCalculation.getInstance());
+
 	}
 
 	/**

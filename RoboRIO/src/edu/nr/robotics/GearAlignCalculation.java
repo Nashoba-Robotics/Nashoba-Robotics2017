@@ -20,7 +20,6 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	double turnAngle = 0;
 	double driveDistance = 0;
 	
-	private int lastSeenTimeStamp;
 	private int lastSeenAngle;
 	private int lastSeenDistance;
 	
@@ -46,8 +45,6 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 			lastSeenAngle = value;
 		} else if(type.identifier == 'd') {
 			lastSeenDistance = value;
-		} else if(type.identifier == 't') {
-			lastSeenTimeStamp = value;
 		}
 		timeOfLastData = getCurrentTimeMillis();
 	
