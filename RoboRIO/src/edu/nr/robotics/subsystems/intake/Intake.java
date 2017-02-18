@@ -52,9 +52,7 @@ public class Intake extends NRSubsystem {
 	 * If the intake arm is not deployed, the speed is always set to zero instead.
 	 * 
 	 * @param speed
-	 *            the intake motor speed, 
-	 *            
-	 *            from -1 to 1
+	 *            the intake motor voltage, from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
 		lowMotorSetpoint = speed * RobotMap.LOW_INTAKE_DIRECTION;

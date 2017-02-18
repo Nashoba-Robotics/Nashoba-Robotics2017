@@ -12,7 +12,7 @@ public class IntakeSpeedCommand extends NRCommand {
 	}
 	
 	@Override
-	public void onExecute() {
+	public void onStart() {
 		Intake.getInstance().setMotorSpeed(speed);
 	}
 	

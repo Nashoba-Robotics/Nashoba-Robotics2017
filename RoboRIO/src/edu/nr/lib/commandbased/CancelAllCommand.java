@@ -14,6 +14,7 @@ public class CancelAllCommand extends NRCommand {
 	public void onStart() {
 		for (NRSubsystem subsystem : NRSubsystem.subsystems) {
 			subsystem.disable();
+			NRCommand.cancelCommand(subsystem.getCurrentCommand());
 		}
 	}
 	
