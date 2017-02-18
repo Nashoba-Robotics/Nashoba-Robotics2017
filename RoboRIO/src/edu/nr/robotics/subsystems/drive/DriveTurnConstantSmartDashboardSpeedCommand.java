@@ -7,27 +7,19 @@ public class DriveTurnConstantSmartDashboardSpeedCommand extends NRCommand {
 	
 	double turnSpeed;
 	
-	String turnSpeedString;
-	
-	double defaultTurnSpeed;
-	
-	public DriveTurnConstantSmartDashboardSpeedCommand(String turnSpeedString, double defaultTurnSpeed) {
-		super(Drive.getInstance());		
-		
-		this.turnSpeedString = turnSpeedString;
-		
-		this.defaultTurnSpeed = defaultTurnSpeed;
+	public DriveTurnConstantSmartDashboardSpeedCommand() {
+		super(Drive.getInstance());	
 	}
 	
 	@Override
 	public void onStart() {
-		turnSpeed = SmartDashboard.getNumber(turnSpeedString, defaultTurnSpeed);
+		SmartDashboard.putNumber("Drive Constant Turn Speed", SmartDashboard.getNumber("Drive Constant Turn Speed", 0));
 	}
 	
 	@Override
 	public void onExecute() {
+		turnSpeed = SmartDashboard.getNumber("Drive Constant Turn Speed", turnSpeed);
 		Drive.getInstance().arcadeDrive(0, turnSpeed);
-		turnSpeed = SmartDashboard.getNumber(turnSpeedString, turnSpeed);
 	}
 	
 	@Override

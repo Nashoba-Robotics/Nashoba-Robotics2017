@@ -56,12 +56,14 @@ public class DriveForwardPIDCommand extends NRCommand {
 		double dt = time - lastTime;
 		
 		double leftError = startingPositionLeft + distance - Drive.getInstance().getLeftPosition();
+		double dLeftError = leftError - lastErrorLeft;
 		
-		double leftOutput = KP * leftError + KD * (leftError - lastErrorLeft) / dt + KI * leftPositionAccumulator;
+		double leftOutput = KP * leftError + KD * dLeftError / dt + KI * leftPositionAccumulator;
 
 		double rightError = startingPositionRight + distance - Drive.getInstance().getRightPosition();
-		
-		double rightOutput = KP * rightError + KD * (rightError - lastErrorRight) / dt + KI * rightPositionAccumulator;
+		double dRightError = rightError - lastErrorRight;
+
+		double rightOutput = KP * rightError + KD * dRightError / dt + KI * rightPositionAccumulator;
 
 		Drive.getInstance().setMotorSpeedInPercent(leftOutput, rightOutput);
 		

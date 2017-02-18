@@ -27,12 +27,8 @@ public class DriveJoystickCommand extends JoystickCommand {
 			
 			//Make the gyro guide us when we're going straight, 
 			//otherwise reset the gyroscrope and use the joystick turn value
-			if (Math.abs(rotateValue) < 0.05) {
-				if (Math.abs(moveValue) > .1) {
-					rotateValue = gyroCorrection.getTurnValue();
-				} else {
-					gyroCorrection.clearInitialValue();
-				}
+			if (Math.abs(rotateValue) < 0.05 && Math.abs(moveValue) > .1) {
+				rotateValue = gyroCorrection.getTurnValue();
 			} else {
 				gyroCorrection.clearInitialValue();
 			}
@@ -48,8 +44,8 @@ public class DriveJoystickCommand extends JoystickCommand {
 			}
 			// Cube the inputs (while preserving the sign) to increase fine
 			// control while permitting full power
-			right = right * right * right;
-			left = left * left * left;
+			right = NRMath.powWithSign(right, 3);
+			left = NRMath.powWithSign(left, 3);
 			Drive.getInstance().tankDrive(OI.getInstance().getDriveSpeedMultiplier() * left,
 					-OI.getInstance().getDriveSpeedMultiplier() * right);
 		}
