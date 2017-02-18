@@ -31,7 +31,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The diameter of the wheels, in feet
 	 */
-	public static final double WHEEL_DIAMETER = (4.0 / 12.0); //TODO: Drive: Get wheel diameter
+	public static final double WHEEL_DIAMETER = (4.0 / Units.INCHES_PER_FOOT);
 	
 	/**
 	 * The distance the wheel travels in a single revolution, in feet
@@ -40,34 +40,35 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 */
 	static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
 	
-	// TODO: Drive: Get actual max speeds
 	/**
 	 * The max driving speed of the robot in low gear, in feet per second
+	 * TODO: Drive: Get max low gear speed
 	 */
 	public static final double MAX_LOW_GEAR_SPEED = 0;
 
 	/**
 	 * The max driving speed of the robot in high gear, in feet per second
+	 * TODO: Drive: Get max high gear speed
 	 */
 	public static final double MAX_HIGH_GEAR_SPEED = 0;
 	
 	/**
 	 * The max driving acceleration in feet/sec/sec
 	 * 
-	 * TODO: Get max acceleration of the drive train in feet / second / second
+	 * TODO: Drive: Get max acceleration
 	 */
 	public static final double MAX_ACCELERATION = 0;
 	
 	/**
 	 * The max drive jerk in feet/sec/sec/sec
 	 * 
-	 * TODO: Get max jerk of the drive train
+	 * TODO: Drive: Get max jerk
 	 */
 	public static final double MAX_JERK = 0;
 	
 	// TODO: Drive: Get distance between left and right wheels
 	public static final double WHEEL_BASE = 0; //In inches
-		
+			
 	/**
 	 * The maximum speed of the robot in low gear, in rotations per minute
 	 */
@@ -91,12 +92,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The speed that the left drivetrain is currently supposed to be running at, in rotations per minute
 	 */
-	double leftMotorSetpoint = 0;
+	private double leftMotorSetpoint = 0;
 	
 	/**
 	 * The speed that the right drivetrain is currently supposed to be running at, in rotations per minute
 	 */
-	double rightMotorSetpoint = 0;
+	private double rightMotorSetpoint = 0;
 
 	//TODO: Drive: Find FPID values
 	public static final double F_LOW_GEAR = (MAX_LOW_GEAR_RPM / Units.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
@@ -115,43 +116,56 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 	
 	public static enum Gear {
-		high, low
+		high, low;
+		
+		//TODO: Drive: Find which gear directions are forward/reverse	
+		private static Value HIGH_VALUE = Value.kForward;
+		private static Value LOW_VALUE = Value.kReverse;
+
+		private static int HIGH_PROFILE = 0;
+		private static int LOW_PROFILE = 1;
 	}
 	
-	//TODO: Drive: Find which gear directions are forward/reverse	
-	private static Value GEAR_HIGH_VALUE = Value.kForward;
-	private static Value GEAR_LOW_VALUE = Value.kReverse;
-
-	private static int HIGH_GEAR_PROFILE = 0;
-	private static int LOW_GEAR_PROFILE = 1;
 	
-	private static int DEFAULT_PROFILE = LOW_GEAR_PROFILE; //TODO: Drive: What should the default gearing be?
-	
-	private Gear currentGear = Gear.low;
+	private int getCurrentGearProfile() {
+		if(getCurrentGear() == Gear.high) {
+			return Gear.HIGH_PROFILE;
+		} else {
+			return Gear.LOW_PROFILE;
+		}
+	}
 	
 	private double currentMaxRPM() {
-		if(currentGear == Gear.low) {
+		if(getCurrentGear() == Gear.low) {
 			return MAX_LOW_GEAR_RPM;
 		} else {
 			return MAX_HIGH_GEAR_RPM;
 		}
 	}
 	
-	PIDSourceType type = PIDSourceType.kRate;
-
-	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
+	/**
+	 * Position difference compared to end profiler
+	 * TODO: Drive Motion Profiling: Get position threshold
+	 */
+	public static final double PROFILE_POSITION_THRESHOLD = 0;
 
 	/**
-	 * The thresholds to finish motion profiling
+	 * Delta time checked for to compare talon positions to previous positions to end profiler
 	 * 
-	 * TODO: Motion Profiling: Get thresholds to finish motion profiling
+	 * TODO: Drive Motion Profiling: Get time threshold
 	 */
-	public static final double PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
+	public static final double PROFILE_TIME_THRESHOLD = 0;
 	
 	private Drive() {
 		//TODO: Drive: Find phase of motors
 		
 		if (EnabledSubsystems.DRIVE_ENABLED) {
+			
+			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
+					  RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL,
+					  RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
+
+			
 			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 
 			if(EnabledSubsystems.DRIVE_DUMB_ENABLED) {
@@ -160,17 +174,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 				leftTalon.changeControlMode(TalonControlMode.Speed);
 			}
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			leftTalon.setProfile(LOW_GEAR_PROFILE);
+			leftTalon.setProfile(Gear.LOW_PROFILE);
 			leftTalon.setF(F_LOW_GEAR);
 			leftTalon.setP(P_LOW_GEAR);
 			leftTalon.setI(I_LOW_GEAR);
 			leftTalon.setD(D_LOW_GEAR);
-			leftTalon.setProfile(HIGH_GEAR_PROFILE);
+			leftTalon.setProfile(Gear.HIGH_PROFILE);
 			leftTalon.setF(F_HIGH_GEAR);
 			leftTalon.setP(P_HIGH_GEAR);
 			leftTalon.setI(I_HIGH_GEAR);
 			leftTalon.setD(D_HIGH_GEAR);
-			leftTalon.setProfile(DEFAULT_PROFILE);
+			leftTalon.setProfile(getCurrentGearProfile());
 			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
@@ -192,17 +206,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 				rightTalon.changeControlMode(TalonControlMode.Speed);
 			}
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-			rightTalon.setProfile(LOW_GEAR_PROFILE);
+			rightTalon.setProfile(Gear.LOW_PROFILE);
 			rightTalon.setF(F_LOW_GEAR);
 			rightTalon.setP(P_LOW_GEAR);
 			rightTalon.setI(I_LOW_GEAR);
 			rightTalon.setD(D_LOW_GEAR);
-			rightTalon.setProfile(HIGH_GEAR_PROFILE);
+			rightTalon.setProfile(Gear.HIGH_PROFILE);
 			rightTalon.setF(F_HIGH_GEAR);
 			rightTalon.setP(P_HIGH_GEAR);
 			rightTalon.setI(I_HIGH_GEAR);
 			rightTalon.setD(D_HIGH_GEAR);
-			rightTalon.setProfile(DEFAULT_PROFILE);
+			rightTalon.setProfile(getCurrentGearProfile());
 			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
@@ -215,11 +229,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
-		}
-		if(EnabledSubsystems.DRIVE_GEAR_ENABLED) {
-			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
-											  RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL,
-											  RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 		}
 	}
 
@@ -304,30 +313,27 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * Sets the motor speed for the left and right motors
 	 * 
 	 * @param left
-	 *            the left motor speed, from -1 to 1
-	 *            		OR
 	 *            the left motor speed in rpm
 	 *         
 	 * @param right
-	 *            the right motor speed, from -1 to 1
-	 *            		OR
 	 *            the right motor speed in rpm
 	 */
 	public void setMotorSpeedInRPM(double left, double right) {
 		if (leftTalon != null && rightTalon != null) {
+			leftMotorSetpoint = left;
+			rightMotorSetpoint = right;
+
 			if(leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
-				leftMotorSetpoint = left/currentMaxRPM();
+				leftTalon.set(leftMotorSetpoint / currentMaxRPM());
 			} else {
-				leftMotorSetpoint = left;
+				leftTalon.set(leftMotorSetpoint);
 			}
 			if(rightTalon.getControlMode() == TalonControlMode.PercentVbus) {
-				rightMotorSetpoint = right/currentMaxRPM();
+				rightTalon.set(rightMotorSetpoint / currentMaxRPM());
 			} else {
-				rightMotorSetpoint = right;
+				rightTalon.set(rightMotorSetpoint);
 			}
 
-			leftTalon.set(leftMotorSetpoint);
-			rightTalon.set(rightMotorSetpoint);
 		}
 	}
 
@@ -342,42 +348,19 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 */
 	public void setMotorSpeedInPercent(double left, double right) {
 		if (leftTalon != null && rightTalon != null) {
+			leftMotorSetpoint = left * currentMaxRPM();
+			rightMotorSetpoint = right * currentMaxRPM();
+
 			if(leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
-				leftMotorSetpoint = left;
+				leftTalon.set(leftMotorSetpoint / currentMaxRPM());
 			} else {
-				leftMotorSetpoint = left*currentMaxRPM();
+				leftTalon.set(leftMotorSetpoint);
 			}
 			if(rightTalon.getControlMode() == TalonControlMode.PercentVbus) {
-				rightMotorSetpoint = right;
+				rightTalon.set(rightMotorSetpoint / currentMaxRPM());
 			} else {
-				rightMotorSetpoint = right*currentMaxRPM();
+				rightTalon.set(rightMotorSetpoint);
 			}
-
-			leftTalon.set(leftMotorSetpoint);
-			rightTalon.set(rightMotorSetpoint);
-		}
-	}
-
-	/**
-	 * Sets the motor speed for the left and right motors
-	 * 
-	 * @param left
-	 *            the left motor speed, from -1 to 1
-	 *            		OR
-	 *            the left motor speed in rpm
-	 *         
-	 * @param right
-	 *            the right motor speed, from -1 to 1
-	 *            		OR
-	 *            the right motor speed in rpm
-	 */
-	public void setMotorVoltage(double left, double right) {
-		leftMotorSetpoint = left;
-		rightMotorSetpoint = right;
-
-		if (leftTalon != null && rightTalon != null) {
-			leftTalon.set(leftMotorSetpoint);
-			rightTalon.set(rightMotorSetpoint);
 		}
 	}
 
@@ -553,14 +536,14 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public void setPID(double p, double i, double d, double f, Gear gear) {
 		if(gear == Gear.high) {
 			if (leftTalon != null) 
-				leftTalon.setPID(p, i, d, f, 0, 0, HIGH_GEAR_PROFILE);
+				leftTalon.setPID(p, i, d, f, 0, 0, Gear.HIGH_PROFILE);
 			if (rightTalon != null)
-				rightTalon.setPID(p, i, d, f, 0, 0, HIGH_GEAR_PROFILE);
+				rightTalon.setPID(p, i, d, f, 0, 0, Gear.HIGH_PROFILE);
 		} else {
 			if (leftTalon != null)
-				leftTalon.setPID(p, i, d, f, 0, 0, LOW_GEAR_PROFILE);
+				leftTalon.setPID(p, i, d, f, 0, 0, Gear.LOW_PROFILE);
 			if (rightTalon != null)
-				rightTalon.setPID(p, i, d, f, 0, 0, LOW_GEAR_PROFILE);
+				rightTalon.setPID(p, i, d, f, 0, 0, Gear.LOW_PROFILE);
 		}
 	}
 
@@ -586,21 +569,19 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 	
 	public void switchToHighGear() {		
-		if(currentGear != Gear.high) {
-			setProfile(HIGH_GEAR_PROFILE);
-			currentGear = Gear.high;
+		if(getCurrentGear() != Gear.high) {
+			setProfile(Gear.HIGH_PROFILE);
 			if(gearSwitcher != null) {
-				gearSwitcher.set(GEAR_HIGH_VALUE);
+				gearSwitcher.set(Gear.HIGH_VALUE);
 			}
 		}
 	}
 	
 	public void switchToLowGear() {		
-		if(currentGear != Gear.low) {
-			setProfile(LOW_GEAR_PROFILE);
-			currentGear = Gear.low;
+		if(getCurrentGear() != Gear.low) {
+			setProfile(Gear.LOW_PROFILE);
 			if(gearSwitcher != null) {
-				gearSwitcher.set(GEAR_LOW_VALUE);
+				gearSwitcher.set(Gear.LOW_VALUE);
 			}
 		}
 	}
@@ -620,7 +601,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 	
 	public Gear getCurrentGear() {
-		return currentGear;
+		if(gearSwitcher != null) {
+			if(gearSwitcher.get() == Gear.HIGH_VALUE) {
+				return Gear.high;
+			} else {
+				return Gear.low;
+			}
+		} else {
+			return Gear.low;
+		}
 	}
 	
 	/**
@@ -677,12 +666,16 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 
 	public void switchGear() {
-		if(currentGear == Gear.low) {
+		if(getCurrentGear() == Gear.low) {
 			switchToHighGear();
 		} else {
 			switchToLowGear();
 		}
 	}
+	
+	// PID SOURCE
+	
+	private PIDSourceType type = PIDSourceType.kRate;
 
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
@@ -712,9 +705,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		}
 	}
 
+	// PID OUTPUT
+	
 	@Override
 	public void pidWrite(double outputLeft, double outputRight) {
 		setMotorSpeedInRPM(outputLeft, outputRight);
 	}
+	
+	// END OF PID
 
 }

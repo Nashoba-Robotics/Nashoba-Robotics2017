@@ -30,7 +30,7 @@ public class DriveForwardCommand extends NRCommand {
 	 */
 	public DriveForwardCommand(double distance) {
 		super(Drive.getInstance());
-		this.distance = distance / Drive.DISTANCE_PER_REV;
+		this.distance = distance / Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV;
 	}
 
 	@Override
