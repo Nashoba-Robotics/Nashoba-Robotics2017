@@ -246,20 +246,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 
 	/**
-	 * Set the voltage ramp rate for both drive talons. Limits the rate at which
-	 * the throttle will change.
-	 * 
-	 * @param rampRate
-	 *            Maximum change in voltage, in volts / sec.
-	 */
-	public void setTalonRampRate(double rampRate) {
-		if (leftTalon != null)
-			leftTalon.setVoltageRampRate(rampRate);
-		if (rightTalon != null)
-			rightTalon.setVoltageRampRate(rampRate);
-	}
-
-	/**
 	 * Sets left and right motor speeds to the speeds needed for the given move
 	 * and turn values
 	 * 
@@ -302,11 +288,26 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * @param left
 	 *            the left motor speed
+	 *            from -1 to 1
 	 * @param right
 	 *            the right motor speed
+	 *            from -1 to 1
 	 */
 	public void tankDrive(double left, double right) {
 		setMotorSpeedInPercent(left, right);
+	}
+
+	/**
+	 * Sets the motor speed for the left and right motors
+	 * 
+	 * @param left
+	 *            the left motor speed, from -1 to 1
+	 *         
+	 * @param right
+	 *            the right motor speed, from -1 to 1
+	 */
+	public void setMotorSpeedInPercent(double left, double right) {
+			setMotorSpeedInRPM(left * currentMaxRPM(), right * currentMaxRPM());
 	}
 
 	/**
@@ -338,85 +339,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 
 	/**
-	 * Sets the motor speed for the left and right motors
+	 * Gets the current position of the left talon
 	 * 
-	 * @param left
-	 *            the left motor speed, from -1 to 1
-	 *         
-	 * @param right
-	 *            the right motor speed, from -1 to 1
-	 */
-	public void setMotorSpeedInPercent(double left, double right) {
-		if (leftTalon != null && rightTalon != null) {
-			leftMotorSetpoint = left * currentMaxRPM();
-			rightMotorSetpoint = right * currentMaxRPM();
-
-			if(leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
-				leftTalon.set(leftMotorSetpoint / currentMaxRPM());
-			} else {
-				leftTalon.set(leftMotorSetpoint);
-			}
-			if(rightTalon.getControlMode() == TalonControlMode.PercentVbus) {
-				rightTalon.set(rightMotorSetpoint / currentMaxRPM());
-			} else {
-				rightTalon.set(rightMotorSetpoint);
-			}
-		}
-	}
-
-	/**
-	 * Gets whether the PIDs are enabled or not. If both are enabled, then
-	 * returns true, otherwise returns false
-	 * 
-	 * @return whether the PIDs are enabled
-	 */
-	public boolean getPIDEnabled() {
-		if (leftTalon != null && rightTalon != null)
-			return leftTalon.getControlMode() == TalonControlMode.Speed
-					&& rightTalon.getControlMode() == TalonControlMode.Speed;
-		return false;
-	}
-
-	/**
-	 * Enables or disables both left and right PIDs. Disabling also resets the
-	 * integral term and the previous error of the PID, and sets the output to
-	 * zero
-	 * 
-	 * Doesn't do anything if they are already that state.
-	 * 
-	 * @param enabled
-	 *            whether to enable (true) or disable (false)
-	 */
-	public void setPIDEnabled(boolean enabled) {
-		if (leftTalon != null && rightTalon != null) {
-			if (enabled) {
-				if (!getPIDEnabled()) {
-					leftTalon.changeControlMode(TalonControlMode.Speed);
-					rightTalon.changeControlMode(TalonControlMode.Speed);
-				}
-			} else if (getPIDEnabled()) {
-				leftTalon.clearIAccum();
-				rightTalon.clearIAccum();
-				leftTalon.changeControlMode(TalonControlMode.PercentVbus);
-				rightTalon.changeControlMode(TalonControlMode.PercentVbus);
-			}
-		}
-	}
-
-	/**
-	 * Resets both the left and right encoders
-	 */
-	public void resetEncoders() {
-		if (leftTalon != null)
-			leftTalon.setPosition(0);
-		if (rightTalon != null)
-			rightTalon.setPosition(0);
-	}
-
-	/**
-	 * Gets the current position of the talon
-	 * 
-	 * @return current position of talon
+	 * @return current position of the talon
 	 */
 	public double getLeftPosition() {
 		if(leftTalon != null)
@@ -425,9 +350,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 	
 	/**
-	 * Gets the current position of the talon
+	 * Gets the current position of the right talon
 	 * 
-	 * @return current position of talon
+	 * @return current position of the talon
 	 */
 	public double getRightPosition() {
 		if(rightTalon != null)
@@ -435,37 +360,27 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		return 0;
 	}
 	
+	/**
+	 * Gets the historical position of the left talon
+	 * 
+	 * @param deltaTime How long ago to look
+	 * @return current position of talon
+	 */
 	public double getHistoricalLeftPosition(long deltaTime) {
 		if (leftEncoder != null)
 			return leftEncoder.getPosition(deltaTime);
 		return 0;
 	}
 	
+	/**
+	 * Gets the historical position of the right talon
+	 * 
+	 * @param deltaTime How long ago to look
+	 * @return current position of the talon
+	 */
 	public double getHistoricalRightPosition(long deltaTime) {
 		if (rightEncoder != null)
 			return rightEncoder.getPosition(deltaTime);
-		return 0;
-	}
-	
-	/**
-	 * Get the distance the left encoder has driven since the last reset
-	 * 
-	 * @return The distance the left encoder has driven since the last reset, in rotations.
-	 */
-	public double getEncoderLeftDistance() {
-		if (leftTalon != null)
-			return leftTalon.getPosition();
-		return 0;
-	}
-
-	/**
-	 * Get the distance the right encoder has driven since the last reset
-	 * 
-	 * @return The distance the right encoder has driven since the last reset, in rotations.
-	 */
-	public double getEncoderRightDistance() {
-		if (rightTalon != null)
-			return rightTalon.getPosition();
 		return 0;
 	}
 
@@ -474,7 +389,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * @return The current speed of the encoder
 	 */
-	public double getEncoderLeftSpeed() {
+	public double getLeftSpeed() {
 		if (leftTalon != null)
 			return leftTalon.getSpeed();
 		return 0;
@@ -485,41 +400,34 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * @return The current speed of the encoder
 	 */
-	public double getEncoderRightSpeed() {
+	public double getRightSpeed() {
 		if (rightTalon != null)
 			return rightTalon.getSpeed();
 		return 0;
 	}
 	
+	/**
+	 * Get the historical rate of the left encoder. Units are rotations per minute
+	 * 
+	 * @param deltaTime How long ago to look
+	 * @return The past speed of the encoder
+	 */
 	public double getHistoricalLeftSpeed(long deltaTime) {
 		if (leftEncoder != null)
 			return leftEncoder.getVelocity(deltaTime);
 		return 0;
 	}
 	
+	/**
+	 * Get the historical rate of the right encoder. Units are rotations per minute
+	 * 
+	 * @param deltaTime How long ago to look
+	 * @return The past speed of the encoder
+	 */
 	public double getHistoricalRightSpeed(long deltaTime) {
 		if (rightEncoder != null)
 			return rightEncoder.getVelocity(deltaTime);
 		return 0;
-	}
-	
-	/**
-	 * Gets the average distance of the encoders
-	 * 
-	 * @return The average distance the encoders have driven since the last
-	 *         reset in rotations.
-	 */
-	public double getEncoderAverageDistance() {
-		return (getEncoderLeftDistance() + getEncoderRightDistance()) / 2;
-	}
-
-	/**
-	 * Get the average current rate of the encoders. Units are rotations per minute
-	 * 
-	 * @return The current average rate of the encoders
-	 */
-	public double getEncoderAverageSpeed() {
-		return (getEncoderRightSpeed() + getEncoderLeftSpeed()) / 2;
 	}
 
 	/**
@@ -546,16 +454,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 				rightTalon.setPID(p, i, d, f, 0, 0, Gear.LOW_PROFILE);
 		}
 	}
-
-	/**
-	 * Resets talon integral accumulation
-	 */
-	public void resetTalons() {
-		if (leftTalon != null)
-			leftTalon.clearIAccum();
-		if (rightTalon != null)
-			rightTalon.clearIAccum();
-	}
 	
 	/**
 	 * Sets the current talon profile
@@ -567,6 +465,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if(rightTalon != null)
 			rightTalon.setProfile(profile);
 	}
+	
+	// GEAR SWITCHING
 	
 	public void switchToHighGear() {		
 		if(getCurrentGear() != Gear.high) {
@@ -586,20 +486,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		}
 	}
 	
-	public void startDumbDrive() {
-		if(leftTalon != null && rightTalon != null) {
-			leftTalon.changeControlMode(TalonControlMode.PercentVbus);
-			rightTalon.changeControlMode(TalonControlMode.PercentVbus);
-		}
-	}
-	
-	public void endDumbDrive() {
-		if(leftTalon != null && rightTalon != null) {
-			leftTalon.changeControlMode(TalonControlMode.Speed);
-			rightTalon.changeControlMode(TalonControlMode.Speed);
-		}
-	}
-	
 	public Gear getCurrentGear() {
 		if(gearSwitcher != null) {
 			if(gearSwitcher.get() == Gear.HIGH_VALUE) {
@@ -611,6 +497,42 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			return Gear.low;
 		}
 	}
+
+	public void switchGear() {
+		if(getCurrentGear() == Gear.low) {
+			switchToHighGear();
+		} else {
+			switchToLowGear();
+		}
+	}
+	
+	// END GEAR SWITCHING
+	
+	// DUMB DRIVE
+	
+	public void startDumbDrive() {
+		if(leftTalon != null && rightTalon != null) {
+			if(rightTalon.getControlMode() != TalonControlMode.PercentVbus) {
+				rightTalon.changeControlMode(TalonControlMode.PercentVbus);
+			}
+			if(leftTalon.getControlMode() != TalonControlMode.PercentVbus) {
+				leftTalon.changeControlMode(TalonControlMode.PercentVbus);
+			}
+		}
+	}
+	
+	public void endDumbDrive() {
+		if(leftTalon != null && rightTalon != null) {
+			if(rightTalon.getControlMode() != TalonControlMode.Speed) {
+				rightTalon.changeControlMode(TalonControlMode.Speed);
+			}
+			if(leftTalon.getControlMode() != TalonControlMode.Speed) {
+				leftTalon.changeControlMode(TalonControlMode.Speed);
+			}
+		}
+	}
+	
+	// END DUMB DRIVE
 	
 	/**
 	 * Function that is periodically called once the Drive class is initialized
@@ -627,12 +549,14 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public void smartDashboardInfo() {
 		if (leftTalon != null && rightTalon != null) {
 			if(EnabledSubsystems.DRIVE_SMARTDASHBOARD_BASIC_ENABLED) {
-				SmartDashboard.putString("Drive Current", leftTalon.getOutputCurrent() + " : " + rightTalon.getOutputCurrent());
-				SmartDashboard.putString("Drive Left Speed", leftTalon.getSpeed() + " : " + getInstance().leftMotorSetpoint);
-				SmartDashboard.putString("Drive Right Speed", rightTalon.getSpeed() + " : " + getInstance().rightMotorSetpoint);
+				SmartDashboard.putString("Drive Current", getLeftCurrent() + " : " + getRightCurrent());
+				SmartDashboard.putString("Drive Left Speed", getLeftSpeed() + " : " + leftMotorSetpoint);
+				SmartDashboard.putString("Drive Right Speed", getRightSpeed() + " : " + rightMotorSetpoint);
 			}
 			if(EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putString("Drive Voltage", leftTalon.getOutputVoltage() + " : " + rightTalon.getOutputVoltage());
+				SmartDashboard.putNumber("Drive Left Position", getLeftPosition());
+				SmartDashboard.putNumber("Drive Right Position", getRightPosition());
 			}
 		}
 	}
@@ -648,29 +572,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public double getRightCurrent() {
 		if(rightTalon != null) {
 			return rightTalon.getOutputCurrent();
-		} else {
-			return 0;
 		}
+		return 0;
 	}
 
 	public double getLeftCurrent() {
 		if(leftTalon != null) {
 			return leftTalon.getOutputCurrent();
-		} else {
-			return 0;
 		}
-	}
-
-	public double getAverageCurrent() {
-		return (getLeftCurrent() + getRightCurrent())/2;
-	}
-
-	public void switchGear() {
-		if(getCurrentGear() == Gear.low) {
-			switchToHighGear();
-		} else {
-			switchToLowGear();
-		}
+		return 0;
 	}
 	
 	// PID SOURCE
@@ -690,7 +600,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetLeft() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getEncoderLeftSpeed() / Units.SECONDS_PER_MINUTE;
+			return getInstance().getLeftSpeed() / Units.SECONDS_PER_MINUTE;
 		} else {
 			return getInstance().getLeftPosition();
 		}
@@ -699,7 +609,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetRight() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getEncoderRightSpeed() / Units.SECONDS_PER_MINUTE;
+			return getInstance().getRightSpeed() / Units.SECONDS_PER_MINUTE;
 		} else {
 			return getInstance().getRightPosition();
 		}

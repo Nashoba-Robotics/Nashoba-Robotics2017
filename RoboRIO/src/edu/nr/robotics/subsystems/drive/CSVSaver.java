@@ -23,8 +23,8 @@ public class CSVSaver {
 	private synchronized static void init()  {
 		if(singleton == null) {
 			ArrayList<Function<Drive, Double>> l = new ArrayList<>();
-			l.add(Drive::getEncoderLeftSpeed);
-			l.add(Drive::getEncoderRightSpeed);
+			l.add(Drive::getLeftSpeed);
+			l.add(Drive::getRightSpeed);
 			singleton = new CSVSaver(l);
 		}
 	}

@@ -81,7 +81,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		double curTurretOrientation = 90 - Math.asin(curDist * Math.sin(theta3) / curDistReal) - Math.atan(RobotMap.Y_TURRET_OFFSET / RobotMap.X_TURRET_OFFSET);
 		
 		//Gets average speed of two drive sides to get instantaneous speed in (inches / sec)
-		double speed = (Drive.getInstance().getEncoderLeftSpeed() + Drive.getInstance().getEncoderRightSpeed()) / 2 * (Drive.WHEEL_DIAMETER * Units.INCHES_PER_FOOT) / Units.SECONDS_PER_MINUTE;
+		double speed = (Drive.getInstance().getLeftSpeed() + Drive.getInstance().getRightSpeed()) / 2 * (Drive.WHEEL_DIAMETER * Units.INCHES_PER_FOOT) / Units.SECONDS_PER_MINUTE;
 		double vertSpeed = speed * Math.cos(curRobotOrientation);
 		
 		//Code until next break gets additional angle for turret to turn based on current speed
