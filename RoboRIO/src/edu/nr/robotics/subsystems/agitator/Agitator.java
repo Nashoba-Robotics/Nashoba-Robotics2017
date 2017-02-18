@@ -22,7 +22,7 @@ public class Agitator extends NRSubsystem {
 		if (EnabledSubsystems.AGITATOR_ENABLED) {
 			talon = new CANTalon(RobotMap.AGITATOR_TALON_PORT);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
-			talon.enableBrakeMode(true);
+			talon.enableBrakeMode(false);
 			talon.enable();
 		}
 	}

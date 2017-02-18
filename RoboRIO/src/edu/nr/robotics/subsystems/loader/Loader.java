@@ -21,7 +21,7 @@ public class Loader extends NRSubsystem {
 		if (EnabledSubsystems.LOADER_ENABLED) { 		
 			talon = new CANTalon(RobotMap.LOADER_TALON_PORT);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
-			talon.enableBrakeMode(true);
+			talon.enableBrakeMode(false);
 			talon.enable();
 		}
 	}
