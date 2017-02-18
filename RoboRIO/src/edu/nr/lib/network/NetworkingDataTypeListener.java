@@ -12,6 +12,6 @@ import edu.nr.lib.network.TCPServer.NetworkingDataType;
  */
 public interface NetworkingDataTypeListener {
 	
-	public void updateDataType(TCPServer.NetworkingDataType type, int data);
+	public void updateDataType(TCPServer.NetworkingDataType type, double data);
 
 }

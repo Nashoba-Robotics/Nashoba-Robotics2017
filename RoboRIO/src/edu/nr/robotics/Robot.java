@@ -105,10 +105,20 @@ public class Robot extends IterativeRobot {
 		Num.turret.init(turret_cam_types, TCPServer.defaultPort);
 		
 		ArrayList<NetworkingDataType> gear_cam_types = new ArrayList<>();
-		NetworkingDataType gearAngle = new NetworkingDataType('a', "angle");
-		NetworkingDataType gearDistance = new NetworkingDataType('d', "distance");
-		gear_cam_types.add(gearAngle); //TODO: Coprocessor: Get angle sign and units
-		gear_cam_types.add(gearDistance); //TODO: Coprocessor: Get distance unit
+		NetworkingDataType gearAngle = new NetworkingDataType('a', "angle") {
+			public double convert(int in) { //Convert pixels to degrees
+				return 0.1214662 * in;
+			}
+
+		};
+		NetworkingDataType gearDistance = new NetworkingDataType('d', "distance") {
+			public double convert(int in) { //Convert pixels to inches
+				return 5764.4699518042*Math.pow(in, -1.1867971592);
+			}
+
+		};
+		gear_cam_types.add(gearAngle);
+		gear_cam_types.add(gearDistance);
 		gear_cam_types.add(new NetworkingDataType('t', "time"));
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 		

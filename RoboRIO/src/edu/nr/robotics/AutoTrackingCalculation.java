@@ -14,9 +14,9 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	double hoodAngle = 0;
 	double shooterSpeed = 0;
 	
-	private int lastSeenTimeStamp;
-	private int lastSeenAngle;
-	private int lastSeenDistance;
+	private long lastSeenTimeStamp;
+	private double lastSeenAngle;
+	private double lastSeenDistance;
 	
 	private long timeOfLastData;
 	
@@ -43,13 +43,13 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	}
 	
 	@Override
-	public void updateDataType(TCPServer.NetworkingDataType type, int value) {
+	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
 		if(type.identifier == 'a') {
 			lastSeenAngle = value;
 		} else if(type.identifier == 'd') {
 			lastSeenDistance = value;
 		} else if(type.identifier == 't') {
-			lastSeenTimeStamp = value;
+			lastSeenTimeStamp = (long) value;
 		}
 		timeOfLastData = getCurrentTimeMillis();
 		

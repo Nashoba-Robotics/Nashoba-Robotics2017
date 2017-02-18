@@ -16,8 +16,8 @@ public class ShooterStationarySpeedCorrectionCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		long angle = TCPServer.Num.turret.getInstance().getValue('a');
-		long distance = TCPServer.Num.turret.getInstance().getValue('d');
+		double angle = TCPServer.Num.turret.getInstance().getValue('a');
+		double distance = TCPServer.Num.turret.getInstance().getValue('d');
 		
 		//Manipulates camera as if on center of robot
 		double z1 = Math.sqrt(Math.pow(RobotMap.X_CAMERA_OFFSET, 2) + Math.pow(RobotMap.Y_CAMERA_OFFSET, 2));
