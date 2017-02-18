@@ -3,21 +3,20 @@ package edu.nr.robotics.auton;
 import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
-import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveConstantSpeedCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.TimedCommand;
 import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj.command.WaitUntilCommand;
 
 public class DriveToHopperAutoCommand extends CommandGroup {
 
 	/**
 	 * Seconds
 	 */
-	private double TIME_DRIVING_INTO_HOPPER = 0.5; 
+	static double TIME_DRIVING_INTO_HOPPER = 0.5; 
 	
-	private double SPEED_DRIVING_INTO_HOPPER = 0.5;
+	static double SPEED_DRIVING_INTO_HOPPER = 0.5;
 	
 	public DriveToHopperAutoCommand() {
 		addParallel(new ZeroThenAutoTrackCommand());

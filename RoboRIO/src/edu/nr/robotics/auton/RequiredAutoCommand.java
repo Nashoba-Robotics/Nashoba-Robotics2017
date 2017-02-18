@@ -7,7 +7,7 @@ import edu.nr.robotics.subsystems.turret.Turret;
 import edu.nr.robotics.subsystems.turret.TurretPositionCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class RequiredAutoCommand extends CommandGroup {
+public final class RequiredAutoCommand extends CommandGroup {
 
 	public RequiredAutoCommand() {
 		addParallel(new GearDeployCommand());

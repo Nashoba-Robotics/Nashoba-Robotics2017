@@ -4,12 +4,12 @@ import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardCommand;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class DriveToMiddleGearAutoCommand extends RequiredAutoCommand {
+public class DriveToMiddleGearAutoCommand extends CommandGroup {
 
 	public DriveToMiddleGearAutoCommand() {
-		super();
-		addParallel(new EnableAutoTrackingCommand());
+		addParallel(new ZeroThenAutoTrackCommand());
 		addSequential(new DriveForwardCommand(FieldMap.DISTANCE_TO_CENTER_PEG));
 		if (Robot.autoShoot) {
 			addSequential(new AlignThenShootCommand());

@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.subsystems.turret.Turret;
 
 public class HoodPositionCommand extends NRCommand{
 

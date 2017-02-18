@@ -8,7 +8,6 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
-import edu.nr.robotics.subsystems.drive.Drive.DriveMode;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
 import edu.nr.robotics.subsystems.gearMover.GearGetPositionInCommand;
