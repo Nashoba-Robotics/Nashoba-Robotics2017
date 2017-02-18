@@ -43,6 +43,6 @@ public class GearHopperAutoCommand extends CommandGroup {
 		addParallel(new EnableAutoTrackingCommand());
 		addSequential(new DriveForwardCommand(FieldMap.GEAR_TO_HOPPER_SIDE_DIST - BACKWARD_DRIVE_DISTANCE * Math.sin(FieldMap.ANGLE_TO_SIDE_PEG)));
 		if (Robot.autoShoot)
-			addSequential(new AutoShootCommand());
+			addSequential(new AlignThenShootCommand());
 	}
 }

@@ -18,7 +18,7 @@ public class DriveToShooterSideGearAutoCommand extends RequiredAutoCommand {
 		}
 		addSequential(new GearPegAlignCommand());
 		if (Robot.autoShoot) {
-			addSequential(new AutoShootCommand());
+			addSequential(new AlignThenShootCommand());
 		}
 	}
 }

@@ -7,9 +7,9 @@ import edu.nr.robotics.subsystems.shooter.ShooterStationarySpeedCorrectionComman
 import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class AutoShootCommand extends CommandGroup {
+public class AlignThenShootCommand extends CommandGroup {
 
-	public AutoShootCommand() {
+	public AlignThenShootCommand() {
 		HoodStationaryAngleCorrectionCommand hoodCommand = new HoodStationaryAngleCorrectionCommand();
 		TurretStationaryAngleCorrectionCommand turretCommand = new TurretStationaryAngleCorrectionCommand();
 		ShooterStationarySpeedCorrectionCommand shooterCommand = new ShooterStationarySpeedCorrectionCommand();

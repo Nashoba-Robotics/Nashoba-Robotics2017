@@ -12,7 +12,7 @@ public class DriveToMiddleGearAutoCommand extends RequiredAutoCommand {
 		addParallel(new EnableAutoTrackingCommand());
 		addSequential(new DriveForwardCommand(FieldMap.DISTANCE_TO_CENTER_PEG));
 		if (Robot.autoShoot) {
-			addSequential(new AutoShootCommand());
+			addSequential(new AlignThenShootCommand());
 		}
 	}
 }

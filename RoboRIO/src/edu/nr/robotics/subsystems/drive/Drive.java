@@ -129,6 +129,14 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	
 	private Gear currentGear = Gear.low;
 	
+	private double currentMaxRPM() {
+		if(currentGear == Gear.low) {
+			return MAX_LOW_GEAR_RPM;
+		} else {
+			return MAX_HIGH_GEAR_RPM;
+		}
+	}
+	
 	PIDSourceType type = PIDSourceType.kRate;
 
 	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
@@ -289,7 +297,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 *            the right motor speed
 	 */
 	public void tankDrive(double left, double right) {
-		setMotorSpeed(left, right);
+		setMotorSpeedInPercent(left, right);
 	}
 
 	/**
@@ -305,29 +313,71 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 *            		OR
 	 *            the right motor speed in rpm
 	 */
-	public void setMotorSpeed(double left, double right) {
+	public void setMotorSpeedInRPM(double left, double right) {
+		if (leftTalon != null && rightTalon != null) {
+			if(leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
+				leftMotorSetpoint = left/currentMaxRPM();
+			} else {
+				leftMotorSetpoint = left;
+			}
+			if(rightTalon.getControlMode() == TalonControlMode.PercentVbus) {
+				rightMotorSetpoint = right/currentMaxRPM();
+			} else {
+				rightMotorSetpoint = right;
+			}
+
+			leftTalon.set(leftMotorSetpoint);
+			rightTalon.set(rightMotorSetpoint);
+		}
+	}
+
+	/**
+	 * Sets the motor speed for the left and right motors
+	 * 
+	 * @param left
+	 *            the left motor speed, from -1 to 1
+	 *         
+	 * @param right
+	 *            the right motor speed, from -1 to 1
+	 */
+	public void setMotorSpeedInPercent(double left, double right) {
+		if (leftTalon != null && rightTalon != null) {
+			if(leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
+				leftMotorSetpoint = left;
+			} else {
+				leftMotorSetpoint = left*currentMaxRPM();
+			}
+			if(rightTalon.getControlMode() == TalonControlMode.PercentVbus) {
+				rightMotorSetpoint = right;
+			} else {
+				rightMotorSetpoint = right*currentMaxRPM();
+			}
+
+			leftTalon.set(leftMotorSetpoint);
+			rightTalon.set(rightMotorSetpoint);
+		}
+	}
+
+	/**
+	 * Sets the motor speed for the left and right motors
+	 * 
+	 * @param left
+	 *            the left motor speed, from -1 to 1
+	 *            		OR
+	 *            the left motor speed in rpm
+	 *         
+	 * @param right
+	 *            the right motor speed, from -1 to 1
+	 *            		OR
+	 *            the right motor speed in rpm
+	 */
+	public void setMotorVoltage(double left, double right) {
 		leftMotorSetpoint = left;
 		rightMotorSetpoint = right;
 
 		if (leftTalon != null && rightTalon != null) {
-			if(leftTalon.getControlMode() == TalonControlMode.Speed) {
-				if(this.currentGear == Gear.high) {
-					leftTalon.set(leftMotorSetpoint / Drive.MAX_HIGH_GEAR_SPEED);
-				} else {
-					leftTalon.set(leftMotorSetpoint / Drive.MAX_LOW_GEAR_SPEED);					
-				}
-			} else {
-				leftTalon.set(leftMotorSetpoint);
-			}
-			if(rightTalon.getControlMode() == TalonControlMode.Speed) {
-				if(this.currentGear == Gear.high) {
-					rightTalon.set(rightMotorSetpoint / Drive.MAX_HIGH_GEAR_SPEED);
-				} else {
-					rightTalon.set(rightMotorSetpoint / Drive.MAX_LOW_GEAR_SPEED);					
-				}
-			} else {
-				rightTalon.set(rightMotorSetpoint);
-			}
+			leftTalon.set(leftMotorSetpoint);
+			rightTalon.set(rightMotorSetpoint);
 		}
 	}
 
@@ -603,7 +653,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 */
 	@Override
 	public void disable() {
-		setMotorSpeed(0, 0);
+		setMotorSpeedInPercent(0, 0);
 	}
 
 	public double getRightCurrent() {

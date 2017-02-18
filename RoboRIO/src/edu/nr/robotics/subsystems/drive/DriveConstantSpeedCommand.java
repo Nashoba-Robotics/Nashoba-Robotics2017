@@ -6,6 +6,11 @@ public class DriveConstantSpeedCommand extends NRCommand {
 	
 	double leftSpeed, rightSpeed;
 	
+	/**
+	 * From -1 to 1
+	 * @param leftSpeed
+	 * @param rightSpeed
+	 */
 	public DriveConstantSpeedCommand(double leftSpeed, double rightSpeed) {
 		super(Drive.getInstance());
 		
@@ -16,7 +21,7 @@ public class DriveConstantSpeedCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		Drive.getInstance().tankDrive(leftSpeed, rightSpeed);
+		Drive.getInstance().setMotorSpeedInPercent(leftSpeed, rightSpeed);
 	}
 	
 	@Override
