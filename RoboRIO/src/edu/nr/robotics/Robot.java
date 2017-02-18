@@ -13,6 +13,7 @@ import edu.nr.lib.network.TCPServer.Num;
 import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
 import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
+import edu.nr.robotics.auton.DriveOverBaselineAutoCommand;
 import edu.nr.robotics.auton.DriveToHopperAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
@@ -65,6 +66,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autoChooserInit() {
 		autoSpotChooser.addDefault("Do Nothing", new DoNothingCommand());
+		autoSpotChooser.addDefault("Baseline", new DriveOverBaselineAutoCommand());
 		autoSpotChooser.addObject("Non Shooter Gear", new DriveToNonShooterSideGearAutoCommand());
 		autoSpotChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
 		autoSpotChooser.addObject("Shooter Gear", new DriveToShooterSideGearAutoCommand());
