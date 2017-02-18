@@ -22,7 +22,7 @@ public class Agitator extends NRSubsystem {
 		if (EnabledSubsystems.AGITATOR_ENABLED) {
 			talon = new CANTalon(RobotMap.AGITATOR_TALON_PORT);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
-			talon.enableBrakeMode(true);
+			talon.enableBrakeMode(false);
 			talon.enable();
 		}
 	}
@@ -51,7 +51,7 @@ public class Agitator extends NRSubsystem {
 		motorSetpoint = percent * RobotMap.AGITATOR_DIRECTION;
 		if (talon != null) {
 			talon.set(motorSetpoint);
-		}
+		} 
 	}
 	
 	@Override
@@ -73,7 +73,7 @@ public class Agitator extends NRSubsystem {
 
 	@Override
 	public void disable() {
-		talon.set(0);
+		setMotorSpeed(0);
 	}
 
 }
