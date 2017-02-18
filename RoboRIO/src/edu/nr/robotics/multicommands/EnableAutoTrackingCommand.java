@@ -18,14 +18,22 @@ public class EnableAutoTrackingCommand extends NRCommand{
 	}
 	
 	@Override
-	public void onStart() {
-		while (!AutoTrackingCalculationCommand.canSeeTarget()) {
+	public void onExecute() {
+		if (!AutoTrackingCalculationCommand.canSeeTarget()) {
 			Turret.getInstance().setMotorSpeed(RobotMap.MAX_TURRET_SPEED * RobotMap.MAX_TURRET_TRACKING_PERCENTAGE * Turret.getInstance().turretTrackDirection);
 		}
-		Turret.getInstance().setPositionDelta(0);
-		new HoodAutoAlignCommand();
-		new ShooterAutoAlignCommand();
-		new TurretAutoAlignCommand();
 	}
 	
+	@Override
+	public void onEnd() {
+		Turret.getInstance().setPositionDelta(0);
+		new HoodAutoAlignCommand().start();
+		new ShooterAutoAlignCommand().start();
+		new TurretAutoAlignCommand().start();
+	}
+	
+	@Override
+	public boolean isFinishedNR() {
+		return AutoTrackingCalculationCommand.canSeeTarget();
+	}
 }
