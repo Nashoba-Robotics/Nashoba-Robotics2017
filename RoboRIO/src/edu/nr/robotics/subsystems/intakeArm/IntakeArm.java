@@ -13,21 +13,27 @@ public class IntakeArm extends NRSubsystem {
 
 	private DoubleSolenoid intakeArm;
 
+	//TODO: IntakeArm: determine direction
+	
 	public enum IntakeArmState {
 		DEPLOYED, RETRACTED
 	}
+	
+	private static Value DEPLOYED_VALUE = Value.kForward;
+	private static Value RETRACTED_VALUE = Value.kForward;
 
 	/**
 	 * The current state of the intake arm, either retracted or deployed.
 	 * 
 	 * The default is retracted, since that is how the robot will start.
 	 */
-	public IntakeArmState currentIntakeArmState = IntakeArmState.RETRACTED;
+	public IntakeArmState currentIntakeArmState;
 
 	private IntakeArm() {
 		if (EnabledSubsystems.INTAKE_ARM_ENABLED) {
 			intakeArm = new DoubleSolenoid(RobotMap.INTAKE_ARM_PNEUMATIC, RobotMap.INTAKE_ARM_FORWARD,
 					RobotMap.INTAKE_ARM_REVERSE);
+			currentIntakeArmState = getState(intakeArm.get());
 			// TODO: IntakeArm: Check solenoid for current state
 
 		}
@@ -41,7 +47,7 @@ public class IntakeArm extends NRSubsystem {
 	}
 
 	public void deployIntakeArm() {
-		intakeArm.set(Value.kForward);
+		intakeArm.set(DEPLOYED_VALUE);
 		currentIntakeArmState = IntakeArmState.DEPLOYED;
 	}
 
@@ -49,7 +55,7 @@ public class IntakeArm extends NRSubsystem {
 
 		Intake.getInstance().onIntakeArmRetract();
 
-		intakeArm.set(Value.kReverse);
+		intakeArm.set(RETRACTED_VALUE);
 		currentIntakeArmState = IntakeArmState.RETRACTED;
 	}
 
@@ -75,7 +81,19 @@ public class IntakeArm extends NRSubsystem {
 
 	@Override
 	public void disable() {
-		intakeArm.set(Value.kOff);
+		intakeArm.set(Value.kOff); //TODO: IntakeArm: Determine what state if off
+	}
+	
+	private static IntakeArmState getState(Value val) {
+		if(val == DEPLOYED_VALUE) {
+			return IntakeArmState.DEPLOYED;
+		} else {
+			if(val == RETRACTED_VALUE) {
+				return IntakeArmState.RETRACTED;
+			} else {
+				return IntakeArmState.RETRACTED; //TODO: IntakeArm: Determine what state if off
+			}
+		}
 	}
 
 	public boolean intakeArmIsDeployed() {

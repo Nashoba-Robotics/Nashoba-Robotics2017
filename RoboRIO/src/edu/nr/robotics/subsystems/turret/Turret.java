@@ -20,12 +20,10 @@ public class Turret extends NRSubsystem {
 	public double speedSetpoint = 0;
 	public double positionSetpoint = 0;
 
-	private static final int TICKS_PER_REV = 256; //TODO: Turret: Get ticks per revolution
 	public static final int TURRET_TICKS_PER_REV = 256; //TODO: Turret: Get ticks per revolution of actual turret
-	private static final int NATIVE_UNITS_PER_REV = 4*TICKS_PER_REV;
 
 	//TODO: Turret: Find FPID values
-	public static double F = (RobotMap.MAX_TURRET_SPEED / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static double F = (RobotMap.MAX_TURRET_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.MAGNETIC_NATIVE_UNITS_PER_REV);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -50,14 +48,12 @@ public class Turret extends NRSubsystem {
 			} else {
 				talon.changeControlMode(TalonControlMode.Speed);
 			}
-			talon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setMotionMagicCruiseVelocity(RobotMap.MAX_TURRET_SPEED);
 			talon.setMotionMagicAcceleration(RobotMap.MAX_TURRET_ACCELERATION);
-			talon.configEncoderCodesPerRev(TICKS_PER_REV);
 			talon.enableBrakeMode(true);
-			talon.setEncPosition(0);
 			talon.reverseSensor(false); //TODO: Turret: Find phase
 			talon.enable();
 			getInstance().setAutoAlign(true);
@@ -108,7 +104,7 @@ public class Turret extends NRSubsystem {
 	 * 			The goal positions in rotations
 	 */
 	public void setPosition(double position) {
-		positionSetpoint = position * TICKS_PER_REV * RobotMap.TURRET_DIRECTION;
+		positionSetpoint = position * RobotMap.TURRET_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed) {
@@ -138,12 +134,12 @@ public class Turret extends NRSubsystem {
 	}
 	
 	/**
-	 * This sets the change in position of the turret in encoder ticks
+	 * This sets the change in position of the turret in revolutions
 	 * 
 	 * @param deltaPosition
 	 */
 	public void setPositionDelta(double deltaPosition) {
-		positionSetpoint = getInstance().getPosition() + deltaPosition * TICKS_PER_REV * RobotMap.TURRET_DIRECTION;
+		positionSetpoint = getInstance().getPosition() + deltaPosition * RobotMap.TURRET_DIRECTION;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed) {
