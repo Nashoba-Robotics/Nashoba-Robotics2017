@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.robotics.RobotMap;
@@ -21,7 +22,7 @@ public class Hood extends NRSubsystem {
 	public double positionSetpoint = 0;
 	
 	//TODO: Hood: Find FPID values
-	public static double F = (RobotMap.MAX_HOOD_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double F = (Hood.MAX_HOOD_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -36,6 +37,29 @@ public class Hood extends NRSubsystem {
 	public static final int OPERATOR_CONTROL = 1;
 	
 	private boolean autoAlign = false;
+
+	/**
+	 * The number of hood rotations around the goal position that we can be at
+	 * TODO: Hood: Find the position threshold
+	 */
+	public static final double POSITION_THRESHOLD = 0;
+
+	/**
+	 * The threshold of degrees the hood needs to be within to shoot in degrees
+	 */
+	public static final double SHOOT_THRESHOLD = 0;
+
+	/**
+	 * The max acceleration of the hood, in rotations per minute per second
+	 * TODO: Hood: Find max acceleration
+	 */
+	public static final double MAX_HOOD_ACCELERATION = 0;
+
+	/**
+	 * The max speed of the hood, in rotations per minute
+	 * TODO: Hood: Find max speed
+	 */
+	public static final double MAX_HOOD_SPEED = 0;
 	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
@@ -50,8 +74,8 @@ public class Hood extends NRSubsystem {
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setProfile(OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(RobotMap.MAX_HOOD_SPEED);
-			talon.setMotionMagicAcceleration(RobotMap.MAX_HOOD_ACCELERATION);
+			talon.setMotionMagicCruiseVelocity(Hood.MAX_HOOD_SPEED);
+			talon.setMotionMagicAcceleration(Hood.MAX_HOOD_ACCELERATION);
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Hood: Find phase
 			talon.enable();
@@ -84,7 +108,7 @@ public class Hood extends NRSubsystem {
 	 *            If the talon mode is PercentVbus, from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		speedSetpoint = speed * RobotMap.HOOD_DIRECTION;
+		speedSetpoint = speed;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.MotionMagic) {
@@ -103,7 +127,7 @@ public class Hood extends NRSubsystem {
 	 * 			The goal positions in rotations
 	 */
 	public void setPosition(double position) {
-		positionSetpoint = position * RobotMap.HOOD_DIRECTION;
+		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed) {

@@ -4,7 +4,6 @@ import edu.nr.lib.NRMath;
 import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.lib.interfaces.GyroCorrection;
 import edu.nr.robotics.OI;
-import edu.nr.robotics.RobotMap;
 
 public class DriveJoystickCommand extends JoystickCommand {
 
@@ -16,7 +15,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 
 	@Override
 	public void onExecute() {
-		if (RobotMap.driveMode == Drive.DriveMode.arcadeDrive) {
+		if (OI.driveMode == Drive.DriveMode.arcadeDrive) {
 			
 			//Get the joystick values
 			double moveValue = OI.getInstance().getArcadeMoveValue();
@@ -58,7 +57,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 
 	@Override
 	public boolean shouldSwitchToJoystick() {
-		if(RobotMap.driveMode == Drive.DriveMode.arcadeDrive) {
+		if(OI.driveMode == Drive.DriveMode.arcadeDrive) {
 			return OI.getInstance().getArcadeMoveValue() != 0 || OI.getInstance().getArcadeTurnValue() != 0;
 		} else {
 			return OI.getInstance().getTankLeftValue() != 0 || OI.getInstance().getTankRightValue() != 0;

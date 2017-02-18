@@ -16,6 +16,11 @@ public class Agitator extends NRSubsystem {
 	private CANTalon talon;
 	
 	public double motorSetpoint = 0;
+
+	/**
+	 * The percent voltage for the agitator to run at when turned on
+	 */
+	public static final double RUN_SPEED = 0;
 	
 	private Agitator() {
 		if (EnabledSubsystems.AGITATOR_ENABLED) {
@@ -47,7 +52,7 @@ public class Agitator extends NRSubsystem {
 	 *            from -1 to 1
 	 */
 	public void setMotorSpeed(double percent) {
-		motorSetpoint = percent * RobotMap.AGITATOR_DIRECTION;
+		motorSetpoint = percent;
 		if (talon != null) {
 			talon.set(motorSetpoint);
 		} 

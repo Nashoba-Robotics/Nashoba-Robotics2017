@@ -1,6 +1,7 @@
 package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.NRMath;
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
 
+	
 	private static Drive singleton;
 
 	private CANTalon leftTalon, rightTalon, tempLeftTalon, tempRightTalon;
@@ -27,21 +29,54 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private DoubleSolenoid gearSwitcher;
 	
 	/**
+	 * The diameter of the wheels, in feet
+	 */
+	public static final double WHEEL_DIAMETER = (4.0 / 12.0); //TODO: Drive: Get wheel diameter
+	
+	/**
 	 * The distance the wheel travels in a single revolution, in feet
 	 * 
 	 * This is equivalent to the circumference of the wheel
 	 */
-	private static final double DISTANCE_PER_REV = Math.PI * RobotMap.DRIVE_WHEEL_DIAMETER;
+	static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
 	
+	// TODO: Drive: Get actual max speeds
+	/**
+	 * The max driving speed of the robot in low gear, in feet per second
+	 */
+	public static final double MAX_LOW_GEAR_SPEED = 0;
+
+	/**
+	 * The max driving speed of the robot in high gear, in feet per second
+	 */
+	public static final double MAX_HIGH_GEAR_SPEED = 0;
+	
+	/**
+	 * The max driving acceleration in feet/sec/sec
+	 * 
+	 * TODO: Get max acceleration of the drive train in feet / second / second
+	 */
+	public static final double MAX_ACCELERATION = 0;
+	
+	/**
+	 * The max drive jerk in feet/sec/sec/sec
+	 * 
+	 * TODO: Get max jerk of the drive train
+	 */
+	public static final double MAX_JERK = 0;
+	
+	// TODO: Drive: Get distance between left and right wheels
+	public static final double WHEEL_BASE = 0; //In inches
+		
 	/**
 	 * The maximum speed of the robot in low gear, in rotations per minute
 	 */
-	private static final double MAX_LOW_GEAR_RPM = RobotMap.MAX_DRIVE_LOW_GEAR_SPEED / DISTANCE_PER_REV * RobotMap.SECONDS_PER_MINUTE;
+	private static final double MAX_LOW_GEAR_RPM = Drive.MAX_LOW_GEAR_SPEED / DISTANCE_PER_REV * Units.SECONDS_PER_MINUTE;
 
 	/**
 	 * The maximum speed of the robot in high gear, in rotations per minute
 	 */
-	private static final double MAX_HIGH_GEAR_RPM = RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED / DISTANCE_PER_REV * RobotMap.SECONDS_PER_MINUTE;
+	private static final double MAX_HIGH_GEAR_RPM = Drive.MAX_HIGH_GEAR_SPEED / DISTANCE_PER_REV * Units.SECONDS_PER_MINUTE;
 
 	/**
 	 * The number of encoder ticks per wheel revolution
@@ -64,13 +99,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	double rightMotorSetpoint = 0;
 
 	//TODO: Drive: Find FPID values
-	public static final double F_LOW_GEAR = (MAX_LOW_GEAR_RPM / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static final double F_LOW_GEAR = (MAX_LOW_GEAR_RPM / Units.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static final double P_LOW_GEAR = 0;
 	public static final double I_LOW_GEAR = 0;
 	public static final double D_LOW_GEAR = 0;
 
 	//TODO: Drive: Find FPID values
-	public static final double F_HIGH_GEAR = (MAX_HIGH_GEAR_RPM / RobotMap.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
+	public static final double F_HIGH_GEAR = (MAX_HIGH_GEAR_RPM / Units.HUNDRED_MS_PER_MIN * NATIVE_UNITS_PER_REV);
 	public static final double P_HIGH_GEAR = 0;
 	public static final double I_HIGH_GEAR = 0;
 	public static final double D_HIGH_GEAR = 0;
@@ -95,6 +130,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private Gear currentGear = Gear.low;
 	
 	PIDSourceType type = PIDSourceType.kRate;
+
+	public static final double PROFILE_POSITION_THRESHOLD = 0; // Position difference compared to end profiler
+
+	/**
+	 * The thresholds to finish motion profiling
+	 * 
+	 * TODO: Motion Profiling: Get thresholds to finish motion profiling
+	 */
+	public static final double PROFILE_TIME_THRESHOLD = 0; // Delta time checked for to compare talon positions to previous positions to end profiler
 	
 	private Drive() {
 		//TODO: Drive: Find phase of motors
@@ -165,7 +209,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			tempRightTalon.enableBrakeMode(true);
 		}
 		if(EnabledSubsystems.DRIVE_GEAR_ENABLED) {
-			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM,
+			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
 											  RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL,
 											  RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 		}
@@ -262,24 +306,24 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 *            the right motor speed in rpm
 	 */
 	public void setMotorSpeed(double left, double right) {
-		leftMotorSetpoint = left * RobotMap.LEFT_DRIVE_DIRECTION;;
-		rightMotorSetpoint = right * RobotMap.RIGHT_DRIVE_DIRECTION;;
+		leftMotorSetpoint = left;
+		rightMotorSetpoint = right;
 
 		if (leftTalon != null && rightTalon != null) {
 			if(leftTalon.getControlMode() == TalonControlMode.Speed) {
 				if(this.currentGear == Gear.high) {
-					leftTalon.set(leftMotorSetpoint / RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+					leftTalon.set(leftMotorSetpoint / Drive.MAX_HIGH_GEAR_SPEED);
 				} else {
-					leftTalon.set(leftMotorSetpoint / RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);					
+					leftTalon.set(leftMotorSetpoint / Drive.MAX_LOW_GEAR_SPEED);					
 				}
 			} else {
 				leftTalon.set(leftMotorSetpoint);
 			}
 			if(rightTalon.getControlMode() == TalonControlMode.Speed) {
 				if(this.currentGear == Gear.high) {
-					rightTalon.set(rightMotorSetpoint / RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+					rightTalon.set(rightMotorSetpoint / Drive.MAX_HIGH_GEAR_SPEED);
 				} else {
-					rightTalon.set(rightMotorSetpoint / RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);					
+					rightTalon.set(rightMotorSetpoint / Drive.MAX_LOW_GEAR_SPEED);					
 				}
 			} else {
 				rightTalon.set(rightMotorSetpoint);
@@ -603,7 +647,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetLeft() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getEncoderLeftSpeed() / RobotMap.SECONDS_PER_MINUTE;
+			return getInstance().getEncoderLeftSpeed() / Units.SECONDS_PER_MINUTE;
 		} else {
 			return getInstance().getLeftPosition();
 		}
@@ -612,7 +656,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetRight() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getEncoderRightSpeed() / RobotMap.SECONDS_PER_MINUTE;
+			return getInstance().getEncoderRightSpeed() / Units.SECONDS_PER_MINUTE;
 		} else {
 			return getInstance().getRightPosition();
 		}
@@ -624,11 +668,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		rightMotorSetpoint = outputRight;
 
 		if(currentGear == Gear.low) {
-			leftTalon.set(leftMotorSetpoint * RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);
-			rightTalon.set(rightMotorSetpoint * RobotMap.MAX_DRIVE_LOW_GEAR_SPEED);
+			leftTalon.set(leftMotorSetpoint * Drive.MAX_LOW_GEAR_SPEED);
+			rightTalon.set(rightMotorSetpoint * Drive.MAX_LOW_GEAR_SPEED);
 		} else {
-			leftTalon.set(leftMotorSetpoint * RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
-			rightTalon.set(rightMotorSetpoint * RobotMap.MAX_DRIVE_HIGH_GEAR_SPEED);
+			leftTalon.set(leftMotorSetpoint * Drive.MAX_HIGH_GEAR_SPEED);
+			rightTalon.set(rightMotorSetpoint * Drive.MAX_HIGH_GEAR_SPEED);
 		}
 	}
 

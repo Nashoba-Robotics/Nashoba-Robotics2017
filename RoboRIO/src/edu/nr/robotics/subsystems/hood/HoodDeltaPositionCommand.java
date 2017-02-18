@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.RobotMap;
 
 public class HoodDeltaPositionCommand extends NRCommand{
 
@@ -22,6 +21,6 @@ public class HoodDeltaPositionCommand extends NRCommand{
 	
 	@Override
 	public boolean isFinishedNR() {
-		return Hood.getInstance().getPosition() < goalPosition + RobotMap.HOOD_POSITION_THRESHOLD && Hood.getInstance().getPosition() > goalPosition - RobotMap.HOOD_POSITION_THRESHOLD;
+		return Hood.getInstance().getPosition() < goalPosition + Hood.POSITION_THRESHOLD && Hood.getInstance().getPosition() > goalPosition - Hood.POSITION_THRESHOLD;
 	}
 }

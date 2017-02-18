@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
@@ -19,12 +20,23 @@ public class Shooter extends NRSubsystem {
 	public double motorSetpoint = 0;
 
 	//TODO: Shooter: Find FPID values
-	public static double F = (RobotMap.MAX_SHOOTER_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double F = (Shooter.MAX_SHOOTER_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
 
 	private boolean autoAlign = false;
+
+	/**
+	 * The threshold of rpm the shooter needs to be within to shoot in rpm
+	 */
+	public static final double SHOOT_THRESHOLD = 0;
+
+	/**
+	 * The max speed of the shooter, in rotations per minute
+	 * TODO: Shooter: Find max speed
+	 */
+	public static final double MAX_SHOOTER_SPEED = 0;
 	
 	private Shooter() { 
 		if (EnabledSubsystems.SHOOTER_ENABLED) { 
@@ -69,7 +81,7 @@ public class Shooter extends NRSubsystem {
 	 *            If the talon mode is PercentVBus from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		motorSetpoint = speed * RobotMap.SHOOTER_DIRECTION;
+		motorSetpoint = speed;
 		if (talon != null) {
 			talon.set(motorSetpoint);
 		}

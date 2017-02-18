@@ -1,5 +1,6 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.CancelAllCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.commandbased.NRCommand;
@@ -7,11 +8,14 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
+import edu.nr.robotics.subsystems.drive.Drive.DriveMode;
+import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
 import edu.nr.robotics.subsystems.gearMover.GearGetPositionInCommand;
 import edu.nr.robotics.subsystems.gearMover.GearGetPositionOutCommand;
 import edu.nr.robotics.subsystems.gearMover.GearRetractCommand;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
+import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.intake.IntakeJoystickCommand;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;
@@ -19,6 +23,7 @@ import edu.nr.robotics.subsystems.intakeArm.IntakeArmRetractCommand;
 import edu.nr.robotics.subsystems.loader.LoaderRunCommand;
 import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterDeltaSpeedCommand;
+import edu.nr.robotics.subsystems.turret.Turret;
 import edu.nr.robotics.subsystems.turret.TurretPositionCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
@@ -100,12 +105,40 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	private JoystickButton driveReverse;
 	
+	// TODO: OI: Get actual Joystick ports
+	private static final int STICK_LEFT = -1;
+	private static final int STICK_RIGHT = -1;
+	private static final int STICK_OPERATOR_LEFT = 0;
+	private static final int STICK_OPERATOR_RIGHT = 0;
+
+
+	/**
+	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
+	 *
+	 * TODO: Get hood position increment value
+	 */
+	public static final double HOOD_POSITION_INCREMENT_VALUE = 0.5;
+
+
+	/**
+	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
+	 *
+	 * TODO: Get shooter speed increment value
+	 */
+	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 100;
+
+
+	/**
+	 * What {@link Drive#DriveMode} for the {@link DriveJoystickCommand} to use.
+	 */
+	public static final Drive.DriveMode driveMode = Drive.DriveMode.arcadeDrive;
+	
 	private OI() {		
-		driveLeft = new Joystick(RobotMap.STICK_LEFT);
-		driveRight = new Joystick(RobotMap.STICK_RIGHT);
+		driveLeft = new Joystick(STICK_LEFT);
+		driveRight = new Joystick(STICK_RIGHT);
 		
-		operatorLeft = new Joystick(RobotMap.STICK_OPERATOR_LEFT);
-		operatorRight = new Joystick(RobotMap.STICK_OPERATOR_RIGHT);
+		operatorLeft = new Joystick(STICK_OPERATOR_LEFT);
+		operatorRight = new Joystick(STICK_OPERATOR_RIGHT);
 
 		initDriveLeft();
 		initDriveRight();
@@ -152,26 +185,26 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
 
 		
-		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenPressed(new IntakeSpeedCommand(RobotMap.INTAKE_PUKE_SPEED));
+		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenPressed(new IntakeSpeedCommand(Intake.PUKE_SPEED));
 		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenReleased(new IntakeJoystickCommand());
 		
 		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmDeployCommand());
 		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
 
-		new JoystickButton(operatorLeft, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(RobotMap.SHOOTER_SPEED_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(-RobotMap.SHOOTER_SPEED_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(-OI.SHOOTER_SPEED_INCREMENT_VALUE));
 		
 		
-		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(RobotMap.HOOD_POSITION_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(-RobotMap.HOOD_POSITION_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(-OI.HOOD_POSITION_INCREMENT_VALUE));
 		
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenPressed(new LoaderRunCommand());
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenReleased(new LoaderStopCommand());
 	}
 
 	public void initOperatorRight() {
-		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(RobotMap.PRESET_TURRET_ANGLE_RED / RobotMap.DEGREES_PER_ROTATION));
-		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(RobotMap.PRESET_TURRET_ANGLE_BLUE / RobotMap.DEGREES_PER_ROTATION));
+		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_RED / Units.DEGREES_PER_ROTATION));
+		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_BLUE / Units.DEGREES_PER_ROTATION));
 		
 		new JoystickButton(operatorRight, ENABLE_AUTO_TRACKING_BUTTON_NUMBER).whenPressed(new EnableAutoTrackingCommand());
 	
@@ -243,7 +276,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	 * @return The speed, in rotations per minute
 	 */
 	public double getIntakeValue() {
-		return intakeSwitch.get() ? RobotMap.INTAKE_RUN_SPEED : 0;
+		return intakeSwitch.get() ? Intake.RUN_SPEED : 0;
 	}
 	
 	public double getTurretValue() {

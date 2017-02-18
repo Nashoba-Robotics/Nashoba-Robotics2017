@@ -3,7 +3,6 @@ package edu.nr.robotics.subsystems.drive;
 import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.RobotMap;
 
 public class DrivePIDTurnAngleCommand extends NRCommand {
 	
@@ -11,6 +10,13 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 	
 	double initialAngle = 0;
 	double finishAngle = 0;
+
+	/**
+	 * Degrees in which the robot needs to be to stop DrivePIDTurnAngleCommand
+	 * 
+	 * TODO: DrivePIDTurnAngleCommand: Get threshold to finish turning
+	 */
+	public static final double PID_TURN_ANGLE_THRESHOLD = 0;
 	
 	//TODO: PIDTurnCommand: Get p value 
 	public static final double P = 0;
@@ -42,6 +48,6 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 	
 	@Override
 	public boolean isFinishedNR() {
-		return Math.abs(getAngleError()) < RobotMap.DRIVE_PID_TURN_ANGLE_THRESHOLD;
+		return Math.abs(getAngleError()) < DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD;
 	}
 }

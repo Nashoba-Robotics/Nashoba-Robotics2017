@@ -26,9 +26,9 @@ public class GearMover extends NRSubsystem {
 
 	private GearMover() {
 		if (EnabledSubsystems.GEAR_MOVER_ENABLED) {
-			GearMover = new DoubleSolenoid(RobotMap.GEAR_MOVER_PNEUMATIC, RobotMap.GEAR_MOVER_FORWARD,
+			GearMover = new DoubleSolenoid(RobotMap.GEAR_MOVER_PCM_PORT, RobotMap.GEAR_MOVER_FORWARD,
 					RobotMap.GEAR_MOVER_REVERSE);
-			GearGetPosition = new DoubleSolenoid(RobotMap.GEAR_GET_POSITION_PNEUMATIC,
+			GearGetPosition = new DoubleSolenoid(RobotMap.GEAR_GET_POSITION_PCM_PORT,
 					RobotMap.GEAR_GET_POSITION_FORWARD, RobotMap.GEAR_GET_POSITION_REVERSE);
 		}
 	}

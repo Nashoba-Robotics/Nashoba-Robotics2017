@@ -16,6 +16,20 @@ public class Loader extends NRSubsystem {
 	private CANTalon talon;
 	
 	public double motorSetpoint = 0;
+
+	/**
+	 * The speed in rotations per minute for the loader to run at while going in reverse
+	 *
+	 * TODO: Get loader reverse speed
+	 */
+	public static final double REVERSE_SPEED = 0;
+
+	/**
+	 * The speed in rotations per minute for the loader to run at during normal usage
+	 *
+	 * TODO: Get loader run speed
+	 */
+	public static final double RUN_SPEED = 0;
 		
 	private Loader() { 
 		if (EnabledSubsystems.LOADER_ENABLED) { 		
@@ -46,7 +60,7 @@ public class Loader extends NRSubsystem {
 	 *            the loader motor speed, from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		motorSetpoint = speed * RobotMap.LOADER_DIRECTION;
+		motorSetpoint = speed;
 		if (talon != null) {
 			talon.set(motorSetpoint);
 		}
@@ -81,10 +95,6 @@ public class Loader extends NRSubsystem {
 	@Override
 	public void disable() {
 		setMotorSpeed(0);
-	}
-	
-	public boolean isRunning() {
-		return motorSetpoint > RobotMap.LOADER_RUNNING_THRESHOLD;
 	}
 	
 }

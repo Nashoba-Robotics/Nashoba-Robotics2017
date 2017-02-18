@@ -31,7 +31,7 @@ public class IntakeArm extends NRSubsystem {
 
 	private IntakeArm() {
 		if (EnabledSubsystems.INTAKE_ARM_ENABLED) {
-			intakeArm = new DoubleSolenoid(RobotMap.INTAKE_ARM_PNEUMATIC, RobotMap.INTAKE_ARM_FORWARD,
+			intakeArm = new DoubleSolenoid(RobotMap.INTAKE_ARM_PCM_PORT, RobotMap.INTAKE_ARM_FORWARD,
 					RobotMap.INTAKE_ARM_REVERSE);
 			currentIntakeArmState = getState(intakeArm.get());
 			// TODO: IntakeArm: Check solenoid for current state

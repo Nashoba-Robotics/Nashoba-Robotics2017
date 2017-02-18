@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.robotics.RobotMap;
@@ -23,7 +24,7 @@ public class Turret extends NRSubsystem {
 	public static final int TURRET_TICKS_PER_REV = 256; //TODO: Turret: Get ticks per revolution of actual turret
 
 	//TODO: Turret: Find FPID values
-	public static double F = (RobotMap.MAX_TURRET_SPEED / RobotMap.HUNDRED_MS_PER_MIN * RobotMap.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double F = (Turret.MAX_TURRET_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -40,6 +41,45 @@ public class Turret extends NRSubsystem {
 	private boolean autoAlign = false;
 	
 	public int turretTrackDirection = 1;
+
+	/**
+	 * The number of turret rotations around the goal position that we can be at
+	 * TODO: Turret: Find the position threshold
+	 */
+	public static final double POSITION_THRESHOLD = 0;
+
+	/**
+	 * The threshold of degrees the turret needs to be within to shoot in degrees
+	 */
+	public static final double SHOOT_THRESHOLD = 0;
+
+	public static final double PRESET_ANGLE_BLUE = 0;
+
+	/**
+	 * The angle the turret will automatically turn to start the match in degrees
+	 * 
+	 * TODO: Get preset turret angles for red and blue sides
+	 */
+	public static final double PRESET_ANGLE_RED = 0;
+
+	/**
+	 * The percentage of max speed the turret will go when tracking
+	 * 
+	 * TODO: Turret: Determine the percentage of max speed the turret will go when tracking
+	 */
+	public static final double MAX_TRACKING_PERCENTAGE = 0;
+
+	/**
+	 * The max acceleration of the turret, in rotations per minute per second
+	 * TODO: Turret: Find max acceleration
+	 */
+	public static final double MAX_TURRET_ACCELERATION = 0;
+
+	/**
+	 * The max speed of the turret, in rotations per minute
+	 * TODO: Turret: Find max speed
+	 */
+	public static final double MAX_TURRET_SPEED = 0;
 	
 	private Turret() { 
 		if (EnabledSubsystems.TURRET_ENABLED) { 
@@ -53,8 +93,8 @@ public class Turret extends NRSubsystem {
 			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(RobotMap.MAX_TURRET_SPEED);
-			talon.setMotionMagicAcceleration(RobotMap.MAX_TURRET_ACCELERATION);
+			talon.setMotionMagicCruiseVelocity(Turret.MAX_TURRET_SPEED);
+			talon.setMotionMagicAcceleration(Turret.MAX_TURRET_ACCELERATION);
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Turret: Find phase
 			talon.enable();
@@ -87,7 +127,7 @@ public class Turret extends NRSubsystem {
 	 *            If the talon mode is PercentVbus, from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		speedSetpoint = speed * RobotMap.TURRET_DIRECTION;
+		speedSetpoint = speed;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.MotionMagic) {
@@ -106,7 +146,7 @@ public class Turret extends NRSubsystem {
 	 * 			The goal positions in rotations
 	 */
 	public void setPosition(double position) {
-		positionSetpoint = position * RobotMap.TURRET_DIRECTION;
+		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed) {
@@ -141,7 +181,7 @@ public class Turret extends NRSubsystem {
 	 * @param deltaPosition
 	 */
 	public void setPositionDelta(double deltaPosition) {
-		positionSetpoint = getInstance().getPosition() + deltaPosition * RobotMap.TURRET_DIRECTION;
+		positionSetpoint = getInstance().getPosition() + deltaPosition;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed) {

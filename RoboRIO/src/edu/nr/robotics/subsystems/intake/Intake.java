@@ -17,6 +17,22 @@ public class Intake extends NRSubsystem {
 	
 	public double lowMotorSetpoint = 0;
 	public double highMotorSetpoint = 0;
+
+	/**
+	 * The speed in rotations per minute for the intake to run at while attempting to "puke" all the balls.
+	 * 
+	 * Puking balls involves running the intake in reverse to clear any balls that are trapped in it.
+	 * 
+	 * TODO: Get puke speed
+	 */
+	public static final double PUKE_SPEED = 0;
+
+	/**
+	 * The speed in rotations per minute for the intake to run at during normal usage
+	 * 
+	 * TODO: Get run speed
+	 */
+	public static final double RUN_SPEED = 0;
 	
 	private Intake() { 
 		if (EnabledSubsystems.INTAKE_ENABLED) { 
@@ -55,8 +71,8 @@ public class Intake extends NRSubsystem {
 	 *            the intake motor voltage, from -1 to 1
 	 */
 	public void setMotorSpeed(double speed) {
-		lowMotorSetpoint = speed * RobotMap.LOW_INTAKE_DIRECTION;
-		highMotorSetpoint = speed * RobotMap.HIGH_INTAKE_DIRECTION;
+		lowMotorSetpoint = speed;
+		highMotorSetpoint = speed;
 		if (lowTalon != null && highTalon != null) {
 			if(IntakeArm.getInstance().intakeArmIsDeployed()) {
 				lowTalon.set(lowMotorSetpoint);

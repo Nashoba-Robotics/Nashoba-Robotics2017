@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.turret;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.RobotMap;
 
 public class TurretPositionCommand extends NRCommand{
 
@@ -19,6 +18,6 @@ public class TurretPositionCommand extends NRCommand{
 	
 	@Override
 	public boolean isFinishedNR() {
-		return Turret.getInstance().getPosition() < position + RobotMap.TURRET_POSITION_THRESHOLD && Turret.getInstance().getPosition() > position - RobotMap.TURRET_POSITION_THRESHOLD;
+		return Turret.getInstance().getPosition() < position + Turret.POSITION_THRESHOLD && Turret.getInstance().getPosition() > position - Turret.POSITION_THRESHOLD;
 	}
 }

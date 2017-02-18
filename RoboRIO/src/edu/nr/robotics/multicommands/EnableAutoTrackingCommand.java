@@ -3,7 +3,6 @@ package edu.nr.robotics.multicommands;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.AutoTrackingCalculation;
-import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.hood.Hood;
 import edu.nr.robotics.subsystems.hood.HoodAutoAlignCommand;
 import edu.nr.robotics.subsystems.shooter.Shooter;
@@ -21,7 +20,7 @@ public class EnableAutoTrackingCommand extends NRCommand{
 	@Override
 	public void onExecute() {
 		if (!AutoTrackingCalculation.getInstance().canSeeTarget()) {
-			Turret.getInstance().setMotorSpeed(RobotMap.MAX_TURRET_SPEED * RobotMap.MAX_TURRET_TRACKING_PERCENTAGE * Turret.getInstance().turretTrackDirection);
+			Turret.getInstance().setMotorSpeed(Turret.MAX_TURRET_SPEED * Turret.MAX_TRACKING_PERCENTAGE * Turret.getInstance().turretTrackDirection);
 		}
 	}
 	

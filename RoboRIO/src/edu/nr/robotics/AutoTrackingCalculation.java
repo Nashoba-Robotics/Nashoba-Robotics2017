@@ -2,6 +2,7 @@ package edu.nr.robotics;
 
 import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
+import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -18,6 +19,12 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	private int lastSeenDistance;
 	
 	private long timeOfLastData;
+	/**
+	 * The amount of time to wait without a picture before sweeping
+	 * 
+	 * TODO: General: Determine the max wait time before sweeping turret
+	 */
+	public static final long MAX_TRACKING_WAIT_TIME = 0;
 	
 	private static AutoTrackingCalculation singleton;
 	
@@ -50,20 +57,20 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		double theta4 = 180 - Math.atan(RobotMap.Y_CAMERA_OFFSET / RobotMap.X_CAMERA_OFFSET) - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
 		double h4 = Math.sqrt(Math.pow(RobotMap.X_TURRET_OFFSET, 2) + Math.pow(RobotMap.Y_TURRET_OFFSET, 2));
 		double h3 = Math.sqrt(Math.pow(h4, 2) + Math.pow(z1, 2) - 2 * h4 * z1 * Math.cos(theta4));
-		double theta5 = Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp) * RobotMap.DEGREES_PER_ROTATION - Math.atan(RobotMap.Y_CAMERA_OFFSET / RobotMap.X_CAMERA_OFFSET);
+		double theta5 = Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION - Math.atan(RobotMap.Y_CAMERA_OFFSET / RobotMap.X_CAMERA_OFFSET);
 		double theta6 = 90 - theta5 - Math.asin(h4 * Math.sin(theta4) / h3);
 		double histDistCenter = Math.sqrt(Math.pow(lastSeenDistance, 2) + Math.pow(h3, 2) - 2 * lastSeenDistance * h3 * Math.cos(theta6 + lastSeenAngle));
 		double histAngleCenter = 180 - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET) - z1 * Math.sin(theta4) / h3 - lastSeenDistance * Math.sin(theta6 + lastSeenAngle) / histDistCenter;
 		
-		double histRobotOrientation = histAngleCenter + Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp) * RobotMap.DEGREES_PER_ROTATION;
+		double histRobotOrientation = histAngleCenter + Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
 		double deltaAngle = (NavX.getInstance().getYaw(AngleUnit.DEGREE) - NavX.getInstance().getHistoricalYaw(AngleUnit.DEGREE, lastSeenTimeStamp));
 		double curRobotOrientation = histRobotOrientation + deltaAngle;
-		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(lastSeenTimeStamp) * RobotMap.DEGREES_PER_ROTATION;
-		double histRightPos = Drive.getInstance().getHistoricalRightPosition(lastSeenTimeStamp) * RobotMap.DEGREES_PER_ROTATION;
+		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
+		double histRightPos = Drive.getInstance().getHistoricalRightPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
 		
 		//Code until next break to get current distance and turret orientation
 		double theta1 = histRobotOrientation + 90;
-		double r = Math.max(histLeftPos, histRightPos) / deltaAngle - (0.5 * RobotMap.DRIVE_WHEEL_BASE);
+		double r = Math.max(histLeftPos, histRightPos) / deltaAngle - (0.5 * Drive.WHEEL_BASE);
 		double h = Math.sqrt(Math.pow(r, 2) + Math.pow(histDistCenter, 2) - 2 * r * histDistCenter * Math.cos(theta1));
 		double theta0 = Math.asin(histDistCenter * Math.sin(theta1) / h) - deltaAngle;
 		double curDist = Math.sqrt(Math.pow(h, 2) + Math.pow(r, 2) - 2 * h * r * Math.cos(theta0));
@@ -73,7 +80,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		double curTurretOrientation = 90 - Math.asin(curDist * Math.sin(theta3) / curDistReal) - Math.atan(RobotMap.Y_TURRET_OFFSET / RobotMap.X_TURRET_OFFSET);
 		
 		//Gets average speed of two drive sides to get instantaneous speed in (inches / sec)
-		double speed = (Drive.getInstance().getEncoderLeftSpeed() + Drive.getInstance().getEncoderRightSpeed()) / 2 * (RobotMap.DRIVE_WHEEL_DIAMETER * RobotMap.INCHES_PER_FOOT) / RobotMap.SECONDS_PER_MINUTE;
+		double speed = (Drive.getInstance().getEncoderLeftSpeed() + Drive.getInstance().getEncoderRightSpeed()) / 2 * (Drive.WHEEL_DIAMETER * Units.INCHES_PER_FOOT) / Units.SECONDS_PER_MINUTE;
 		double vertSpeed = speed * Math.cos(curRobotOrientation);
 		
 		//Code until next break gets additional angle for turret to turn based on current speed
@@ -82,14 +89,14 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		double e = Math.sqrt(Math.pow(curDistReal, 2) + Math.pow(p, 2) - 2 * curDistReal * p * Math.cos(curTurretOrientation));
 		turretAngle = 180 - Math.asin(curDistReal * Math.sin(curTurretOrientation) / e);
 		//Sets the change in position of the turret
-		turretAngle /= RobotMap.DEGREES_PER_ROTATION; // Changes from angle to rotations
+		turretAngle /= Units.DEGREES_PER_ROTATION; // Changes from angle to rotations
 		
 		//What the distance of the shot will map as due to forward/backward motion
 		double feltDist = vertSpeed * timeUntilMake;
 		//TODO: Hood: Map feltDist to hood angle
 		hoodAngle = 0;
 		//Sets the position of the hood
-		hoodAngle /= RobotMap.DEGREES_PER_ROTATION; // Changes from angle to rotations
+		hoodAngle /= Units.DEGREES_PER_ROTATION; // Changes from angle to rotations
 		
 		//TODO: Shooter: Map feltDist to shooter speed in rpm
 		shooterSpeed = 0;
@@ -108,10 +115,10 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	}
 	
 	private long getCurrentTimeMillis() {
-		return (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * RobotMap.MILLISECONDS_PER_SECOND);
+		return (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * Units.MILLISECONDS_PER_SECOND);
 	}
 	
 	public boolean canSeeTarget() {
-		return (getCurrentTimeMillis() - timeOfLastData) < RobotMap.MAX_TRACKING_WAIT_TIME;
+		return (getCurrentTimeMillis() - timeOfLastData) < AutoTrackingCalculation.MAX_TRACKING_WAIT_TIME;
 	}
 }
