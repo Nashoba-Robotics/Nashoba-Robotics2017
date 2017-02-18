@@ -3,6 +3,7 @@ package edu.nr.robotics;
 
 import java.util.ArrayList;
 
+import edu.nr.lib.commandbased.CancelAllCommand;
 import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.interfaces.SmartDashboardSource;
@@ -138,10 +139,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running.
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+		new CancelAllCommand().start();
 	}
 
 	/**

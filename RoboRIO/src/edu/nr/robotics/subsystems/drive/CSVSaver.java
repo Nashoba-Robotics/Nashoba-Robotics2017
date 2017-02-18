@@ -7,9 +7,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.function.Function;
 
-import edu.nr.lib.commandbased.NRSubsystem;
-
-//TODO: CSVSaver: Make generic
 public class CSVSaver {
 
 	boolean enabled = false;
@@ -23,7 +20,7 @@ public class CSVSaver {
 		return singleton;
 	}
 	
-	private synchronized static <T extends NRSubsystem> void init()  {
+	private synchronized static void init()  {
 		if(singleton == null) {
 			ArrayList<Function<Drive, Double>> l = new ArrayList<>();
 			l.add(Drive::getEncoderLeftSpeed);
