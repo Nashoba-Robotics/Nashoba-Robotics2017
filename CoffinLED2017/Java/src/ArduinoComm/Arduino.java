@@ -19,14 +19,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class ArduinoExample implements SerialPortEventListener {
+public class Arduino implements SerialPortEventListener {
 
 	// make it a singleton
-	private static ArduinoExample singleton;
+	private static Arduino singleton;
 
-	public static ArduinoExample getInstance() {
+	public static Arduino getInstance() {
 		if (singleton == null) {
-			singleton = new ArduinoExample();
+			singleton = new Arduino();
 			singleton.initialize();
 		}
 		return singleton;
@@ -335,7 +335,7 @@ public class ArduinoExample implements SerialPortEventListener {
 
 	public static void main(String[] args) throws Exception {
 
-		ArduinoExample.getInstance();//start the ArduinoExample object
+		Arduino.getInstance();//start the Arduino object
 
 	}
 }
