@@ -13,12 +13,7 @@ public class AgitatorSpeedCommand extends NRCommand {
 	}
 	
 	@Override
-	public void onExecute() {
+	public void onStart() {
 		Loader.getInstance().setMotorSpeed(percent);
-	}
-	
-	@Override
-	public boolean isFinishedNR() {
-		return false;
 	}
 }
