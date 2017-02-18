@@ -2,6 +2,8 @@ package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.robotics.OI;
+import edu.nr.robotics.Robot;
+import edu.wpi.first.wpilibj.Compressor;
 
 public class ClimbCommand extends NRCommand {
 
@@ -19,6 +21,7 @@ public class ClimbCommand extends NRCommand {
 	
 	@Override
 	public void onStart() {
+		Robot.robotCompressor.stop();
 		Drive.getInstance().startDumbDrive();
 	}
 	
@@ -33,6 +36,7 @@ public class ClimbCommand extends NRCommand {
 	
 	@Override
 	public void onEnd() {
+		Robot.robotCompressor.start();
 		if(!OI.getInstance().shouldDumbDrive()) {
 			Drive.getInstance().endDumbDrive();
 		}

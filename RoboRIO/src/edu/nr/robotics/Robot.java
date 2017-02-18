@@ -13,12 +13,14 @@ import edu.nr.lib.network.TCPServer.Num;
 import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
 import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
+import edu.nr.robotics.auton.DriveOverBaselineAutoCommand;
 import edu.nr.robotics.auton.DriveToHopperAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -44,6 +46,8 @@ public class Robot extends IterativeRobot {
 	public static SideOfField side;
 	SendableChooser<SideOfField> sideChooser = new SendableChooser<>();
 	
+	public static Compressor robotCompressor = new Compressor();
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -65,6 +69,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autoChooserInit() {
 		autoSpotChooser.addDefault("Do Nothing", new DoNothingCommand());
+		autoSpotChooser.addDefault("Baseline", new DriveOverBaselineAutoCommand());
 		autoSpotChooser.addObject("Non Shooter Gear", new DriveToNonShooterSideGearAutoCommand());
 		autoSpotChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
 		autoSpotChooser.addObject("Shooter Gear", new DriveToShooterSideGearAutoCommand());
