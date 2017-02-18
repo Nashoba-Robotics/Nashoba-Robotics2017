@@ -717,6 +717,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		leftMotorSetpoint = outputLeft;
 		rightMotorSetpoint = outputRight;
 
+		//TODO: Drive: PidWrite use setMotorSpeed();
+		
 		if(currentGear == Gear.low) {
 			leftTalon.set(leftMotorSetpoint * Drive.MAX_LOW_GEAR_SPEED);
 			rightTalon.set(rightMotorSetpoint * Drive.MAX_LOW_GEAR_SPEED);
