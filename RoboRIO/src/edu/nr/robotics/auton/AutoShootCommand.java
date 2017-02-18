@@ -1,6 +1,5 @@
 package edu.nr.robotics.auton;
 
-import edu.nr.robotics.multicommands.AutoDecideShootCommand;
 import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
 import edu.nr.robotics.subsystems.loader.LoaderShootCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterStationarySpeedCorrectionCommand;
@@ -13,7 +12,6 @@ public class AutoShootCommand extends CommandGroup {
 		addParallel(new HoodStationaryAngleCorrectionCommand());
 		addParallel(new TurretStationaryAngleCorrectionCommand());
 		addParallel(new ShooterStationarySpeedCorrectionCommand());
-		addParallel(new AutoDecideShootCommand());
 		addSequential(new LoaderShootCommand());
 	}
 }

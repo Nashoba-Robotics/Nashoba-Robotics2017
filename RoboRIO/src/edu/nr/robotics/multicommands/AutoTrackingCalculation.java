@@ -2,13 +2,10 @@ package edu.nr.robotics.multicommands;
 
 import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
-import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.drive.Drive;
-import edu.nr.robotics.subsystems.hood.Hood;
-import edu.nr.robotics.subsystems.shooter.Shooter;
 import edu.nr.robotics.subsystems.turret.Turret;
 
 public class AutoTrackingCalculation implements NetworkingDataTypeListener {
