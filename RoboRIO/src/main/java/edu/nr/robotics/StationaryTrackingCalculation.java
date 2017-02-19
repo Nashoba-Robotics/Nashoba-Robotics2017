@@ -1,4 +1,4 @@
-package edu.nr.robotics;
+package src.main.java.edu.nr.robotics;
 
 import edu.nr.lib.NRMath;
 import edu.nr.lib.Units;
