@@ -7,7 +7,7 @@
 .tmp/
 
 
-.classpath
+RoboRIO/.classpath
 .settings/
 
 # Package Files 
