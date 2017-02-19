@@ -10,7 +10,7 @@ public class AgitatorRunCommand extends JoystickCommand {
 	
 	@Override
 	public void onStart() {
-		Agitator.getInstance().setMotorVoltagePercent(Agitator.RUN_PERCENT);
+		Agitator.getInstance().setMotorVoltage(Agitator.RUN_PERCENT);
 	}
 
 	@Override

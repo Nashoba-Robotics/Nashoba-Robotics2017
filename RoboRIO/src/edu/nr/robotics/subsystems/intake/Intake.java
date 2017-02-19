@@ -31,14 +31,14 @@ public class Intake extends NRSubsystem {
 	 * 
 	 * Puking balls involves running the intake in reverse to clear any balls that are trapped in it.
 	 * 
-	 * TODO: Get puke speed
+	 * TODO: Intake: Get puke voltage
 	 */
 	public static final double PUKE_VOLTAGE = 0;
 
 	/**
 	 * The percent voltage for the intake to run at during normal usage
 	 * 
-	 * TODO: Get run speed
+	 * TODO: Intake Get run voltage
 	 */
 	public static final double RUN_VOLTAGE = 0;
 	
@@ -71,12 +71,12 @@ public class Intake extends NRSubsystem {
 	}
 
 	/**
-	 * Sets motor speed of the intake.
+	 * Sets the motor voltage.
 	 * 
-	 * If the intake arm is not deployed, the speed is always set to zero instead.
+	 * If the intake arm is not deployed, the speed is set to zero instead.
 	 * 
 	 * @param percent
-	 *            the intake motor voltage, from -1 to 1
+	 *            the voltage that the motor should run at, on a scale from -1 to 1
 	 */
 	public void setMotorVoltage(double percent) {
 		lowMotorSetpoint = percent;

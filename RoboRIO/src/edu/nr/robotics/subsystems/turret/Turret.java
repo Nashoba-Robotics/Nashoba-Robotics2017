@@ -19,12 +19,12 @@ public class Turret extends NRSubsystem {
 	private TalonEncoder encoder;
 	
 	/**
-	 * Degrees per second
+	 * The speed in degrees per second that the motor is currently supposed to be running at
 	 */
 	private double speedSetpoint = 0;
 	
 	/**
-	 * Degrees
+	 * The position in degrees that the hood is currently supposed to be at
 	 */
 	private double positionSetpoint = 0;
 
@@ -63,14 +63,14 @@ public class Turret extends NRSubsystem {
 	/**
 	 * The angle the turret will automatically turn to start the match in degrees
 	 * 
-	 * TODO: Get preset turret angle for blue side
+	 * TODO: Turret: Get preset turret angle for blue side
 	 */
 	public static final double PRESET_ANGLE_BLUE = 0;
 
 	/**
 	 * The angle the turret will automatically turn to start the match in degrees
 	 * 
-	 * TODO: Get preset turret angle for red side
+	 * TODO: Turret: Get preset turret angle for red side
 	 */
 	public static final double PRESET_ANGLE_RED = 0;
 
@@ -227,7 +227,7 @@ public class Turret extends NRSubsystem {
 	@Override
 	public void periodic() {
 		if(talon != null) {
-			if(talon.isFwdLimitSwitchClosed()) {
+			if(talon.isFwdLimitSwitchClosed()) { //TODO: Turret: Check limit switch direction
 				talon.setEncPosition(FORWARD_POSITION);
 				turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {

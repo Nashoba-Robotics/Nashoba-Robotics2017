@@ -13,6 +13,6 @@ public class AgitatorSpeedCommand extends NRCommand {
 	
 	@Override
 	public void onStart() {
-		Agitator.getInstance().setMotorVoltagePercent(percent);
+		Agitator.getInstance().setMotorVoltage(percent);
 	}
 }

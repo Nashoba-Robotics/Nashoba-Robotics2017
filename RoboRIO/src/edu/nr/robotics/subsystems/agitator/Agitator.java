@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Agitator extends NRSubsystem {
 
-	public static Agitator singleton;
+	private static Agitator singleton;
 	
 	private CANTalon talon;
 	
@@ -20,6 +20,10 @@ public class Agitator extends NRSubsystem {
 	 * The percent voltage (-1 to 1) for the agitator to run at when turned on
 	 */
 	public static final double RUN_PERCENT = 0;
+	
+	/**
+	 * The percent voltage (-1 to 1) for the agitator to run at when reversing
+	 */
 	public static final double REVERSE_PERCENT = -RUN_PERCENT;
 	
 	private Agitator() {
@@ -45,13 +49,11 @@ public class Agitator extends NRSubsystem {
 	}
 	
 	/**
-	 * Sets motor speed of the agitator
+	 * Sets the motor voltage.
 	 * 
-	 * @param speed
-	 *            the agitator motor speed in percent voltage, 
-	 *            from -1 to 1
+	 * @param percent the voltage that the motor should run at, on a scale from -1 to 1
 	 */
-	public void setMotorVoltagePercent(double percent) {
+	public void setMotorVoltage(double percent) {
 		motorSetpoint = percent;
 		if (talon != null) {
 			talon.set(motorSetpoint);
@@ -76,7 +78,7 @@ public class Agitator extends NRSubsystem {
 
 	@Override
 	public void disable() {
-		setMotorVoltagePercent(0);
+		setMotorVoltage(0);
 	}
 
 }

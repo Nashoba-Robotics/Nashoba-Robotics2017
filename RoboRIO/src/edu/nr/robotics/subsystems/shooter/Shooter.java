@@ -19,7 +19,7 @@ public class Shooter extends NRSubsystem {
 	private CANTalon talon;
 	
 	/**
-	 * RPM
+	 * The speed in RPM that the motor is currently supposed to be running at
 	 */
 	public double motorSetpoint = 0;
 

@@ -90,12 +90,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private static final int NATIVE_UNITS_PER_REV = 4 * TICKS_PER_REV;
 
 	/**
-	 * The speed that the left drivetrain is currently supposed to be running at, in rotations per minute
+	 * The speed in RPM that the left motors are currently supposed to be running at
 	 */
 	private double leftMotorSetpoint = 0;
 	
 	/**
-	 * The speed that the right drivetrain is currently supposed to be running at, in rotations per minute
+	 * The speed in RPM that the right motors are currently supposed to be running at
 	 */
 	private double rightMotorSetpoint = 0;
 

@@ -19,12 +19,12 @@ public class Hood extends NRSubsystem {
 	private TalonEncoder encoder;
 	
 	/**
-	 * Degrees per second
+	 * The speed in degrees per second that the motor is currently supposed to be running at
 	 */
 	private double speedSetpoint = 0;
 	
 	/**
-	 * Degrees
+	 * The position in degrees that the hood is currently supposed to be at
 	 */
 	private double positionSetpoint = 0;
 	

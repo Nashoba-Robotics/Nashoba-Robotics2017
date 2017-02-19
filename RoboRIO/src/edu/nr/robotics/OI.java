@@ -113,16 +113,12 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
-	 *
-	 * TODO: Get hood position increment value
 	 */
 	public static final double HOOD_POSITION_INCREMENT_VALUE = 0.5;
 
 
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
-	 *
-	 * TODO: Get shooter speed increment value
 	 */
 	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 100;
 
@@ -153,8 +149,6 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	public void initDriveRight() {
 		
-		driveReverse = new JoystickButton(driveRight, DRIVE_REVERSE_BUTTON_NUMBER);
-
 		new JoystickButton(driveLeft, DRIVE_GEAR_TOGGLE_BUTTON_NUMBER).whenPressed(new NRCommand(Drive.getInstance()) {
 			@Override
 			public void onStart() {
@@ -266,7 +260,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public double getDriveSpeedMultiplier() {
-		return driveSpeedMultiplier * (driveReverse.get() ? -1 : 1);
+		return driveSpeedMultiplier;
 	}
 
 	/**

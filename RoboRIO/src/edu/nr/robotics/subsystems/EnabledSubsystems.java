@@ -12,7 +12,7 @@ public class EnabledSubsystems {
 								LOADER_ENABLED 		= false,
 								AGITATOR_ENABLED 	= false;
 	
-	//These start the subsystem in dumb mode. Changing them later ignores this.
+	//These start the subsystem in dumb mode. Changing them later sometimes ignores this.
 	public static final boolean DRIVE_DUMB_ENABLED	 	= false,
 								SHOOTER_DUMB_ENABLED 	= false,
 								HOOD_DUMB_ENABLED 		= false,

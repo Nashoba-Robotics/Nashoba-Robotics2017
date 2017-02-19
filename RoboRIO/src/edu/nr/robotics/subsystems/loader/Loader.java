@@ -11,26 +11,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Loader extends NRSubsystem {
 
-	public static Loader singleton;
+	private static Loader singleton;
 
 	private CANTalon talon;
 	
 	/**
-	 * Percent
+	 * The voltage percent the motor is currently supposed to be running at
 	 */
-	public double motorSetpoint = 0;
+	private double setpoint = 0;
 
 	/**
 	 * The voltage percent for the loader to run at while going in reverse
 	 *
-	 * TODO: Get loader reverse speed
+	 * TODO: Loader: Get loader reverse speed
 	 */
 	public static final double REVERSE_VOLTAGE = 0;
 
 	/**
 	 * The voltage percent for the loader to run at during normal usage
 	 *
-	 * TODO: Get loader run speed
+	 * TODO: Loader: Get loader run speed
 	 */
 	public static final double RUN_VOLTAGE = 0;
 		
@@ -57,29 +57,23 @@ public class Loader extends NRSubsystem {
 	}
 
 	/**
-	 * Sets voltage of the loader
+	 * Sets the motor voltage.
 	 * 
-	 * @param speed
-	 *            the loader voltage, from -1 to 1
+	 * @param percent
+	 *            the voltage that the motor should run at, on a scale from -1 to 1
 	 */
 	public void setMotorVoltage(double percent) {
-		motorSetpoint = percent;
+		setpoint = percent;
 		if (talon != null) {
-			talon.set(motorSetpoint);
+			talon.set(setpoint);
 		}
 	}
 	
-	/**
-	 * Function that is periodically called once the subsystem class is initialized
-	 */
 	@Override
 	public void periodic() {
 
 	}
 
-	/**
-	 * Sends data to SmartDashboard
-	 */
 	@Override
 	public void smartDashboardInfo() {
 		if (talon != null) {
@@ -92,9 +86,6 @@ public class Loader extends NRSubsystem {
 		}
 	}
 
-	/**
-	 * What subsystem does upon robot being disabled
-	 */
 	@Override
 	public void disable() {
 		setMotorVoltage(0);
