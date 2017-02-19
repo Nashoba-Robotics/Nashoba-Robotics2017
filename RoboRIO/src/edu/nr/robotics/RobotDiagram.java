@@ -41,6 +41,7 @@ public class RobotDiagram implements NamedSendable {
 			table.putNumber("Hood Angle", Hood.getInstance().getPosition());
 			table.putNumber("Turret Angle", Turret.getInstance().getPosition());
 			table.putNumber("Match Time", DriverStation.getInstance().getMatchTime());
+			table.putBoolean("Is Auto", Robot.isAuto());
 			table.putBoolean("Can Gear See", GearAlignCalculation.getInstance().canSeeTarget());
 
 			table.putBoolean("Drive High Gear", Drive.getInstance().getCurrentGear() == Drive.Gear.high);
