@@ -26,23 +26,23 @@ public class GearHopperAutoCommand extends CommandGroup {
 			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG, FieldMap.ANGLE_TO_SIDE_PEG));
 		}
 		else {
-			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, -FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG, -FieldMap.ANGLE_TO_SIDE_PEG));
+			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, -FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG, FieldMap.ANGLE_TO_SIDE_PEG.mul(-1)));
 		}
 		addSequential(new GearPegAlignCommand());
 		addSequential(new WaitCommand(GEAR_SECONDS_TO_DELAY));
 		addSequential(new DriveForwardCommand(BACKWARD_DRIVE_DISTANCE));
 		if (Robot.side == SideOfField.blue) {
-			addSequential(new DrivePIDTurnAngleCommand(-FieldMap.ANGLE_TO_SIDE_PEG));
+			addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_TO_SIDE_PEG.mul(-1)));
 		} else {
 			addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_TO_SIDE_PEG));
 		}
-		addSequential(new DriveForwardCommand(FieldMap.GEAR_TO_HOPPER_FORWARD_DIST + BACKWARD_DRIVE_DISTANCE * Math.cos(FieldMap.ANGLE_TO_SIDE_PEG)));
+		addSequential(new DriveForwardCommand(FieldMap.GEAR_TO_HOPPER_FORWARD_DIST + BACKWARD_DRIVE_DISTANCE * FieldMap.ANGLE_TO_SIDE_PEG.cos()));
 		if (Robot.side == SideOfField.blue) {
-			addSequential(new DrivePIDTurnAngleCommand(-Units.RIGHT_ANGLE));
+			addSequential(new DrivePIDTurnAngleCommand(Units.RIGHT_ANGLE.mul(-1)));
 		} else {
 			addSequential(new DrivePIDTurnAngleCommand(Units.RIGHT_ANGLE));
 		}
-		addSequential(new DriveForwardCommand(FieldMap.GEAR_TO_HOPPER_SIDE_DIST - BACKWARD_DRIVE_DISTANCE * Math.sin(FieldMap.ANGLE_TO_SIDE_PEG)));
+		addSequential(new DriveForwardCommand(FieldMap.GEAR_TO_HOPPER_SIDE_DIST - BACKWARD_DRIVE_DISTANCE * FieldMap.ANGLE_TO_SIDE_PEG.sin()));
 		addParallel(new DriveConstantSpeedCommand(DriveToHopperAutoCommand.SPEED_DRIVING_INTO_HOPPER,DriveToHopperAutoCommand.SPEED_DRIVING_INTO_HOPPER));
 		addSequential(new WaitCommand(DriveToHopperAutoCommand.TIME_DRIVING_INTO_HOPPER));
 		addSequential(new DoNothingCommand(Drive.getInstance()));

@@ -1,10 +1,10 @@
 package edu.nr.robotics;
 
-import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
 import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
+import edu.nr.lib.units.Angle.Type;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.turret.Turret;
 
@@ -72,7 +72,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		double histAngleCenter = 180 - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET) - z1 * Math.sin(theta4) / h3 - lastSeenDistance * Math.sin(theta6 + lastSeenAngle) / histDistCenter;
 		
 		double histRobotOrientation = histAngleCenter + Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
-		double deltaAngle = (NavX.getInstance().getYaw(AngleUnit.DEGREE) - NavX.getInstance().getHistoricalYaw(AngleUnit.DEGREE, lastSeenTimeStamp));
+		double deltaAngle = NavX.getInstance().getYaw().get(Type.DEGREE) - NavX.getInstance().getHistoricalYaw(lastSeenTimeStamp).get(Type.DEGREE);
 		double curRobotOrientation = histRobotOrientation + deltaAngle;
 		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
 		double histRightPos = Drive.getInstance().getHistoricalRightPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;

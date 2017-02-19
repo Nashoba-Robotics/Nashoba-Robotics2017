@@ -3,6 +3,8 @@ package edu.nr.robotics.auton;
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Type;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 import jaci.pathfinder.Pathfinder;
@@ -16,7 +18,7 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 	TwoDimensionalMotionProfilerPathfinder profiler;
 	double forwardDistance; // In meters down below, inches on input
 	double sideDistance; // In meters down below, inches on input
-	double endHeading; // In degrees
+	Angle endHeading; // In degrees
 
 	// Two-Dimensional motion profiling constants
 	// TODO: MotionProfileWallToHopperCommand: Get two-dimensional motion
@@ -35,7 +37,7 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 															// want to stay
 															// straight for
 
-	public MotionProfileWallToHopperCommand(double forwardDistance, double sideDistance, double endHeading) {
+	public MotionProfileWallToHopperCommand(double forwardDistance, double sideDistance, Angle endHeading) {
 		super(Drive.getInstance());
 		this.forwardDistance = forwardDistance / Units.INCHES_PER_METER;
 		this.sideDistance = sideDistance / Units.INCHES_PER_METER;
@@ -51,8 +53,8 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,
-					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER, Drive.TICKS_PER_REV,
-					Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
+					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER,
+					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
 		} else {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
@@ -60,13 +62,13 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,
-					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER, Drive.TICKS_PER_REV,
-					Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
+					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER,
+					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
 		}
 		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0),
-				new Waypoint(forwardDistance - DISTANCE_FROM_ENDPOINT * Math.cos(endHeading),
-						sideDistance - DISTANCE_FROM_ENDPOINT * Math.sin(endHeading), Pathfinder.d2r(endHeading)),
-				new Waypoint(forwardDistance, sideDistance, Pathfinder.d2r(endHeading)) });
+				new Waypoint(forwardDistance - DISTANCE_FROM_ENDPOINT * endHeading.cos(),
+						sideDistance - DISTANCE_FROM_ENDPOINT * endHeading.sin(), endHeading.get(Type.RADIAN)),
+				new Waypoint(forwardDistance, sideDistance, endHeading.get(Type.RADIAN)) });
 		profiler.enable();
 	}
 

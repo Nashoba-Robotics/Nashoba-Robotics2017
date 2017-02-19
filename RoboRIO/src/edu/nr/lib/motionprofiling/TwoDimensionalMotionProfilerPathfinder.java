@@ -4,11 +4,11 @@ import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.nr.lib.AngleUnit;
 import edu.nr.lib.GyroCorrection;
 import edu.nr.lib.NavX;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
+import edu.nr.lib.units.Angle;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
@@ -109,7 +109,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
 				double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
 				
-				double currentHeading = -NavX.getInstance().getYaw(AngleUnit.DEGREE);
+				double currentHeading = -NavX.getInstance().getYaw().get(Angle.Type.DEGREE);
 				//double currentHeading = -gyroCorrection.getAngleErrorDegrees();
 				double desiredHeading = Pathfinder.r2d(left.getHeading());
 				

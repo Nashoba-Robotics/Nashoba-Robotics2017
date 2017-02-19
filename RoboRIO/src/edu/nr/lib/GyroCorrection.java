@@ -1,44 +1,35 @@
 package edu.nr.lib;
 
+import edu.nr.lib.units.Angle;
+
 public class GyroCorrection
 {
 	public static final double DEFAULT_KP_THETA = 0.05, MAX_ANGLE_CORRECTION_SPEED = 0.2;
 	protected boolean initialized = false;
 	
-	private double initialAngle;
-	double goalAngle;
+	private Angle initialAngle;
+	Angle goalAngle;
 	NavX navx;
 	
-	AngleUnit unit;
-	
-	public GyroCorrection(double angle, NavX navx, AngleUnit unit) {
+	public GyroCorrection(Angle angle, NavX navx) {
 		if(navx == null) {
 			navx = NavX.getInstance();
 		}
 		this.navx = navx;
 		goalAngle = angle;
-		this.unit = unit;
-		initialAngle = navx.getYaw(unit);
+		initialAngle = navx.getYaw();
 	}
 	
-	public GyroCorrection(double angle, AngleUnit unit) {
-		this(angle, NavX.getInstance(), unit);
-	}
-	
-	public GyroCorrection(AngleUnit unit) {
-		this(0, unit);
+	public GyroCorrection(Angle angle) {
+		this(angle, NavX.getInstance());
 	}
 	
 	public GyroCorrection(NavX navx) {
-		this(0, navx, AngleUnit.DEGREE);
+		this(Angle.ZERO, navx);
 	}
 	
 	public GyroCorrection() {
-		this(0, AngleUnit.DEGREE);
-	}
-	
-	public GyroCorrection(NavX navx, AngleUnit unit) {
-		this(0, navx, unit);
+		this(Angle.ZERO);
 	}
 	
 	/**
@@ -54,7 +45,7 @@ public class GyroCorrection
 			initialized = true;
 		}
 		
-		double turn = getAngleErrorDegrees() * kP_theta;
+		double turn = getAngleError().get(Angle.Type.DEGREE) * kP_theta;
     	if(turn<0)
     		turn = Math.max(-MAX_ANGLE_CORRECTION_SPEED, turn);
     	else
@@ -73,24 +64,21 @@ public class GyroCorrection
 	}
 	
 	/**
-	 * Get the angle error in degrees
+	 * Get the angle error
 	 */
-	public double getAngleErrorDegrees()
+	public Angle getAngleError()
 	{
 		if(initialized == false)
 		{
 			reset();
 			initialized = true;
 		}
-		double currentAngle = navx.getYaw(unit);
-		
-		//System.out.println("goalAngle: " + goalAngle);
-		//System.out.println("initialAngle: " + initialAngle);
-		//System.out.println("currentAngle: " + currentAngle);
-		
+		Angle currentAngle = navx.getYaw();
+				
 		//Error is just based off initial angle
-    	return (currentAngle - initialAngle) + goalAngle;
-	}	
+    	return currentAngle.sub(initialAngle).add(goalAngle);
+	}
+	
 	/**
 	 * Sets the current angle offset to zero, 
 	 * so if {@link GyroCorrection#getAngleErrorDegrees} were called immediately afterward, it would return zero.
@@ -98,7 +86,7 @@ public class GyroCorrection
 	public void reset()
 	{
 		System.out.println("Resetting navx... Current initial angle: " + initialAngle);
-		initialAngle = navx.getYaw(unit);
+		initialAngle = navx.getYaw();
 		System.out.println("Final initial angle: " + initialAngle);
 	}		
 	/**

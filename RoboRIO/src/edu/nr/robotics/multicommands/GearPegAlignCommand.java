@@ -21,7 +21,7 @@ public class GearPegAlignCommand extends CommandGroup {
     		
     		@Override
     		public void onStart() {
-    			turnCommand = new DrivePIDTurnAngleCommand(GearAlignCalculation.getInstance().getAngleToTurnDegrees());
+    			turnCommand = new DrivePIDTurnAngleCommand(GearAlignCalculation.getInstance().getAngleToTurn());
     			turnCommand.start();
     		}
     		
