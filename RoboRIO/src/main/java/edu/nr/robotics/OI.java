@@ -185,12 +185,12 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmDeployCommand());
 		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
 
-		new JoystickButton(operatorLeft, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(-OI.SHOOTER_SPEED_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(-OI.SHOOTER_SPEED_INCREMENT_VALUE));
 		
 		
-		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
+		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
 		
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenPressed(new LoaderRunCommand());
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenReleased(new LoaderStopCommand());
