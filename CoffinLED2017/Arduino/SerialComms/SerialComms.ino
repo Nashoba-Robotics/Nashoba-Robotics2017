@@ -23,7 +23,7 @@ char message[TOT_LEN];
 
 int leds[LED_NUM] = {1, 2, 3, 4, 5, 6};
 
-int globTotTime = 0, globTime = 0;
+double globTotTime = 0, globTime = 0, prevTime = 0, deltaTime = 0;
 
 //parsing structs
 typedef struct intStr{
@@ -33,7 +33,7 @@ typedef struct intStr{
 
 typedef struct doubleStr{
   String str;
-  int num;
+  double num;
 } doubleStr;
 
 typedef struct paramStr{
@@ -73,7 +73,11 @@ void setup() {
 
 void loop() {
   serialComms(';');
+
+  //globTime prevTime deltaTime
+  globTime = ((double)millis()/1000) - prevTime;
   updateTimer();
+  prevTime = (double)millis()/1000;
 }
 
 void serialComms(char delim) {
