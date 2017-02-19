@@ -17,7 +17,7 @@ public class TurretDeltaPositionCommand extends NRCommand{
 
 	@Override
 	public void onStart() {
-		Turret.getInstance().setPositionDelta(deltaPosition);
+		Turret.getInstance().setPosition(deltaPosition + Turret.getInstance().getPosition());
 	}
 	
 	@Override

@@ -112,6 +112,14 @@ public class Hood extends NRSubsystem {
 		}
 	}
 	
+	private double addGearing(double in) {
+		return in; //TODO: Hood: Gearing
+	}
+	
+	private double removeGearing(double in) {
+		return in; //TODO: Hood: Gearing
+	}
+	
 	/**
 	 * Sets motor speed of hood.
 	 * 
@@ -140,11 +148,22 @@ public class Hood extends NRSubsystem {
 				}
 			}
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
-				talon.set(speedSetpoint / MAX_SPEED);
+				talon.set(addGearing(speedSetpoint / MAX_SPEED));
 			} else {
-				talon.set(speedSetpoint);				
+				talon.set(addGearing(speedSetpoint));				
 			}
 		}
+	}
+
+	/**
+	 * Gets the current speed of the talon
+	 * 
+	 * @return current position of talon in degrees per second
+	 */
+	public double getSpeed() {
+		if(talon != null)
+			return removeGearing(talon.getSpeed()) * Units.DEGREES_PER_ROTATION / Units.SECONDS_PER_MINUTE;
+		return 0;
 	}
 	
 	/**
@@ -160,9 +179,19 @@ public class Hood extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(positionSetpoint);
+			talon.set(addGearing(positionSetpoint));
 		}
 
+	}
+
+	/**
+	 * @return Position in degrees
+	 */
+	public double getPosition() {
+		if(talon != null) {
+			return removeGearing(talon.getPosition()) * Units.DEGREES_PER_ROTATION;
+		}
+		return 0;
 	}
 	
 	/**
@@ -172,7 +201,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public double getHistoricalPosition(long deltaTime) {
 		if (encoder != null)
-			return encoder.getPosition(deltaTime) * Units.DEGREES_PER_ROTATION;
+			return removeGearing(encoder.getPosition(deltaTime)) * Units.DEGREES_PER_ROTATION;
 		return 0;
 	}
 	
@@ -200,8 +229,8 @@ public class Hood extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putNumber("Hood Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Hood Speed", talon.getSpeed() + " : " + getInstance().speedSetpoint);
-				SmartDashboard.putString("Hood Position", talon.getPosition() + " : " + getInstance().positionSetpoint);				
+				SmartDashboard.putString("Hood Speed", getSpeed() + " : " + speedSetpoint);
+				SmartDashboard.putString("Hood Position", getPosition() + " : " + positionSetpoint);				
 			}
 			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putNumber("Hood Voltage", talon.getOutputVoltage());
@@ -229,16 +258,6 @@ public class Hood extends NRSubsystem {
 			return talon.getControlMode() == TalonControlMode.MotionMagic;
 		}
 		return false;
-	}
-
-	/**
-	 * @return Position in degrees
-	 */
-	public double getPosition() {
-		if(talon != null) {
-			return talon.getPosition() * Units.DEGREES_PER_ROTATION;
-		}
-		return 0;
 	}
 	
 	/**

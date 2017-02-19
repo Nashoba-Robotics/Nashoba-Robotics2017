@@ -26,7 +26,7 @@ public class EnableAutoTrackingCommand extends NRCommand{
 	
 	@Override
 	public void onEnd() {
-		Turret.getInstance().setPositionDelta(0);
+		Turret.getInstance().disable();
 		new HoodAutoAlignCommand().start();
 		new ShooterAutoAlignCommand().start();
 		new TurretAutoAlignCommand().start();

@@ -127,6 +127,14 @@ public class Turret extends NRSubsystem {
 		}
 	}
 	
+	private double addGearing(double in) {
+		return in; //TODO: Turret: Gearing
+	}
+	
+	private double removeGearing(double in) {
+		return in; //TODO: Turret: Gearing
+	}
+	
 	/**
 	 * Sets motor speed of hood.
 	 * 
@@ -155,11 +163,22 @@ public class Turret extends NRSubsystem {
 				}
 			}
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
-				talon.set(speedSetpoint / MAX_SPEED);
+				talon.set(addGearing(speedSetpoint / MAX_SPEED));
 			} else {
-				talon.set(speedSetpoint);				
+				talon.set(addGearing(speedSetpoint));				
 			}
 		}
+	}
+	
+	/**
+	 * Gets the current speed of the talon
+	 * 
+	 * @return current position of talon in degrees per second
+	 */
+	public double getSpeed() {
+		if(talon != null)
+			return removeGearing(talon.getSpeed()) * Units.DEGREES_PER_ROTATION / Units.SECONDS_PER_MINUTE;
+		return 0;
 	}
 	
 	/**
@@ -175,25 +194,7 @@ public class Turret extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(positionSetpoint);
-		}
-
-	}
-	
-	/**
-	 * Set the goal position delta of the turret. 
-	 * 
-	 * @param position
-	 * 			The goal positions delta in degrees
-	 */
-	public void setPositionDelta(double position) {
-		positionSetpoint = position + getPosition();
-		if (talon != null) {
-			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
-				talon.changeControlMode(TalonControlMode.MotionMagic);
-			}
-			talon.set(positionSetpoint + getPosition());
+			talon.set(addGearing(positionSetpoint));
 		}
 
 	}
@@ -205,7 +206,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public double getPosition() {
 		if(talon != null)
-			return talon.getPosition() * Units.DEGREES_PER_ROTATION;
+			return removeGearing(talon.getPosition()) * Units.DEGREES_PER_ROTATION;
 		return 0;
 	}
 	
@@ -216,7 +217,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public double getHistoricalPosition(long deltaTime) {
 		if (encoder != null)
-			return encoder.getPosition(deltaTime) * Units.DEGREES_PER_ROTATION;
+			return removeGearing(encoder.getPosition(deltaTime)) * Units.DEGREES_PER_ROTATION;
 		return 0;
 	}
 	
@@ -228,10 +229,10 @@ public class Turret extends NRSubsystem {
 		if(talon != null) {
 			if(talon.isFwdLimitSwitchClosed()) {
 				talon.setEncPosition(FORWARD_POSITION);
-				getInstance().turretTrackDirection = -1;
+				turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {
 				talon.setEncPosition(REVERSE_POSITION);
-				getInstance().turretTrackDirection = 1;
+				turretTrackDirection = 1;
 			} 
 		}
 
@@ -245,8 +246,8 @@ public class Turret extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Turret Speed", talon.getSpeed() + " : " + speedSetpoint);
-				SmartDashboard.putString("Turret Position", talon.getPosition() + " : " + positionSetpoint);	
+				SmartDashboard.putString("Turret Speed", getSpeed() + " : " + speedSetpoint);
+				SmartDashboard.putString("Turret Position", getPosition() + " : " + positionSetpoint);	
 			}
 			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
