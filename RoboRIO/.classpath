@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="var" path="wpilib" sourcepath="wpilib.sources"/>
-	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
-	<classpathentry kind="var" path="opencv" sourcepath="opencv.sources"/>
-	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/Pathfinder-Java.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/sf2-frc.jar" sourcepath="USERLIBS_DIR/sf2/"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/Users/Nashoba%20Robotics/wpilib/user/java/docs/CTRLib/"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="lib" path="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/athena/2017.3.1/44e21804c8a15808a733ba5bc782fed3ef62313a/athena-2017.3.1.jar" sourcepath="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/athena/2017.3.1/a5e6577370896b3666a1f99e900233e4240b5d27/athena-2017.3.1-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.1.7/fb573a4610fdc75d50851841499f654bc1177a41/NetworkTables-3.1.7-arm.jar" sourcepath="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.1.7/ae81523c2312b711256c31c896cd2638420ec993/NetworkTables-3.1.7-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.1.7/9f5baa306923168455434bfd253c2a9ccf35a151/NetworkTables-3.1.7-desktop.jar" sourcepath="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.1.7/ae81523c2312b711256c31c896cd2638420ec993/NetworkTables-3.1.7-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.1.0/2a534baab7f01c049ba9768adb645f9b0128f987/opencv-java-3.1.0.jar" sourcepath="/Users/garrison/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.1.0/30ac314db3d3a30fae0e3dc2e1740466708f1c0/opencv-java-3.1.0-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.cscore.java/cscore/1.0.2/d92666b7a2467a5a34d12277c41ebb569df9fb89/cscore-1.0.2-arm.jar" sourcepath="/Users/garrison/.gradle/caches/modules-2/files-2.1/edu.wpi.cscore.java/cscore/1.0.2/3e92e35e1eb5d5b9c4101b7d0908b433030f07b0/cscore-1.0.2-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/.gradle/caches/modules-2/files-2.1/thirdparty.frc.ctre/Toolsuite-Java/4.4.1.9/547aac1ebff1737c775cc2ea075cada66a0c7d26/Toolsuite-Java-4.4.1.9.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/.gradle/caches/modules-2/files-2.1/thirdparty.frc.kauai/Navx-Java/3.0.323/2145b8a6638a950d2ce1df2f7b10bd995a15b8dc/Navx-Java-3.0.323.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/Programming/robotics/Nashoba-Robotics2017/lib/CTRLib.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/Programming/robotics/Nashoba-Robotics2017/lib/navx_frc.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/Programming/robotics/Nashoba-Robotics2017/lib/Pathfinder-Java.jar"/>
+	<classpathentry kind="lib" path="/Users/garrison/Programming/robotics/Nashoba-Robotics2017/lib/sf2-frc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

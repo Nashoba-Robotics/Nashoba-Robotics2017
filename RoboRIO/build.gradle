@@ -1,0 +1,38 @@
+plugins {
+    id "java"
+    id "eclipse"
+    id "idea"
+    id "jaci.openrio.gradle.GradleRIO" version "2017.1.2"
+}
+
+frc {
+    team = "1768"
+    robotClass = "edu.nr.robotics.Robot"
+}
+
+dependencies {
+    compile wpilib()
+    compile talonSrx()                  // Compile with the Talon SRX Library
+    compile navx()                      // Compile with the KauaiLab's NavX-MXP or NavX-Micro library
+
+
+    // Use these to link your own third-party device libraries (e.g. navX)
+    compile fileTree(dir: '../lib', include: '**/*.jar')
+    nativeLib  fileTree(dir: '../lib', include: '**/*.so')
+
+    
+}
+
+def robotManifest = {
+  attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+  attributes 'Robot-Class': frc.robotClass
+}
+
+jar {
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest robotManifest
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2.1'
+}
