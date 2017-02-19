@@ -7,6 +7,7 @@ import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArm;
+import edu.nr.robotics.subsystems.intakeSlide.IntakeSlide;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends NRSubsystem {
@@ -81,7 +82,7 @@ public class Intake extends NRSubsystem {
 		lowMotorSetpoint = percent;
 		highMotorSetpoint = percent;
 		if (lowTalon != null && highTalon != null) {
-			if(IntakeArm.getInstance().intakeArmIsDeployed()) {
+			if(IntakeArm.getInstance().isDeployed() && IntakeSlide.getInstance().isDeployed()) {
 				lowTalon.set(lowMotorSetpoint);
 				highTalon.set(highMotorSetpoint);
 			} else {

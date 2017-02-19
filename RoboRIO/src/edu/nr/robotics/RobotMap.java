@@ -24,11 +24,15 @@ public class RobotMap {
 	public static final int INTAKE_HIGH_TALON_PORT = -1;
 	public static final int HOOD_TALON_PORT = -1;	
 	
-	//TODO: Intake: Get actual PCM ports
+	//TODO: Generic: Get actual PCM ports
 	public static final int INTAKE_ARM_PCM_PORT = 0;
 	public static final int INTAKE_ARM_FORWARD = 0;
 	public static final int INTAKE_ARM_REVERSE = 0;
-	
+
+	public static final int INTAKE_SLIDE_PCM_PORT = 0;
+	public static final int INTAKE_SLIDE_FORWARD = 0;
+	public static final int INTAKE_SLIDE_REVERSE = 0;
+
 	public static final int GEAR_MOVER_PCM_PORT = 0;
 	public static final int GEAR_MOVER_FORWARD = 0;
 	public static final int GEAR_MOVER_REVERSE = 0;

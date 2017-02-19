@@ -1,4 +1,4 @@
-package edu.nr.robotics.subsystems.intakeArm;
+package edu.nr.robotics.subsystems.intakeSlide;
 
 import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class IntakeArm extends NRSubsystem {
-	public static IntakeArm singleton;
+public class IntakeSlide extends NRSubsystem {
+	public static IntakeSlide singleton;
 
 	private DoubleSolenoid solenoid;
 
@@ -30,7 +30,7 @@ public class IntakeArm extends NRSubsystem {
 				if(val == State.RETRACTED_VALUE) {
 					return State.RETRACTED;
 				} else {
-					return State.RETRACTED; //TODO: IntakeArm: Determine what state if off
+					return State.RETRACTED; //TODO: IntakeSlide: Determine what state if off
 				}
 			}
 		}
@@ -41,14 +41,14 @@ public class IntakeArm extends NRSubsystem {
 	}
 
 
-	private IntakeArm() {
-		if (EnabledSubsystems.INTAKE_ARM_ENABLED) {
-			solenoid = new DoubleSolenoid(RobotMap.INTAKE_ARM_PCM_PORT, RobotMap.INTAKE_ARM_FORWARD,
-					RobotMap.INTAKE_ARM_REVERSE);
+	private IntakeSlide() {
+		if (EnabledSubsystems.INTAKE_SLIDE_ENABLED) {
+			solenoid = new DoubleSolenoid(RobotMap.INTAKE_SLIDE_PCM_PORT, RobotMap.INTAKE_SLIDE_FORWARD,
+					RobotMap.INTAKE_SLIDE_REVERSE);
 		}
 	}
 
-	public static IntakeArm getInstance() {
+	public static IntakeSlide getInstance() {
 		if(singleton == null) {
 			init();
 		}
@@ -57,18 +57,18 @@ public class IntakeArm extends NRSubsystem {
 
 	public synchronized static void init() {
 		if (singleton == null) {
-			singleton = new IntakeArm();
+			singleton = new IntakeSlide();
 			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
 		}
 	}
 
-	void deployIntakeArm() {
+	void deployIntakeSlide() {
 		if(solenoid != null) {
 			solenoid.set(State.DEPLOYED_VALUE);
 		}
 	}
 
-	void retractIntakeArm() {
+	void retractIntakeSlide() {
 		if(solenoid != null) {
 			solenoid.set(State.RETRACTED_VALUE);
 		}
@@ -76,10 +76,10 @@ public class IntakeArm extends NRSubsystem {
 
 	@Override
 	public void smartDashboardInfo() {
-		if(EnabledSubsystems.INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED){
-			SmartDashboard.putString("Intake Arm Position", currentState().toString());
+		if(EnabledSubsystems.INTAKESLIDE_SMARTDASHBOARD_BASIC_ENABLED){
+			SmartDashboard.putString("Intake Slide Position", currentState().toString());
 		}
-		if(EnabledSubsystems.INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED){
+		if(EnabledSubsystems.INTAKESLIDE_SMARTDASHBOARD_BASIC_ENABLED){
 			
 		}
 
@@ -92,7 +92,7 @@ public class IntakeArm extends NRSubsystem {
 	@Override
 	public void disable() {
 		if(solenoid != null) {
-			solenoid.set(Value.kOff); //TODO: IntakeArm: Determine what state if off
+			solenoid.set(Value.kOff); //TODO: IntakeSlide: Determine what state if off
 		}
 	}
 
