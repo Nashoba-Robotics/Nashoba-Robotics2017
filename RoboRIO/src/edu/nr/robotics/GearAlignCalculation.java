@@ -20,8 +20,8 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	double turnAngle = 0;
 	double driveDistance = 0;
 	
-	private int lastSeenAngle;
-	private int lastSeenDistance;
+	private double lastSeenAngle;
+	private double lastSeenDistance;
 	
 	private long timeOfLastData;
 	
@@ -40,7 +40,7 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	}
 	
 	@Override
-	public void updateDataType(TCPServer.NetworkingDataType type, int value) {
+	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
 		if(type.identifier == 'a') {
 			lastSeenAngle = value;
 		} else if(type.identifier == 'd') {

@@ -262,7 +262,7 @@ public class TCPServer implements Runnable {
 	 * @param identifier a character that matches a {@link NetworkingDataType}
 	 * @return the data that matches the identifier, or 0 if none do
 	 */
-	public int getValue(char identifier) {
+	public double getValue(char identifier) {
 		for (NetworkingDataType type : data) {
 			if (type.identifier == identifier) {
 				return type.data;
@@ -277,7 +277,7 @@ public class TCPServer implements Runnable {
 	 * @param name a name that matches a {@link NetworkingDataType}
 	 * @return the type that matches the name, or 0 if none do
 	 */
-	public int getValue(String name) {
+	public double getValue(String name) {
 		for (NetworkingDataType type : data) {
 			if (type.name.equals(name)) {
 				return type.data;
@@ -309,8 +309,8 @@ public class TCPServer implements Runnable {
 						if (type != null) {
 							char[] data = new char[4];
 							inFromClient.read(data, 0, 4);
-							type.data = ((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
-									+ (data[3] & 0xFF);
+							type.setData(((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
+									+ (data[3] & 0xFF));
 							m_hasData = true;
 							type.updateListeners();
 							System.out.println("Read from " + num + "\t\t" + firstCharacter + " value: " + type.data);
@@ -364,7 +364,11 @@ public class TCPServer implements Runnable {
 		/**
 		 * This is the actual data that is sent.
 		 */
-		private int data = 0;
+		private double data = 0;
+		
+		private void setData(int in) {
+			data = convert(in);
+		}
 		
 		public void addListener(NetworkingDataTypeListener listener) {
 			listeners.add(listener);
@@ -378,6 +382,10 @@ public class TCPServer implements Runnable {
 			for(NetworkingDataTypeListener listener : listeners) {
 				listener.updateDataType(this, this.data);
 			}
+		}
+		
+		public double convert(int in) {
+			return in;
 		}
 
 	}
