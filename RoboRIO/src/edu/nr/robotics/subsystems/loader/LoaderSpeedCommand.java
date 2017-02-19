@@ -6,18 +6,17 @@ public class LoaderSpeedCommand extends NRCommand{
 
 	double speed;
 	
+	/**
+	 * 
+	 * @param speed Percent voltage
+	 */
 	public LoaderSpeedCommand(double speed) {
 		super(Loader.getInstance());
 		this.speed = speed;
 	}
 	
 	@Override
-	public void onExecute() {
-		Loader.getInstance().setMotorSpeed(speed);
-	}
-	
-	@Override
-	public boolean isFinishedNR() {
-		return false;
+	public void onStart() {
+		Loader.getInstance().setMotorVoltage(speed);
 	}
 }

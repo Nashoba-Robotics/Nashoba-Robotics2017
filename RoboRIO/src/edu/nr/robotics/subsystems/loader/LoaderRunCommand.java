@@ -5,6 +5,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class LoaderRunCommand extends CommandGroup{
 	
 	public LoaderRunCommand() {
-		addSequential(new LoaderSpeedCommand(Loader.RUN_SPEED));
+		addSequential(new LoaderSpeedCommand(Loader.RUN_VOLTAGE));
 	}
 }

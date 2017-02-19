@@ -13,36 +13,33 @@ public class Loader extends NRSubsystem {
 
 	public static Loader singleton;
 
-	private CANTalon talonLow;
-	private CANTalon talonHigh;
+	private CANTalon talon;
 	
+	/**
+	 * Percent
+	 */
 	public double motorSetpoint = 0;
 
 	/**
-	 * The speed in rotations per minute for the loader to run at while going in reverse
+	 * The voltage percent for the loader to run at while going in reverse
 	 *
 	 * TODO: Get loader reverse speed
 	 */
-	public static final double REVERSE_SPEED = 0;
+	public static final double REVERSE_VOLTAGE = 0;
 
 	/**
-	 * The speed in rotations per minute for the loader to run at during normal usage
+	 * The voltage percent for the loader to run at during normal usage
 	 *
 	 * TODO: Get loader run speed
 	 */
-	public static final double RUN_SPEED = 0;
+	public static final double RUN_VOLTAGE = 0;
 		
 	private Loader() { 
-		if (EnabledSubsystems.LOADER_ENABLED) { 		
-			talonLow = new CANTalon(RobotMap.LOADER_LOW_TALON_PORT);
-			talonLow.changeControlMode(TalonControlMode.PercentVbus);
-			talonLow.enableBrakeMode(false);
-			talonLow.enable();
-			
-			talonHigh = new CANTalon(RobotMap.LOADER_HIGH_TALON_PORT);
-			talonHigh.changeControlMode(TalonControlMode.PercentVbus);
-			talonHigh.enableBrakeMode(false);
-			talonHigh.enable();
+		if (EnabledSubsystems.LOADER_ENABLED) { 
+			talon = new CANTalon(RobotMap.LOADER_HIGH_TALON_PORT);
+			talon.changeControlMode(TalonControlMode.PercentVbus);
+			talon.enableBrakeMode(false);
+			talon.enable();
 		}
 	}
 
@@ -60,16 +57,15 @@ public class Loader extends NRSubsystem {
 	}
 
 	/**
-	 * Sets motor speed of the loader
+	 * Sets voltage of the loader
 	 * 
 	 * @param speed
-	 *            the loader motor speed, from -1 to 1
+	 *            the loader voltage, from -1 to 1
 	 */
-	public void setMotorSpeed(double speed) {
-		motorSetpoint = speed;
-		if (talonLow != null && talonHigh != null) {
-			talonLow.set(motorSetpoint);
-			talonHigh.set(motorSetpoint);
+	public void setMotorVoltage(double percent) {
+		motorSetpoint = percent;
+		if (talon != null) {
+			talon.set(motorSetpoint);
 		}
 	}
 	
@@ -86,14 +82,12 @@ public class Loader extends NRSubsystem {
 	 */
 	@Override
 	public void smartDashboardInfo() {
-		if (talonLow != null && talonHigh != null) {
+		if (talon != null) {
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_BASIC_ENABLED){
-				SmartDashboard.putNumber("Loader Low Motor Current", talonLow.getOutputCurrent());
-				SmartDashboard.putNumber("Loader High Motor Current", talonHigh.getOutputCurrent());
+				SmartDashboard.putNumber("Loader Current", talon.getOutputCurrent());
 			}
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_COMPLEX_ENABLED){
-				SmartDashboard.putNumber("Loader Low Motor Voltage", talonLow.getOutputVoltage());
-				SmartDashboard.putNumber("Loader High Motor Voltage", talonHigh.getOutputVoltage());
+				SmartDashboard.putNumber("Loader Voltage", talon.getOutputVoltage());
 			}
 		}
 	}
@@ -103,7 +97,7 @@ public class Loader extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		setMotorSpeed(0);
+		setMotorVoltage(0);
 	}
 	
 }
