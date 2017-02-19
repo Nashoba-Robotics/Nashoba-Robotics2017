@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.shooter;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.OI;
 
 public class ShooterSpeedCommand extends NRCommand {
 

@@ -3,7 +3,6 @@ package edu.nr.robotics.subsystems.drive;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.Robot;
-import edu.wpi.first.wpilibj.Compressor;
 
 public class ClimbCommand extends NRCommand {
 

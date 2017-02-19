@@ -2,7 +2,6 @@ package edu.nr.robotics.subsystems.shooter;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.robotics.AutoTrackingCalculation;
-import edu.nr.robotics.OI;
 
 public class ShooterAutoAlignCommand extends NRCommand {
 
