@@ -80,7 +80,7 @@ public class TCPServer implements Runnable {
 		public synchronized void init(Collection<? extends NetworkingDataType> dataTypes) {
 			if(dataTypes != null) {
 				if(singleton == null) {
-					singleton = new TCPServer(null, defaultPort, this);
+					singleton = new TCPServer(dataTypes, defaultPort, this);
 				} else {
 					singleton.addDataTypes(dataTypes);
 				}
@@ -103,7 +103,7 @@ public class TCPServer implements Runnable {
 		public synchronized void init(Collection<? extends NetworkingDataType> dataTypes, int port) {
 			if(dataTypes != null) {
 				if(singleton == null) {
-					singleton = new TCPServer(null, port, this);
+					singleton = new TCPServer(dataTypes, port, this);
 				} else {
 					singleton.addDataTypes(dataTypes);
 				}
@@ -313,9 +313,6 @@ public class TCPServer implements Runnable {
 									+ (data[3] & 0xFF));
 							m_hasData = true;
 							type.updateListeners();
-							System.out.println("Read from " + num + "\t\t" + firstCharacter + " value: " + type.data);
-						} else {
-							inFromClient.read(new char[4], 0, 4);
 						}
 					}
 

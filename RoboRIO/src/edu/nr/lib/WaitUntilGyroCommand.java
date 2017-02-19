@@ -7,7 +7,7 @@ import edu.nr.lib.commandbased.NRCommand;
  */
 public class WaitUntilGyroCommand extends NRCommand {
 
-	NavXGyroCorrection gyroCorrection;
+	AngleGyroCorrection gyroCorrection;
 	double angle;
 	GetGyroCommand gyro;
 
@@ -35,7 +35,7 @@ public class WaitUntilGyroCommand extends NRCommand {
         if(gyro != null)
         	gyroCorrection = gyro.getCorrection();
         else
-            gyroCorrection = new NavXGyroCorrection();
+            gyroCorrection = new AngleGyroCorrection();
 	}
 	
 }

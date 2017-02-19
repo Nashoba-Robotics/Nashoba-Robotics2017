@@ -6,6 +6,8 @@ import java.util.TimerTask;
 
 import com.ctre.CANTalon;
 
+import edu.nr.lib.Units;
+
 public class TalonEncoder extends TimerTask {
 
 	private final Timer timer;
@@ -32,7 +34,7 @@ public class TalonEncoder extends TimerTask {
 	@Override
 	public void run() {
 		data.add(new Data(talon.getPosition(), talon.getSpeed(),
-				(long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * 1000.0)));
+				(long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * Units.MILLISECONDS_PER_SECOND)));
 	}
 
 	/**
