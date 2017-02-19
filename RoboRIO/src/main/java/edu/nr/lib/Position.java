@@ -79,11 +79,10 @@ public class Position {
     
     /**
      * Gets the current angle
-     * @param unit the AngleUnit to return in
-     * @return the angle in radians
+     * @return the angle
      */
     public Angle getAngle() {
-        return new Angle(Math.atan2(y, x), Angle.Type.RADIAN);
+        return NRMath.atan2(y,x);
     }
 
     /**

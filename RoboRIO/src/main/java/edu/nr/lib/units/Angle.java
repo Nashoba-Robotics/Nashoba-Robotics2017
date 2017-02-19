@@ -9,8 +9,8 @@ public class Angle {
 	public enum Type {
 		DEGREE, ROTATION, RADIAN;
 		
-		private static final double ROTATIONS_PER_DEGREE = 360;
-		private static final double RADIANS_PER_DEGREE = 180 / Math.PI;
+		private static final double ROTATIONS_PER_DEGREE = 1/360.0;
+		private static final double RADIANS_PER_DEGREE = 2*Math.PI / 360.0;
 				
 		static public double convertToDefault(double val, Type fromType) {
 			if(fromType == Type.DEGREE) {
