@@ -31,8 +31,8 @@ public class Arduino implements SerialPortEventListener {
 		}
 		return singleton;
 	}
-
-	private static GUI display;
+	
+	public static GUI display;
 
 	SerialPort serialPort;
 	/** The port we're normally going to use. */
@@ -60,12 +60,30 @@ public class Arduino implements SerialPortEventListener {
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
 
-	private String[] statuses = {"Shooter Speed", "Hood Angle", "Turret Angle"};
-	private String[] abrev = {"SP", "HA", "TA"};
+	private String[] lcd = {"Shooter Speed", "Hood Angle", "Turret Angle"};//numbers to get for the lcd
+	private String[] abrev = {"SP", "HA", "TA"};//abreviations to the lcd
 	
+	private String[] singleLEDs= {"Can Gear See", "Drive High Gear", "Hood Aligned", "Turret Aligned", "Shooter Aligned", "Hood Tracking", 
+			"Turret Tracking", "Shooter Tracking"};
+	
+	/////////////VARIABLES////////////////
+	//double
+	//	lcd		| Shooter Speed, Hood Angle, Turret Angle
+	//	ledStrip| Match Time
+	//boolean	
+	//	sigleLed| Can Gear See, Drive High Gear, Hood Aligned, Turret Aligned, Shooter Aligned, Hood Tracking, Turret Tracking, Shooter Tracking
+	//////////////////////////////////////
+	//lcdPrint(x, y, String)
+	//setTimer(double)
+	//setLED(LED#, state)
+	//////////////////////////////////////
 	public void initialize() {
 		
-
+		//connect to the robot
+		setRobotListener();//set the event listener for the robot vars
+		Network.getInstance().connect();
+		//TODO: make this work with the GUI and make no connection handeling
+		
 		// init GUI
 		display = GUI.getInstance();
 		
@@ -108,7 +126,6 @@ public class Arduino implements SerialPortEventListener {
 			System.err.println(e.toString());
 		}
 		
-		RobotListener();//set the event listener for the robot vars
 	}
 
 	/**
@@ -162,7 +179,7 @@ public class Arduino implements SerialPortEventListener {
 
 	
 	//talk to the robot
-	public void RobotListener() {
+	public void setRobotListener() {
 		
 		Network.getInstance().setOnMessageReceivedListener(new Network.OnMessageReceivedListener() {
 
@@ -170,33 +187,64 @@ public class Arduino implements SerialPortEventListener {
 			public void onMessageReceived(String key, Object value) {
 				//read the values
 				ArrayList<Double> values = new ArrayList<Double>();
-				for(int i = 0; i < statuses.length; i++) {
-					values.add(Network.getInstance().getNumber(statuses[i]));
+				for(int i = 0; i < lcd.length; i++) {
+					values.add(Network.getInstance().getNumber(lcd[i]));
 				}
 				
-				//sp, ha, ta
-				String[] sendStr = new String[values.size()];
+				ArrayList<String> sendStr = new ArrayList<String>();//string of commands to send
+				//For the LCD screen
 				String col = "0";
 				for(int i = 0; i < values.size(); i++) {
-					if(i > 1) col = "8";
-					sendStr[i] = "lcdPrint("
-					+ Integer.toString(i%2)
-					+ ", "
-					+ col
-					+ ", "
-					+ abrev[0]
-					+ ":"
-					+ Double.toString(values.get(0))
-					+ ");";//"lcdPrint(0, 0, SP:1.2123);
+					if(i > 1) col = "8";//new column after row 2
+					sendStr.add("lcdPrint("
+						+ Integer.toString(i%2)//row
+						+ ","
+						+ col//column
+						+ ","
+						+ abrev[0]//print name
+						+ ":"
+						+ Double.toString(values.get(0))//value
+						+ ");"
+					);//finished Ex:"lcdPrint(0, 0, SP:1.2123);
 				}
 				
+				//read the bools
+				ArrayList<Boolean> bools= new ArrayList<Boolean>();
+				for(int i = 0; i < singleLEDs.length; i++) {
+					bools.add(Network.getInstance().getBoolean(singleLEDs[i]));
+				}
+				//For the single led booleans
+				char bool;
+				for(int i = 0; i < bools.size(); i++) {
+					if(bools.get(i)) bool = '1';
+					else bool = '0';
+					sendStr.add("setLED("
+						+ Integer.toString(i)//led number
+						+ ","
+						+ bool//'1' || '0'
+						+ ");"
+					);//finished Ex:"setLED(0, 1);"
+				}
+				
+				//match timer
+				String totSec = "135";
+				if(Network.getInstance().getBoolean("Is Auto")) {
+					totSec = "15";
+				}
+				sendStr.add("setTimer("//cur time, tot time
+					+ Network.getInstance().getNumber("Match Time")
+					+ ","
+					+ totSec
+					+ ");"
+				);
+				
 				//send the data
-				for(int i = 0; i < values.size(); i++) {
-					if (verify(sendStr[i])) {
-						sendStr(sendStr[i]);
-						GUI.getInstance().appendIn(sendStr[i]);
+				for(int i = 0; i < sendStr.size(); i++) {
+					if (verify(sendStr.get(i))) {
+						sendStr(sendStr.get(i));
+						GUI.getInstance().appendIn(sendStr.get(i));
 					}else {
-						GUI.getInstance().appendIn("***Please end with a ';' : " + sendStr[i] + "***");
+						GUI.getInstance().appendIn("***Please end with a ';' : " + sendStr.get(i) + "***");
 					}
 				}
 			}
@@ -207,7 +255,7 @@ public class Arduino implements SerialPortEventListener {
 	
 	
 	// the GUI class/obj
-	private static class GUI extends Frame {
+	static class GUI extends Frame {
 		
 		/**
 		 * 
@@ -229,6 +277,7 @@ public class Arduino implements SerialPortEventListener {
 		TextArea outText;
 		TextArea inTextOut;
 		TextArea status;
+		TextArea robotStatus;
 		TextField inText;
 		String lastEntry = "";
 		int outLine = 0, inLine = 0, index = 0;
@@ -238,7 +287,7 @@ public class Arduino implements SerialPortEventListener {
 		public void initalize() {
 
 			setSize(x, y);// frame size
-			setLayout(new GridLayout(4, 1));
+			setLayout(new GridLayout(5, 1));
 			setVisible(true);// now frame will be visible, by default not visible
 			setFont(new Font("TimesRoman", Font.PLAIN, 14 /*36 for 4k*/ ));
 			addWindowListener(new WindowAdapter() {
@@ -259,6 +308,10 @@ public class Arduino implements SerialPortEventListener {
 			status.setForeground(Color.RED);
 			add(status);
 			
+			robotStatus = new TextArea("No Connection to Robot", 1, 40);
+			robotStatus.setForeground(Color.RED);
+			add(robotStatus);
+			
 			outText = new TextArea();
 			outText.setSize(x, y / 3);
 			add(outText);
@@ -266,7 +319,7 @@ public class Arduino implements SerialPortEventListener {
 			inTextOut = new TextArea();
 			inTextOut.setSize(x, y / 3);
 			add(inTextOut);
-
+			
 			inText = new TextField("Enter a command here", 30);
 			inText.addKeyListener(new KeyAdapter() {
 				public void keyPressed(KeyEvent e) {
@@ -315,6 +368,12 @@ public class Arduino implements SerialPortEventListener {
 			outText.append("-------------Arduino Ouput-------------\n");
 		}
 
+		public void setRobotStatus(String str, boolean redGreen) {
+			robotStatus.setText(str);
+			if(redGreen) robotStatus.setForeground(Color.GREEN);
+			else robotStatus.setForeground(Color.RED);
+		}
+		
 		public void appendIn(String str) {
 			inTextOut.append(inLine + " | " + str + "\n");
 			inLine++;

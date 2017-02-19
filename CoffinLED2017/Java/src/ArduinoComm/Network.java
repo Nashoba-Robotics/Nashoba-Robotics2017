@@ -57,7 +57,7 @@ public class Network implements ITableListener {
                     @Override
                     public void connected(IRemote iRemote)
                     {
-                        //Frame.getInstance().setTitle("Coffin Controller - Connected to Field");
+                        Arduino.getInstance().display.setRobotStatus("Connected to Robot", true);
                         if(connectionListener != null)
                             connectionListener.onConnectionStateChanged(true);
                     }
@@ -65,7 +65,7 @@ public class Network implements ITableListener {
                     @Override
                     public void disconnected(IRemote iRemote)
                     {
-                        //Frame.getInstance().setTitle("Coffin Controller - Not Connected to Field");
+                        Arduino.getInstance().display.setRobotStatus("Not Connected to Robot", false);
                         if(connectionListener != null)
                             connectionListener.onConnectionStateChanged(false);
                     }
