@@ -52,7 +52,7 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 	@Override
 	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
 		if(type.identifier == 'a') {
-			lastSeenAngle = new Angle(value, Angle.Type.DEGREE);
+			lastSeenAngle = new Angle(value, Angle.Unit.DEGREE);
 		} else if(type.identifier == 'd') {
 			lastSeenDistance = value;
 		} else if(type.identifier == 't') {

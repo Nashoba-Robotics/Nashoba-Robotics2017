@@ -8,7 +8,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -177,7 +177,7 @@ public class Hood extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(addGearing(positionSetpoint.get(Type.ROTATION)));
+			talon.set(addGearing(positionSetpoint.get(Unit.ROTATION)));
 		}
 
 	}
@@ -187,7 +187,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public Angle getPosition() {
 		if(talon != null) {
-			return new Angle(removeGearing(talon.getPosition()), Type.ROTATION);
+			return new Angle(removeGearing(talon.getPosition()), Unit.ROTATION);
 		}
 		return Angle.ZERO;
 	}
@@ -199,7 +199,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public Angle getHistoricalPosition(long deltaTime) {
 		if (encoder != null)
-			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Type.ROTATION);
+			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Unit.ROTATION);
 		return Angle.ZERO;
 	}
 	
@@ -211,9 +211,9 @@ public class Hood extends NRSubsystem {
 		if(talon != null) {
 			//TODO: Hood: Is forward limit switch top or bottom?
 			if(talon.isFwdLimitSwitchClosed()) {
-				talon.setPosition(TOP_POSITION.get(Type.ROTATION));
+				talon.setPosition(TOP_POSITION.get(Unit.ROTATION));
 			} else if(talon.isRevLimitSwitchClosed()) {
-				talon.setPosition(BOTTOM_POSITION.get(Type.ROTATION));
+				talon.setPosition(BOTTOM_POSITION.get(Unit.ROTATION));
 			} 
 		}
 

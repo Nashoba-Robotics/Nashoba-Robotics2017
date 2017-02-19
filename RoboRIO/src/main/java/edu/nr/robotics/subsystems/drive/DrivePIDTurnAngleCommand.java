@@ -3,7 +3,7 @@ package edu.nr.robotics.subsystems.drive;
 import edu.nr.lib.NavX;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 
 public class DrivePIDTurnAngleCommand extends NRCommand {
 
@@ -44,13 +44,13 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 
 	@Override
 	public void onExecute() {
-		double turn = getAngleError().get(Type.DEGREE) * P;
+		double turn = getAngleError().get(Unit.DEGREE) * P;
 		Drive.getInstance().arcadeDrive(0, turn);
 	}
 
 	@Override
 	public boolean isFinishedNR() {
-		return Math.abs(getAngleError().get(Type.DEGREE)) <= 
-				DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD.get(Type.DEGREE);
+		return Math.abs(getAngleError().get(Unit.DEGREE)) <= 
+				DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD.get(Unit.DEGREE);
 	}
 }

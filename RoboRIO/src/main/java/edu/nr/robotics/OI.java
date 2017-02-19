@@ -113,7 +113,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
 	 */
-	public static final Angle HOOD_POSITION_INCREMENT_VALUE = new Angle(0.5, Angle.Type.DEGREE);
+	public static final Angle HOOD_POSITION_INCREMENT_VALUE = new Angle(0.5, Angle.Unit.DEGREE);
 
 
 	/**

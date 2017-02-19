@@ -20,7 +20,7 @@ public class FieldMap {
 	public static final double FORWARD_DISTANCE_TO_SIDE_PEG = 0;
 	public static final double SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG = 0;
 	public static final double SIDE_DISTANCE_TO_NON_SHOOTER_SIDE_PEG = 0;
-	public static final Angle ANGLE_TO_SIDE_PEG = new Angle(45, Angle.Type.DEGREE);
+	public static final Angle ANGLE_TO_SIDE_PEG = new Angle(45, Angle.Unit.DEGREE);
 	/**
 	 * The dimensions to the hopper in auto that would be used in inches or degrees
 	 * The angle to the hopper is assuming hopper is on left and positive is right

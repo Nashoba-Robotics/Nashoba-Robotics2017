@@ -6,7 +6,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.turret.Turret;
 
@@ -55,7 +55,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	@Override
 	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
 		if(type.identifier == 'a') {
-			lastSeenAngle = new Angle(value, Angle.Type.DEGREE);
+			lastSeenAngle = new Angle(value, Angle.Unit.DEGREE);
 		} else if(type.identifier == 'd') {
 			lastSeenDistance = value;
 		} else if(type.identifier == 't') {
@@ -85,12 +85,12 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		
 		//Code until next break to get current distance and turret orientation
 		Angle theta1 = histRobotOrientation.add(Units.RIGHT_ANGLE);
-		double r = Math.max(histLeftPos, histRightPos) / deltaAngle.get(Type.DEGREE) - (0.5 * Drive.WHEEL_BASE);
+		double r = Math.max(histLeftPos, histRightPos) / deltaAngle.get(Unit.DEGREE) - (0.5 * Drive.WHEEL_BASE);
 		double h = NRMath.lawOfCos(r, histDistCenter, theta1);
 		Angle theta0 = NRMath.asin(histDistCenter * theta1.sin() / h).sub(deltaAngle);
 		double curDist = NRMath.lawOfCos(h, r, theta0);
 		double hyp = Math.hypot(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
-		Angle theta3 = new Angle(0.5, Angle.Type.ROTATION).sub(thetaXTurret).add(curRobotOrientation);
+		Angle theta3 = new Angle(0.5, Angle.Unit.ROTATION).sub(thetaXTurret).add(curRobotOrientation);
 		double curDistReal = NRMath.lawOfCos(curDist, hyp, theta3);
 		Angle curTurretOrientation = Units.RIGHT_ANGLE.sub(NRMath.asin(curDist * theta3.sin() / curDistReal)).sub(thetaYTurret);
 		
@@ -102,7 +102,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		double timeUntilMake = 0; //TODO: Turret: Map turret distance to ball time in air and add time it takes for turret to move to spot and ball to shoot
 		double p = speed * (timeUntilMake);
 		double e = NRMath.lawOfCos(curDistReal, p, curTurretOrientation);
-		turretAngle = new Angle(0.5, Angle.Type.ROTATION).sub(NRMath.asin(curDistReal * curTurretOrientation.sin() / e));
+		turretAngle = new Angle(0.5, Angle.Unit.ROTATION).sub(NRMath.asin(curDistReal * curTurretOrientation.sin() / e));
 		//Sets the change in position of the turret
 		
 		//What the distance of the shot will map as due to forward/backward motion

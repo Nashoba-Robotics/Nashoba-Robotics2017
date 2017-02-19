@@ -4,7 +4,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 
 public class GearAlignCalculation implements NetworkingDataTypeListener {
 
@@ -51,7 +51,7 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 		timeOfLastData = getCurrentTimeMillis();
 	
 		driveDistance = Math.hypot(lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y, lastSeenDistance * Math.sin(lastSeenAngle)) - DISTANCE_TO_STOP_FROM_GEAR;
-		turnAngle = new Angle(Math.atan(lastSeenDistance * Math.sin(lastSeenAngle) / (lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y)), Type.RADIAN);
+		turnAngle = new Angle(Math.atan(lastSeenDistance * Math.sin(lastSeenAngle) / (lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y)), Unit.RADIAN);
 	}
 	
 	public double getDistToDrive() {

@@ -109,7 +109,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
 				double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
 				
-				double currentHeading = -NavX.getInstance().getYaw().get(Angle.Type.DEGREE);
+				double currentHeading = -NavX.getInstance().getYaw().get(Angle.Unit.DEGREE);
 				//double currentHeading = -gyroCorrection.getAngleErrorDegrees();
 				double desiredHeading = Pathfinder.r2d(left.getHeading());
 				

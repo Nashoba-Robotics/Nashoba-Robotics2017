@@ -2,7 +2,7 @@ package edu.nr.robotics.subsystems.turret;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 
 public class TurretPositionCommand extends NRCommand {
 
@@ -23,10 +23,10 @@ public class TurretPositionCommand extends NRCommand {
 
 	@Override
 	public boolean isFinishedNR() {
-		return Turret.getInstance().getPosition().get(Type.DEGREE) < 
-				position.add(Turret.POSITION_THRESHOLD).get(Type.DEGREE)
+		return Turret.getInstance().getPosition().get(Unit.DEGREE) < 
+				position.add(Turret.POSITION_THRESHOLD).get(Unit.DEGREE)
 				&& 
-				Turret.getInstance().getPosition().get(Type.ROTATION) > 
-				position.sub(Turret.POSITION_THRESHOLD).get(Type.ROTATION);
+				Turret.getInstance().getPosition().get(Unit.ROTATION) > 
+				position.sub(Turret.POSITION_THRESHOLD).get(Unit.ROTATION);
 	}
 }

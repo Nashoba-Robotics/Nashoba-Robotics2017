@@ -4,7 +4,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 import jaci.pathfinder.Waypoint;
@@ -66,8 +66,8 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 		}
 		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0),
 				new Waypoint(forwardDistance - DISTANCE_FROM_ENDPOINT * endHeading.cos(),
-						sideDistance - DISTANCE_FROM_ENDPOINT * endHeading.sin(), endHeading.get(Type.RADIAN)),
-				new Waypoint(forwardDistance, sideDistance, endHeading.get(Type.RADIAN)) });
+						sideDistance - DISTANCE_FROM_ENDPOINT * endHeading.sin(), endHeading.get(Unit.RADIAN)),
+				new Waypoint(forwardDistance, sideDistance, endHeading.get(Unit.RADIAN)) });
 		profiler.enable();
 	}
 

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import edu.nr.lib.Position;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 
 public class TestPosition {
 
@@ -61,12 +61,12 @@ public class TestPosition {
 	
 	@Test
 	public void testSetPolar() {
-		Angle angle = new Angle(2.4 * Math.PI, Angle.Type.RADIAN);
+		Angle angle = new Angle(2.4 * Math.PI, Angle.Unit.RADIAN);
 		double magnitude = 2.93723;
 		
 		Position pos = new Position();
 		pos.setPolar(magnitude, angle);
-		assertEquals(pos.getAngle().get(Type.ROTATION) % 1,angle.get(Type.ROTATION) % 1,0.0001);
+		assertEquals(pos.getAngle().get(Unit.ROTATION) % 1,angle.get(Unit.ROTATION) % 1,0.0001);
 		assertEquals(pos.getMagnitude(),magnitude,0.0001);
 		assertEquals(pos.x, 0.907654, 0.000001);
 		assertEquals(pos.y, 2.793472, 0.000001);
@@ -74,11 +74,11 @@ public class TestPosition {
 	
 	@Test
 	public void testPolar() {
-		Angle angle = new Angle(2.4 * Math.PI, Angle.Type.RADIAN);
+		Angle angle = new Angle(2.4 * Math.PI, Angle.Unit.RADIAN);
 		double magnitude = 2.93723;
 		
 		Position pos = new Position(magnitude, angle);
-		assertEquals(pos.getAngle().get(Type.RADIAN) %( 2*Math.PI),angle.get(Type.RADIAN) % (2*Math.PI),0.0001);
+		assertEquals(pos.getAngle().get(Unit.RADIAN) %( 2*Math.PI),angle.get(Unit.RADIAN) % (2*Math.PI),0.0001);
 		assertEquals(pos.getMagnitude(),magnitude,0.0001);
 		assertEquals(pos.x, 0.907654, 0.000001);
 		assertEquals(pos.y, 2.793472, 0.000001);
@@ -122,13 +122,13 @@ public class TestPosition {
 	
 	@Test
 	public void testRotate() {
-		Angle initialAngle = new Angle(0.2 * Math.PI, Angle.Type.RADIAN);
-		Angle angle = new Angle(0.3 * Math.PI, Angle.Type.RADIAN);
+		Angle initialAngle = new Angle(0.2 * Math.PI, Angle.Unit.RADIAN);
+		Angle angle = new Angle(0.3 * Math.PI, Angle.Unit.RADIAN);
 		double magnitude = 2.93723;
 		
 		Position pos = new Position(magnitude, initialAngle);
 		pos.rotate(angle);
-		assertEquals(pos.getAngle().get(Type.RADIAN),angle.add(initialAngle).get(Type.RADIAN),0.0001);
+		assertEquals(pos.getAngle().get(Unit.RADIAN),angle.add(initialAngle).get(Unit.RADIAN),0.0001);
 		assertEquals(pos.getMagnitude(),magnitude,0.0001);
 		assertEquals(pos.x, magnitude * angle.add(initialAngle).cos(), 0.000001);
 		assertEquals(pos.y, magnitude * angle.add(initialAngle).sin(), 0.000001);

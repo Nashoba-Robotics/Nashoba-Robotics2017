@@ -49,7 +49,7 @@ public class NRMath {
 	}
 	
 	public static Angle asin(double a) {
-		return new Angle(Math.asin(a), Angle.Type.RADIAN);
+		return new Angle(Math.asin(a), Angle.Unit.RADIAN);
 	}
 	
 	/*public static Angle atan(double a) {
@@ -57,11 +57,11 @@ public class NRMath {
 	}*/
 	
 	public static Angle atan2(double a, double b) {
-		return new Angle(Math.atan2(a, b), Angle.Type.RADIAN);
+		return new Angle(Math.atan2(a, b), Angle.Unit.RADIAN);
 	}
 	
 	public static Angle acos(double a) {
-		return new Angle(Math.acos(a), Angle.Type.RADIAN);
+		return new Angle(Math.acos(a), Angle.Unit.RADIAN);
 	}
 
 	public static double lawOfCos(double a, double b, Angle C) {

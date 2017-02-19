@@ -8,7 +8,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.Angle.Type;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -196,7 +196,7 @@ public class Turret extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(addGearing(positionSetpoint.get(Type.ROTATION)));
+			talon.set(addGearing(positionSetpoint.get(Unit.ROTATION)));
 		}
 
 	}
@@ -208,7 +208,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public Angle getPosition() {
 		if(talon != null)
-			return new Angle(removeGearing(talon.getPosition()), Angle.Type.ROTATION);
+			return new Angle(removeGearing(talon.getPosition()), Angle.Unit.ROTATION);
 		return Angle.ZERO;
 	}
 	
@@ -219,7 +219,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public Angle getHistoricalPosition(long deltaTime) {
 		if (encoder != null)
-			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Angle.Type.ROTATION);
+			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Angle.Unit.ROTATION);
 		return Angle.ZERO;
 	}
 	
@@ -230,10 +230,10 @@ public class Turret extends NRSubsystem {
 	public void periodic() {
 		if(talon != null) {
 			if(talon.isFwdLimitSwitchClosed()) { //TODO: Turret: Check limit switch direction
-				talon.setPosition(FORWARD_POSITION.get(Type.ROTATION));
+				talon.setPosition(FORWARD_POSITION.get(Unit.ROTATION));
 				turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {
-				talon.setPosition(REVERSE_POSITION.get(Type.ROTATION));
+				talon.setPosition(REVERSE_POSITION.get(Unit.ROTATION));
 				turretTrackDirection = 1;
 			} 
 		}

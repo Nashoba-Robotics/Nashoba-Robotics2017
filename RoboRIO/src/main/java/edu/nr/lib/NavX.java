@@ -53,7 +53,7 @@ public class NavX implements Periodic {
 	}
 
 	public Angle getYaw() {
-		return new Angle(ahrs.getAngle(), Angle.Type.DEGREE);
+		return new Angle(ahrs.getAngle(), Angle.Unit.DEGREE);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class NavX implements Periodic {
 	 */
 	public Angle getHistoricalYaw(long deltaTime) {
         long navx_timestamp = ahrs.getLastSensorTimestamp() - deltaTime;
-		return new Angle(orientation_history.getYawDegreesAtTime(navx_timestamp), Angle.Type.DEGREE);
+		return new Angle(orientation_history.getYawDegreesAtTime(navx_timestamp), Angle.Unit.DEGREE);
 	}
 
 	@Override
