@@ -75,4 +75,20 @@ public class Angle {
 		return Math.sin(this.get(Type.RADIAN));
 	}
 	
+	public boolean lessThan(Angle angleTwo) {
+		return this.get(Type.DEGREE) < angleTwo.get(Type.DEGREE);
+	}
+
+	public boolean greaterThan(Angle angleTwo) {
+		return this.get(Type.DEGREE) > angleTwo.get(Type.DEGREE);
+	}
+	
+	public Angle negate() {
+		return new Angle(-this.get(Type.DEGREE), Type.DEGREE);
+	}
+	
+	public Angle abs() {
+		return new Angle(Math.abs(this.get(Type.DEGREE)), Type.DEGREE);
+	}
+
 }

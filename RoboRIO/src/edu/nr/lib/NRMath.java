@@ -1,5 +1,7 @@
 package edu.nr.lib;
 
+import edu.nr.lib.units.Angle;
+
 public class NRMath {
 
 	/**
@@ -44,5 +46,25 @@ public class NRMath {
 	 */
 	public static double limit(double x) {
 		return limit(x, 1);
+	}
+	
+	public static Angle asin(double a) {
+		return new Angle(Math.asin(a), Angle.Type.RADIAN);
+	}
+	
+	/*public static Angle atan(double a) {
+		return new Angle(Math.atan(a), Angle.Type.RADIAN);
+	}*/
+	
+	public static Angle atan2(double a, double b) {
+		return new Angle(Math.atan2(a, b), Angle.Type.RADIAN);
+	}
+	
+	public static Angle acos(double a) {
+		return new Angle(Math.acos(a), Angle.Type.RADIAN);
+	}
+
+	public static double lawOfCos(double a, double b, Angle C) {
+		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) + 2 * a * b * C.cos());
 	}
 }

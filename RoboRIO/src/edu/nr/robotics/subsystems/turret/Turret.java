@@ -7,6 +7,8 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Type;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,9 +26,9 @@ public class Turret extends NRSubsystem {
 	private double speedSetpoint = 0;
 	
 	/**
-	 * The position in degrees that the hood is currently supposed to be at
+	 * The position that the hood is currently supposed to be at
 	 */
-	private double positionSetpoint = 0;
+	private Angle positionSetpoint = Angle.ZERO;
 
 	//TODO: Turret: Find FPID values
 	public static double F = (Turret.MAX_SPEED / Units.DEGREES_PER_ROTATION / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
@@ -37,8 +39,8 @@ public class Turret extends NRSubsystem {
 	public static double I_OPERATOR_CONTROL = 0;
 	public static double D_OPERATOR_CONTROL = 0;
 	
-	public static final int FORWARD_POSITION = 0; //TODO: Turret: Find forward position
-	public static final int REVERSE_POSITION = 0; //TODO: Turret: Find reverse position
+	public static final Angle FORWARD_POSITION = Angle.ZERO; //TODO: Turret: Find forward position
+	public static final Angle REVERSE_POSITION = Angle.ZERO; //TODO: Turret: Find reverse position
 	
 	//Profiles
 	private static final int MOTION_MAGIC = 0;
@@ -49,30 +51,30 @@ public class Turret extends NRSubsystem {
 	public int turretTrackDirection = 1;
 
 	/**
-	 * The number of degrees around the goal position that we can be at
+	 * The angle around the goal position that we can be at
 	 * TODO: Turret: Find the position threshold
 	 */
-	public static final double POSITION_THRESHOLD = 0;
+	public static final Angle POSITION_THRESHOLD = Angle.ZERO;
 
 	/**
-	 * The threshold of degrees the turret needs to be within to shoot in degrees
+	 * The angle threshold the turret needs to be within to shoot
 	 * TODO: Turret: Get shoot threshold
 	 */
-	public static final double SHOOT_THRESHOLD = 0;
+	public static final Angle SHOOT_THRESHOLD = Angle.ZERO;
 
 	/**
-	 * The angle the turret will automatically turn to start the match in degrees
+	 * The angle the turret will automatically turn to start the match
 	 * 
 	 * TODO: Turret: Get preset turret angle for blue side
 	 */
-	public static final double PRESET_ANGLE_BLUE = 0;
+	public static final Angle PRESET_ANGLE_BLUE = Angle.ZERO;
 
 	/**
-	 * The angle the turret will automatically turn to start the match in degrees
+	 * The angle the turret will automatically turn to start the match
 	 * 
 	 * TODO: Turret: Get preset turret angle for red side
 	 */
-	public static final double PRESET_ANGLE_RED = 0;
+	public static final Angle PRESET_ANGLE_RED = Angle.ZERO;
 
 	/**
 	 * The percentage of max speed the turret will go when tracking
@@ -185,16 +187,16 @@ public class Turret extends NRSubsystem {
 	 * Set the goal position of the turret. 
 	 * 
 	 * @param position
-	 * 			The goal positions in degrees
+	 * 			The goal position
 	 */
-	public void setPosition(double position) {
+	public void setPosition(Angle position) {
 		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(addGearing(positionSetpoint));
+			talon.set(addGearing(positionSetpoint.get(Type.ROTATION)));
 		}
 
 	}
@@ -204,10 +206,10 @@ public class Turret extends NRSubsystem {
 	 * 
 	 * @return current position of talon in degrees
 	 */
-	public double getPosition() {
+	public Angle getPosition() {
 		if(talon != null)
-			return removeGearing(talon.getPosition()) * Units.DEGREES_PER_ROTATION;
-		return 0;
+			return new Angle(removeGearing(talon.getPosition()), Angle.Type.ROTATION);
+		return Angle.ZERO;
 	}
 	
 	/**
@@ -215,10 +217,10 @@ public class Turret extends NRSubsystem {
 	 * @param deltaTime how long ago to look, in milliseconds
 	 * @return in degrees
 	 */
-	public double getHistoricalPosition(long deltaTime) {
+	public Angle getHistoricalPosition(long deltaTime) {
 		if (encoder != null)
-			return removeGearing(encoder.getPosition(deltaTime)) * Units.DEGREES_PER_ROTATION;
-		return 0;
+			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Angle.Type.ROTATION);
+		return Angle.ZERO;
 	}
 	
 	/**
@@ -228,10 +230,10 @@ public class Turret extends NRSubsystem {
 	public void periodic() {
 		if(talon != null) {
 			if(talon.isFwdLimitSwitchClosed()) { //TODO: Turret: Check limit switch direction
-				talon.setEncPosition(FORWARD_POSITION);
+				talon.setPosition(FORWARD_POSITION.get(Type.ROTATION));
 				turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {
-				talon.setEncPosition(REVERSE_POSITION);
+				talon.setPosition(REVERSE_POSITION.get(Type.ROTATION));
 				turretTrackDirection = 1;
 			} 
 		}

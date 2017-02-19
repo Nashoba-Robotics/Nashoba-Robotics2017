@@ -7,7 +7,6 @@ import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Angle.Type;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
-import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 
 public class MotionProfileWallToHopperCommand extends NRCommand {

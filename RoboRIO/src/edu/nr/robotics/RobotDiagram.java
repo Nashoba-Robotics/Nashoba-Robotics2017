@@ -1,12 +1,10 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.units.Angle.Type;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.hood.Hood;
-import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
 import edu.nr.robotics.subsystems.shooter.Shooter;
-import edu.nr.robotics.subsystems.shooter.ShooterStationarySpeedCorrectionCommand;
 import edu.nr.robotics.subsystems.turret.Turret;
-import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.NamedSendable;
 import edu.wpi.first.wpilibj.tables.ITable;
@@ -38,27 +36,27 @@ public class RobotDiagram implements NamedSendable {
 		this.table = subtable;
 		if (table != null) {
 			table.putNumber("Shooter Speed", Shooter.getInstance().getSpeed());
-			table.putNumber("Hood Angle", Hood.getInstance().getPosition());
-			table.putNumber("Turret Angle", Turret.getInstance().getPosition());
+			table.putNumber("Hood Angle", Hood.getInstance().getPosition().get(Type.DEGREE));
+			table.putNumber("Turret Angle", Turret.getInstance().getPosition().get(Type.DEGREE));
 			table.putNumber("Match Time", DriverStation.getInstance().getMatchTime());
 			table.putBoolean("Can Gear See", GearAlignCalculation.getInstance().canSeeTarget());
 
 			table.putBoolean("Drive High Gear", Drive.getInstance().getCurrentGear() == Drive.Gear.high);
 
 			table.putBoolean("Hood Good",
-					Math.abs(HoodStationaryAngleCorrectionCommand.getHoodAngle()
-							- Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD
-							|| Math.abs(AutoTrackingCalculation.getInstance().getHoodAngle()
-									- Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD);
+					StationaryTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition())
+							.lessThan(Hood.SHOOT_THRESHOLD)
+							|| AutoTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition()).abs()
+							.lessThan(Hood.SHOOT_THRESHOLD));
 			table.putBoolean("Turret Good",
-					Math.abs(TurretStationaryAngleCorrectionCommand.getTurretAngle()
-							- Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD
-							|| Math.abs(AutoTrackingCalculation.getInstance().getTurretAngle()
-									- Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD);
+					StationaryTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition())
+							.lessThan(Turret.SHOOT_THRESHOLD)
+							|| AutoTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition()).abs()
+							.lessThan(Turret.SHOOT_THRESHOLD));
 			table.putBoolean("Shooter Good",
 					Math.abs(AutoTrackingCalculation.getInstance().getShooterSpeed()
 							- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD
-							|| Math.abs(ShooterStationarySpeedCorrectionCommand.getShooterSpeed()
+							|| Math.abs(StationaryTrackingCalculation.getInstance().getShooterSpeed()
 									- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD);
 
 			table.putBoolean("Hood Autotracking", Hood.getInstance().isAutoAlign());

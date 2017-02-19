@@ -7,6 +7,8 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Type;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,9 +26,9 @@ public class Hood extends NRSubsystem {
 	private double speedSetpoint = 0;
 	
 	/**
-	 * The position in degrees that the hood is currently supposed to be at
+	 * The position that the hood is currently supposed to be at
 	 */
-	private double positionSetpoint = 0;
+	private Angle positionSetpoint = Angle.ZERO;
 	
 	//TODO: Hood: Find FPID values
 	public static double F = (Hood.MAX_SPEED / Units.DEGREES_PER_ROTATION / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV );
@@ -38,15 +40,11 @@ public class Hood extends NRSubsystem {
 	public static double D_OPERATOR_CONTROL = 0;
 	
 	/**
-	 * Degrees
 	 * TODO: Hood: Find top position
 	 */
-	private static final int TOP_POSITION = 0;
+	private static final Angle TOP_POSITION = Angle.ZERO;
 	
-	/**
-	 * Degrees
-	 */
-	private static final int BOTTOM_POSITION = 0;
+	private static final Angle BOTTOM_POSITION = Angle.ZERO;
 
 	//CANTalon PID Profile numbers
 	private static final int MOTION_MAGIC = 0;
@@ -55,16 +53,16 @@ public class Hood extends NRSubsystem {
 	private boolean autoAlign = false;
 
 	/**
-	 * The number of hood degrees around the goal position that we can be at
+	 * The angle around the goal position that we can be at
 	 * TODO: Hood: Find the position threshold
 	 */
-	public static final double POSITION_THRESHOLD = 0;
+	public static final Angle POSITION_THRESHOLD = Angle.ZERO;
 
 	/**
-	 * The threshold of degrees the hood needs to be within to shoot in rotations
+	 * The threshold the hood needs to be within to shoot
 	 * TODO: Hood: Find shoot threshold
 	 */
-	public static final double SHOOT_THRESHOLD = 0;
+	public static final Angle SHOOT_THRESHOLD = Angle.ZERO;
 
 	/**
 	 * The max acceleration of the hood, in degrees per second per second
@@ -170,39 +168,39 @@ public class Hood extends NRSubsystem {
 	 * Set the goal position of the hood. 
 	 * 
 	 * @param position
-	 * 			The goal positions in degrees
+	 * 			The goal position
 	 */
-	public void setPosition(double position) {
+	public void setPosition(Angle position) {
 		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(addGearing(positionSetpoint));
+			talon.set(addGearing(positionSetpoint.get(Type.ROTATION)));
 		}
 
 	}
 
 	/**
-	 * @return Position in degrees
+	 * @return Position
 	 */
-	public double getPosition() {
+	public Angle getPosition() {
 		if(talon != null) {
-			return removeGearing(talon.getPosition()) * Units.DEGREES_PER_ROTATION;
+			return new Angle(removeGearing(talon.getPosition()), Type.ROTATION);
 		}
-		return 0;
+		return Angle.ZERO;
 	}
 	
 	/**
 	 * Get the position at a time in the past.
 	 * @param deltaTime How long ago to look, in milliseconds
-	 * @return The position in degrees
+	 * @return The position
 	 */
-	public double getHistoricalPosition(long deltaTime) {
+	public Angle getHistoricalPosition(long deltaTime) {
 		if (encoder != null)
-			return removeGearing(encoder.getPosition(deltaTime)) * Units.DEGREES_PER_ROTATION;
-		return 0;
+			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Type.ROTATION);
+		return Angle.ZERO;
 	}
 	
 	/**
@@ -213,9 +211,9 @@ public class Hood extends NRSubsystem {
 		if(talon != null) {
 			//TODO: Hood: Is forward limit switch top or bottom?
 			if(talon.isFwdLimitSwitchClosed()) {
-				talon.setEncPosition(TOP_POSITION);
+				talon.setPosition(TOP_POSITION.get(Type.ROTATION));
 			} else if(talon.isRevLimitSwitchClosed()) {
-				talon.setEncPosition(BOTTOM_POSITION);
+				talon.setPosition(BOTTOM_POSITION.get(Type.ROTATION));
 			} 
 		}
 

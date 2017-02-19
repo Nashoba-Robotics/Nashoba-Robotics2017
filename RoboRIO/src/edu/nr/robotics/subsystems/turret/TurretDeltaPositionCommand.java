@@ -1,23 +1,24 @@
 package edu.nr.robotics.subsystems.turret;
 
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.units.Angle;
 
 public class TurretDeltaPositionCommand extends NRCommand{
 
-	double deltaPosition;
+	Angle deltaPosition;
 	
 	/**
 	 * 
-	 * @param deltaPosition degrees
+	 * @param deltaPosition
 	 */
-	public TurretDeltaPositionCommand(double deltaPosition) {
+	public TurretDeltaPositionCommand(Angle deltaPosition) {
 		super(Turret.getInstance());
 		this.deltaPosition = deltaPosition;
 	}
 
 	@Override
 	public void onStart() {
-		Turret.getInstance().setPosition(deltaPosition + Turret.getInstance().getPosition());
+		Turret.getInstance().setPosition(deltaPosition.add(Turret.getInstance().getPosition()));
 	}
 	
 	@Override

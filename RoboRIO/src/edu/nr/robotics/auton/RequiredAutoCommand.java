@@ -1,5 +1,6 @@
 package edu.nr.robotics.auton;
 
+import edu.nr.lib.units.Angle;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
 import edu.nr.robotics.subsystems.hood.HoodPositionCommand;
@@ -11,7 +12,7 @@ public final class RequiredAutoCommand extends CommandGroup {
 
 	public RequiredAutoCommand() {
 		addParallel(new GearDeployCommand());
-		addParallel(new HoodPositionCommand(0));
+		addParallel(new HoodPositionCommand(Angle.ZERO));
 		if (Robot.side == SideOfField.blue) {
 			addParallel(new TurretPositionCommand(Turret.REVERSE_POSITION));
 		} else {

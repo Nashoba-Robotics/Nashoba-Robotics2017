@@ -28,6 +28,7 @@ public class Units {
 	 * Number of degrees in a right angle
 	 */
 	public static final Angle RIGHT_ANGLE = new Angle(90, Angle.Type.DEGREE);
+	public static final Angle HALF_CIRCLE = new Angle(180, Angle.Type.DEGREE);
 	public static final int MAGNETIC_NATIVE_UNITS_PER_REV = 4096;
 	public static final double HUNDRED_MS_PER_SECOND = 10;
 	/**
