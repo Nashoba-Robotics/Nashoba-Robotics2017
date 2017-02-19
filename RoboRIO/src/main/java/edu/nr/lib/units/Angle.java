@@ -1,4 +1,4 @@
-package src.main.java.edu.nr.lib.units;
+package edu.nr.lib.units;
 
 public class Angle {
 	
