@@ -15,6 +15,11 @@ public class ShooterStationarySpeedCorrectionCommand extends NRCommand {
 	}
 	
 	@Override
+	public void onStart() {
+		Shooter.getInstance().setAutoAlign(true);
+	}
+	
+	@Override
 	public void onExecute() {
 		double angle = TCPServer.Num.turret.getInstance().getValue('a');
 		double distance = TCPServer.Num.turret.getInstance().getValue('d');
@@ -35,12 +40,17 @@ public class ShooterStationarySpeedCorrectionCommand extends NRCommand {
 		
 		//TODO: Shooter: Map distance of turret to speed of shooter in rpm
 		shooterSpeed = 0;
-		Shooter.getInstance().setMotorSpeed(shooterSpeed);
+		Shooter.getInstance().setMotorSpeedInRPM(shooterSpeed);
 	}
 	
 	@Override
 	public boolean isFinishedNR() {
 		return false;
+	}
+	
+	@Override
+	public void onEnd() {
+		Shooter.getInstance().setAutoAlign(false);
 	}
 	
 	public static double getShooterSpeed() {

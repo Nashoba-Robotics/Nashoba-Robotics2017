@@ -17,11 +17,7 @@ public class ShooterAutoAlignCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		if (OI.getInstance().isShooterOn()) {
-			Shooter.getInstance().setMotorSpeed(AutoTrackingCalculation.getInstance().getShooterSpeed());
-		} else {
-			Shooter.getInstance().setMotorSpeed(0);
-		}
+		Shooter.getInstance().setMotorSpeedInRPM(AutoTrackingCalculation.getInstance().getShooterSpeed());
 	}
 	
 	@Override

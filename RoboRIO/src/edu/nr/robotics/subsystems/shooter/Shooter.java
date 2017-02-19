@@ -7,6 +7,7 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,10 +18,13 @@ public class Shooter extends NRSubsystem {
 
 	private CANTalon talon;
 	
+	/**
+	 * RPM
+	 */
 	public double motorSetpoint = 0;
 
 	//TODO: Shooter: Find FPID values
-	public static double F = (Shooter.MAX_SHOOTER_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double F = (Shooter.MAX_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
@@ -29,6 +33,7 @@ public class Shooter extends NRSubsystem {
 
 	/**
 	 * The threshold of rpm the shooter needs to be within to shoot in rpm
+	 * TODO: Shooter: Find threshold
 	 */
 	public static final double SHOOT_THRESHOLD = 0;
 
@@ -36,7 +41,7 @@ public class Shooter extends NRSubsystem {
 	 * The max speed of the shooter, in rotations per minute
 	 * TODO: Shooter: Find max speed
 	 */
-	public static final double MAX_SHOOTER_SPEED = 0;
+	public static final double MAX_SPEED = 0;
 	
 	private Shooter() { 
 		if (EnabledSubsystems.SHOOTER_ENABLED) { 
@@ -54,7 +59,7 @@ public class Shooter extends NRSubsystem {
 			talon.enableBrakeMode(false);
 			talon.reverseSensor(false); //TODO: Shooter: Find phase
 			talon.enable();
-			getInstance().setAutoAlign(true);
+			setAutoAlign(true);
 		}
 	}
 
@@ -75,15 +80,26 @@ public class Shooter extends NRSubsystem {
 	 * Sets motor speed of shooter
 	 * 
 	 * @param speed
-	 *            the shooter motor speed, 
-	 *            
-	 *            If the talon mode is Speed, from -MAX_RPM to MAX_RPM
-	 *            If the talon mode is PercentVBus from -1 to 1
+	 *            the shooter motor speed,  from -1 to 1
 	 */
-	public void setMotorSpeed(double speed) {
+	public void setMotorSpeedPercent(double speed) {
+		setMotorSpeedInRPM(speed * MAX_SPEED);
+	}
+
+	/**
+	 * Sets motor speed of shooter
+	 * 
+	 * @param speed
+	 *            the shooter motor speed, from -{@value #MAX_SPEED} to {@value #MAX_SPEED}
+	 */
+	public void setMotorSpeedInRPM(double speed) {
 		motorSetpoint = speed;
-		if (talon != null) {
-			talon.set(motorSetpoint);
+		if (talon != null && OI.getInstance().isShooterOn()) {
+			if(talon.getControlMode() == TalonControlMode.Speed) {
+				talon.set(motorSetpoint);
+			} else {
+				talon.set(motorSetpoint/MAX_SPEED);
+			}
 		}
 	}
 	
@@ -103,7 +119,7 @@ public class Shooter extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Shooter Speed", talon.getSpeed() + " : " + getInstance().motorSetpoint);	
+				SmartDashboard.putString("Shooter Speed", talon.getSpeed() + " : " + motorSetpoint);	
 			}
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Shooter Voltage", talon.getOutputVoltage());
@@ -116,7 +132,7 @@ public class Shooter extends NRSubsystem {
 	 */
 	@Override
 	public void disable() {
-		setMotorSpeed(0);
+		setMotorSpeedPercent(0);
 	}
 
 	public void setPID(double P, double I, double D, double F) {
@@ -132,7 +148,10 @@ public class Shooter extends NRSubsystem {
 	 * @return speed of the shooter in rpm
 	 */
 	public double getSpeed() {
-		return talon.getSpeed();
+		if(talon != null) {
+			return talon.getSpeed();
+		}
+		return 0;
 	}
 	
 	/**
