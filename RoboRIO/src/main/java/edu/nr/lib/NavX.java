@@ -5,6 +5,7 @@ import com.kauailabs.sf2.frc.navXSensor;
 import com.kauailabs.sf2.orientation.OrientationHistory;
 
 import edu.nr.lib.interfaces.Periodic;
+import edu.nr.lib.units.Angle;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -51,13 +52,8 @@ public class NavX implements Periodic {
 		return ahrs.getDisplacementX();
 	}
 
-	public double getYaw(AngleUnit unit) {
-		if(unit == AngleUnit.DEGREE)
-			return ahrs.getAngle();
-		if(unit == AngleUnit.RADIAN)
-			return Math.toRadians(ahrs.getAngle());
-		System.err.println("Angle unit: " + unit + " is not known by the NavX getYaw method");
-		return 0;
+	public Angle getYaw() {
+		return new Angle(ahrs.getAngle(), Angle.Type.DEGREE);
 	}
 	
 	/**
@@ -66,14 +62,9 @@ public class NavX implements Periodic {
 	 * @param deltaTime how far back to look, in milliseconds. Must be positive.
 	 * @return
 	 */
-	public double getHistoricalYaw(AngleUnit unit, long deltaTime) {
+	public Angle getHistoricalYaw(long deltaTime) {
         long navx_timestamp = ahrs.getLastSensorTimestamp() - deltaTime;
-		if(unit == AngleUnit.DEGREE)
-			return orientation_history.getYawDegreesAtTime(navx_timestamp);
-		if(unit == AngleUnit.RADIAN)
-			return Math.toRadians(orientation_history.getYawDegreesAtTime(navx_timestamp));
-		System.err.println("Angle unit: " + unit + " is not known by the NavX getYaw method");
-		return 0;
+		return new Angle(orientation_history.getYawDegreesAtTime(navx_timestamp), Angle.Type.DEGREE);
 	}
 
 	@Override

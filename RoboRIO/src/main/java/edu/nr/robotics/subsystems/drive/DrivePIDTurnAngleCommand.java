@@ -1,53 +1,56 @@
 package edu.nr.robotics.subsystems.drive;
 
-import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Type;
 
 public class DrivePIDTurnAngleCommand extends NRCommand {
-	
-	double angle = 0; //Angle to turn in degrees
-	
-	double initialAngle = 0;
-	double finishAngle = 0;
+
+	Angle angle; // Angle to turn in degrees
+
+	Angle initialAngle;
+	Angle finishAngle;
 
 	/**
 	 * Degrees in which the robot needs to be to stop DrivePIDTurnAngleCommand
 	 * 
 	 * TODO: DrivePIDTurnAngleCommand: Get threshold to finish turning
 	 */
-	public static final double PID_TURN_ANGLE_THRESHOLD = 0;
-	
-	//TODO: PIDTurnCommand: Get p value 
+	public static final Angle PID_TURN_ANGLE_THRESHOLD = Angle.ZERO;
+
+	// TODO: PIDTurnCommand: Get p value
 	public static final double P = 0;
-	
+
 	/**
 	 * 
-	 * @param angle in degrees
+	 * @param angle
+	 *            in degrees
 	 */
-	public DrivePIDTurnAngleCommand(double angle) {
+	public DrivePIDTurnAngleCommand(Angle angle) {
 		super(Drive.getInstance());
 		this.angle = angle;
 	}
-	
+
 	@Override
 	public void onStart() {
-		initialAngle = NavX.getInstance().getYaw(AngleUnit.DEGREE);
-		finishAngle = initialAngle + angle;
+		initialAngle = NavX.getInstance().getYaw();
+		finishAngle = initialAngle.add(angle);
 	}
-	
-	private double getAngleError() {
-		return finishAngle - NavX.getInstance().getYaw(AngleUnit.DEGREE);
+
+	private Angle getAngleError() {
+		return finishAngle.sub(NavX.getInstance().getYaw());
 	}
-	
+
 	@Override
 	public void onExecute() {
-		double turn = P * getAngleError();
+		double turn = getAngleError().get(Type.DEGREE) * P;
 		Drive.getInstance().arcadeDrive(0, turn);
 	}
-	
+
 	@Override
 	public boolean isFinishedNR() {
-		return Math.abs(getAngleError()) <= DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD;
+		return Math.abs(getAngleError().get(Type.DEGREE)) <= 
+				DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD.get(Type.DEGREE);
 	}
 }

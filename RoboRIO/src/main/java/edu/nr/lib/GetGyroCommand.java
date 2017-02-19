@@ -7,7 +7,7 @@ public class GetGyroCommand extends NRCommand {
 	GyroCorrection gyro;
 	
 	protected void onStart() {
-		gyro = new GyroCorrection(AngleUnit.DEGREE);
+		gyro = new GyroCorrection();
 	}
 
 	public GyroCorrection getCorrection() {

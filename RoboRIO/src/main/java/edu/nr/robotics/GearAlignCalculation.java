@@ -3,6 +3,8 @@ package edu.nr.robotics;
 import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Type;
 
 public class GearAlignCalculation implements NetworkingDataTypeListener {
 
@@ -17,7 +19,7 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	 */
 	public static final double DISTANCE_TO_STOP_FROM_GEAR = 0;
 	
-	double turnAngle = 0;
+	Angle turnAngle = Angle.ZERO;
 	double driveDistance = 0;
 	
 	private double lastSeenAngle;
@@ -48,20 +50,16 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 		}
 		timeOfLastData = getCurrentTimeMillis();
 	
-		driveDistance = Math.sqrt(Math.pow(lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y, 2) + Math.pow(lastSeenDistance * Math.sin(lastSeenAngle), 2)) - DISTANCE_TO_STOP_FROM_GEAR;
-		turnAngle = (Math.atan(lastSeenDistance * Math.sin(lastSeenAngle) / (lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y)));
+		driveDistance = Math.hypot(lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y, lastSeenDistance * Math.sin(lastSeenAngle)) - DISTANCE_TO_STOP_FROM_GEAR;
+		turnAngle = new Angle(Math.atan(lastSeenDistance * Math.sin(lastSeenAngle) / (lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y)), Type.RADIAN);
 	}
 	
 	public double getDistToDrive() {
 		return driveDistance;
 	}
 	
-	public double getAngleToTurnDegrees() {
+	public Angle getAngleToTurn() {
 		return turnAngle;
-	}
-	
-	public double getAngleToTurnRotations() {
-		return turnAngle / Units.DEGREES_PER_ROTATION;
 	}
 	
 	private long getCurrentTimeMillis() {

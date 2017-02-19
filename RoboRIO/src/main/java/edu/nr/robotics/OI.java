@@ -5,6 +5,7 @@ import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.interfaces.SmartDashboardSource;
+import edu.nr.lib.units.Angle;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -101,9 +102,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	private JoystickButton intakeSwitch;
 	private JoystickButton shooterSwitch;
 	private JoystickButton dumbDriveSwitch;
-	
-	private JoystickButton driveReverse;
-	
+		
 	// TODO: OI: Get actual Joystick ports
 	private static final int STICK_LEFT = -1;
 	private static final int STICK_RIGHT = -1;
@@ -114,7 +113,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
 	 */
-	public static final double HOOD_POSITION_INCREMENT_VALUE = 0.5;
+	public static final Angle HOOD_POSITION_INCREMENT_VALUE = new Angle(0.5, Angle.Type.DEGREE);
 
 
 	/**
@@ -191,7 +190,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		
 		
 		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(-OI.HOOD_POSITION_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
 		
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenPressed(new LoaderRunCommand());
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenReleased(new LoaderStopCommand());
@@ -228,7 +227,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public double getArcadeMoveValue() {
-		return snapDriveJoysticks(driveLeft.getY()) * (driveLeft.getRawButton(2) ? 1 : -1);
+		return snapDriveJoysticks(driveLeft.getY()) * (driveLeft.getRawButton(DRIVE_REVERSE_BUTTON_NUMBER) ? 1 : -1);
 	}
 
 	public double getArcadeTurnValue() {

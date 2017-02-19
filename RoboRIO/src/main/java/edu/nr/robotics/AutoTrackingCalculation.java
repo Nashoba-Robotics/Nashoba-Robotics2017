@@ -1,21 +1,23 @@
 package edu.nr.robotics;
 
-import edu.nr.lib.AngleUnit;
+import edu.nr.lib.NRMath;
 import edu.nr.lib.NavX;
 import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Type;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.turret.Turret;
 
 public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		
-	double turretAngle = 0;
+	Angle turretAngle = Angle.ZERO;
 	
 	/**
 	 * Degrees
 	 */
-	double hoodAngle = 0;
+	Angle hoodAngle = Angle.ZERO;
 	
 	/**
 	 * RPM
@@ -23,7 +25,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	double shooterSpeed = 0;
 	
 	private long lastSeenTimeStamp;
-	private double lastSeenAngle;
+	private Angle lastSeenAngle;
 	private double lastSeenDistance;
 	
 	private long timeOfLastData;
@@ -53,7 +55,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	@Override
 	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
 		if(type.identifier == 'a') {
-			lastSeenAngle = value;
+			lastSeenAngle = new Angle(value, Angle.Type.DEGREE);
 		} else if(type.identifier == 'd') {
 			lastSeenDistance = value;
 		} else if(type.identifier == 't') {
@@ -61,50 +63,53 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		}
 		timeOfLastData = getCurrentTimeMillis();
 		
-		//Code until break manipulates camera angle as if on center of robot
-		double z1 = Math.sqrt(Math.pow(RobotMap.X_CAMERA_OFFSET, 2) + Math.pow(RobotMap.Y_CAMERA_OFFSET, 2));
-		double theta4 = 180 - Math.atan(RobotMap.Y_CAMERA_OFFSET / RobotMap.X_CAMERA_OFFSET) - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
-		double h4 = Math.sqrt(Math.pow(RobotMap.X_TURRET_OFFSET, 2) + Math.pow(RobotMap.Y_TURRET_OFFSET, 2));
-		double h3 = Math.sqrt(Math.pow(h4, 2) + Math.pow(z1, 2) - 2 * h4 * z1 * Math.cos(theta4));
-		double theta5 = Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION - Math.atan(RobotMap.Y_CAMERA_OFFSET / RobotMap.X_CAMERA_OFFSET);
-		double theta6 = 90 - theta5 - Math.asin(h4 * Math.sin(theta4) / h3);
-		double histDistCenter = Math.sqrt(Math.pow(lastSeenDistance, 2) + Math.pow(h3, 2) - 2 * lastSeenDistance * h3 * Math.cos(theta6 + lastSeenAngle));
-		double histAngleCenter = 180 - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET) - z1 * Math.sin(theta4) / h3 - lastSeenDistance * Math.sin(theta6 + lastSeenAngle) / histDistCenter;
+		Angle thetaYCamera = NRMath.atan2(RobotMap.Y_CAMERA_OFFSET, RobotMap.X_CAMERA_OFFSET);
+		Angle thetaXTurret = NRMath.atan2(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
+		Angle thetaYTurret = NRMath.atan2(RobotMap.Y_TURRET_OFFSET, RobotMap.X_TURRET_OFFSET);
 		
-		double histRobotOrientation = histAngleCenter + Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
-		double deltaAngle = (NavX.getInstance().getYaw(AngleUnit.DEGREE) - NavX.getInstance().getHistoricalYaw(AngleUnit.DEGREE, lastSeenTimeStamp));
-		double curRobotOrientation = histRobotOrientation + deltaAngle;
+		//Code until break manipulates camera angle as if on center of robot
+		double z1 = Math.hypot(RobotMap.X_CAMERA_OFFSET, RobotMap.Y_CAMERA_OFFSET);
+		Angle theta4 = Units.HALF_CIRCLE.sub(thetaYCamera).sub(thetaXTurret);
+		double h4 = Math.hypot(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
+		double h3 = NRMath.lawOfCos(h4, z1, theta4);
+		Angle theta5 = Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).sub(thetaYCamera);
+		Angle theta6 = Units.RIGHT_ANGLE.sub(theta5).sub(NRMath.asin(h4 * theta4.sin()).mul(1/h3));
+		double histDistCenter = NRMath.lawOfCos(lastSeenDistance, h3, theta6.add(lastSeenAngle));
+		Angle histAngleCenter = Units.HALF_CIRCLE.sub(thetaXTurret).sub(NRMath.asin(z1 * theta4.sin() / h3)).sub(NRMath.asin(lastSeenDistance * theta6.add(lastSeenAngle).sin() / histDistCenter));
+		
+		Angle histRobotOrientation = histAngleCenter.add(Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp));
+		Angle deltaAngle = NavX.getInstance().getYaw().sub(NavX.getInstance().getHistoricalYaw(lastSeenTimeStamp));
+		Angle curRobotOrientation = histRobotOrientation.add(deltaAngle);
 		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
 		double histRightPos = Drive.getInstance().getHistoricalRightPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
 		
 		//Code until next break to get current distance and turret orientation
-		double theta1 = histRobotOrientation + 90;
-		double r = Math.max(histLeftPos, histRightPos) / deltaAngle - (0.5 * Drive.WHEEL_BASE);
-		double h = Math.sqrt(Math.pow(r, 2) + Math.pow(histDistCenter, 2) - 2 * r * histDistCenter * Math.cos(theta1));
-		double theta0 = Math.asin(histDistCenter * Math.sin(theta1) / h) - deltaAngle;
-		double curDist = Math.sqrt(Math.pow(h, 2) + Math.pow(r, 2) - 2 * h * r * Math.cos(theta0));
-		double hyp = Math.sqrt(Math.pow(RobotMap.X_TURRET_OFFSET, 2) + Math.pow(RobotMap.Y_TURRET_OFFSET, 2));
-		double theta3 = 180 - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET) + curRobotOrientation;
-		double curDistReal = Math.sqrt(Math.pow(curDist, 2) + Math.pow(hyp, 2) - 2 * curDist * hyp * Math.cos(theta3));
-		double curTurretOrientation = 90 - Math.asin(curDist * Math.sin(theta3) / curDistReal) - Math.atan(RobotMap.Y_TURRET_OFFSET / RobotMap.X_TURRET_OFFSET);
+		Angle theta1 = histRobotOrientation.add(Units.RIGHT_ANGLE);
+		double r = Math.max(histLeftPos, histRightPos) / deltaAngle.get(Type.DEGREE) - (0.5 * Drive.WHEEL_BASE);
+		double h = NRMath.lawOfCos(r, histDistCenter, theta1);
+		Angle theta0 = NRMath.asin(histDistCenter * theta1.sin() / h).sub(deltaAngle);
+		double curDist = NRMath.lawOfCos(h, r, theta0);
+		double hyp = Math.hypot(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
+		Angle theta3 = new Angle(0.5, Angle.Type.ROTATION).sub(thetaXTurret).add(curRobotOrientation);
+		double curDistReal = NRMath.lawOfCos(curDist, hyp, theta3);
+		Angle curTurretOrientation = Units.RIGHT_ANGLE.sub(NRMath.asin(curDist * theta3.sin() / curDistReal)).sub(thetaYTurret);
 		
 		//Gets average speed of two drive sides to get instantaneous speed in (inches / sec)
 		double speed = (Drive.getInstance().getLeftSpeed() + Drive.getInstance().getRightSpeed()) / 2 * (Drive.WHEEL_DIAMETER * Units.INCHES_PER_FOOT) / Units.SECONDS_PER_MINUTE;
-		double vertSpeed = speed * Math.cos(curRobotOrientation);
+		double vertSpeed = speed * curRobotOrientation.cos();
 		
 		//Code until next break gets additional angle for turret to turn based on current speed
 		double timeUntilMake = 0; //TODO: Turret: Map turret distance to ball time in air and add time it takes for turret to move to spot and ball to shoot
 		double p = speed * (timeUntilMake);
-		double e = Math.sqrt(Math.pow(curDistReal, 2) + Math.pow(p, 2) - 2 * curDistReal * p * Math.cos(curTurretOrientation));
-		turretAngle = 180 - Math.asin(curDistReal * Math.sin(curTurretOrientation) / e);
+		double e = NRMath.lawOfCos(curDistReal, p, curTurretOrientation);
+		turretAngle = new Angle(0.5, Angle.Type.ROTATION).sub(NRMath.asin(curDistReal * curTurretOrientation.sin() / e));
 		//Sets the change in position of the turret
-		turretAngle /= Units.DEGREES_PER_ROTATION; // Changes from angle to rotations
 		
 		//What the distance of the shot will map as due to forward/backward motion
 		@SuppressWarnings("unused")
 		double feltDist = vertSpeed * timeUntilMake;
 		//TODO: Hood: Map feltDist to hood angle in degrees
-		hoodAngle = 0;
+		hoodAngle = Angle.ZERO;
 		
 		//TODO: Shooter: Map feltDist to shooter speed in rpm
 		shooterSpeed = 0;
@@ -113,14 +118,14 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	/**
 	 * @return Turret angle in degrees
 	 */
-	public double getTurretAngle() {
+	public Angle getTurretAngle() {
 		return turretAngle;
 	}
 
 	/**
 	 * @return Hood angle in degrees
 	 */
-	public double getHoodAngle() {
+	public Angle getHoodAngle() {
 		return hoodAngle;
 	}
 	

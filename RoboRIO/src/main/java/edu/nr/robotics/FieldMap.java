@@ -1,5 +1,7 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.units.Angle;
+
 public class FieldMap {
 
 	/**
@@ -18,7 +20,7 @@ public class FieldMap {
 	public static final double FORWARD_DISTANCE_TO_SIDE_PEG = 0;
 	public static final double SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG = 0;
 	public static final double SIDE_DISTANCE_TO_NON_SHOOTER_SIDE_PEG = 0;
-	public static final double ANGLE_TO_SIDE_PEG = 45;
+	public static final Angle ANGLE_TO_SIDE_PEG = new Angle(45, Angle.Type.DEGREE);
 	/**
 	 * The dimensions to the hopper in auto that would be used in inches or degrees
 	 * The angle to the hopper is assuming hopper is on left and positive is right
@@ -27,7 +29,7 @@ public class FieldMap {
 	 */
 	public static final double FORWARD_DISTANCE_WALL_TO_HOPPER = 0;
 	public static final double SIDE_DISTANCE_WALL_TO_HOPPER = 0;
-	public static final double ANGLE_WALL_TO_HOPPER = 0;
+	public static final Angle ANGLE_WALL_TO_HOPPER = Angle.ZERO;
 	/**
 	 * The distances the robot would need to go from the gear to the hopper in inches
 	 * 
