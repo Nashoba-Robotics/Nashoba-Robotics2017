@@ -7,6 +7,9 @@
 .tmp/
 
 
+.classpath
+.settings/
+
 # Package Files 
 
 *.war
