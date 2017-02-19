@@ -8,6 +8,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -21,23 +22,14 @@ public class Hood extends NRSubsystem {
 	private TalonEncoder encoder;
 	
 	/**
-	 * The speed in degrees per second that the motor is currently supposed to be running at
+	 * The speed that the motor is currently supposed to be running at
 	 */
-	private double speedSetpoint = 0;
+	private AngularSpeed speedSetpoint = AngularSpeed.ZERO;
 	
 	/**
 	 * The position that the hood is currently supposed to be at
 	 */
 	private Angle positionSetpoint = Angle.ZERO;
-	
-	//TODO: Hood: Find FPID values
-	public static double F = (Hood.MAX_SPEED / Units.DEGREES_PER_ROTATION / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV );
-	public static double P_MOTION_MAGIC = 0;
-	public static double I_MOTION_MAGIC = 0;
-	public static double D_MOTION_MAGIC = 0;
-	public static double P_OPERATOR_CONTROL = 0;
-	public static double I_OPERATOR_CONTROL = 0;
-	public static double D_OPERATOR_CONTROL = 0;
 	
 	/**
 	 * TODO: Hood: Find top position
@@ -74,7 +66,16 @@ public class Hood extends NRSubsystem {
 	 * The max speed of the hood, in degrees per second
 	 * TODO: Hood: Find max speed
 	 */
-	public static final double MAX_SPEED = 0;
+	public static final AngularSpeed MAX_SPEED = AngularSpeed.ZERO;
+	
+	//TODO: Hood: Find FPID values
+	public static double F = MAX_SPEED.get(AngularSpeed.Unit.RPS) / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	public static double P_MOTION_MAGIC = 0;
+	public static double I_MOTION_MAGIC = 0;
+	public static double D_MOTION_MAGIC = 0;
+	public static double P_OPERATOR_CONTROL = 0;
+	public static double I_OPERATOR_CONTROL = 0;
+	public static double D_OPERATOR_CONTROL = 0;
 	
 	private Hood() { 
 		if (EnabledSubsystems.HOOD_ENABLED) { 
@@ -89,7 +90,7 @@ public class Hood extends NRSubsystem {
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setProfile(OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(MAX_SPEED / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
+			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(AngularSpeed.Unit.RPM));
 			talon.setMotionMagicAcceleration(MAX_ACCELERATION / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Hood: Find phase
@@ -125,16 +126,16 @@ public class Hood extends NRSubsystem {
 	 *            the hood motor speed, from -1 to 1
 	 */
 	public void setMotorSpeedInPercent(double speed) {
-		setMotorSpeedInDegreesPerSecond(speed * MAX_SPEED);
+		setMotorSpeedInDegreesPerSecond(MAX_SPEED.mul(speed));
 	}
 
 	/**
 	 * Sets motor speed of hood.
 	 * 
 	 * @param speed
-	 *            the hood motor speed, from -{@value #MAX_SPEED} to {@value #MAX_SPEED}
+	 *            the hood motor speed, from -MAX_SPEED to MAX_SPEED
 	 */
-	public void setMotorSpeedInDegreesPerSecond(double speed) {
+	public void setMotorSpeedInDegreesPerSecond(AngularSpeed speed) {
 		speedSetpoint = speed;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
@@ -146,9 +147,9 @@ public class Hood extends NRSubsystem {
 				}
 			}
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
-				talon.set(addGearing(speedSetpoint / MAX_SPEED));
+				talon.set(addGearing(speedSetpoint.div(MAX_SPEED)));
 			} else {
-				talon.set(addGearing(speedSetpoint));				
+				talon.set(addGearing(speedSetpoint.get(AngularSpeed.Unit.RPM)));				
 			}
 		}
 	}
@@ -156,12 +157,12 @@ public class Hood extends NRSubsystem {
 	/**
 	 * Gets the current speed of the talon
 	 * 
-	 * @return current position of talon in degrees per second
+	 * @return current position of talon
 	 */
-	public double getSpeed() {
+	public AngularSpeed getSpeed() {
 		if(talon != null)
-			return removeGearing(talon.getSpeed()) * Units.DEGREES_PER_ROTATION / Units.SECONDS_PER_MINUTE;
-		return 0;
+			return new AngularSpeed(removeGearing(talon.getSpeed()), AngularSpeed.Unit.RPM);
+		return AngularSpeed.ZERO;
 	}
 	
 	/**
@@ -227,8 +228,8 @@ public class Hood extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putNumber("Hood Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Hood Speed", getSpeed() + " : " + speedSetpoint);
-				SmartDashboard.putString("Hood Position", getPosition() + " : " + positionSetpoint);				
+				SmartDashboard.putString("Hood Speed", getSpeed().get(AngularSpeed.Unit.DEGREEPERSECOND) + " : " + speedSetpoint.get(AngularSpeed.Unit.DEGREEPERSECOND));
+				SmartDashboard.putString("Hood Position", getPosition().get(Angle.Unit.DEGREE) + " : " + positionSetpoint.get(Angle.Unit.DEGREE));				
 			}
 			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putNumber("Hood Voltage", talon.getOutputVoltage());

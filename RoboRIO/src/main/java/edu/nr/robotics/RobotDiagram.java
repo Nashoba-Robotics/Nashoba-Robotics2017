@@ -1,5 +1,6 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.hood.Hood;
@@ -35,7 +36,7 @@ public class RobotDiagram implements NamedSendable {
 	public void initTable(ITable subtable) {
 		this.table = subtable;
 		if (table != null) {
-			table.putNumber("Shooter Speed", Shooter.getInstance().getSpeed());
+			table.putNumber("Shooter Speed", Shooter.getInstance().getSpeed().get(AngularSpeed.Unit.RPM));
 			table.putNumber("Hood Angle", Hood.getInstance().getPosition().get(Unit.DEGREE));
 			table.putNumber("Turret Angle", Turret.getInstance().getPosition().get(Unit.DEGREE));
 			table.putNumber("Match Time", DriverStation.getInstance().getMatchTime());
@@ -55,10 +56,8 @@ public class RobotDiagram implements NamedSendable {
 							|| AutoTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition()).abs()
 							.lessThan(Turret.SHOOT_THRESHOLD));
 			table.putBoolean("Shooter Aligned",
-					Math.abs(AutoTrackingCalculation.getInstance().getShooterSpeed()
-							- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD
-							|| Math.abs(StationaryTrackingCalculation.getInstance().getShooterSpeed()
-									- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD);
+					AutoTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD) ||
+					StationaryTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD));
 
 			table.putBoolean("Hood Tracking", Hood.getInstance().isAutoAlign());
 			table.putBoolean("Turret Tracking", Turret.getInstance().isAutoAlign());

@@ -9,7 +9,7 @@ public class Angle {
 	public enum Unit {
 		DEGREE, ROTATION, RADIAN;
 		
-		private static Unit defaultUnit = DEGREE;
+		private static final Unit defaultUnit = DEGREE;
 		
 		private static final double ROTATIONS_PER_DEGREE = 1/360.0;
 		private static final double RADIANS_PER_DEGREE = 2*Math.PI / 360.0;

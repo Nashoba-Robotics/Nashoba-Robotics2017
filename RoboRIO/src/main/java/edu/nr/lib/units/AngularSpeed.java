@@ -9,7 +9,7 @@ public class AngularSpeed {
 	public enum Unit {
 		DEGREEPERSECOND, RPM, RPS;
 		
-		private static Unit defaultUnit = RPS;
+		private static final Unit defaultUnit = RPS;
 		
 		private static final double DEGREEPERSECOND_PER_RPS = 1/360.0;
 		private static final double RPM_PER_RPS = 60;
@@ -65,6 +65,14 @@ public class AngularSpeed {
 		return new AngularSpeed(this.get(Unit.defaultUnit) + angleTwo.get(Unit.defaultUnit), Unit.defaultUnit);
 	}
 	
+	public AngularSpeed mul(double x) {
+		return new AngularSpeed(this.get(Unit.defaultUnit) * x, Unit.defaultUnit);
+	}
+	
+	public double div(AngularSpeed speedTwo) {
+		return this.get(Unit.defaultUnit) / speedTwo.get(Unit.defaultUnit);
+	}
+
 	public boolean lessThan(AngularSpeed angleTwo) {
 		return this.get(Unit.defaultUnit) < angleTwo.get(Unit.defaultUnit);
 	}

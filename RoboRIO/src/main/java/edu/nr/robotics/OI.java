@@ -6,6 +6,7 @@ import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.AngularSpeed;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -119,7 +120,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
 	 */
-	public static final double SHOOTER_SPEED_INCREMENT_VALUE = 100;
+	public static final AngularSpeed SHOOTER_SPEED_INCREMENT_VALUE = new AngularSpeed(100, AngularSpeed.Unit.RPM);
 
 
 	/**
@@ -186,7 +187,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
 
 		new JoystickButton(operatorLeft, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(-OI.SHOOTER_SPEED_INCREMENT_VALUE));
+		new JoystickButton(operatorLeft, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE.negate()));
 		
 		
 		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));

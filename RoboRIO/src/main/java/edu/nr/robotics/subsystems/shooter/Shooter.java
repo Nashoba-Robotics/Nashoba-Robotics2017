@@ -7,6 +7,7 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.lib.units.AngularSpeed;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -19,29 +20,29 @@ public class Shooter extends NRSubsystem {
 	private CANTalon talon;
 	
 	/**
-	 * The speed in RPM that the motor is currently supposed to be running at
+	 * The speed that the motor is currently supposed to be running at
 	 */
-	public double motorSetpoint = 0;
-
-	//TODO: Shooter: Find FPID values
-	public static double F = (Shooter.MAX_SPEED / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
-	public static double P = 0;
-	public static double I = 0;
-	public static double D = 0;
+	public AngularSpeed motorSetpoint = AngularSpeed.ZERO;
 
 	private boolean autoAlign = false;
 
 	/**
-	 * The threshold of rpm the shooter needs to be within to shoot in rpm
+	 * The threshold the shooter needs to be within to shoot
 	 * TODO: Shooter: Find threshold
 	 */
-	public static final double SHOOT_THRESHOLD = 0;
+	public static final AngularSpeed SHOOT_THRESHOLD = AngularSpeed.ZERO;
 
 	/**
-	 * The max speed of the shooter, in rotations per minute
+	 * The max speed of the shooter
 	 * TODO: Shooter: Find max speed
 	 */
-	public static final double MAX_SPEED = 0;
+	public static final AngularSpeed MAX_SPEED = AngularSpeed.ZERO;
+
+	//TODO: Shooter: Find FPID values
+	public static double F = (Shooter.MAX_SPEED.get(AngularSpeed.Unit.RPM) / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double P = 0;
+	public static double I = 0;
+	public static double D = 0;
 	
 	private Shooter() { 
 		if (EnabledSubsystems.SHOOTER_ENABLED) { 
@@ -83,22 +84,22 @@ public class Shooter extends NRSubsystem {
 	 *            the shooter motor speed,  from -1 to 1
 	 */
 	public void setMotorSpeedPercent(double speed) {
-		setMotorSpeedInRPM(speed * MAX_SPEED);
+		setMotorSpeedInRPM(MAX_SPEED.mul(speed));
 	}
 
 	/**
 	 * Sets motor speed of shooter
 	 * 
 	 * @param speed
-	 *            the shooter motor speed, from -{@value #MAX_SPEED} to {@value #MAX_SPEED}
+	 *            the shooter motor speed, from -MAX_SPEED to MAX_SPEED
 	 */
-	public void setMotorSpeedInRPM(double speed) {
+	public void setMotorSpeedInRPM(AngularSpeed speed) {
 		motorSetpoint = speed;
 		if (talon != null && OI.getInstance().isShooterOn()) {
 			if(talon.getControlMode() == TalonControlMode.Speed) {
-				talon.set(motorSetpoint);
+				talon.set(motorSetpoint.get(AngularSpeed.Unit.RPM));
 			} else {
-				talon.set(motorSetpoint/MAX_SPEED);
+				talon.set(motorSetpoint.div(MAX_SPEED));
 			}
 		}
 	}
@@ -119,7 +120,7 @@ public class Shooter extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Shooter Speed", talon.getSpeed() + " : " + motorSetpoint);	
+				SmartDashboard.putString("Shooter Speed", getSpeed().get(AngularSpeed.Unit.RPM) + " : " + motorSetpoint.get(AngularSpeed.Unit.RPM));	
 			}
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Shooter Voltage", talon.getOutputVoltage());
@@ -145,13 +146,13 @@ public class Shooter extends NRSubsystem {
 	/**
 	 * Gets the speed of the shooter
 	 * 
-	 * @return speed of the shooter in rpm
+	 * @return speed of the shooter
 	 */
-	public double getSpeed() {
+	public AngularSpeed getSpeed() {
 		if(talon != null) {
-			return talon.getSpeed();
+			return new AngularSpeed(talon.getSpeed(), AngularSpeed.Unit.RPM);
 		}
-		return 0;
+		return AngularSpeed.ZERO;
 	}
 	
 	/**

@@ -5,21 +5,16 @@ import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.AngularSpeed;
 import edu.nr.robotics.subsystems.turret.Turret;
 
 public class StationaryTrackingCalculation implements NetworkingDataTypeListener {
 		
 	Angle turretAngle = Angle.ZERO;
 	
-	/**
-	 * Degrees
-	 */
 	Angle hoodAngle = Angle.ZERO;
 	
-	/**
-	 * RPM
-	 */
-	double shooterSpeed = 0;
+	AngularSpeed shooterSpeed = AngularSpeed.ZERO;
 	
 	private long lastSeenTimeStamp;
 	private Angle lastSeenAngle;
@@ -81,11 +76,11 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 		Angle theta2 = NRMath.asin(distCenter * theta1.sin() / distReal);
 		turretAngle = theta2.sub(Units.RIGHT_ANGLE).add(thetaYTurret);
 
-		//TODO: Hood: Map distance of turret to angle of hood in degrees
+		//TODO: Hood: Map distance of turret to angle of hood
 		hoodAngle = Angle.ZERO;
 
-		//TODO: Shooter: Map distance of turret to speed of shooter in rpm
-		shooterSpeed = 0;
+		//TODO: Shooter: Map distance of turret to speed of shooter
+		shooterSpeed = AngularSpeed.ZERO;
 
 	}
 	
@@ -106,7 +101,7 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 	/**
 	 * @return Shooter speed in rpm
 	 */
-	public double getShooterSpeed() {
+	public AngularSpeed getShooterSpeed() {
 		return shooterSpeed;
 	}
 	

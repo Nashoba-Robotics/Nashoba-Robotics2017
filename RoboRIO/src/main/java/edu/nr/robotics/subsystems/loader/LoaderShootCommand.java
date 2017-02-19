@@ -16,12 +16,12 @@ public class LoaderShootCommand extends CommandGroup {
 			@Override
 			protected boolean condition() {
 				if (AutoTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition()).abs().lessThan(Hood.SHOOT_THRESHOLD)
-						&& Math.abs(AutoTrackingCalculation.getInstance().getShooterSpeed() - Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD
+						&& AutoTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD)
 						&& AutoTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition()).abs().lessThan(Turret.SHOOT_THRESHOLD)) {
 					return true;
 				}
 				if (StationaryTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition()).abs().lessThan(Hood.SHOOT_THRESHOLD)
-						&& Math.abs(StationaryTrackingCalculation.getInstance().getShooterSpeed() - Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD
+						&& StationaryTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD)
 						&& StationaryTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition()).abs().lessThan(Turret.SHOOT_THRESHOLD)) {
 					return true;
 				}

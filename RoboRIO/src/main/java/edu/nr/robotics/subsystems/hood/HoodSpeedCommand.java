@@ -1,15 +1,13 @@
 package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.units.AngularSpeed;
 
 public class HoodSpeedCommand extends NRCommand{
 
-	double speed;
+	AngularSpeed speed;
 	
-	/**
-	 * Degrees per second
-	 */
-	public HoodSpeedCommand(double speed) {
+	public HoodSpeedCommand(AngularSpeed speed) {
 		super(Hood.getInstance());
 		this.speed = speed;
 	}
