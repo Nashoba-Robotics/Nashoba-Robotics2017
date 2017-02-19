@@ -41,29 +41,30 @@ public class RobotDiagram implements NamedSendable {
 			table.putNumber("Hood Angle", Hood.getInstance().getPosition());
 			table.putNumber("Turret Angle", Turret.getInstance().getPosition());
 			table.putNumber("Match Time", DriverStation.getInstance().getMatchTime());
+			table.putBoolean("Is Auto", Robot.isAuto());
 			table.putBoolean("Can Gear See", GearAlignCalculation.getInstance().canSeeTarget());
 
 			table.putBoolean("Drive High Gear", Drive.getInstance().getCurrentGear() == Drive.Gear.high);
 
-			table.putBoolean("Hood Good",
+			table.putBoolean("Hood Aligned",
 					Math.abs(HoodStationaryAngleCorrectionCommand.getHoodAngle()
 							- Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD
 							|| Math.abs(AutoTrackingCalculation.getInstance().getHoodAngle()
 									- Hood.getInstance().getPosition()) < Hood.SHOOT_THRESHOLD);
-			table.putBoolean("Turret Good",
+			table.putBoolean("Turret Aligned",
 					Math.abs(TurretStationaryAngleCorrectionCommand.getTurretAngle()
 							- Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD
 							|| Math.abs(AutoTrackingCalculation.getInstance().getTurretAngle()
 									- Turret.getInstance().getPosition()) < Turret.SHOOT_THRESHOLD);
-			table.putBoolean("Shooter Good",
+			table.putBoolean("Shooter Aligned",
 					Math.abs(AutoTrackingCalculation.getInstance().getShooterSpeed()
 							- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD
 							|| Math.abs(ShooterStationarySpeedCorrectionCommand.getShooterSpeed()
 									- Shooter.getInstance().getSpeed()) < Shooter.SHOOT_THRESHOLD);
 
-			table.putBoolean("Hood Autotracking", Hood.getInstance().isAutoAlign());
-			table.putBoolean("Turret Autotracking", Turret.getInstance().isAutoAlign());
-			table.putBoolean("Shooter Autotracking", Shooter.getInstance().isAutoAlign());
+			table.putBoolean("Hood Tracking", Hood.getInstance().isAutoAlign());
+			table.putBoolean("Turret Tracking", Turret.getInstance().isAutoAlign());
+			table.putBoolean("Shooter Tracking", Shooter.getInstance().isAutoAlign());
 
 		}
 

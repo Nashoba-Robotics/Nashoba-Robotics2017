@@ -48,6 +48,8 @@ public class Robot extends IterativeRobot {
 	
 	public static Compressor robotCompressor = new Compressor();
 	
+	private static boolean isAuto;
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -159,6 +161,7 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.start();
 		
+		this.isAuto = true;
 	}
 
 	/**
@@ -169,6 +172,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		new CancelAllCommand().start();
+		
+		this.isAuto = false;
 	}
 
 	/**
@@ -210,5 +215,9 @@ public class Robot extends IterativeRobot {
 		Periodic.runAll();
 		SmartDashboardSource.runAll();
 		SmartDashboard.putData(RobotDiagram.getInstance());
+	}
+	
+	public static boolean isAuto() {
+		return isAuto;
 	}
 }
