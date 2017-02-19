@@ -36,6 +36,7 @@ public class ShooterStationarySpeedCorrectionCommand extends NRCommand {
 		
 		//Manipulates camera as if on center of turret
 		double theta1 = 180 - angleCenter - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
+		@SuppressWarnings("unused")
 		double distReal = Math.sqrt(Math.pow(distCenter, 2) + Math.pow(h4, 2) - 2 * distCenter * h4 * Math.cos(theta1));
 		
 		//TODO: Shooter: Map distance of turret to speed of shooter in rpm

@@ -1,7 +1,5 @@
 package ArduinoComm;
 
-import java.awt.Frame;
-
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.IRemote;
 import edu.wpi.first.wpilibj.tables.IRemoteConnectionListener;

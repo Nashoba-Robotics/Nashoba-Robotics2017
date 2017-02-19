@@ -101,6 +101,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		turretAngle /= Units.DEGREES_PER_ROTATION; // Changes from angle to rotations
 		
 		//What the distance of the shot will map as due to forward/backward motion
+		@SuppressWarnings("unused")
 		double feltDist = vertSpeed * timeUntilMake;
 		//TODO: Hood: Map feltDist to hood angle in degrees
 		hoodAngle = 0;

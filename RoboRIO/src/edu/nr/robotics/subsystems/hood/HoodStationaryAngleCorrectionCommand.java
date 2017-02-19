@@ -36,6 +36,7 @@ public class HoodStationaryAngleCorrectionCommand extends NRCommand {
 		
 		//Manipulates camera as if on center of turret
 		double theta1 = 180 - angleCenter - Math.atan(RobotMap.X_TURRET_OFFSET / RobotMap.Y_TURRET_OFFSET);
+		@SuppressWarnings("unused")
 		double distReal = Math.sqrt(Math.pow(distCenter, 2) + Math.pow(h4, 2) - 2 * distCenter * h4 * Math.cos(theta1));
 		
 		//TODO: Hood: Map distance of turret to angle of hood in degrees
