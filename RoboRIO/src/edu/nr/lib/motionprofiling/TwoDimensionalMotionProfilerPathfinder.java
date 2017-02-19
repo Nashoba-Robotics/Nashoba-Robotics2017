@@ -4,12 +4,11 @@ import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.nr.lib.AngleGyroCorrection;
 import edu.nr.lib.AngleUnit;
+import edu.nr.lib.GyroCorrection;
 import edu.nr.lib.NavX;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
-import edu.nr.lib.interfaces.GyroCorrection;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
@@ -78,7 +77,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		this.encoderTicksPerRevolution = encoderTicksPerRevolution;
 		this.initialPositionLeft = source.pidGetLeft();
 		this.initialPositionRight = source.pidGetRight();
-		this.gyroCorrection = new AngleGyroCorrection();
+		this.gyroCorrection = new GyroCorrection();
 		gyroCorrection.clearInitialValue();
 		this.wheelDiameter = wheelDiameter;
 		reset();

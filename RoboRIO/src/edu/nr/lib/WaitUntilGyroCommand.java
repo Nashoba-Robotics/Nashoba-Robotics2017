@@ -7,7 +7,7 @@ import edu.nr.lib.commandbased.NRCommand;
  */
 public class WaitUntilGyroCommand extends NRCommand {
 
-	AngleGyroCorrection gyroCorrection;
+	GyroCorrection gyroCorrection;
 	double angle;
 	GetGyroCommand gyro;
 
@@ -23,11 +23,11 @@ public class WaitUntilGyroCommand extends NRCommand {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinishedNR() {
-		System.out.println("Error: " + (gyroCorrection.get() - angle));
+		System.out.println("Error: " + (gyroCorrection.getAngleErrorDegrees() - angle));
 		if (angle > 0)
-			return gyroCorrection.get() > angle;
+			return gyroCorrection.getAngleErrorDegrees() > angle;
 		else
-			return gyroCorrection.get() < angle;
+			return gyroCorrection.getAngleErrorDegrees() < angle;
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class WaitUntilGyroCommand extends NRCommand {
         if(gyro != null)
         	gyroCorrection = gyro.getCorrection();
         else
-            gyroCorrection = new AngleGyroCorrection();
+            gyroCorrection = new GyroCorrection();
 	}
 	
 }
