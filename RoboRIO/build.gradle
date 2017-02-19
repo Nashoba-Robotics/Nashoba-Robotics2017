@@ -1,4 +1,5 @@
 plugins {
+    id "jacoco"
     id "java"
     id "eclipse"
     id "idea"
@@ -9,17 +10,24 @@ frc {
     team = "1768"
     robotClass = "edu.nr.robotics.Robot"
 }
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+}
+
 
 dependencies {
     compile wpilib()
+
+    // JUnit 
+    testCompile "junit:junit:+"
+
     compile talonSrx()                  // Compile with the Talon SRX Library
     compile navx()                      // Compile with the KauaiLab's NavX-MXP or NavX-Micro library
-
 
     // Use these to link your own third-party device libraries (e.g. navX)
     compile fileTree(dir: '../lib', include: '**/*.jar')
     nativeLib  fileTree(dir: '../lib', include: '**/*.so')
-
     
 }
 
