@@ -78,7 +78,7 @@ void loop() {
 
 void serialComms(char delim) {
   String rawStr = "null";
-  String commands[] = {"echo", "lcdBacklight", "lcdPrint", "clearLcd", "clearLeds", "setLed", "countDown", "countDownTwo", "gameTimer", "quit", "setTimer"};
+  String commands[] = {"echo", "lcdBacklight", "lcdPrint", "clearLcd", "clearLeds", "setLedStrip", "countDown", "countDownTwo", "realGameTimer", "quit", "setTimer", "setLed"};
   if(Serial.available()) rawStr = Serial.readStringUntil(delim);
   else return;
   String command = parseCommand(rawStr);
@@ -105,7 +105,9 @@ void serialComms(char delim) {
   }else if(command == commands[9]) {
     Serial.println("not in a loop");
   }else if(command == commands[10]) {
-//    setTimer(params);
+    realGameTimer(params);
+  }else if(command == commands[11]) {
+    setSingleLED(params);
   }else {
     Serial.println("No comand on the arduino for: "  + command + "\n\tWith parameters: "  + params);
   }
@@ -384,7 +386,7 @@ void countDown(String params) {
   
 }
 
-void gameTimer(String params) {//(time, total time)
+void realGameTimer(String params) {//(time, total time)
   int paramNum = countParams(params);
   if(paramNum != 2) return;
   doubleStr seconds;
@@ -464,12 +466,27 @@ void drawStates() {
   strip.show();
 }
 
+void setSingleLED(String str) {//(LED#, LEDState(1, 0))
+  intStr LED = parseNextParamInt(str);
+  intStr LEDState = parseNextParamInt(LED.str);
+  digitalWrite(leds[LED.num%LED_NUM], LEDState.num%2);
+}
+
 
 //dependance/other functinos
 
 void updateTimer() {
-  
+  int t = (globTime / globTotTime) * LED_COUNT;
+  for(int i = 0; i < LED_COUNT; i++) {
+    if(i < t) {
+      states[i][1] = 255;
+    }else if(i >= t) {
+      states[i][0] = 255;
+    }
+  }
+  drawStates();
 }
+
 void setBacklight(int r, int g, int b) {
   r %= 256;
   g %= 256;
