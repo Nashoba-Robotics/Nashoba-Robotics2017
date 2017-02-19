@@ -1,6 +1,7 @@
 package edu.nr.lib;
 
 import edu.nr.lib.interfaces.GyroCorrection;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.nr.lib.NavX;
 
 public class AngleGyroCorrection extends GyroCorrection {

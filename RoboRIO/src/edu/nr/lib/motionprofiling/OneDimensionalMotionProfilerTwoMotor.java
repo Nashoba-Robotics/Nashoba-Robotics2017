@@ -3,7 +3,7 @@ package edu.nr.lib.motionprofiling;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.nr.lib.NavXGyroCorrection;
+import edu.nr.lib.AngleGyroCorrection;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.interfaces.GyroCorrection;
@@ -52,7 +52,7 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 		this.kp_theta = kp_theta;
 		this.initialPositionLeft = source.pidGetLeft();
 		this.initialPositionRight = source.pidGetRight();
-		this.gyroCorrection = new NavXGyroCorrection();
+		this.gyroCorrection = new AngleGyroCorrection();
 		reset();
 	}
 	
@@ -181,4 +181,23 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 		return trajectory;
 	}
 	
+	public void setKA(double ka) {
+		this.ka = ka;
+	}
+	
+	public void setKP(double kp) {
+		this.kp = kp;
+	}
+	
+	public void setKD(double kd) {
+		this.kd = kd;
+	}
+
+	public void setKV(double kv) {
+		this.kv = kv;
+	}
+
+	public void setKP_theta(double kp_theta) {
+		this.kp_theta = kp_theta;
+	}
 }
