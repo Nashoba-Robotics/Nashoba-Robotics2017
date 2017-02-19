@@ -41,7 +41,7 @@ public class TwoDimensionalMotionProfilerBasic extends TimerTask implements TwoD
 		this.out = out;
 		this.source = source;
 		this.period = period;
-		this.trajectory = new TwoDimensionalTrajectorySimple();
+		this.trajectory = new TwoDimensionalTrajectoryBlank();
 		timer = new Timer();
 		timer.schedule(this, 0, this.period);
 		this.source.setPIDSourceType(PIDSourceType.kDisplacement);
