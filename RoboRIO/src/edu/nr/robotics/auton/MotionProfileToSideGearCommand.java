@@ -52,7 +52,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER,
-					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER);
+					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
 		} else {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
@@ -61,7 +61,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER,
-					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER);
+					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
 		}
 		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0),
 				new Waypoint(forwardDistance - DISTANCE_FROM_ENDPOINT * Math.cos(endHeading),

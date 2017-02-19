@@ -11,7 +11,6 @@ import edu.nr.lib.Units;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.interfaces.GyroCorrection;
-import edu.nr.robotics.subsystems.drive.Drive;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -52,8 +51,11 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 
 	double timeSinceStart = 0;
 	double lastTime = 0;
+	
+	double wheelbase;
 		
-	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, long period) {
+	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, long period, double wheelbase) {
+		this.wheelbase = wheelbase;
 		this.out = out;
 		this.source = source;
 		this.period = period;
@@ -63,7 +65,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				new Waypoint(1,0,0)
         };
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
-		this.modifier = new TankModifier(trajectory).modify(Drive.WHEEL_BASE / Units.INCHES_PER_METER);
+		this.modifier = new TankModifier(trajectory).modify(this.wheelbase / Units.INCHES_PER_METER);
 		this.left = new DistanceFollower(modifier.getLeftTrajectory());
 		this.right = new DistanceFollower(modifier.getRightTrajectory());
 		timer = new Timer();
@@ -86,8 +88,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		//new Thread(this).start();
 	}
 	
-	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter) {
-		this(out, source, kv, ka, kp, ki, kd, kp_theta, max_velocity, max_acceleration, max_jerk, encoderTicksPerRevolution, wheelDiameter, defaultPeriod);
+	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, double wheelbase) {
+		this(out, source, kv, ka, kp, ki, kd, kp_theta, max_velocity, max_acceleration, max_jerk, encoderTicksPerRevolution, wheelDiameter, defaultPeriod, wheelbase);
 	}
 	
 	double timeOfVChange = 0;
@@ -98,8 +100,8 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 			if(enabled) {
 				lastTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 				
-				double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (Drive.WHEEL_BASE * Math.PI * .0254)) /*Rotations per meter*/);
-				double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (Drive.WHEEL_BASE * Math.PI * .0254)) /*Rotations per meter*/);
+				double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (this.wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
+				double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (this.wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
 				
 				double currentHeading = -NavX.getInstance().getYaw(AngleUnit.DEGREE);
 				double desiredHeading = Pathfinder.r2d(left.getHeading());
@@ -162,7 +164,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	public void setTrajectory(Waypoint[] points) {
 		this.points = points;
 		this.trajectory = Pathfinder.generate(points, trajectoryConfig);
-		this.modifier = new TankModifier(trajectory).modify(Drive.WHEEL_BASE / Units.INCHES_PER_METER);
+		this.modifier = new TankModifier(trajectory).modify(this.wheelbase / Units.INCHES_PER_METER);
 		this.left = new DistanceFollower(modifier.getLeftTrajectory());
 		this.right = new DistanceFollower(modifier.getRightTrajectory());
 		
