@@ -20,7 +20,7 @@ public class GearHopperAutoCommand extends CommandGroup {
 	private static final Distance BACKWARD_DRIVE_DISTANCE = Distance.ZERO; //Will be negative
 	
 	// TODO: GearHopperAutoCommand: Get time to delay while gear is dropped off
-	private static final Time GEAR_SECONDS_TO_DELAY = Time.ZERO;
+	private static final Time GEAR_SECONDS_TO_DELAY = new Time(5, Time.Unit.SECOND);
 	
 	public GearHopperAutoCommand() {
 		addParallel(new ZeroThenAutoTrackCommand());

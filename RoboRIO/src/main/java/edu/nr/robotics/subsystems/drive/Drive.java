@@ -60,14 +60,14 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	static final Distance DISTANCE_PER_REV = WHEEL_DIAMETER.mul(Math.PI);
 
 	/**
-	 * The max driving speed of the robot in low gear TODO: Drive: Get max low
-	 * gear speed
+	 * The max driving speed of the robot in low gear 
+	 * TODO: Drive: Get max low gear speed
 	 */
 	public static final Speed MAX_LOW_GEAR_SPEED = Speed.ZERO;
 
 	/**
-	 * The max driving speed of the robot in high gear TODO: Drive: Get max high
-	 * gear speed
+	 * The max driving speed of the robot in high gear 
+	 * TODO: Drive: Get max high gear speed
 	 */
 	public static final Speed MAX_HIGH_GEAR_SPEED = Speed.ZERO;
 
@@ -85,14 +85,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 */
 	public static final double MAX_JERK = 0;
 
-	// TODO: Drive: Get distance between left and right wheels
-	public static final Distance WHEEL_BASE = Distance.ZERO;
+	public static final Distance WHEEL_BASE = new Distance(26.1, Distance.Unit.INCH);
 
 	/**
 	 * The number of encoder ticks per wheel revolution
+	 * TODO: Drive: Get ticks per revolution
 	 */
-	public static final int TICKS_PER_REV = 256; // TODO: Drive: Get ticks per
-													// revolution
+	public static final int TICKS_PER_REV = 256; 
 
 	/**
 	 * The number of CANTalon "Native Units" per revolution
@@ -111,14 +110,14 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 */
 	private Speed rightMotorSetpoint = Speed.ZERO;
 
-	// TODO: Drive: Find FPID values
+	// TODO: Drive: Find low gear FPID values
 	public static final double F_LOW_GEAR = MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
 			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV;
 	public static final double P_LOW_GEAR = 0;
 	public static final double I_LOW_GEAR = 0;
 	public static final double D_LOW_GEAR = 0;
 
-	// TODO: Drive: Find FPID values
+	// TODO: Drive: Find high gear FPID values
 	public static final double F_HIGH_GEAR = MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
 			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV;
 	public static final double P_HIGH_GEAR = 0;
@@ -157,18 +156,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 
 	/**
-	 * Position difference compared to end profiler TODO: Drive Motion
-	 * Profiling: Get position threshold
+	 * Position difference compared to end profiler
 	 */
-	public static final Distance PROFILE_POSITION_THRESHOLD = Distance.ZERO;
+	public static final Distance PROFILE_POSITION_THRESHOLD = new Distance(1, Distance.Unit.INCH);
 
 	/**
 	 * Delta time checked for to compare talon positions to previous positions
 	 * to end profiler
-	 * 
-	 * TODO: Drive Motion Profiling: Get time threshold
 	 */
-	public static final Time PROFILE_TIME_THRESHOLD = Time.ZERO;
+	public static final Time PROFILE_TIME_THRESHOLD = new Time(200, Time.Unit.MILLISECOND);
 
 	private Drive() {
 		// TODO: Drive: Find phase of motors

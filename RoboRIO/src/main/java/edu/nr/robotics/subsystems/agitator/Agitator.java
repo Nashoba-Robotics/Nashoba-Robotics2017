@@ -19,6 +19,7 @@ public class Agitator extends NRSubsystem {
 
 	/**
 	 * The percent voltage (-1 to 1) for the agitator to run at when turned on
+	 * TODO: Agitator: Get run speed
 	 */
 	public static final double HIGH_RUN_PERCENT = 0;
 	
@@ -37,6 +38,7 @@ public class Agitator extends NRSubsystem {
 			talon = new CANTalon(RobotMap.AGITATOR_TALON_PORT);
 			talon.changeControlMode(TalonControlMode.PercentVbus);
 			talon.enableBrakeMode(false);
+			talon.reverseOutput(true);
 			talon.enable();
 		}
 	}

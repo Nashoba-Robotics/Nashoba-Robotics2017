@@ -17,14 +17,8 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		
 	Angle turretAngle = Angle.ZERO;
 	
-	/**
-	 * Degrees
-	 */
 	Angle hoodAngle = Angle.ZERO;
 	
-	/**
-	 * RPM
-	 */
 	AngularSpeed shooterSpeed = AngularSpeed.ZERO;
 	
 	private Time lastSeenTimeStamp;
@@ -32,13 +26,6 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	private double lastSeenDistance;
 	
 	private Time timeOfLastData;
-	
-	/**
-	 * The amount of time to wait without a picture before sweeping
-	 * 
-	 * TODO: General: Determine the max wait time before sweeping turret
-	 */
-	public static final Time MIN_TRACKING_WAIT_TIME = Time.ZERO;
 	
 	private static AutoTrackingCalculation singleton;
 	
@@ -140,6 +127,6 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	}
 	
 	public boolean canSeeTarget() {
-		return Time.getCurrentTime().sub(timeOfLastData).lessThan(AutoTrackingCalculation.MIN_TRACKING_WAIT_TIME);
+		return Time.getCurrentTime().sub(timeOfLastData).lessThan(FieldMap.MIN_TRACKING_WAIT_TIME);
 	}
 }

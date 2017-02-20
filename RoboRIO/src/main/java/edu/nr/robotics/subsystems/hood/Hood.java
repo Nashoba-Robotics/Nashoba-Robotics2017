@@ -49,13 +49,13 @@ public class Hood extends NRSubsystem {
 	 * The angle around the goal position that we can be at
 	 * TODO: Hood: Find the position threshold
 	 */
-	public static final Angle POSITION_THRESHOLD = Angle.ZERO;
+	public static final Angle POSITION_THRESHOLD = new Angle(0.2, Angle.Unit.DEGREE);
 
 	/**
 	 * The threshold the hood needs to be within to shoot
 	 * TODO: Hood: Find shoot threshold
 	 */
-	public static final Angle SHOOT_THRESHOLD = Angle.ZERO;
+	public static final Angle SHOOT_THRESHOLD = new Angle(0.2, Angle.Unit.DEGREE);
 
 	/**
 	 * The max acceleration of the hood, in degrees per second per second

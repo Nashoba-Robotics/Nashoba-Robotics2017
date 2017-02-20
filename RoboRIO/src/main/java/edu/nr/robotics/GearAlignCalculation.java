@@ -67,6 +67,6 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	}
 	
 	public boolean canSeeTarget() {
-		return Time.getCurrentTime().sub(timeOfLastData).lessThan(AutoTrackingCalculation.MIN_TRACKING_WAIT_TIME);
+		return Time.getCurrentTime().sub(timeOfLastData).lessThan(FieldMap.MIN_TRACKING_WAIT_TIME);
 	}
 }

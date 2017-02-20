@@ -7,17 +7,15 @@ import edu.nr.lib.units.Angle.Unit;
 
 public class DrivePIDTurnAngleCommand extends NRCommand {
 
-	Angle angle; // Angle to turn in degrees
+	Angle deltaAngle;
 
 	Angle initialAngle;
 	Angle finishAngle;
 
 	/**
 	 * Degrees in which the robot needs to be to stop DrivePIDTurnAngleCommand
-	 * 
-	 * TODO: DrivePIDTurnAngleCommand: Get threshold to finish turning
 	 */
-	public static final Angle PID_TURN_ANGLE_THRESHOLD = Angle.ZERO;
+	public static final Angle PID_TURN_ANGLE_THRESHOLD = new Angle(1, Angle.Unit.DEGREE);
 
 	// TODO: PIDTurnCommand: Get p value
 	public static final double P = 0;
@@ -29,17 +27,21 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 	 */
 	public DrivePIDTurnAngleCommand(Angle angle) {
 		super(Drive.getInstance());
-		this.angle = angle;
+		this.deltaAngle = angle;
+	}
+	
+	private Angle getCurrentAngle() {
+		return NavX.getInstance().getYaw();
 	}
 
 	@Override
 	public void onStart() {
-		initialAngle = NavX.getInstance().getYaw();
-		finishAngle = initialAngle.add(angle);
+		initialAngle = getCurrentAngle();
+		finishAngle = initialAngle.add(deltaAngle);
 	}
 
 	private Angle getAngleError() {
-		return finishAngle.sub(NavX.getInstance().getYaw());
+		return finishAngle.sub(getCurrentAngle());
 	}
 
 	@Override

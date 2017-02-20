@@ -23,13 +23,6 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 	
 	private Time timeOfLastData;
 	
-	/**
-	 * The amount of time to wait without a picture before sweeping
-	 * 
-	 * TODO: General: Determine the max wait time before sweeping turret
-	 */
-	public static final Time MIN_TRACKING_WAIT_TIME = Time.ZERO;
-	
 	private static StationaryTrackingCalculation singleton;
 	
 	public synchronized static void init() {
@@ -107,6 +100,6 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 	}
 	
 	public boolean canSeeTarget() {
-		return Time.getCurrentTime().sub(timeOfLastData).lessThan(StationaryTrackingCalculation.MIN_TRACKING_WAIT_TIME);
+		return Time.getCurrentTime().sub(timeOfLastData).lessThan(FieldMap.MIN_TRACKING_WAIT_TIME);
 	}
 }

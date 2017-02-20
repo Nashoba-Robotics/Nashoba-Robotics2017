@@ -22,7 +22,7 @@ public class DriveForwardCommand extends NRCommand {
 	public static final double KV = 0;
 	public static final double KD = 0;
 	public static final double KP_THETA = 0;
-	public static final double MAX_SPEED_PERCENTAGE = 0;
+	public static final double MAX_SPEED_PERCENTAGE = 1;
 
 	/**
 	 * Drive forward
