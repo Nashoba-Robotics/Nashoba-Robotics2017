@@ -6,7 +6,6 @@ import java.util.TimerTask;
 
 import com.ctre.CANTalon;
 
-import edu.nr.lib.Units;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
 

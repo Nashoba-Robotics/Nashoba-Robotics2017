@@ -1,7 +1,5 @@
 package edu.nr.lib.units;
 
-import edu.nr.lib.units.Angle.Unit;
-
 public class Time {
 	
 	public static final Time ZERO = new Time(0, Unit.defaultUnit);

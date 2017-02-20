@@ -2,7 +2,6 @@ package edu.nr.robotics.subsystems.agitator;
 
 import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.robotics.OI;
-import edu.nr.robotics.subsystems.shooter.Shooter;
 
 public class AgitatorRunCommand extends JoystickCommand {
 	

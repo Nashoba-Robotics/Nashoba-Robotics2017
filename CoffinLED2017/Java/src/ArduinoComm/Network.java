@@ -57,7 +57,7 @@ public class Network implements ITableListener {
                     @Override
                     public void connected(IRemote iRemote)
                     {
-                        Arduino.getInstance().display.setRobotStatus("Connected to Robot", true);
+                        Arduino.display.setRobotStatus("Connected to Robot", true);
                         if(connectionListener != null)
                             connectionListener.onConnectionStateChanged(true);
                     }
@@ -65,7 +65,7 @@ public class Network implements ITableListener {
                     @Override
                     public void disconnected(IRemote iRemote)
                     {
-                        Arduino.getInstance().display.setRobotStatus("Not Connected to Robot", false);
+                        Arduino.display.setRobotStatus("Not Connected to Robot", false);
                         if(connectionListener != null)
                             connectionListener.onConnectionStateChanged(false);
                     }

@@ -4,8 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.function.Function;
 
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;

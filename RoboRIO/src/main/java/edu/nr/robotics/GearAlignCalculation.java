@@ -1,13 +1,10 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.NRMath;
-import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Distance;
-import edu.nr.lib.units.Angle.Unit;
 import edu.nr.lib.units.Time;
 
 public class GearAlignCalculation implements NetworkingDataTypeListener {

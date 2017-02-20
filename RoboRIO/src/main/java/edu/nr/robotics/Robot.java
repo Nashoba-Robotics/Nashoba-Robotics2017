@@ -37,6 +37,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+	private static Robot singleton;
+	
+	public static Robot getInstance() {
+		return singleton;
+	}
+	
 	Command autonomousCommand;
 	SendableChooser<Command> autoSpotChooser = new SendableChooser<>();
 	SendableChooser<Boolean> autoShootChooser = new SendableChooser<>();
@@ -47,15 +53,14 @@ public class Robot extends IterativeRobot {
 	SendableChooser<SideOfField> sideChooser = new SendableChooser<>();
 	
 	public static Compressor robotCompressor = new Compressor();
-	
-	private static boolean isAuto;
-	
+		
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
+		singleton = this;
 		CameraServer.getInstance().startAutomaticCapture();
 
 		autoChooserInit();
@@ -160,8 +165,6 @@ public class Robot extends IterativeRobot {
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
-		
-		this.isAuto = true;
 	}
 
 	/**
@@ -172,8 +175,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		new CancelAllCommand().start();
-		
-		this.isAuto = false;
 	}
 
 	/**
@@ -215,9 +216,5 @@ public class Robot extends IterativeRobot {
 		Periodic.runAll();
 		SmartDashboardSource.runAll();
 		SmartDashboard.putData(RobotDiagram.getInstance());
-	}
-	
-	public static boolean isAuto() {
-		return isAuto;
 	}
 }
