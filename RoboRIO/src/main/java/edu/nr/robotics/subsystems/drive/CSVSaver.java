@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Time;
+
 public class CSVSaver {
 
 	boolean enabled = false;
@@ -22,14 +25,11 @@ public class CSVSaver {
 	
 	private synchronized static void init()  {
 		if(singleton == null) {
-			ArrayList<Function<Drive, Double>> l = new ArrayList<>();
-			l.add(Drive::getLeftSpeed);
-			l.add(Drive::getRightSpeed);
-			singleton = new CSVSaver(l);
+			singleton = new CSVSaver();
 		}
 	}
 	
-	public CSVSaver(ArrayList<Function<Drive, Double>> list) {
+	public CSVSaver() {
 		FileWriter fw;
 		PrintWriter out;
 		BufferedWriter buffer;
@@ -45,10 +45,9 @@ public class CSVSaver {
 						while (enabled) {
 							out.print(edu.wpi.first.wpilibj.Timer.getFPGATimestamp());
 							out.print(",");
-							for(Function<Drive, Double> f:list) {
-								out.print(f.apply(Drive.getInstance()));
-								out.print(",");
-							}
+							out.print(Drive.getInstance().getLeftSpeed().get(Distance.Unit.METER, Time.Unit.SECOND));
+							out.print(",");
+							out.print(Drive.getInstance().getRightSpeed().get(Distance.Unit.METER, Time.Unit.SECOND));
 							out.print('\n');
 							out.flush();
 							edu.wpi.first.wpilibj.Timer.delay(0.01);

@@ -5,15 +5,17 @@ import edu.nr.lib.units.Angle.Unit;
 public class Time {
 	
 	public static final Time ZERO = new Time(0, Unit.defaultUnit);
+	public static final Time ONE_SECOND = new Time(1, Unit.SECOND);
 	private double val;
 	private Unit type;
 	
 	public enum Unit {
-		SECOND, MINUTE, MILLISECOND;
+		SECOND, MINUTE, MILLISECOND, HUNDRED_MILLISECOND;
 		
 		public static final Unit defaultUnit = SECOND;
 		
 		private static final double MILLISECONDS_PER_SECOND = 1000;
+		private static final double HUNDRED_MILLISECONDS_PER_SECOND = 10;
 		private static final double MINUTES_PER_SECOND = 1/60.0;
 				
 		static public double convertToDefault(double val, Unit fromType) {
@@ -25,6 +27,9 @@ public class Time {
 			}
 			if(fromType == Unit.MILLISECOND) {
 				return val / MILLISECONDS_PER_SECOND;
+			}
+			if(fromType == HUNDRED_MILLISECOND) {
+				return val / HUNDRED_MILLISECONDS_PER_SECOND;
 			}
 			return 0;
 		}
@@ -38,6 +43,9 @@ public class Time {
 			}
 			if(toType == Unit.MILLISECOND) {
 				return MILLISECONDS_PER_SECOND * val;
+			}
+			if(toType == Unit.HUNDRED_MILLISECOND) {
+				return val * HUNDRED_MILLISECONDS_PER_SECOND;
 			}
 			return 0;
 		}

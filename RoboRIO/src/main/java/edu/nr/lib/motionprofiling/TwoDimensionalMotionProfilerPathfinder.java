@@ -146,11 +146,6 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				}
 				*/
 				
-				//source.setPIDSourceType(PIDSourceType.kRate);
-				//SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + -(outputLeft / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
-				//SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight()  + ":" + (outputRight / (RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254)));
-				//source.setPIDSourceType(PIDSourceType.kDisplacement);
-				
 				double deltaT = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - lastTime;
 				
 				//System.out.println("Time since last update: " + deltaT);

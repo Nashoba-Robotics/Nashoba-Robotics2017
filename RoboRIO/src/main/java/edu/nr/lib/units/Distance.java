@@ -12,7 +12,7 @@ public class Distance {
 	public enum Unit {
 		FOOT, INCH, DRIVE_ROTATION, METER;
 		
-		private static final Unit defaultUnit = INCH;
+		public static final Unit defaultUnit = INCH;
 		
 		private static final double DRIVE_ROTATION_PER_INCH = Drive.WHEEL_DIAMETER_INCHES * Math.PI;
 		private static final double FOOT_PER_INCH = 1.0/Units.INCHES_PER_FOOT;
@@ -102,6 +102,10 @@ public class Distance {
 		} else {
 			return false;
 		}
+	}
+
+	public double div(Distance distance) {
+		return this.get(Unit.defaultUnit) / distance.get(Unit.defaultUnit);
 	}
 
 }

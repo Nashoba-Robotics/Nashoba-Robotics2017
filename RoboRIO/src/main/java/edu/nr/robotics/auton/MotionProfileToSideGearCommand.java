@@ -6,6 +6,7 @@ import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Time;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 import jaci.pathfinder.Waypoint;
@@ -49,7 +50,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 		if (Drive.getInstance().getCurrentGear() == Gear.low) {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
-					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
+					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND)
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,
@@ -58,7 +59,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 		} else {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
-					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
+					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND)
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,

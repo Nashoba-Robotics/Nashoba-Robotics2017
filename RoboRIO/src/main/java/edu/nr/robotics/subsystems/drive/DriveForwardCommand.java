@@ -6,6 +6,7 @@ import edu.nr.lib.motionprofiling.OneDimensionalMotionProfiler;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
 import edu.nr.lib.motionprofiling.OneDimensionalTrajectorySimple;
 import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Time;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 
 public class DriveForwardCommand extends NRCommand {
@@ -39,13 +40,13 @@ public class DriveForwardCommand extends NRCommand {
 				KP_THETA);
 		if (Drive.getInstance().getCurrentGear() == Gear.low) {
 			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
-					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES,
-					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES * MAX_SPEED_PERCENTAGE,
+					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND),
+					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES));
 		} else {
 			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
-					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES,
-					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES * MAX_SPEED_PERCENTAGE,
+					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND),
+					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES));
 		}
 		profiler.enable();
