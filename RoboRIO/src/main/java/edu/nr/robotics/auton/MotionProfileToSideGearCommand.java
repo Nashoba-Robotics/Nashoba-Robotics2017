@@ -5,6 +5,7 @@ import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Angle.Unit;
+import edu.nr.lib.units.Distance;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 import jaci.pathfinder.Waypoint;
@@ -15,8 +16,8 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	// motion profile
 
 	TwoDimensionalMotionProfilerPathfinder profiler;
-	double forwardDistance; // In meters down below, inches on input
-	double sideDistance; // In meters down below, inches on input
+	Distance forwardDistance; // In meters down below, inches on input
+	Distance sideDistance; // In meters down below, inches on input
 	Angle endHeading;
 
 	// Two-Dimensional motion profiling constants
@@ -29,17 +30,17 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	public static final double KD = 0;
 	public static final double KP_THETA = 0;
 	public static final double MAX_SPEED_PERCENTAGE = 0;
-	public static final double DISTANCE_FROM_ENDPOINT = 0; // On the path the
-															// distance away
-															// from the path
-															// endpoint that we
-															// want to stay
-															// straight for
+	
+	/**
+	 * On the path the distance away from the path endpoint that we want to stay
+	 * straight for
+	 */
+	public static final Distance DISTANCE_FROM_ENDPOINT = Distance.ZERO;
 
-	public MotionProfileToSideGearCommand(double forwardDistance, double sideDistance, Angle endHeading) {
+	public MotionProfileToSideGearCommand(Distance forwardDistance, Distance sideDistance, Angle endHeading) {
 		super(Drive.getInstance());
-		this.forwardDistance = forwardDistance / Units.INCHES_PER_METER;
-		this.sideDistance = sideDistance / Units.INCHES_PER_METER;
+		this.forwardDistance = forwardDistance;
+		this.sideDistance = sideDistance;
 		this.endHeading = endHeading;
 	}
 
@@ -64,10 +65,12 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER,
 					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
 		}
-		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0),
-				new Waypoint(forwardDistance - DISTANCE_FROM_ENDPOINT * endHeading.cos(),
-						sideDistance - DISTANCE_FROM_ENDPOINT * endHeading.sin(), endHeading.get(Unit.RADIAN)),
-				new Waypoint(forwardDistance, sideDistance, endHeading.get(Unit.RADIAN)) });
+		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0), new Waypoint(
+				forwardDistance.sub((DISTANCE_FROM_ENDPOINT.mul(endHeading.cos()))).get(Distance.Unit.DRIVE_ROTATION),
+				sideDistance.sub(DISTANCE_FROM_ENDPOINT.mul(endHeading.sin())).get(Distance.Unit.DRIVE_ROTATION),
+				endHeading.get(Unit.RADIAN)),
+				new Waypoint(forwardDistance.get(Distance.Unit.DRIVE_ROTATION),
+						sideDistance.get(Distance.Unit.DRIVE_ROTATION), endHeading.get(Unit.RADIAN)) });
 		profiler.enable();
 	}
 

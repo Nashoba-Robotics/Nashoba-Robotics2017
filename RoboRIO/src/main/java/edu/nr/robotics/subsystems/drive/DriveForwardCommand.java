@@ -5,12 +5,13 @@ import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfiler;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
 import edu.nr.lib.motionprofiling.OneDimensionalTrajectorySimple;
+import edu.nr.lib.units.Distance;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 
 public class DriveForwardCommand extends NRCommand {
 
 	OneDimensionalMotionProfiler profiler;
-	double distance; // Rotations
+	Distance distance; // Rotations
 
 	// These are the one-dimensional motion profiling values
 	// TODO: DriveForwardCommand: Find the correct constants for one-dimensional
@@ -26,11 +27,10 @@ public class DriveForwardCommand extends NRCommand {
 	 * Drive forward
 	 * 
 	 * @param distance
-	 *            The distance in inches
 	 */
-	public DriveForwardCommand(double distance) {
+	public DriveForwardCommand(Distance distance) {
 		super(Drive.getInstance());
-		this.distance = distance / Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV;
+		this.distance = distance;
 	}
 
 	@Override
@@ -38,12 +38,12 @@ public class DriveForwardCommand extends NRCommand {
 		profiler = new OneDimensionalMotionProfilerTwoMotor(Drive.getInstance(), Drive.getInstance(), KV, KA, KP, KD,
 				KP_THETA);
 		if (Drive.getInstance().getCurrentGear() == Gear.low) {
-			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance,
+			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
 					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV,
 					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV));
 		} else {
-			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance,
+			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
 					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV,
 					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV));

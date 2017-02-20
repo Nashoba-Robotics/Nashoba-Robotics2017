@@ -1,6 +1,7 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Distance;
 
 public class FieldMap {
 
@@ -10,16 +11,16 @@ public class FieldMap {
 	 * 
 	 * TODO: Field: Get the distance from the robot to the center peg in auto
 	 */
-	public static final double DISTANCE_TO_CENTER_PEG = 0;
+	public static final Distance DISTANCE_TO_CENTER_PEG = Distance.ZERO;
 	/**
 	 * The dimensions to the pegs in auto that would be used in inches or degrees
 	 * The angle to the side peg assumes
 	 * 
 	 * TODO: Field: Find the distaces to the side pegs that would be used
 	 */
-	public static final double FORWARD_DISTANCE_TO_SIDE_PEG = 0;
-	public static final double SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG = 0;
-	public static final double SIDE_DISTANCE_TO_NON_SHOOTER_SIDE_PEG = 0;
+	public static final Distance FORWARD_DISTANCE_TO_SIDE_PEG = Distance.ZERO;
+	public static final Distance SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG = Distance.ZERO;
+	public static final Distance SIDE_DISTANCE_TO_NON_SHOOTER_SIDE_PEG = Distance.ZERO;
 	public static final Angle ANGLE_TO_SIDE_PEG = new Angle(45, Angle.Unit.DEGREE);
 	/**
 	 * The dimensions to the hopper in auto that would be used in inches or degrees
@@ -27,15 +28,15 @@ public class FieldMap {
 	 * 
 	 * TODO: Field: Find the distances to the hoppers that would be used
 	 */
-	public static final double FORWARD_DISTANCE_WALL_TO_HOPPER = 0;
-	public static final double SIDE_DISTANCE_WALL_TO_HOPPER = 0;
+	public static final Distance FORWARD_DISTANCE_WALL_TO_HOPPER = Distance.ZERO;
+	public static final Distance SIDE_DISTANCE_WALL_TO_HOPPER = Distance.ZERO;
 	public static final Angle ANGLE_WALL_TO_HOPPER = Angle.ZERO;
 	/**
 	 * The distances the robot would need to go from the gear to the hopper in inches
 	 * 
 	 *  TODO: Field: Find distance robot needs to drive from gear to hopper
 	 */
-	public static final double GEAR_TO_HOPPER_SIDE_DIST = 0;
-	public static final double GEAR_TO_HOPPER_FORWARD_DIST = 0;
+	public static final Distance GEAR_TO_HOPPER_SIDE_DIST = Distance.ZERO;
+	public static final Distance GEAR_TO_HOPPER_FORWARD_DIST = Distance.ZERO;
 
 }

@@ -12,7 +12,7 @@ public class ClimbCommand extends NRCommand {
 	/**
 	 * Percent voltage
 	 */
-	private static final double CLIMB_VOLTAGE = 0; //TODO: Climber: Find climb speed
+	private static final double CLIMB_VOLTAGE = 0; //TODO: Climber: Find climb percent voltage
 
 	public ClimbCommand() {
 		super(Drive.getInstance());

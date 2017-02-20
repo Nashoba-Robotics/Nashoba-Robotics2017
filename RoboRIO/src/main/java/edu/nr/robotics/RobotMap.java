@@ -52,7 +52,7 @@ public class RobotMap {
 	 * Camera offsets are offset from turret when turret is at 0 degrees (facing driving direction of robot)
 	 */
 	public static final double Y_CAMERA_OFFSET = 0; //TODO: Turret: Get y camera offset
-	public static final double X_CAMERA_OFFSET = 0; //TODO: Turret: Get x camera offset
+	public static final double X_CAMERA_OFFSET = 0;
 	public static final double X_TURRET_OFFSET = 5.465;
 	public static final double Y_TURRET_OFFSET = -7;
 

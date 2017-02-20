@@ -101,8 +101,8 @@ public class Robot extends IterativeRobot {
 		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle");
 		NetworkingDataType turretDistance = new NetworkingDataType('d', "distance");
 		NetworkingDataType turretTimeStamp = new NetworkingDataType('t', "time");
-		turret_cam_types.add(turretAngle); //TODO: Coprocessor: Get angle sign and units
-		turret_cam_types.add(turretDistance); //TODO: Coprocessor: Get distance unit
+		turret_cam_types.add(turretAngle); //TODO: Turret Coprocessor: Get angle sign and units
+		turret_cam_types.add(turretDistance); //TODO: Turret Coprocessor: Get distance unit
 		turret_cam_types.add(turretTimeStamp);
 		Num.turret.init(turret_cam_types, TCPServer.defaultPort);
 		
