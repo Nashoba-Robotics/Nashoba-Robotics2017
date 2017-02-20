@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,12 +20,17 @@ public class Agitator extends NRSubsystem {
 	/**
 	 * The percent voltage (-1 to 1) for the agitator to run at when turned on
 	 */
-	public static final double RUN_PERCENT = 0;
+	public static final double HIGH_RUN_PERCENT = 0;
+	
+	/**
+	 * The percent voltage (-1 to 1) for the agitator to run at when shooter is off
+	 */
+	public static final double LOW_RUN_PERCENT = 0;
 	
 	/**
 	 * The percent voltage (-1 to 1) for the agitator to run at when reversing
 	 */
-	public static final double REVERSE_PERCENT = -RUN_PERCENT;
+	public static final double REVERSE_PERCENT = -HIGH_RUN_PERCENT;
 	
 	private Agitator() {
 		if (EnabledSubsystems.AGITATOR_ENABLED) {
@@ -73,7 +79,6 @@ public class Agitator extends NRSubsystem {
 
 	@Override
 	public void periodic() {
-		
 	}
 
 	@Override
