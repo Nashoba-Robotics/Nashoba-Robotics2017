@@ -1,6 +1,8 @@
 package edu.nr.robotics.subsystems.agitator;
 
 import edu.nr.lib.commandbased.JoystickCommand;
+import edu.nr.robotics.OI;
+import edu.nr.robotics.subsystems.shooter.Shooter;
 
 public class AgitatorRunCommand extends JoystickCommand {
 	
@@ -10,7 +12,11 @@ public class AgitatorRunCommand extends JoystickCommand {
 	
 	@Override
 	public void onStart() {
-		Agitator.getInstance().setMotorVoltage(Agitator.RUN_PERCENT);
+		if (OI.getInstance().isShooterOn()) {
+			Agitator.getInstance().setMotorVoltage(Agitator.HIGH_RUN_PERCENT);
+		} else {
+			Agitator.getInstance().setMotorVoltage(Agitator.LOW_RUN_PERCENT);
+		}
 	}
 
 	@Override

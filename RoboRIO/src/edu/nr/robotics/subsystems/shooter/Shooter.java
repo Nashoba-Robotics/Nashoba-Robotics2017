@@ -98,7 +98,7 @@ public class Shooter extends NRSubsystem {
 			if(talon.getControlMode() == TalonControlMode.Speed) {
 				talon.set(motorSetpoint);
 			} else {
-				talon.set(motorSetpoint/MAX_SPEED);
+				talon.set(motorSetpoint / MAX_SPEED);
 			}
 		}
 	}

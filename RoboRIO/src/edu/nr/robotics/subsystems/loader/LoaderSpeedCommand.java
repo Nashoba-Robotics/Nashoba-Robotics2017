@@ -4,19 +4,21 @@ import edu.nr.lib.commandbased.NRCommand;
 
 public class LoaderSpeedCommand extends NRCommand{
 
-	double speed;
+	double lowSpeed;
+	double highSpeed;
 	
 	/**
 	 * 
 	 * @param speed Percent voltage
 	 */
-	public LoaderSpeedCommand(double speed) {
+	public LoaderSpeedCommand(double lowSpeed, double highSpeed) {
 		super(Loader.getInstance());
-		this.speed = speed;
+		this.lowSpeed = lowSpeed;
 	}
 	
 	@Override
 	public void onStart() {
-		Loader.getInstance().setMotorVoltage(speed);
+		Loader.getInstance().setLowMotorVoltage(lowSpeed);
+		Loader.getInstance().setHighMotorVoltage(highSpeed);
 	}
 }
