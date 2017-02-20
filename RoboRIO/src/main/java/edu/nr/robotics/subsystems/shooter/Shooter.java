@@ -1,16 +1,17 @@
-package src.main.java.edu.nr.robotics.subsystems.shooter;
+package edu.nr.robotics.subsystems.shooter;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-import src.main.java.edu.nr.lib.Units;
-import src.main.java.edu.nr.lib.commandbased.DoNothingJoystickCommand;
-import src.main.java.edu.nr.lib.commandbased.NRSubsystem;
-import src.main.java.edu.nr.lib.units.AngularSpeed;
-import src.main.java.edu.nr.robotics.RobotMap;
-import src.main.java.edu.nr.robotics.subsystems.EnabledSubsystems;
-import src.main.java.edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.nr.lib.Units;
+import edu.nr.lib.commandbased.DoNothingJoystickCommand;
+import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.lib.units.AngularSpeed;
+import edu.nr.robotics.OI;
+import edu.nr.robotics.RobotMap;
+import edu.nr.robotics.subsystems.EnabledSubsystems;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends NRSubsystem {
 
@@ -98,11 +99,7 @@ public class Shooter extends NRSubsystem {
 			if(talon.getControlMode() == TalonControlMode.Speed) {
 				talon.set(motorSetpoint.get(AngularSpeed.Unit.RPM));
 			} else {
-<<<<<<< HEAD:RoboRIO/src/edu/nr/robotics/subsystems/shooter/Shooter.java
-				talon.set(motorSetpoint / MAX_SPEED);
-=======
 				talon.set(motorSetpoint.div(MAX_SPEED));
->>>>>>> daac497fd71871e71d7cc9995a54de846af978bb:RoboRIO/src/main/java/edu/nr/robotics/subsystems/shooter/Shooter.java
 			}
 		}
 	}

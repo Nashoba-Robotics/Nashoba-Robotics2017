@@ -1,6 +1,6 @@
-package src.main.java.edu.nr.lib;
+package edu.nr.lib;
 
-import wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
