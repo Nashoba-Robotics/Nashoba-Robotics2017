@@ -7,6 +7,7 @@ import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.turret.Turret;
@@ -25,18 +26,18 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	 */
 	AngularSpeed shooterSpeed = AngularSpeed.ZERO;
 	
-	private long lastSeenTimeStamp;
+	private Time lastSeenTimeStamp;
 	private Angle lastSeenAngle;
 	private double lastSeenDistance;
 	
-	private long timeOfLastData;
+	private Time timeOfLastData;
 	
 	/**
 	 * The amount of time to wait without a picture before sweeping
 	 * 
 	 * TODO: General: Determine the max wait time before sweeping turret
 	 */
-	public static final long MIN_TRACKING_WAIT_TIME = 0;
+	public static final Time MIN_TRACKING_WAIT_TIME = Time.ZERO;
 	
 	private static AutoTrackingCalculation singleton;
 	
@@ -60,9 +61,9 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		} else if(type.identifier == 'd') {
 			lastSeenDistance = value;
 		} else if(type.identifier == 't') {
-			lastSeenTimeStamp = (long) value;
+			lastSeenTimeStamp = new Time(value, Time.Unit.MILLISECOND);
 		}
-		timeOfLastData = getCurrentTimeMillis();
+		timeOfLastData = Time.getCurrentTime();
 		
 		Angle thetaYCamera = NRMath.atan2(RobotMap.Y_CAMERA_OFFSET, RobotMap.X_CAMERA_OFFSET);
 		Angle thetaXTurret = NRMath.atan2(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
@@ -137,11 +138,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		return shooterSpeed;
 	}
 	
-	private long getCurrentTimeMillis() {
-		return (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * Units.MILLISECONDS_PER_SECOND);
-	}
-	
 	public boolean canSeeTarget() {
-		return (getCurrentTimeMillis() - timeOfLastData) < AutoTrackingCalculation.MIN_TRACKING_WAIT_TIME;
+		return Time.getCurrentTime().sub(timeOfLastData).lessThan(AutoTrackingCalculation.MIN_TRACKING_WAIT_TIME);
 	}
 }

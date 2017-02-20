@@ -9,6 +9,7 @@ import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -218,7 +219,7 @@ public class Turret extends NRSubsystem {
 	 * @param deltaTime how long ago to look, in milliseconds
 	 * @return in degrees
 	 */
-	public Angle getHistoricalPosition(long deltaTime) {
+	public Angle getHistoricalPosition(Time deltaTime) {
 		if (encoder != null)
 			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Angle.Unit.ROTATION);
 		return Angle.ZERO;

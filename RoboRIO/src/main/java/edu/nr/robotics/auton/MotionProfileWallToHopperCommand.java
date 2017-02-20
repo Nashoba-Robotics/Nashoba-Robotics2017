@@ -78,13 +78,13 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 
 	@Override
 	public boolean isFinishedNR() {
-		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) Drive.PROFILE_TIME_THRESHOLD)
+		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD)
 				- Drive.getInstance().getLeftPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalLeftPosition((long) Drive.PROFILE_TIME_THRESHOLD * 2)
+				&& Math.abs(Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2))
 						- Drive.getInstance().getLeftPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalRightPosition((long) Drive.PROFILE_TIME_THRESHOLD)
+				&& Math.abs(Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD)
 						- Drive.getInstance().getRightPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalRightPosition((long) Drive.PROFILE_TIME_THRESHOLD * 2)
+				&& Math.abs(Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2))
 						- Drive.getInstance().getRightPosition()) < Drive.PROFILE_POSITION_THRESHOLD)
 			return true;
 		return false;

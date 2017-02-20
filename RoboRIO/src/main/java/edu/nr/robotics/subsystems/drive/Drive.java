@@ -6,6 +6,8 @@ import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.sensorhistory.TalonEncoder;
+import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Time;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 
@@ -154,7 +156,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * TODO: Drive Motion Profiling: Get time threshold
 	 */
-	public static final double PROFILE_TIME_THRESHOLD = 0;
+	public static final Time PROFILE_TIME_THRESHOLD = Time.ZERO;
 	
 	private Drive() {
 		//TODO: Drive: Find phase of motors
@@ -366,7 +368,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * @param deltaTime How long ago to look
 	 * @return current position of talon
 	 */
-	public double getHistoricalLeftPosition(long deltaTime) {
+	public double getHistoricalLeftPosition(Time deltaTime) {
 		if (leftEncoder != null)
 			return leftEncoder.getPosition(deltaTime);
 		return 0;
@@ -378,7 +380,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * @param deltaTime How long ago to look
 	 * @return current position of the talon
 	 */
-	public double getHistoricalRightPosition(long deltaTime) {
+	public double getHistoricalRightPosition(Time deltaTime) {
 		if (rightEncoder != null)
 			return rightEncoder.getPosition(deltaTime);
 		return 0;
@@ -412,9 +414,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * @param deltaTime How long ago to look
 	 * @return The past speed of the encoder
 	 */
-	public double getHistoricalLeftSpeed(long deltaTime) {
+	public double getHistoricalLeftSpeed(Time deltaTime) {
 		if (leftEncoder != null)
-			return leftEncoder.getVelocity(deltaTime);
+			return leftEncoder.getVelocity(deltaTime).get(AngularSpeed.Unit.RPM);
 		return 0;
 	}
 	
@@ -424,9 +426,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * @param deltaTime How long ago to look
 	 * @return The past speed of the encoder
 	 */
-	public double getHistoricalRightSpeed(long deltaTime) {
+	public double getHistoricalRightSpeed(Time deltaTime) {
 		if (rightEncoder != null)
-			return rightEncoder.getVelocity(deltaTime);
+			return rightEncoder.getVelocity(deltaTime).get(AngularSpeed.Unit.RPM);
 		return 0;
 	}
 

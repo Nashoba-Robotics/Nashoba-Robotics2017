@@ -1,10 +1,13 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.NRMath;
 import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Angle.Unit;
+import edu.nr.lib.units.Time;
 
 public class GearAlignCalculation implements NetworkingDataTypeListener {
 
@@ -22,10 +25,10 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	Angle turnAngle = Angle.ZERO;
 	double driveDistance = 0;
 	
-	private double lastSeenAngle;
+	private Angle lastSeenAngle;
 	private double lastSeenDistance;
 	
-	private long timeOfLastData;
+	private Time timeOfLastData;
 	
 	private static GearAlignCalculation singleton;
 	
@@ -44,14 +47,14 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	@Override
 	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
 		if(type.identifier == 'a') {
-			lastSeenAngle = value;
+			lastSeenAngle = new Angle(value, Angle.Unit.DEGREE);
 		} else if(type.identifier == 'd') {
 			lastSeenDistance = value;
 		}
-		timeOfLastData = getCurrentTimeMillis();
+		timeOfLastData = Time.getCurrentTime();
 	
-		driveDistance = Math.hypot(lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y, lastSeenDistance * Math.sin(lastSeenAngle)) - DISTANCE_TO_STOP_FROM_GEAR;
-		turnAngle = new Angle(Math.atan(lastSeenDistance * Math.sin(lastSeenAngle) / (lastSeenDistance * Math.cos(lastSeenAngle) + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y)), Unit.RADIAN);
+		driveDistance = Math.hypot(lastSeenDistance * lastSeenAngle.cos() + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y, lastSeenDistance * lastSeenAngle.sin()) - DISTANCE_TO_STOP_FROM_GEAR;
+		turnAngle = NRMath.atan2(lastSeenDistance * lastSeenAngle.sin(),lastSeenDistance * lastSeenAngle.cos() + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y);
 	}
 	
 	public double getDistToDrive() {
@@ -62,11 +65,7 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 		return turnAngle;
 	}
 	
-	private long getCurrentTimeMillis() {
-		return (long) (edu.wpi.first.wpilibj.Timer.getFPGATimestamp() * Units.MILLISECONDS_PER_SECOND);
-	}
-	
 	public boolean canSeeTarget() {
-		return (getCurrentTimeMillis() - timeOfLastData) < AutoTrackingCalculation.MIN_TRACKING_WAIT_TIME;
+		return Time.getCurrentTime().sub(timeOfLastData).lessThan(AutoTrackingCalculation.MIN_TRACKING_WAIT_TIME);
 	}
 }

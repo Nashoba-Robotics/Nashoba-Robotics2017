@@ -6,6 +6,7 @@ import com.kauailabs.sf2.orientation.OrientationHistory;
 
 import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Time;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -62,8 +63,9 @@ public class NavX implements Periodic {
 	 * @param deltaTime how far back to look, in milliseconds. Must be positive.
 	 * @return
 	 */
-	public Angle getHistoricalYaw(long deltaTime) {
-        long navx_timestamp = ahrs.getLastSensorTimestamp() - deltaTime;
+	public Angle getHistoricalYaw(Time deltaTime) {
+		long dt = (long) deltaTime.get(Time.Unit.MILLISECOND);
+        long navx_timestamp = ahrs.getLastSensorTimestamp() - dt;
 		return new Angle(orientation_history.getYawDegreesAtTime(navx_timestamp), Angle.Unit.DEGREE);
 	}
 

@@ -9,7 +9,7 @@ public class AngularSpeed {
 	public enum Unit {
 		DEGREEPERSECOND, RPM, RPS;
 		
-		private static final Unit defaultUnit = RPS;
+		public static final Unit defaultUnit = RPS;
 		
 		private static final double DEGREEPERSECOND_PER_RPS = 1/360.0;
 		private static final double RPM_PER_RPS = 60;

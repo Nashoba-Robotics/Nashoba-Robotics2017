@@ -14,7 +14,7 @@ public class Angle {
 		private static final double ROTATIONS_PER_DEGREE = 1/360.0;
 		private static final double RADIANS_PER_DEGREE = 2*Math.PI / 360.0;
 				
-		static public double convertToDefault(double val, Unit fromType) {
+		static private double convertToDefault(double val, Unit fromType) {
 			if(fromType == Unit.DEGREE) {
 				return val;
 			}
@@ -27,7 +27,7 @@ public class Angle {
 			return 0;
 		}
 		
-		static public double convertFromDefault(double val, Unit toType) {
+		static private double convertFromDefault(double val, Unit toType) {
 			if(toType == Unit.DEGREE) {
 				return val;
 			}
@@ -91,6 +91,15 @@ public class Angle {
 	
 	public Angle abs() {
 		return new Angle(Math.abs(this.get(Unit.defaultUnit)), Unit.defaultUnit);
+	}
+	
+	@Override
+	public boolean equals(Object otherAngle) {
+		if(otherAngle instanceof Angle) {
+			return this.get(Unit.defaultUnit) == ((Angle) otherAngle).get(Unit.defaultUnit);
+		} else {
+			return false;
+		}
 	}
 
 }
