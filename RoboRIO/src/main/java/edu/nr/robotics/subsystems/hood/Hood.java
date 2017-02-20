@@ -8,6 +8,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.AngularAcceleration;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle.Unit;
@@ -58,10 +59,10 @@ public class Hood extends NRSubsystem {
 	public static final Angle SHOOT_THRESHOLD = new Angle(0.2, Angle.Unit.DEGREE);
 
 	/**
-	 * The max acceleration of the hood, in degrees per second per second
+	 * The max acceleration of the hood
 	 * TODO: Hood: Find max acceleration
 	 */
-	public static final double MAX_ACCELERATION = 0;
+	public static final AngularAcceleration MAX_ACCELERATION = AngularAcceleration.ZERO;
 
 	/**
 	 * The max speed of the hood, in degrees per second
@@ -92,7 +93,7 @@ public class Hood extends NRSubsystem {
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setProfile(OPERATOR_CONTROL);
 			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(AngularSpeed.Unit.RPM));
-			talon.setMotionMagicAcceleration(MAX_ACCELERATION / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
+			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(AngularSpeed.Unit.RPM, Time.Unit.SECOND));
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Hood: Find phase
 			talon.enable();

@@ -8,6 +8,7 @@ import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.AngularAcceleration;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle.Unit;
@@ -80,7 +81,7 @@ public class Turret extends NRSubsystem {
 	 * The max acceleration of the turret, in degrees per second per second
 	 * TODO: Turret: Find max acceleration
 	 */
-	public static final double MAX_ACCELERATION = 0;
+	public static final AngularAcceleration MAX_ACCELERATION = AngularAcceleration.ZERO;
 
 	/**
 	 * The max speed of the turret, in degrees per second
@@ -110,7 +111,7 @@ public class Turret extends NRSubsystem {
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(AngularSpeed.Unit.RPM));
-			talon.setMotionMagicAcceleration(MAX_ACCELERATION / Units.DEGREES_PER_ROTATION * Units.SECONDS_PER_MINUTE);
+			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(AngularSpeed.Unit.RPM, Time.Unit.SECOND));
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Turret: Find phase
 			talon.enable();
