@@ -12,7 +12,7 @@
 #define END_LED 'e'
 #define TOT_LEN 4 + (3*LED_COUNT)
 
-#define LED_NUM 6
+#define LED_NUM 8
 
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(LED_COUNT, PIN, NEO_GRB + NEO_KHZ800);
@@ -21,9 +21,13 @@ int totLen = TOT_LEN;
 char states[LED_COUNT][3];//2d array LED_COUNT x 3
 char message[TOT_LEN];
 
-int leds[LED_NUM] = {1, 2, 3, 4, 5, 6};
+int leds[LED_NUM] = {1, 2, 3, 4, 5, 6, 7, 8};
 
 double globTotTime = 0, globTime = 0, prevTime = 0, deltaTime = 0;
+
+//commands
+String commands[] = {"echo", "lcdBacklight", "lcdPrint", "clearLcd", "clearLeds", "setLedStrip", "countDown", "countDownTwo", "realGameTimer", "quit", "setTimer", "setLed"};
+int numCommands = 12;
 
 //parsing structs
 typedef struct intStr{
@@ -45,7 +49,7 @@ typedef struct paramStr{
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600);  
   lcd.begin(16, 2);
 
   pinMode(REDLITE, OUTPUT);
@@ -53,6 +57,8 @@ void setup() {
   pinMode(BLUELITE, OUTPUT);
   
   Serial.println("Arduino ready->");
+  Serial.println("Commands:");
+  for(int i = 0; i < numCommands; i++) Serial.println(commands[i]);
 
   strip.begin();
 
@@ -82,7 +88,6 @@ void loop() {
 
 void serialComms(char delim) {
   String rawStr = "null";
-  String commands[] = {"echo", "lcdBacklight", "lcdPrint", "clearLcd", "clearLeds", "setLedStrip", "countDown", "countDownTwo", "realGameTimer", "quit", "setTimer", "setLed"};
   if(Serial.available()) rawStr = Serial.readStringUntil(delim);
   else return;
   String command = parseCommand(rawStr);
