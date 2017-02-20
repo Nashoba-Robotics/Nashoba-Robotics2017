@@ -54,7 +54,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER,
-					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
+					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER));
 		} else {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
@@ -63,7 +63,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER
 							* MAX_SPEED_PERCENTAGE,
 					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER,
-					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER / Units.INCHES_PER_METER, Drive.WHEEL_BASE);
+					Drive.TICKS_PER_REV, Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER));
 		}
 		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0), new Waypoint(
 				forwardDistance.sub((DISTANCE_FROM_ENDPOINT.mul(endHeading.cos()))).get(Distance.Unit.DRIVE_ROTATION),
@@ -81,16 +81,14 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 
 	@Override
 	public boolean isFinishedNR() {
-		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD)
-				- Drive.getInstance().getLeftPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2))
-						- Drive.getInstance().getLeftPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD)
-						- Drive.getInstance().getRightPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2))
-						- Drive.getInstance().getRightPosition()) < Drive.PROFILE_POSITION_THRESHOLD)
-			return true;
-		return false;
+		return Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD).abs().sub(Drive.getInstance().getLeftPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
+				&& Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).abs().sub(Drive.getInstance().getLeftPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
+				&& Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD).abs().sub(Drive.getInstance().getRightPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
+				&& Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).abs().sub(Drive.getInstance().getRightPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD);
 	}
 
 }

@@ -7,6 +7,7 @@ import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -31,16 +32,32 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private DoubleSolenoid gearSwitcher;
 	
 	/**
-	 * The diameter of the wheels, in feet
+	 * The diameter of the wheels in inches.
+	 * 
+	 * This should not be used. Instead {@link WHEEL_DIAMETER} should be used.
 	 */
-	public static final double WHEEL_DIAMETER = (4.0 / Units.INCHES_PER_FOOT);
+	public static final double WHEEL_DIAMETER_INCHES = 4;
+
+	/**
+	 * The distance the wheel travels in a single revolution, in inches
+	 * 
+	 * This is equivalent to the circumference of the wheel
+	 * 
+	 * This should not be used. Instead {@link DISTANCE_PER_REV} should be used.
+	 */
+	public static final double DISTANCE_PER_REV_INCHES = 4 * Math.PI;
+
+	/**
+	 * The diameter of the wheels
+	 */
+	public static final Distance WHEEL_DIAMETER = new Distance(WHEEL_DIAMETER_INCHES, Distance.Unit.INCH);
 	
 	/**
-	 * The distance the wheel travels in a single revolution, in feet
+	 * The distance the wheel travels in a single revolution
 	 * 
 	 * This is equivalent to the circumference of the wheel
 	 */
-	static final double DISTANCE_PER_REV = Math.PI * WHEEL_DIAMETER;
+	static final Distance DISTANCE_PER_REV = WHEEL_DIAMETER.mul(Math.PI);
 	
 	/**
 	 * The max driving speed of the robot in low gear, in feet per second
@@ -69,17 +86,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public static final double MAX_JERK = 0;
 	
 	// TODO: Drive: Get distance between left and right wheels
-	public static final double WHEEL_BASE = 0; //In inches
+	public static final Distance WHEEL_BASE = Distance.ZERO;
 			
 	/**
 	 * The maximum speed of the robot in low gear, in rotations per minute
 	 */
-	private static final double MAX_LOW_GEAR_RPM = Drive.MAX_LOW_GEAR_SPEED / DISTANCE_PER_REV * Units.SECONDS_PER_MINUTE;
+	private static final double MAX_LOW_GEAR_RPM = Drive.MAX_LOW_GEAR_SPEED / DISTANCE_PER_REV.get(Distance.Unit.FOOT) * Units.SECONDS_PER_MINUTE;
 
 	/**
 	 * The maximum speed of the robot in high gear, in rotations per minute
 	 */
-	private static final double MAX_HIGH_GEAR_RPM = Drive.MAX_HIGH_GEAR_SPEED / DISTANCE_PER_REV * Units.SECONDS_PER_MINUTE;
+	private static final double MAX_HIGH_GEAR_RPM = Drive.MAX_HIGH_GEAR_SPEED / DISTANCE_PER_REV.get(Distance.Unit.FOOT) * Units.SECONDS_PER_MINUTE;
 
 	/**
 	 * The number of encoder ticks per wheel revolution
@@ -149,7 +166,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * Position difference compared to end profiler
 	 * TODO: Drive Motion Profiling: Get position threshold
 	 */
-	public static final double PROFILE_POSITION_THRESHOLD = 0;
+	public static final Distance PROFILE_POSITION_THRESHOLD = Distance.ZERO;
 
 	/**
 	 * Delta time checked for to compare talon positions to previous positions to end profiler
@@ -345,10 +362,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * @return current position of the talon
 	 */
-	public double getLeftPosition() {
+	public Distance getLeftPosition() {
 		if(leftTalon != null)
-			return leftTalon.getPosition();
-		return 0;
+			return new Distance(leftTalon.getPosition(), Distance.Unit.DRIVE_ROTATION);
+		return Distance.ZERO;
 	}
 	
 	/**
@@ -356,10 +373,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * @return current position of the talon
 	 */
-	public double getRightPosition() {
+	public Distance getRightPosition() {
 		if(rightTalon != null)
-			return rightTalon.getPosition();
-		return 0;
+			return new Distance(rightTalon.getPosition(), Distance.Unit.DRIVE_ROTATION);
+		return Distance.ZERO;
 	}
 	
 	/**
@@ -368,10 +385,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * @param deltaTime How long ago to look
 	 * @return current position of talon
 	 */
-	public double getHistoricalLeftPosition(Time deltaTime) {
+	public Distance getHistoricalLeftPosition(Time deltaTime) {
 		if (leftEncoder != null)
-			return leftEncoder.getPosition(deltaTime);
-		return 0;
+			return new Distance(leftEncoder.getPosition(deltaTime), Distance.Unit.DRIVE_ROTATION);
+		return Distance.ZERO;
 	}
 	
 	/**
@@ -380,10 +397,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * @param deltaTime How long ago to look
 	 * @return current position of the talon
 	 */
-	public double getHistoricalRightPosition(Time deltaTime) {
+	public Distance getHistoricalRightPosition(Time deltaTime) {
 		if (rightEncoder != null)
-			return rightEncoder.getPosition(deltaTime);
-		return 0;
+			return new Distance(rightEncoder.getPosition(deltaTime), Distance.Unit.DRIVE_ROTATION);
+		return Distance.ZERO;
 	}
 
 	/**
@@ -557,8 +574,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			}
 			if(EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putString("Drive Voltage", leftTalon.getOutputVoltage() + " : " + rightTalon.getOutputVoltage());
-				SmartDashboard.putNumber("Drive Left Position", getLeftPosition());
-				SmartDashboard.putNumber("Drive Right Position", getRightPosition());
+				SmartDashboard.putNumber("Drive Left Position", getLeftPosition().get(Distance.Unit.INCH));
+				SmartDashboard.putNumber("Drive Right Position", getRightPosition().get(Distance.Unit.INCH));
 				SmartDashboard.putString("Current Drive Gear", getCurrentGear().toString());
 			}
 		}
@@ -605,7 +622,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (type == PIDSourceType.kRate) {
 			return getInstance().getLeftSpeed() / Units.SECONDS_PER_MINUTE;
 		} else {
-			return getInstance().getLeftPosition();
+			return getInstance().getLeftPosition().get(Distance.Unit.DRIVE_ROTATION);
 		}
 	}
 
@@ -614,7 +631,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (type == PIDSourceType.kRate) {
 			return getInstance().getRightSpeed() / Units.SECONDS_PER_MINUTE;
 		} else {
-			return getInstance().getRightPosition();
+			return getInstance().getRightPosition().get(Distance.Unit.DRIVE_ROTATION);
 		}
 	}
 

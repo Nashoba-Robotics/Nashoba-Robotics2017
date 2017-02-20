@@ -39,29 +39,27 @@ public class DriveForwardCommand extends NRCommand {
 				KP_THETA);
 		if (Drive.getInstance().getCurrentGear() == Gear.low) {
 			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
-					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV,
-					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV));
+					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES,
+					Drive.MAX_LOW_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES * MAX_SPEED_PERCENTAGE,
+					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES));
 		} else {
 			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
-					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV,
-					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV));
+					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES,
+					Drive.MAX_HIGH_GEAR_SPEED * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES * MAX_SPEED_PERCENTAGE,
+					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV_INCHES));
 		}
 		profiler.enable();
 	}
 
 	@Override
 	public boolean isFinishedNR() {
-		if (Math.abs(Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD)
-				- Drive.getInstance().getLeftPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2))
-						- Drive.getInstance().getLeftPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD)
-						- Drive.getInstance().getRightPosition()) < Drive.PROFILE_POSITION_THRESHOLD
-				&& Math.abs(Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2))
-						- Drive.getInstance().getRightPosition()) < Drive.PROFILE_POSITION_THRESHOLD)
-			return true;
-		return false;
+		return Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD).abs().sub(Drive.getInstance().getLeftPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
+				&& Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).abs().sub(Drive.getInstance().getLeftPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
+				&& Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD).abs().sub(Drive.getInstance().getRightPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
+				&& Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).abs().sub(Drive.getInstance().getRightPosition())
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD);
 	}
 }

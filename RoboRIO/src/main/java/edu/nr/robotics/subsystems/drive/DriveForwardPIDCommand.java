@@ -1,22 +1,26 @@
 package edu.nr.robotics.subsystems.drive;
 
+import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
+
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Time;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveForwardPIDCommand extends NRCommand {
 
-	double distance; // Rotations
-	double startingPositionLeft; //Rotations
-	double startingPositionRight; //Rotations
+	Distance distance;
+	Distance startingPositionLeft;
+	Distance startingPositionRight;
 	
-	double leftPositionAccumulator = 0;
-	double rightPositionAccumulator = 0;
+	Distance leftPositionAccumulator = Distance.ZERO;
+	Distance rightPositionAccumulator = Distance.ZERO;
 	
-	double lastErrorLeft;
-	double lastErrorRight;
-	double lastTime;
+	Distance lastErrorLeft;
+	Distance lastErrorRight;
+	Time lastTime;
 
 	double KP = 0;
 	double KI = 0;
@@ -26,11 +30,10 @@ public class DriveForwardPIDCommand extends NRCommand {
 	 * Drive forward
 	 * 
 	 * @param distance
-	 *            The distance in inches
 	 */
-	public DriveForwardPIDCommand(double distance) {
+	public DriveForwardPIDCommand(Distance distance) {
 		super(Drive.getInstance());
-		this.distance = distance / Units.INCHES_PER_FOOT / Drive.DISTANCE_PER_REV;
+		this.distance = distance;
 	}
 	
 	@Override
@@ -52,33 +55,33 @@ public class DriveForwardPIDCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		double time = Timer.getFPGATimestamp();
-		double dt = time - lastTime;
+		Time time = Time.getCurrentTime();
+		Time dt = time.sub(lastTime);
 		
-		double leftError = startingPositionLeft + distance - Drive.getInstance().getLeftPosition();
-		double dLeftError = leftError - lastErrorLeft;
+		Distance leftError = startingPositionLeft.add(distance).sub(Drive.getInstance().getLeftPosition());
+		Distance dLeftError = leftError.sub(lastErrorLeft);
 		
-		double leftOutput = KP * leftError + KD * dLeftError / dt + KI * leftPositionAccumulator;
+		double leftOutput = KP * leftError.get(Distance.Unit.DRIVE_ROTATION) + KD * dLeftError.get(Distance.Unit.DRIVE_ROTATION) / dt.get(Time.Unit.SECOND) + KI * leftPositionAccumulator.get(Distance.Unit.DRIVE_ROTATION);
 
-		double rightError = startingPositionRight + distance - Drive.getInstance().getRightPosition();
-		double dRightError = rightError - lastErrorRight;
+		Distance rightError = startingPositionRight.add(distance).sub(Drive.getInstance().getRightPosition());
+		Distance dRightError = rightError.sub(lastErrorRight);
 
-		double rightOutput = KP * rightError + KD * dRightError / dt + KI * rightPositionAccumulator;
+		double rightOutput = KP * rightError.get(Distance.Unit.DRIVE_ROTATION) + KD * dRightError.get(Distance.Unit.DRIVE_ROTATION) / dt.get(Time.Unit.SECOND) + KI * rightPositionAccumulator.get(Distance.Unit.DRIVE_ROTATION);
 
 		Drive.getInstance().setMotorSpeedInPercent(leftOutput, rightOutput);
 		
 		lastErrorLeft = leftError;
 		lastErrorRight = rightError;
 		lastTime = time;
-		leftPositionAccumulator += leftError;
-		rightPositionAccumulator += rightError;
+		leftPositionAccumulator = leftPositionAccumulator.add(leftError);
+		rightPositionAccumulator = rightPositionAccumulator.add(rightError);
 	}
 
 	@Override
 	public boolean isFinishedNR() {
-		double leftError = startingPositionLeft + distance - Drive.getInstance().getLeftPosition();
-		double rightError = startingPositionRight + distance - Drive.getInstance().getRightPosition();
+		Distance leftError = startingPositionLeft.add(distance).sub(Drive.getInstance().getLeftPosition());
+		Distance rightError = startingPositionRight.add(distance).sub(Drive.getInstance().getRightPosition());
 		
-		return Math.abs(leftError) <= Drive.PROFILE_POSITION_THRESHOLD && Math.abs(rightError) <= Drive.PROFILE_POSITION_THRESHOLD;
+		return leftError.abs().lessThan(Drive.PROFILE_POSITION_THRESHOLD) && rightError.abs().lessThan(Drive.PROFILE_POSITION_THRESHOLD);
 	}
 }

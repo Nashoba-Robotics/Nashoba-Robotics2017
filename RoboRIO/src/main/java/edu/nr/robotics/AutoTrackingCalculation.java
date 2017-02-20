@@ -7,6 +7,7 @@ import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -82,12 +83,12 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		Angle histRobotOrientation = histAngleCenter.add(Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp));
 		Angle deltaAngle = NavX.getInstance().getYaw().sub(NavX.getInstance().getHistoricalYaw(lastSeenTimeStamp));
 		Angle curRobotOrientation = histRobotOrientation.add(deltaAngle);
-		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
-		double histRightPos = Drive.getInstance().getHistoricalRightPosition(lastSeenTimeStamp) * Units.DEGREES_PER_ROTATION;
+		double histLeftPos = Drive.getInstance().getHistoricalLeftPosition(lastSeenTimeStamp).get(Distance.Unit.INCH);
+		double histRightPos = Drive.getInstance().getHistoricalRightPosition(lastSeenTimeStamp).get(Distance.Unit.INCH);
 		
 		//Code until next break to get current distance and turret orientation
 		Angle theta1 = histRobotOrientation.add(Units.RIGHT_ANGLE);
-		double r = Math.max(histLeftPos, histRightPos) / deltaAngle.get(Unit.DEGREE) - (0.5 * Drive.WHEEL_BASE);
+		double r = Math.max(histLeftPos, histRightPos) / deltaAngle.get(Unit.RADIAN) - (0.5 * Drive.WHEEL_BASE.get(Distance.Unit.INCH));
 		double h = NRMath.lawOfCos(r, histDistCenter, theta1);
 		Angle theta0 = NRMath.asin(histDistCenter * theta1.sin() / h).sub(deltaAngle);
 		double curDist = NRMath.lawOfCos(h, r, theta0);
@@ -97,7 +98,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		Angle curTurretOrientation = Units.RIGHT_ANGLE.sub(NRMath.asin(curDist * theta3.sin() / curDistReal)).sub(thetaYTurret);
 		
 		//Gets average speed of two drive sides to get instantaneous speed in (inches / sec)
-		double speed = (Drive.getInstance().getLeftSpeed() + Drive.getInstance().getRightSpeed()) / 2 * (Drive.WHEEL_DIAMETER * Units.INCHES_PER_FOOT) / Units.SECONDS_PER_MINUTE;
+		double speed = (Drive.getInstance().getLeftSpeed() + Drive.getInstance().getRightSpeed()) / 2 * (Drive.WHEEL_DIAMETER_INCHES) / Units.SECONDS_PER_MINUTE;
 		double vertSpeed = speed * curRobotOrientation.cos();
 		
 		//Code until next break gets additional angle for turret to turn based on current speed
