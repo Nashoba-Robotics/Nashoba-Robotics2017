@@ -132,11 +132,11 @@ public class Turret extends NRSubsystem {
 	}
 	
 	private double addGearing(double in) {
-		return in; //TODO: Turret: Gearing
+		return in * 933.333;
 	}
 	
 	private double removeGearing(double in) {
-		return in; //TODO: Turret: Gearing
+		return in / 933.333; 
 	}
 	
 	/**

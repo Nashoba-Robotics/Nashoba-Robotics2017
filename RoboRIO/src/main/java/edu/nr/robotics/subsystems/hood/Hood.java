@@ -113,11 +113,11 @@ public class Hood extends NRSubsystem {
 	}
 	
 	private double addGearing(double in) {
-		return in; //TODO: Hood: Gearing
+		return in * 1685.71;
 	}
 	
 	private double removeGearing(double in) {
-		return in; //TODO: Hood: Gearing
+		return in / 1685.71;
 	}
 	
 	/**
