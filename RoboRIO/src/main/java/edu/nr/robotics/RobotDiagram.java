@@ -1,6 +1,8 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.hood.Hood;
@@ -36,7 +38,7 @@ public class RobotDiagram implements NamedSendable {
 	public void initTable(ITable subtable) {
 		this.table = subtable;
 		if (table != null) {
-			table.putNumber("Shooter Speed", Shooter.getInstance().getSpeed().get(AngularSpeed.Unit.RPM));
+			table.putNumber("Shooter Speed", Shooter.getInstance().getSpeed().get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
 			table.putNumber("Hood Angle", Hood.getInstance().getPosition().get(Unit.DEGREE));
 			table.putNumber("Turret Angle", Turret.getInstance().getPosition().get(Unit.DEGREE));
 			table.putNumber("Match Time", DriverStation.getInstance().getMatchTime());

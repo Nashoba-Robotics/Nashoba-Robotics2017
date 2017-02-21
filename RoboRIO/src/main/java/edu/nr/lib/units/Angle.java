@@ -1,5 +1,8 @@
 package edu.nr.lib.units;
 
+import edu.nr.lib.Units;
+import edu.nr.lib.units.Distance.Unit;
+
 public class Angle {
 	
 	public static final Angle ZERO = new Angle(0, Unit.DEGREE);
@@ -7,11 +10,13 @@ public class Angle {
 	private Unit type;
 	
 	public enum Unit {
-		DEGREE, ROTATION, RADIAN;
+		DEGREE, ROTATION, RADIAN, MAGNETIC_ENCODER_NATIVE_UNITS;
 		
-		private static final Unit defaultUnit = DEGREE;
+		public static final Unit defaultUnit = DEGREE;
 		
 		private static final double ROTATIONS_PER_DEGREE = 1/360.0;
+		private static final double MAGNETIC_ENCODER_NATIVE_UNITS_PER_ROTATION = Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+		private static final double MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE = MAGNETIC_ENCODER_NATIVE_UNITS_PER_ROTATION * ROTATIONS_PER_DEGREE; 
 		private static final double RADIANS_PER_DEGREE = 2*Math.PI / 360.0;
 				
 		static private double convertToDefault(double val, Unit fromType) {
@@ -23,6 +28,9 @@ public class Angle {
 			}
 			if(fromType == Unit.RADIAN) {
 				return val / RADIANS_PER_DEGREE;
+			}
+			if(fromType == MAGNETIC_ENCODER_NATIVE_UNITS) {
+				return val / MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE;
 			}
 			return 0;
 		}
@@ -36,6 +44,9 @@ public class Angle {
 			}
 			if(toType == Unit.RADIAN) {
 				return RADIANS_PER_DEGREE * val;
+			}
+			if(toType == MAGNETIC_ENCODER_NATIVE_UNITS) {
+				return val * MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE;
 			}
 			return 0;
 		}
@@ -100,6 +111,10 @@ public class Angle {
 		} else {
 			return false;
 		}
+	}
+
+	public double div(Angle angle) {
+		return this.get(Unit.defaultUnit) / angle.get(Unit.defaultUnit);
 	}
 
 }

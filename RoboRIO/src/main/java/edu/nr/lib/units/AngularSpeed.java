@@ -1,92 +1,74 @@
 package edu.nr.lib.units;
 
 public class AngularSpeed {
-	
-	public static final AngularSpeed ZERO = new AngularSpeed(0, Unit.RPS);
-	private double val;
-	private Unit type;
-	
-	public enum Unit {
-		DEGREEPERSECOND, RPM, RPS;
-		
-		public static final Unit defaultUnit = RPS;
-		
-		private static final double DEGREEPERSECOND_PER_RPS = 1/360.0;
-		private static final double RPM_PER_RPS = 60;
-				
-		static public double convertToDefault(double val, Unit fromType) {
-			if(fromType == Unit.RPS) {
-				return val;
-			}
-			if(fromType == Unit.RPM) {
-				return val / RPM_PER_RPS;
-			}
-			if(fromType == Unit.DEGREEPERSECOND) {
-				return val / DEGREEPERSECOND_PER_RPS;
-			}
-			return 0;
-		}
-		
-		static public double convertFromDefault(double val, Unit toType) {
-			if(toType == Unit.RPS) {
-				return val;
-			}
-			if(toType == Unit.RPM) {
-				return RPM_PER_RPS * val;
-			}
-			if(toType == Unit.DEGREEPERSECOND) {
-				return DEGREEPERSECOND_PER_RPS * val;
-			}
-			return 0;
-		}
 
-		static public double convert(double val, Unit fromType, Unit toType) {
-			if(fromType == toType) {
-				return val;
-			}
-			return convertFromDefault(convertToDefault(val, fromType), toType);
-		}
-}
-	
-	public AngularSpeed(double val, Unit type) {
-		this.val = val;
-		this.type = type;
+	public static final AngularSpeed ZERO = new AngularSpeed(Angle.ZERO, Time.ONE_SECOND);
+	private Angle angle;
+	private Time time;
+
+	public AngularSpeed(Angle angle, Time time) {
+		this.angle = angle;
+		this.time = time;
 	}
-	
-	public double get(Unit toType) {
-		return Unit.convert(val, type, toType);
+
+	public AngularSpeed(double val, Angle.Unit angleUnit, Time.Unit timeUnit) {
+		this.angle = new Angle(val, angleUnit);
+		this.time = new Time(1, timeUnit);
 	}
-	
+
+	public AngularSpeed(Speed speed) {
+		new AngularSpeed(speed.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE), Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	}
+
+	public double get(Angle.Unit toAngleUnit, Time.Unit toTimeUnit) {
+		return angle.get(toAngleUnit) / time.get(toTimeUnit);
+	}
+
 	public AngularSpeed sub(AngularSpeed angleTwo) {
-		return new AngularSpeed(this.get(Unit.defaultUnit) - angleTwo.get(Unit.defaultUnit), Unit.defaultUnit);
+		return new AngularSpeed(
+				angle.mul(angleTwo.time.get(Time.Unit.SECOND))
+						.sub(angleTwo.angle.mul(time.get(Time.Unit.SECOND))),
+				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
 	}
-	
+
 	public AngularSpeed add(AngularSpeed angleTwo) {
-		return new AngularSpeed(this.get(Unit.defaultUnit) + angleTwo.get(Unit.defaultUnit), Unit.defaultUnit);
+		return new AngularSpeed(
+				angle.mul(angleTwo.time.get(Time.Unit.SECOND))
+						.add(angleTwo.angle.mul(time.get(Time.Unit.SECOND))),
+				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
 	}
-	
+
 	public AngularSpeed mul(double x) {
-		return new AngularSpeed(this.get(Unit.defaultUnit) * x, Unit.defaultUnit);
+		return new AngularSpeed(angle.mul(x), time);
 	}
 	
-	public double div(AngularSpeed speedTwo) {
-		return this.get(Unit.defaultUnit) / speedTwo.get(Unit.defaultUnit);
+	public double div(AngularSpeed other) {
+		return angle.div(other.angle) / time.div(other.time);
 	}
 
 	public boolean lessThan(AngularSpeed angleTwo) {
-		return this.get(Unit.defaultUnit) < angleTwo.get(Unit.defaultUnit);
+		return this.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit) < angleTwo.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	public boolean greaterThan(AngularSpeed angleTwo) {
-		return this.get(Unit.defaultUnit) > angleTwo.get(Unit.defaultUnit);
+		return this.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit) > angleTwo.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
-	
+
 	public AngularSpeed negate() {
-		return new AngularSpeed(-this.get(Unit.defaultUnit), Unit.defaultUnit);
+		return new AngularSpeed(angle.negate(), time);
 	}
-	
+
 	public AngularSpeed abs() {
-		return new AngularSpeed(Math.abs(this.get(Unit.defaultUnit)), Unit.defaultUnit);
+		return new AngularSpeed(angle.abs(), time.abs());
+	}
+
+	@Override
+	public boolean equals(Object otherAngle) {
+		if (otherAngle instanceof AngularSpeed) {
+			return this.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit) == ((AngularSpeed) otherAngle).get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit);
+		} else {
+			return false;
+		}
 	}
 
 }

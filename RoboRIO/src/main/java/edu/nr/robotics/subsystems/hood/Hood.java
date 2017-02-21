@@ -71,7 +71,7 @@ public class Hood extends NRSubsystem {
 	public static final AngularSpeed MAX_SPEED = AngularSpeed.ZERO;
 	
 	//TODO: Hood: Find FPID values
-	public static double F = MAX_SPEED.get(AngularSpeed.Unit.RPS) / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	public static double F = MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -92,10 +92,11 @@ public class Hood extends NRSubsystem {
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setProfile(OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(AngularSpeed.Unit.RPM));
-			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(AngularSpeed.Unit.RPM, Time.Unit.SECOND));
+			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
+			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND));
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Hood: Find phase
+			talon.reverseOutput(true);
 			talon.enable();
 		}
 	}
@@ -151,7 +152,7 @@ public class Hood extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.set(addGearing(speedSetpoint.div(MAX_SPEED)));
 			} else {
-				talon.set(addGearing(speedSetpoint.get(AngularSpeed.Unit.RPM)));				
+				talon.set(addGearing(speedSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE)));				
 			}
 		}
 	}
@@ -163,7 +164,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public AngularSpeed getSpeed() {
 		if(talon != null)
-			return new AngularSpeed(removeGearing(talon.getSpeed()), AngularSpeed.Unit.RPM);
+			return new AngularSpeed(removeGearing(talon.getSpeed()), Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		return AngularSpeed.ZERO;
 	}
 	
@@ -212,10 +213,9 @@ public class Hood extends NRSubsystem {
 	@Override
 	public void periodic() {
 		if(talon != null) {
-			//TODO: Hood: Is forward limit switch top or bottom?
-			if(talon.isFwdLimitSwitchClosed()) {
+			if(talon.isRevLimitSwitchClosed()) {
 				talon.setPosition(TOP_POSITION.get(Unit.ROTATION));
-			} else if(talon.isRevLimitSwitchClosed()) {
+			} else if(talon.isFwdLimitSwitchClosed()) {
 				talon.setPosition(BOTTOM_POSITION.get(Unit.ROTATION));
 			} 
 		}
@@ -230,7 +230,7 @@ public class Hood extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putNumber("Hood Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Hood Speed", getSpeed().get(AngularSpeed.Unit.DEGREEPERSECOND) + " : " + speedSetpoint.get(AngularSpeed.Unit.DEGREEPERSECOND));
+				SmartDashboard.putString("Hood Speed", getSpeed().get(Angle.Unit.DEGREE, Time.Unit.SECOND) + " : " + speedSetpoint.get(Angle.Unit.DEGREE, Time.Unit.SECOND));
 				SmartDashboard.putString("Hood Position", getPosition().get(Angle.Unit.DEGREE) + " : " + positionSetpoint.get(Angle.Unit.DEGREE));				
 			}
 			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_COMPLEX_ENABLED) {

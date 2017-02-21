@@ -7,7 +7,9 @@ import com.ctre.CANTalon.TalonControlMode;
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Time;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -39,7 +41,7 @@ public class Shooter extends NRSubsystem {
 	public static final AngularSpeed MAX_SPEED = AngularSpeed.ZERO;
 
 	//TODO: Shooter: Find FPID values
-	public static double F = (Shooter.MAX_SPEED.get(AngularSpeed.Unit.RPM) / Units.HUNDRED_MS_PER_MIN * Units.MAGNETIC_NATIVE_UNITS_PER_REV);
+	public static double F = Shooter.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
@@ -97,7 +99,7 @@ public class Shooter extends NRSubsystem {
 		motorSetpoint = speed;
 		if (talon != null && OI.getInstance().isShooterOn()) {
 			if(talon.getControlMode() == TalonControlMode.Speed) {
-				talon.set(motorSetpoint.get(AngularSpeed.Unit.RPM));
+				talon.set(motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
 			} else {
 				talon.set(motorSetpoint.div(MAX_SPEED));
 			}
@@ -120,7 +122,7 @@ public class Shooter extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Shooter Speed", getSpeed().get(AngularSpeed.Unit.RPM) + " : " + motorSetpoint.get(AngularSpeed.Unit.RPM));	
+				SmartDashboard.putString("Shooter Speed", getSpeed().get(Angle.Unit.ROTATION, Time.Unit.MINUTE) + " : " + motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));	
 			}
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Shooter Voltage", talon.getOutputVoltage());
@@ -150,7 +152,7 @@ public class Shooter extends NRSubsystem {
 	 */
 	public AngularSpeed getSpeed() {
 		if(talon != null) {
-			return new AngularSpeed(talon.getSpeed(), AngularSpeed.Unit.RPM);
+			return new AngularSpeed(talon.getSpeed(), Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		}
 		return AngularSpeed.ZERO;
 	}

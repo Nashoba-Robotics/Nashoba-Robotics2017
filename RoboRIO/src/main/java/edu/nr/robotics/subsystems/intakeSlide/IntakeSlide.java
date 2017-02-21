@@ -16,9 +16,8 @@ public class IntakeSlide extends NRSubsystem {
 	public enum State {
 		DEPLOYED, RETRACTED;
 		
-		//TODO: IntakeArm: determine direction
 		private static Value DEPLOYED_VALUE = Value.kForward;
-		private static Value RETRACTED_VALUE = Value.kForward;
+		private static Value RETRACTED_VALUE = Value.kReverse;
 		
 
 		
@@ -26,11 +25,7 @@ public class IntakeSlide extends NRSubsystem {
 			if(val == State.DEPLOYED_VALUE) {
 				return State.DEPLOYED;
 			} else {
-				if(val == State.RETRACTED_VALUE) {
-					return State.RETRACTED;
-				} else {
-					return State.RETRACTED; //TODO: IntakeSlide: Determine what state if off
-				}
+				return State.RETRACTED;
 			}
 		}
 	}
@@ -90,9 +85,6 @@ public class IntakeSlide extends NRSubsystem {
 
 	@Override
 	public void disable() {
-		if(solenoid != null) {
-			solenoid.set(Value.kOff); //TODO: IntakeSlide: Determine what state if off
-		}
 	}
 
 	public boolean isDeployed() {

@@ -17,7 +17,7 @@ public class Speed {
 	}
 
 	public Speed(AngularSpeed speed) {
-		new Speed(speed.get(AngularSpeed.Unit.RPM), Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE);
+		new Speed(speed.get(Angle.Unit.ROTATION, Time.Unit.MINUTE), Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE);
 	}
 
 	public double get(Distance.Unit toDistanceUnit, Time.Unit toTimeUnit) {
