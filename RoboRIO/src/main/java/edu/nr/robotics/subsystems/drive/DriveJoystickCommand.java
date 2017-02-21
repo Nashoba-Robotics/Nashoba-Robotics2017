@@ -12,6 +12,11 @@ public class DriveJoystickCommand extends JoystickCommand {
 	public DriveJoystickCommand() {
 		super(Drive.getInstance());
 	}
+	
+	@Override
+	public void onStart() {
+		gyroCorrection = new GyroCorrection();
+	}
 
 	@Override
 	public void onExecute() {

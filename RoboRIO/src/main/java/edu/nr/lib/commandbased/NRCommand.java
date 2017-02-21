@@ -13,7 +13,7 @@ public class NRCommand extends Command {
 
 	boolean forceCancel = false;
 	
-	ArrayList<NRSubsystem> subsystems;
+	ArrayList<NRSubsystem> subsystems = new ArrayList<>();
 	
 	public NRCommand(ArrayList<NRSubsystem> subsystems) {
 		super();

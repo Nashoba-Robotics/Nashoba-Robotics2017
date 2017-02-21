@@ -45,8 +45,8 @@ public class Shooter extends NRSubsystem {
 	public static double D = 0;
 	
 	private Shooter() { 
-		if (EnabledSubsystems.SHOOTER_ENABLED) { 
-			talon = new CANTalon(RobotMap.SHOOTER_TALON_PORT);
+		if (EnabledSubsystems.SHOOTER_ENABLED) {
+			talon = new CANTalon(RobotMap.SHOOTER_A_TALON_PORT);
 			if(EnabledSubsystems.SHOOTER_DUMB_ENABLED) {
 				talon.changeControlMode(TalonControlMode.PercentVbus);
 			} else {
@@ -61,6 +61,11 @@ public class Shooter extends NRSubsystem {
 			talon.reverseSensor(false); //TODO: Shooter: Find phase
 			talon.enable();
 			setAutoAlign(true);
+			
+			CANTalon tempTalon = new CANTalon(RobotMap.SHOOTER_B_TALON_PORT);
+			tempTalon.changeControlMode(TalonControlMode.Follower);
+			tempTalon.set(talon.getDeviceID());
+			tempTalon.enableBrakeMode(false);
 		}
 	}
 

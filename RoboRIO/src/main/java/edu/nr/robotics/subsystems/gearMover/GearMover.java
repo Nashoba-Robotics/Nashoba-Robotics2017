@@ -101,8 +101,10 @@ public class GearMover extends NRSubsystem {
 
 	@Override
 	public void disable() {
-		GearMover.set(Value.kOff);
-		GearGetPosition.set(Value.kOff);
+		if(GearMover != null)
+			GearMover.set(Value.kOff);
+		if(GearGetPosition != null)
+			GearGetPosition.set(Value.kOff);
 	}
 
 	public boolean gearMoverIsDeployed() {

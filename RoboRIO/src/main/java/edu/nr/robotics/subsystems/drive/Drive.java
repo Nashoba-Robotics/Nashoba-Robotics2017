@@ -61,13 +61,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * The max driving speed of the robot in low gear 
 	 * TODO: Drive: Get max low gear speed
 	 */
-	public static final Speed MAX_LOW_GEAR_SPEED = Speed.ZERO;
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(1, Distance.Unit.METER, Time.Unit.SECOND);
 
 	/**
 	 * The max driving speed of the robot in high gear 
 	 * TODO: Drive: Get max high gear speed
 	 */
-	public static final Speed MAX_HIGH_GEAR_SPEED = Speed.ZERO;
+	public static final Speed MAX_HIGH_GEAR_SPEED = new Speed(1, Distance.Unit.METER, Time.Unit.SECOND);
 
 	/**
 	 * The max driving acceleration in feet/sec/sec
@@ -87,9 +87,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	/**
 	 * The number of encoder ticks per wheel revolution
-	 * TODO: Drive: Get ticks per revolution
 	 */
-	public static final int TICKS_PER_REV = 256; 
+	public static final int TICKS_PER_REV = 2048; 
 
 	/**
 	 * The number of CANTalon "Native Units" per revolution
@@ -227,6 +226,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
 			rightTalon.reverseSensor(false);
+			rightTalon.reverseOutput(true);
 			rightTalon.enable();
 
 			rightEncoder = new TalonEncoder(rightTalon);
@@ -564,14 +564,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (leftTalon != null && rightTalon != null) {
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putString("Drive Current", getLeftCurrent() + " : " + getRightCurrent());
-				SmartDashboard.putString("Drive Left Speed", getLeftSpeed() + " : " + leftMotorSetpoint);
-				SmartDashboard.putString("Drive Right Speed", getRightSpeed() + " : " + rightMotorSetpoint);
+				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				System.out.println("R: " + rightTalon.getEncPosition());
+				System.out.println("L: " + leftTalon.getEncPosition());
 			}
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
+				SmartDashboard.putData(this);
 				SmartDashboard.putString("Drive Voltage",
 						leftTalon.getOutputVoltage() + " : " + rightTalon.getOutputVoltage());
-				SmartDashboard.putNumber("Drive Left Position", getLeftPosition().get(Distance.Unit.INCH));
-				SmartDashboard.putNumber("Drive Right Position", getRightPosition().get(Distance.Unit.INCH));
+				SmartDashboard.putNumber("Drive Left Position", getLeftPosition().get(Distance.Unit.DRIVE_ROTATION));
+				SmartDashboard.putNumber("Drive Right Position", getRightPosition().get(Distance.Unit.DRIVE_ROTATION));
 				SmartDashboard.putString("Current Drive Gear", getCurrentGear().toString());
 			}
 		}

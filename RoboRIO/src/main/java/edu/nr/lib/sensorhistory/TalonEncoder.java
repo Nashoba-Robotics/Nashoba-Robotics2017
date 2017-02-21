@@ -16,6 +16,7 @@ public class TalonEncoder extends TimerTask {
 
 	// In milliseconds
 	private final Time period;
+	//TODO: TalonEncoder: actual default period
 	private static final Time defaultPeriod = new Time(5, Time.Unit.MILLISECOND); // 200
 																					// Hz
 

@@ -22,6 +22,9 @@ import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
+import edu.nr.robotics.subsystems.hood.Hood;
+import edu.nr.robotics.subsystems.shooter.Shooter;
+import edu.nr.robotics.subsystems.turret.Turret;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -64,7 +67,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		singleton = this;
-		CameraServer.getInstance().startAutomaticCapture();
+		//CameraServer.getInstance().startAutomaticCapture();
+		Hood.init();
+		Turret.init();
+		Shooter.init();
+		
+		System.out.println("Hood: " + Hood.getInstance());
+		System.out.println("Turret: " + Turret.getInstance());
+		System.out.println("Shooter: " + Shooter.getInstance());
 
 		autoChooserInit();
 		tcpServerInit();
@@ -79,7 +89,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autoChooserInit() {
 		autoSpotChooser.addDefault("Do Nothing", new DoNothingCommand());
-		autoSpotChooser.addDefault("Baseline", new DriveOverBaselineAutoCommand());
+		autoSpotChooser.addObject("Baseline", new DriveOverBaselineAutoCommand());
 		autoSpotChooser.addObject("Non Shooter Gear", new DriveToNonShooterSideGearAutoCommand());
 		autoSpotChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
 		autoSpotChooser.addObject("Shooter Gear", new DriveToShooterSideGearAutoCommand());

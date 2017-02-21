@@ -24,10 +24,10 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	Angle turnAngle = Angle.ZERO;
 	Distance driveDistance = Distance.ZERO;
 	
-	private Angle lastSeenAngle;
-	private Distance lastSeenDistance;
+	private Angle lastSeenAngle = Angle.ZERO;
+	private Distance lastSeenDistance = Distance.ZERO;
 	
-	private Time timeOfLastData;
+	private Time timeOfLastData = Time.ZERO;
 	
 	private static GearAlignCalculation singleton;
 	

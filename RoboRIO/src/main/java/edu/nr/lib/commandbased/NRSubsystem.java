@@ -40,7 +40,7 @@ public abstract class NRSubsystem extends Subsystem implements SmartDashboardSou
 		this.joystickCommand = joystickCommand;
 		
 		switchToJoystickTimer = new Timer();
-		switchToJoystickTimer.schedule(new JoystickSwitchChecker(), 0, joystickCommand.getPeriodOfCheckingForSwitchToJoystick());
+		switchToJoystickTimer.schedule(new JoystickSwitchChecker(), 100, joystickCommand.getPeriodOfCheckingForSwitchToJoystick());
 		initDefaultCommand();
 	}
 	
