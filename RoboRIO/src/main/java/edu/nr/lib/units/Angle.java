@@ -8,7 +8,7 @@ public class Angle {
 	private double val;
 	private Unit type;
 	
-	public enum Unit {
+	public enum Unit implements GenericUnit {
 		DEGREE, ROTATION, RADIAN, MAGNETIC_ENCODER_NATIVE_UNITS;
 		
 		public static final Unit defaultUnit = DEGREE;
@@ -18,43 +18,36 @@ public class Angle {
 		private static final double MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE = MAGNETIC_ENCODER_NATIVE_UNITS_PER_ROTATION * ROTATIONS_PER_DEGREE; 
 		private static final double RADIANS_PER_DEGREE = 2*Math.PI / 360.0;
 				
-		static private double convertToDefault(double val, Unit fromType) {
-			if(fromType == Unit.DEGREE) {
+		public double convertToDefault(double val) {
+			if(this == Unit.DEGREE) {
 				return val;
 			}
-			if(fromType == Unit.ROTATION) {
+			if(this == Unit.ROTATION) {
 				return val / ROTATIONS_PER_DEGREE;
 			}
-			if(fromType == Unit.RADIAN) {
+			if(this == Unit.RADIAN) {
 				return val / RADIANS_PER_DEGREE;
 			}
-			if(fromType == MAGNETIC_ENCODER_NATIVE_UNITS) {
+			if(this == MAGNETIC_ENCODER_NATIVE_UNITS) {
 				return val / MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE;
 			}
 			return 0;
 		}
 		
-		static private double convertFromDefault(double val, Unit toType) {
-			if(toType == Unit.DEGREE) {
+		public double convertFromDefault(double val) {
+			if(this == Unit.DEGREE) {
 				return val;
 			}
-			if(toType == Unit.ROTATION) {
+			if(this == Unit.ROTATION) {
 				return ROTATIONS_PER_DEGREE * val;
 			}
-			if(toType == Unit.RADIAN) {
+			if(this == Unit.RADIAN) {
 				return RADIANS_PER_DEGREE * val;
 			}
-			if(toType == MAGNETIC_ENCODER_NATIVE_UNITS) {
+			if(this == MAGNETIC_ENCODER_NATIVE_UNITS) {
 				return val * MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE;
 			}
 			return 0;
-		}
-
-		static public double convert(double val, Unit fromType, Unit toType) {
-			if(fromType == toType) {
-				return val;
-			}
-			return convertFromDefault(convertToDefault(val, fromType), toType);
 		}
 }
 	
@@ -64,7 +57,7 @@ public class Angle {
 	}
 	
 	public double get(Unit toType) {
-		return Unit.convert(val, type, toType);
+		return GenericUnit.convert(val, type, toType);
 	}
 	
 	public Angle sub(Angle angleTwo) {

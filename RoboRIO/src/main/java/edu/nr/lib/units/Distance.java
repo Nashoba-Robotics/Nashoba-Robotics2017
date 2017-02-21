@@ -9,7 +9,7 @@ public class Distance {
 	private double val;
 	private Unit type;
 	
-	public enum Unit {
+	public enum Unit implements GenericUnit {
 		FOOT, INCH, DRIVE_ROTATION, METER;
 		
 		public static final Unit defaultUnit = INCH;
@@ -18,43 +18,36 @@ public class Distance {
 		private static final double FOOT_PER_INCH = 1.0/Units.INCHES_PER_FOOT;
 		private static final double METER_PER_INCH = 1.0/Units.INCHES_PER_METER;
 				
-		static private double convertToDefault(double val, Unit fromType) {
-			if(fromType == Unit.defaultUnit) {
+		public double convertToDefault(double val) {
+			if(this == Unit.defaultUnit) {
 				return val;
 			}
-			if(fromType == Unit.FOOT) {
+			if(this == Unit.FOOT) {
 				return val / FOOT_PER_INCH;
 			}
-			if(fromType == Unit.DRIVE_ROTATION) {
+			if(this == Unit.DRIVE_ROTATION) {
 				return val / DRIVE_ROTATION_PER_INCH;
 			}
-			if(fromType == Unit.METER) {
+			if(this == Unit.METER) {
 				return val / METER_PER_INCH;
 			}
 			return 0;
 		}
 		
-		static private double convertFromDefault(double val, Unit toType) {
-			if(toType == Unit.defaultUnit) {
+		public double convertFromDefault(double val) {
+			if(this == Unit.defaultUnit) {
 				return val;
 			}
-			if(toType == Unit.FOOT) {
+			if(this == Unit.FOOT) {
 				return FOOT_PER_INCH * val;
 			}
-			if(toType == Unit.DRIVE_ROTATION) {
+			if(this == Unit.DRIVE_ROTATION) {
 				return DRIVE_ROTATION_PER_INCH * val;
 			}
-			if(toType == Unit.METER) {
+			if(this == Unit.METER) {
 				return METER_PER_INCH * val;
 			}
 			return 0;
-		}
-
-		static public double convert(double val, Unit fromType, Unit toType) {
-			if(fromType == toType) {
-				return val;
-			}
-			return convertFromDefault(convertToDefault(val, fromType), toType);
 		}
 }
 	
@@ -64,7 +57,7 @@ public class Distance {
 	}
 	
 	public double get(Unit toType) {
-		return Unit.convert(val, type, toType);
+		return type.convert(val, toType);
 	}
 	
 	public Distance sub(Distance angleTwo) {
