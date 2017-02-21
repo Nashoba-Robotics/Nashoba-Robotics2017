@@ -95,7 +95,7 @@ public class Hood extends NRSubsystem {
 			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND));
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Hood: Find phase
-			talon.reverseOutput(true);
+			talon.setInverted(true);
 			talon.enable();
 		}
 	}

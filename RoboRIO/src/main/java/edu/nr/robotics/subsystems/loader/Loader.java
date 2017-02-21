@@ -28,7 +28,7 @@ public class Loader extends NRSubsystem {
 	 * TODO: Loader: Get loader run speed
 	 */
 	public static final double LOW_RUN_VOLTAGE = 0.30;
-	public static final double HIGH_RUN_VOLTAGE = 0.30;
+	public static final double HIGH_RUN_VOLTAGE = 0.65;
 	
 	/**
 	 * The voltage percent for the loader to run at while going in reverse

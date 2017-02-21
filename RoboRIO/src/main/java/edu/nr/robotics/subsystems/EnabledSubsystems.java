@@ -2,15 +2,15 @@ package edu.nr.robotics.subsystems;
 
 public class EnabledSubsystems {
 	public static final boolean DRIVE_ENABLED 		= false,
-								SHOOTER_ENABLED 	= false,
+								SHOOTER_ENABLED 	= true,
 								HOOD_ENABLED 		= false,
 								TURRET_ENABLED 		= false,
-								INTAKE_ENABLED 		= true,
+								INTAKE_ENABLED 		= false,
 								INTAKE_ARM_ENABLED 	= false,
 								INTAKE_SLIDE_ENABLED= false,
 								GEAR_MOVER_ENABLED 	= false,
-								LOADER_ENABLED 		= false,
-								AGITATOR_ENABLED 	= false;
+								LOADER_ENABLED 		= true,
+								AGITATOR_ENABLED 	= true;
 	
 	//These start the subsystem in dumb mode. Changing them later sometimes ignores this.
 	public static final boolean DRIVE_DUMB_ENABLED	 	= true,
