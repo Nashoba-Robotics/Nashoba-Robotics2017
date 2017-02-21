@@ -83,4 +83,20 @@ public class NRMath {
 		return new Speed((leftSpeed.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit)
 				+ rightSpeed.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit))/2, Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
+
+	public static Distance hypot(Distance x, Distance y) {
+		return new Distance(Math.hypot(x.get(Distance.Unit.defaultUnit), y.get(Distance.Unit.defaultUnit)), Distance.Unit.defaultUnit);
+	}
+
+	public static Angle atan2(Distance x, Distance y) {
+		return NRMath.atan2(x.get(Distance.Unit.defaultUnit), y.get(Distance.Unit.defaultUnit));
+	}
+
+	public static Distance lawOfCos(Distance x, Distance y, Angle theta) {
+		return new Distance(NRMath.lawOfCos(x.get(Distance.Unit.defaultUnit), y.get(Distance.Unit.defaultUnit), theta), Distance.Unit.defaultUnit);
+	}
+
+	public static Distance max(Distance a, Distance b) {
+		return new Distance(Math.max(a.get(Distance.Unit.defaultUnit), b.get(Distance.Unit.defaultUnit)), Distance.Unit.defaultUnit);
+	}
 }

@@ -29,9 +29,8 @@ public class Shooter extends NRSubsystem {
 
 	/**
 	 * The threshold the shooter needs to be within to shoot
-	 * TODO: Shooter: Find threshold
 	 */
-	public static final AngularSpeed SHOOT_THRESHOLD = AngularSpeed.ZERO;
+	public static final AngularSpeed SHOOT_THRESHOLD = new AngularSpeed(50, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 	/**
 	 * The max speed of the shooter

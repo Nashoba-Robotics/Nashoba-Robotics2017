@@ -10,6 +10,9 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.network.TCPServer.NetworkingDataType;
 import edu.nr.lib.network.TCPServer.Num;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Time;
 import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
 import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
@@ -103,22 +106,32 @@ public class Robot extends IterativeRobot {
 	 */
 	public void tcpServerInit() {
 		ArrayList<NetworkingDataType> turret_cam_types = new ArrayList<>();
-		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle");
-		NetworkingDataType turretDistance = new NetworkingDataType('d', "distance");
-		NetworkingDataType turretTimeStamp = new NetworkingDataType('t', "time");
-		turret_cam_types.add(turretAngle); //TODO: Turret Coprocessor: Get angle sign and units
-		turret_cam_types.add(turretDistance); //TODO: Turret Coprocessor: Get distance unit
+		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle", Angle.Unit.DEGREE) {
+			public double convert(int in) { //Convert pixels to degrees
+				return in; //TODO: Calibration: Turret angle
+			}
+
+		};
+		NetworkingDataType turretDistance = new NetworkingDataType('d', "distance", Distance.Unit.INCH) {
+			public double convert(int in) { //Convert pixels to inches
+				return in; //TODO: Calibration: Turret distance
+			}
+
+		};
+		NetworkingDataType turretTimeStamp = new NetworkingDataType('t', "time", Time.Unit.MILLISECOND);
+		turret_cam_types.add(turretAngle);
+		turret_cam_types.add(turretDistance);
 		turret_cam_types.add(turretTimeStamp);
 		Num.turret.init(turret_cam_types, TCPServer.defaultPort);
 		
 		ArrayList<NetworkingDataType> gear_cam_types = new ArrayList<>();
-		NetworkingDataType gearAngle = new NetworkingDataType('a', "angle") {
+		NetworkingDataType gearAngle = new NetworkingDataType('a', "angle", Angle.Unit.DEGREE) {
 			public double convert(int in) { //Convert pixels to degrees
 				return 0.1214662 * in;
 			}
 
 		};
-		NetworkingDataType gearDistance = new NetworkingDataType('d', "distance") {
+		NetworkingDataType gearDistance = new NetworkingDataType('d', "distance", Distance.Unit.INCH) {
 			public double convert(int in) { //Convert pixels to inches
 				return 5764.4699518042*Math.pow(in, -1.1867971592);
 			}
@@ -126,7 +139,7 @@ public class Robot extends IterativeRobot {
 		};
 		gear_cam_types.add(gearAngle);
 		gear_cam_types.add(gearDistance);
-		gear_cam_types.add(new NetworkingDataType('t', "time"));
+		gear_cam_types.add(new NetworkingDataType('t', "time", Time.Unit.SECOND));
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 		
 		AutoTrackingCalculation.init();

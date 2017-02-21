@@ -76,7 +76,11 @@ public class Time {
 	public Time mul(double x) {
 		return new Time(this.get(Unit.defaultUnit) * x, Unit.defaultUnit);
 	}
-	
+
+	public Distance mul(Speed speed) {
+		return speed.mul(this);
+	}
+
 	public double div(Time t) {
 		return this.get(Unit.defaultUnit) / t.get(Unit.defaultUnit);
 	}

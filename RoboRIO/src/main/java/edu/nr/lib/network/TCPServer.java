@@ -330,6 +330,7 @@ public class TCPServer implements Runnable {
 	public static class NetworkingDataType {
 		
 		ArrayList<NetworkingDataTypeListener> listeners;
+		public Object unit;
 		
 		/**
 		 * Create a networking data type.
@@ -340,7 +341,7 @@ public class TCPServer implements Runnable {
 		 * @param name
 		 *            A string describing the data. Eg "angle"
 		 */
-		public NetworkingDataType(char identifier, String name) {
+		public NetworkingDataType(char identifier, String name, Object unit) {
 			this.identifier = identifier;
 			this.name = name;
 			

@@ -41,7 +41,11 @@ public class Speed {
 	public Speed mul(double x) {
 		return new Speed(distance.mul(x), time);
 	}
-	
+
+	public Distance mul(Time t) {
+		return distance.mul(t.div(time));
+	}
+
 	public double div(Speed other) {
 		return distance.div(other.distance) / time.div(other.time);
 	}
