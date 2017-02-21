@@ -107,4 +107,8 @@ public class Time {
 		}
 	}
 
+	public double getDefault() {
+		return get(Unit.defaultUnit);
+	}
+
 }

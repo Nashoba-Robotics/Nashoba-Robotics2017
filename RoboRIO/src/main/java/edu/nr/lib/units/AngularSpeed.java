@@ -23,6 +23,10 @@ public class AngularSpeed {
 	public double get(Angle.Unit toAngleUnit, Time.Unit toTimeUnit) {
 		return angle.get(toAngleUnit) / time.get(toTimeUnit);
 	}
+	
+	public double getDefault() {
+		return get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit);
+	}
 
 	public AngularSpeed sub(AngularSpeed angleTwo) {
 		return new AngularSpeed(

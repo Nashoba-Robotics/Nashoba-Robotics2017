@@ -23,6 +23,10 @@ public class Speed {
 	public double get(Distance.Unit toDistanceUnit, Time.Unit toTimeUnit) {
 		return distance.get(toDistanceUnit) / time.get(toTimeUnit);
 	}
+	
+	public double getDefault() {
+		return get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
+	}
 
 	public Speed sub(Speed angleTwo) {
 		return new Speed(

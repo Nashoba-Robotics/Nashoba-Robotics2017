@@ -1,6 +1,7 @@
 package edu.nr.lib.units;
 
 import edu.nr.lib.Units;
+import edu.nr.lib.units.Time.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 
 public class Distance {
@@ -58,6 +59,10 @@ public class Distance {
 	
 	public double get(Unit toType) {
 		return type.convert(val, toType);
+	}
+
+	public double getDefault() {
+		return get(Unit.defaultUnit);
 	}
 	
 	public Distance sub(Distance angleTwo) {

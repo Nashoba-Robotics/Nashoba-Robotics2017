@@ -1,6 +1,7 @@
 package edu.nr.lib.units;
 
 import edu.nr.lib.Units;
+import edu.nr.lib.units.Time.Unit;
 
 public class Angle {
 	
@@ -58,6 +59,10 @@ public class Angle {
 	
 	public double get(Unit toType) {
 		return GenericUnit.convert(val, type, toType);
+	}
+
+	public double getDefault() {
+		return get(Unit.defaultUnit);
 	}
 	
 	public Angle sub(Angle angleTwo) {

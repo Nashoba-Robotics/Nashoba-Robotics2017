@@ -36,8 +36,8 @@ public class TalonEncoder extends TimerTask {
 
 	@Override
 	public void run() {
-		data.add(new Data(talon.getPosition(), new AngularSpeed(talon.getSpeed(),  Angle.Unit.ROTATION, Time.Unit.MINUTE),
-				Time.getCurrentTime()));
+		data.add(new Data(talon.getPosition(),
+				new AngularSpeed(talon.getSpeed(), Angle.Unit.ROTATION, Time.Unit.MINUTE), Time.getCurrentTime()));
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class TalonEncoder extends TimerTask {
 		}
 
 		if (data.size() == 0) {
-			return new AngularSpeed(talon.getSpeed(),  Angle.Unit.ROTATION, Time.Unit.MINUTE);
+			return new AngularSpeed(talon.getSpeed(), Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		} else if (data.size() == 1) {
 			return data.get(0).velocity;
 		}
@@ -144,9 +144,10 @@ public class TalonEncoder extends TimerTask {
 			System.out.println("The timestamps are equal in " + this + ". This is weird and unexpected...");
 			return AngularSpeed.ZERO;
 		}
-		return new AngularSpeed(interpolate(first.velocity.get( Angle.Unit.defaultUnit, Time.Unit.defaultUnit),
-				second.velocity.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit),
-				timestamp.div(second.timestamp.add(first.timestamp))), Angle.Unit.defaultUnit, Time.Unit.defaultUnit);
+		return new AngularSpeed(
+				interpolate(first.velocity.getDefault(), second.velocity.getDefault(),
+						timestamp.div(second.timestamp.add(first.timestamp))),
+				Angle.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	private double interpolate(double first, double second, double timeRatio) {

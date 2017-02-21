@@ -53,7 +53,7 @@ public class RobotMap {
 	 * Turret offsets are how far the turret is from the center of the robot
 	 * Camera offsets are offset from turret when turret is at 0 degrees (facing driving direction of robot)
 	 */
-	public static final Distance Y_CAMERA_OFFSET = Distance.ZERO; //TODO: Turret: Get y camera offset
+	public static final Distance Y_CAMERA_OFFSET = new Distance(6.75, Distance.Unit.INCH);
 	public static final Distance X_CAMERA_OFFSET = Distance.ZERO;
 	public static final Distance X_TURRET_OFFSET = new Distance(5.465, Distance.Unit.INCH);
 	public static final Distance Y_TURRET_OFFSET = new Distance(-7, Distance.Unit.INCH);
