@@ -164,7 +164,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public static final Time PROFILE_TIME_THRESHOLD = new Time(200, Time.Unit.MILLISECOND);
 
 	private Drive() {
-		// TODO: Drive: Find phase of motors
 
 		if (EnabledSubsystems.DRIVE_ENABLED) {
 
@@ -225,8 +224,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
-			rightTalon.reverseSensor(false);
-			rightTalon.reverseOutput(true);
+			rightTalon.reverseSensor(true);
+			rightTalon.setInverted(true);
 			rightTalon.enable();
 
 			rightEncoder = new TalonEncoder(rightTalon);
@@ -564,10 +563,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (leftTalon != null && rightTalon != null) {
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putString("Drive Current", getLeftCurrent() + " : " + getRightCurrent());
-				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
-				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
-				System.out.println("R: " + rightTalon.getEncPosition());
-				System.out.println("L: " + leftTalon.getEncPosition());
+				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
 			}
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putData(this);

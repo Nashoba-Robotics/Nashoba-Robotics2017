@@ -20,9 +20,11 @@ import edu.nr.robotics.auton.DriveOverBaselineAutoCommand;
 import edu.nr.robotics.auton.DriveToHopperAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.SideOfField;
+import edu.nr.robotics.subsystems.agitator.Agitator;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.nr.robotics.subsystems.hood.Hood;
+import edu.nr.robotics.subsystems.loader.Loader;
 import edu.nr.robotics.subsystems.shooter.Shooter;
 import edu.nr.robotics.subsystems.turret.Turret;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -68,13 +70,8 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		singleton = this;
 		//CameraServer.getInstance().startAutomaticCapture();
-		Hood.init();
-		Turret.init();
-		Shooter.init();
-		
-		System.out.println("Hood: " + Hood.getInstance());
-		System.out.println("Turret: " + Turret.getInstance());
-		System.out.println("Shooter: " + Shooter.getInstance());
+		Agitator.init();
+		Loader.init();
 
 		autoChooserInit();
 		tcpServerInit();
@@ -234,6 +231,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
+		//System.out.println("12.56 inches: " + new Distance(1, Distance.Unit.DRIVE_ROTATION).get(Distance.Unit.INCH));
+		//System.out.println("60 seconds: " + new Time(1, Time.Unit.MINUTE).get(Time.Unit.SECOND));
+		
 		Scheduler.getInstance().run();
 		
 		Periodic.runAll();
