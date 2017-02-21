@@ -36,7 +36,7 @@ public class Shooter extends NRSubsystem {
 	 * The max speed of the shooter
 	 * TODO: Shooter: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = AngularSpeed.ZERO;
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
 
 	//TODO: Shooter: Find FPID values
 	public static double F = Shooter.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
@@ -78,7 +78,7 @@ public class Shooter extends NRSubsystem {
 	public synchronized static void init() {
 		if (singleton == null) {
 			singleton = new Shooter();
-			singleton.setJoystickCommand(new DoNothingJoystickCommand(singleton));
+			singleton.setJoystickCommand(new ShooterJoystickCommand());
 		}
 	}
 

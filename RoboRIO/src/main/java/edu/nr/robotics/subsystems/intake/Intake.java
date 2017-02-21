@@ -31,7 +31,7 @@ public class Intake extends NRSubsystem {
 	 * 
 	 * TODO: Intake: Get run voltage
 	 */
-	public static final double RUN_VOLTAGE = 0;
+	public static final double RUN_VOLTAGE = .75;
 
 	/**
 	 * The percent voltage for the intake to run at while attempting to "puke" all the balls.
@@ -45,11 +45,13 @@ public class Intake extends NRSubsystem {
 			lowTalon = new CANTalon(RobotMap.INTAKE_LOW_TALON_PORT);
 			lowTalon.changeControlMode(TalonControlMode.PercentVbus);
 			lowTalon.enableBrakeMode(false);
+			lowTalon.setInverted(true);
 			lowTalon.enable();
 		
 			highTalon = new CANTalon(RobotMap.INTAKE_HIGH_TALON_PORT);
 			highTalon.changeControlMode(TalonControlMode.PercentVbus);
 			highTalon.enableBrakeMode(false);
+			highTalon.setInverted(true);
 			highTalon.enable();
 		}
 	}

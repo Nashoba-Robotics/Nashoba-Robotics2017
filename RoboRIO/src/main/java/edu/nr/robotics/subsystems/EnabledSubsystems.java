@@ -1,20 +1,20 @@
 package edu.nr.robotics.subsystems;
 
 public class EnabledSubsystems {
-	public static final boolean DRIVE_ENABLED 		= true,
+	public static final boolean DRIVE_ENABLED 		= false,
 								SHOOTER_ENABLED 	= false,
 								HOOD_ENABLED 		= false,
 								TURRET_ENABLED 		= false,
-								INTAKE_ENABLED 		= false,
+								INTAKE_ENABLED 		= true,
 								INTAKE_ARM_ENABLED 	= false,
 								INTAKE_SLIDE_ENABLED= false,
 								GEAR_MOVER_ENABLED 	= false,
-								LOADER_ENABLED 		= true,
-								AGITATOR_ENABLED 	= true;
+								LOADER_ENABLED 		= false,
+								AGITATOR_ENABLED 	= false;
 	
 	//These start the subsystem in dumb mode. Changing them later sometimes ignores this.
 	public static final boolean DRIVE_DUMB_ENABLED	 	= true,
-								SHOOTER_DUMB_ENABLED 	= false,
+								SHOOTER_DUMB_ENABLED 	= true,
 								HOOD_DUMB_ENABLED 		= false,
 								TURRET_DUMB_ENABLED 	= false;
 	
@@ -23,11 +23,11 @@ public class EnabledSubsystems {
 								DRIVE_SMARTDASHBOARD_BASIC_ENABLED 		= true,
 								HOOD_SMARTDASHBOARD_BASIC_ENABLED 		= false,
 								GEAR_MOVER_SMARTDASHBOARD_BASIC_ENABLED = false,
-								INTAKE_SMARTDASHBOARD_BASIC_ENABLED 	= false,
+								INTAKE_SMARTDASHBOARD_BASIC_ENABLED 	= true,
 								INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED 	= false,
 								INTAKESLIDE_SMARTDASHBOARD_BASIC_ENABLED= false,
 								LOADER_SMARTDASHBOARD_BASIC_ENABLED 	= true,
-								SHOOTER_SMARTDASHBOARD_BASIC_ENABLED 	= false,
+								SHOOTER_SMARTDASHBOARD_BASIC_ENABLED 	= true,
 								TURRET_SMARTDASHBOARD_BASIC_ENABLED 	= false;
 
 
@@ -35,11 +35,11 @@ public class EnabledSubsystems {
 								DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED 		= true,
 								HOOD_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								GEAR_MOVER_SMARTDASHBOARD_COMPLEX_ENABLED 	= false,
-								INTAKE_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
+								INTAKE_SMARTDASHBOARD_COMPLEX_ENABLED 		= true,
 								INTAKEARM_SMARTDASHBOARD_COMPLEX_ENABLED 	= false,
 								INTAKESLIDE_SMARTDASHBOARD_COMPLEX_ENABLED 	= false,
 								LOADER_SMARTDASHBOARD_COMPLEX_ENABLED 		= true,
-								SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
+								SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED 		= true,
 								TURRET_SMARTDASHBOARD_COMPLEX_ENABLED 		= false;
 
 }

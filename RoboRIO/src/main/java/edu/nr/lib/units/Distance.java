@@ -15,8 +15,8 @@ public class Distance {
 		
 		public static final Unit defaultUnit = INCH;
 		
-		private static final double DRIVE_ROTATION_PER_INCH = Drive.WHEEL_DIAMETER_INCHES * Math.PI;
-		private static final double FOOT_PER_INCH = Units.INCHES_PER_FOOT; //TODO: This makes no sense
+		private static final double DRIVE_ROTATION_PER_INCH = 1/(Drive.WHEEL_DIAMETER_INCHES * Math.PI);
+		private static final double FOOT_PER_INCH = 1.0/Units.INCHES_PER_FOOT;
 		private static final double METER_PER_INCH = 1.0/Units.INCHES_PER_METER;
 				
 		public double convertToDefault(double val) {

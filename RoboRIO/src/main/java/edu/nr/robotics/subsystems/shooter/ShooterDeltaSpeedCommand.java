@@ -18,10 +18,5 @@ public class ShooterDeltaSpeedCommand extends NRCommand {
 		initialSpeed = Shooter.getInstance().getSpeed();
 		Shooter.getInstance().setMotorSpeedInRPM(initialSpeed.add(speedDelta));
 	}
-	
-	@Override
-	public boolean isFinishedNR() {
-		return false;
-	}
 
 }

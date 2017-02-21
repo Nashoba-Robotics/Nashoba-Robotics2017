@@ -14,6 +14,7 @@ public class LoaderSpeedCommand extends NRCommand{
 	public LoaderSpeedCommand(double lowSpeed, double highSpeed) {
 		super(Loader.getInstance());
 		this.lowSpeed = lowSpeed;
+		this.highSpeed = highSpeed;
 	}
 	
 	@Override

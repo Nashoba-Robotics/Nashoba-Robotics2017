@@ -61,13 +61,13 @@ public class Hood extends NRSubsystem {
 	 * The max acceleration of the hood
 	 * TODO: Hood: Find max acceleration
 	 */
-	public static final AngularAcceleration MAX_ACCELERATION = AngularAcceleration.ZERO;
+	public static final AngularAcceleration MAX_ACCELERATION = new AngularAcceleration(1, Angle.Unit.DEGREE, Time.Unit.SECOND,Time.Unit.SECOND);
 
 	/**
 	 * The max speed of the hood, in degrees per second
 	 * TODO: Hood: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = AngularSpeed.ZERO;
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
 	
 	//TODO: Hood: Find FPID values
 	public static double F = MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);

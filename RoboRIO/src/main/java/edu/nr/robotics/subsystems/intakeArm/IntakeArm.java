@@ -31,7 +31,11 @@ public class IntakeArm extends NRSubsystem {
 	}
 
 	public State currentState() {
-		return State.get(solenoid.get());
+		if(solenoid != null) {
+			return State.get(solenoid.get());
+		} else {
+			return State.DEPLOYED; //TODO: Should be State.RETRACTED, is deployed for testing
+		}
 	}
 
 

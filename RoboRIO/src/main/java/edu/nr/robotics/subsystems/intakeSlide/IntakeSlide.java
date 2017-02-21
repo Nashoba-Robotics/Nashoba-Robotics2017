@@ -4,6 +4,7 @@ import edu.nr.lib.commandbased.DoNothingJoystickCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
+import edu.nr.robotics.subsystems.intakeArm.IntakeArm.State;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,7 +32,11 @@ public class IntakeSlide extends NRSubsystem {
 	}
 
 	public State currentState() {
-		return State.get(solenoid.get());
+		if(solenoid != null) {
+			return State.get(solenoid.get());
+		} else {
+			return State.DEPLOYED; //TODO: Should be State.RETRACTED, is deployed for testing
+		}
 	}
 
 

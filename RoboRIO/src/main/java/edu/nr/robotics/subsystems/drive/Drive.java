@@ -563,15 +563,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (leftTalon != null && rightTalon != null) {
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putString("Drive Current", getLeftCurrent() + " : " + getRightCurrent());
-				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
-				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
 			}
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putData(this);
 				SmartDashboard.putString("Drive Voltage",
 						leftTalon.getOutputVoltage() + " : " + rightTalon.getOutputVoltage());
-				SmartDashboard.putNumber("Drive Left Position", getLeftPosition().get(Distance.Unit.DRIVE_ROTATION));
-				SmartDashboard.putNumber("Drive Right Position", getRightPosition().get(Distance.Unit.DRIVE_ROTATION));
+				SmartDashboard.putNumber("Drive Left Position", getLeftPosition().get(Distance.Unit.FOOT));
+				SmartDashboard.putNumber("Drive Right Position", getRightPosition().get(Distance.Unit.FOOT));
 				SmartDashboard.putString("Current Drive Gear", getCurrentGear().toString());
 			}
 		}
