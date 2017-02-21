@@ -7,6 +7,7 @@ import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Time;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -104,11 +105,10 @@ public class OI implements SmartDashboardSource, Periodic {
 	private JoystickButton shooterSwitch;
 	private JoystickButton dumbDriveSwitch;
 		
-	// TODO: OI: Get actual Joystick ports
-	private static final int STICK_LEFT = -1;
-	private static final int STICK_RIGHT = -1;
-	private static final int STICK_OPERATOR_LEFT = 0;
-	private static final int STICK_OPERATOR_RIGHT = 0;
+	private static final int STICK_LEFT = 0;
+	private static final int STICK_RIGHT = 1;
+	private static final int STICK_OPERATOR_LEFT = 3;
+	private static final int STICK_OPERATOR_RIGHT = 2;
 
 
 	/**
@@ -120,7 +120,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
 	 */
-	public static final AngularSpeed SHOOTER_SPEED_INCREMENT_VALUE = new AngularSpeed(100, AngularSpeed.Unit.RPM);
+	public static final AngularSpeed SHOOTER_SPEED_INCREMENT_VALUE = new AngularSpeed(100, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 
 	/**
@@ -274,13 +274,19 @@ public class OI implements SmartDashboardSource, Periodic {
 		return intakeSwitch.get() ? Intake.RUN_VOLTAGE : 0;
 	}
 	
+	// -> Joy2: Loader Roller Joystick
+	// Overrides loader motor power
 	public double getTurretValue() {
 		return snapCoffinJoysticks(operatorRight.getAxis(AxisType.kX));
 	}
-	
-	public double getHoodValue(){
-		return snapCoffinJoysticks(operatorRight.getAxis(AxisType.kY));
+
+	// -> Joy3: Hood Joystick
+	// Overrides hood angle (undone if another auto hood angle command is
+	// sent)
+	public double getHoodValue() {
+		return snapCoffinJoysticks(operatorRight.getAxis(AxisType.kThrottle));
 	}
+
 
 	private static double snapDriveJoysticks(double value) {
 		if (Math.abs(value) < JOYSTICK_DEAD_ZONE) {

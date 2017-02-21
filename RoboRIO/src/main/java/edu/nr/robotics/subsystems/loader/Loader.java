@@ -21,14 +21,6 @@ public class Loader extends NRSubsystem {
 	 */
 	private double lowSetpoint = 0;
 	private double highSetpoint = 0;
-	
-	/**
-	 * The voltage percent for the loader to run at while going in reverse
-	 *
-	 * TODO: Loader: Get loader reverse speed
-	 */
-	public static final double LOW_REVERSE_VOLTAGE = 0;
-	public static final double HIGH_REVERSE_VOLTAGE = 0;
 
 	/**
 	 * The voltage percent for the loader to run at during normal usage
@@ -36,7 +28,13 @@ public class Loader extends NRSubsystem {
 	 * TODO: Loader: Get loader run speed
 	 */
 	public static final double LOW_RUN_VOLTAGE = 0;
-	public static final double HIGH_RUN_VOLTAGE = 0;
+	public static final double HIGH_RUN_VOLTAGE = 0.65;
+	
+	/**
+	 * The voltage percent for the loader to run at while going in reverse
+	 */
+	public static final double LOW_REVERSE_VOLTAGE = -LOW_RUN_VOLTAGE;
+	public static final double HIGH_REVERSE_VOLTAGE = -HIGH_RUN_VOLTAGE;
 		
 	private Loader() { 
 		if (EnabledSubsystems.LOADER_ENABLED) { 

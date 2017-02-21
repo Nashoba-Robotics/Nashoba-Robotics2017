@@ -1,50 +1,53 @@
 package edu.nr.lib.units;
 
+import edu.nr.lib.Units;
+
 public class Angle {
 	
 	public static final Angle ZERO = new Angle(0, Unit.DEGREE);
 	private double val;
 	private Unit type;
 	
-	public enum Unit {
-		DEGREE, ROTATION, RADIAN;
+	public enum Unit implements GenericUnit {
+		DEGREE, ROTATION, RADIAN, MAGNETIC_ENCODER_NATIVE_UNITS;
 		
-		private static final Unit defaultUnit = DEGREE;
+		public static final Unit defaultUnit = DEGREE;
 		
 		private static final double ROTATIONS_PER_DEGREE = 1/360.0;
+		private static final double MAGNETIC_ENCODER_NATIVE_UNITS_PER_ROTATION = Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+		private static final double MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE = MAGNETIC_ENCODER_NATIVE_UNITS_PER_ROTATION * ROTATIONS_PER_DEGREE; 
 		private static final double RADIANS_PER_DEGREE = 2*Math.PI / 360.0;
 				
-		static private double convertToDefault(double val, Unit fromType) {
-			if(fromType == Unit.DEGREE) {
+		public double convertToDefault(double val) {
+			if(this == Unit.DEGREE) {
 				return val;
 			}
-			if(fromType == Unit.ROTATION) {
+			if(this == Unit.ROTATION) {
 				return val / ROTATIONS_PER_DEGREE;
 			}
-			if(fromType == Unit.RADIAN) {
+			if(this == Unit.RADIAN) {
 				return val / RADIANS_PER_DEGREE;
+			}
+			if(this == MAGNETIC_ENCODER_NATIVE_UNITS) {
+				return val / MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE;
 			}
 			return 0;
 		}
 		
-		static private double convertFromDefault(double val, Unit toType) {
-			if(toType == Unit.DEGREE) {
+		public double convertFromDefault(double val) {
+			if(this == Unit.DEGREE) {
 				return val;
 			}
-			if(toType == Unit.ROTATION) {
+			if(this == Unit.ROTATION) {
 				return ROTATIONS_PER_DEGREE * val;
 			}
-			if(toType == Unit.RADIAN) {
+			if(this == Unit.RADIAN) {
 				return RADIANS_PER_DEGREE * val;
 			}
-			return 0;
-		}
-
-		static public double convert(double val, Unit fromType, Unit toType) {
-			if(fromType == toType) {
-				return val;
+			if(this == MAGNETIC_ENCODER_NATIVE_UNITS) {
+				return val * MAGNETIC_ENCODER_NATIVE_UNITS_PER_DEGREE;
 			}
-			return convertFromDefault(convertToDefault(val, fromType), toType);
+			return 0;
 		}
 }
 	
@@ -54,7 +57,7 @@ public class Angle {
 	}
 	
 	public double get(Unit toType) {
-		return Unit.convert(val, type, toType);
+		return GenericUnit.convert(val, type, toType);
 	}
 	
 	public Angle sub(Angle angleTwo) {
@@ -100,6 +103,10 @@ public class Angle {
 		} else {
 			return false;
 		}
+	}
+
+	public double div(Angle angle) {
+		return this.get(Unit.defaultUnit) / angle.get(Unit.defaultUnit);
 	}
 
 }

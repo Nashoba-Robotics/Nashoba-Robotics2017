@@ -27,21 +27,19 @@ public class Intake extends NRSubsystem {
 	public double highMotorSetpoint = 0;
 
 	/**
+	 * The percent voltage for the intake to run at during normal usage
+	 * 
+	 * TODO: Intake: Get run voltage
+	 */
+	public static final double RUN_VOLTAGE = 0;
+
+	/**
 	 * The percent voltage for the intake to run at while attempting to "puke" all the balls.
 	 * 
 	 * Puking balls involves running the intake in reverse to clear any balls that are trapped in it.
-	 * 
-	 * TODO: Intake: Get puke voltage
 	 */
-	public static final double PUKE_VOLTAGE = 0;
+	public static final double PUKE_VOLTAGE = -RUN_VOLTAGE;
 
-	/**
-	 * The percent voltage for the intake to run at during normal usage
-	 * 
-	 * TODO: Intake Get run voltage
-	 */
-	public static final double RUN_VOLTAGE = 0;
-	
 	private Intake() { 
 		if (EnabledSubsystems.INTAKE_ENABLED) { 
 			lowTalon = new CANTalon(RobotMap.INTAKE_LOW_TALON_PORT);

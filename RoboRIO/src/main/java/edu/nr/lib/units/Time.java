@@ -7,7 +7,7 @@ public class Time {
 	private double val;
 	private Unit type;
 	
-	public enum Unit {
+	public enum Unit implements GenericUnit {
 		SECOND, MINUTE, MILLISECOND, HUNDRED_MILLISECOND;
 		
 		public static final Unit defaultUnit = SECOND;
@@ -16,43 +16,36 @@ public class Time {
 		private static final double HUNDRED_MILLISECONDS_PER_SECOND = 10;
 		private static final double MINUTES_PER_SECOND = 1/60.0;
 				
-		static public double convertToDefault(double val, Unit fromType) {
-			if(fromType == Unit.defaultUnit) {
+		public double convertToDefault(double val) {
+			if(this == Unit.defaultUnit) {
 				return val;
 			}
-			if(fromType == Unit.MINUTE) {
+			if(this == Unit.MINUTE) {
 				return val / MINUTES_PER_SECOND;
 			}
-			if(fromType == Unit.MILLISECOND) {
+			if(this == Unit.MILLISECOND) {
 				return val / MILLISECONDS_PER_SECOND;
 			}
-			if(fromType == HUNDRED_MILLISECOND) {
+			if(this == HUNDRED_MILLISECOND) {
 				return val / HUNDRED_MILLISECONDS_PER_SECOND;
 			}
 			return 0;
 		}
 		
-		static public double convertFromDefault(double val, Unit toType) {
-			if(toType == Unit.defaultUnit) {
+		public double convertFromDefault(double val) {
+			if(this == Unit.defaultUnit) {
 				return val;
 			}
-			if(toType == Unit.MINUTE) {
+			if(this == Unit.MINUTE) {
 				return MINUTES_PER_SECOND * val;
 			}
-			if(toType == Unit.MILLISECOND) {
+			if(this == Unit.MILLISECOND) {
 				return MILLISECONDS_PER_SECOND * val;
 			}
-			if(toType == Unit.HUNDRED_MILLISECOND) {
+			if(this == Unit.HUNDRED_MILLISECOND) {
 				return val * HUNDRED_MILLISECONDS_PER_SECOND;
 			}
 			return 0;
-		}
-
-		static public double convert(double val, Unit fromType, Unit toType) {
-			if(fromType == toType) {
-				return val;
-			}
-			return convertFromDefault(convertToDefault(val, fromType), toType);
 		}
 }
 	
@@ -62,7 +55,7 @@ public class Time {
 	}
 	
 	public double get(Unit toType) {
-		return Unit.convert(val, type, toType);
+		return type.convert(val, toType);
 	}
 	
 	public Time sub(Time angleTwo) {
@@ -76,7 +69,11 @@ public class Time {
 	public Time mul(double x) {
 		return new Time(this.get(Unit.defaultUnit) * x, Unit.defaultUnit);
 	}
-	
+
+	public Distance mul(Speed speed) {
+		return speed.mul(this);
+	}
+
 	public double div(Time t) {
 		return this.get(Unit.defaultUnit) / t.get(Unit.defaultUnit);
 	}

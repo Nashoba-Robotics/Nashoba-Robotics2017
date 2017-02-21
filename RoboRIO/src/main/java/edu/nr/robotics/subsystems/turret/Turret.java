@@ -4,7 +4,6 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
@@ -33,8 +32,9 @@ public class Turret extends NRSubsystem {
 	 */
 	private Angle positionSetpoint = Angle.ZERO;
 	
-	public static final Angle FORWARD_POSITION = Angle.ZERO; //TODO: Turret: Find forward position
-	public static final Angle REVERSE_POSITION = Angle.ZERO; //TODO: Turret: Find reverse position
+	//TODO: Turret: Find forward versus reverse limit switches
+	public static final Angle FORWARD_POSITION = new Angle(-90, Angle.Unit.DEGREE);
+	public static final Angle REVERSE_POSITION = new Angle(90, Angle.Unit.DEGREE);
 	
 	//Profiles
 	private static final int MOTION_MAGIC = 0;
@@ -46,15 +46,13 @@ public class Turret extends NRSubsystem {
 
 	/**
 	 * The angle around the goal position that we can be at
-	 * TODO: Turret: Find the position threshold
 	 */
-	public static final Angle POSITION_THRESHOLD = Angle.ZERO;
+	public static final Angle POSITION_THRESHOLD = new Angle(0.5, Angle.Unit.DEGREE);
 
 	/**
 	 * The angle threshold the turret needs to be within to shoot
-	 * TODO: Turret: Get shoot threshold
 	 */
-	public static final Angle SHOOT_THRESHOLD = Angle.ZERO;
+	public static final Angle SHOOT_THRESHOLD = POSITION_THRESHOLD;
 
 	/**
 	 * The angle the turret will automatically turn to start the match
@@ -65,17 +63,13 @@ public class Turret extends NRSubsystem {
 
 	/**
 	 * The angle the turret will automatically turn to start the match
-	 * 
-	 * TODO: Turret: Get preset turret angle for red side
 	 */
-	public static final Angle PRESET_ANGLE_RED = Angle.ZERO;
+	public static final Angle PRESET_ANGLE_RED = PRESET_ANGLE_BLUE.negate();
 
 	/**
 	 * The percentage of max speed the turret will go when tracking
-	 * 
-	 * TODO: Turret: Determine the percentage of max speed the turret will go when tracking
 	 */
-	public static final double MAX_TRACKING_PERCENTAGE = 0;
+	public static final double MAX_TRACKING_PERCENTAGE = 0.1;
 
 	/**
 	 * The max acceleration of the turret, in degrees per second per second
@@ -90,7 +84,7 @@ public class Turret extends NRSubsystem {
 	public static final AngularSpeed MAX_SPEED = AngularSpeed.ZERO;
 
 	//TODO: Turret: Find FPID values
-	public static double F = Turret.MAX_SPEED.get(AngularSpeed.Unit.RPS) / Units.HUNDRED_MS_PER_SECOND * Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	public static double F = Turret.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -110,8 +104,8 @@ public class Turret extends NRSubsystem {
 			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(AngularSpeed.Unit.RPM));
-			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(AngularSpeed.Unit.RPM, Time.Unit.SECOND));
+			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
+			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND));
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(false); //TODO: Turret: Find phase
 			talon.enable();
@@ -170,7 +164,7 @@ public class Turret extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.set(addGearing(speedSetpoint.div(MAX_SPEED)));
 			} else {
-				talon.set(addGearing(speedSetpoint.get(AngularSpeed.Unit.RPM)));				
+				talon.set(addGearing(speedSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE)));				
 			}
 		}
 	}
@@ -182,7 +176,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public AngularSpeed getSpeed() {
 		if(talon != null)
-			return new AngularSpeed(removeGearing(talon.getSpeed()), AngularSpeed.Unit.RPM);
+			return new AngularSpeed(removeGearing(talon.getSpeed()), Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		return AngularSpeed.ZERO;
 	}
 	

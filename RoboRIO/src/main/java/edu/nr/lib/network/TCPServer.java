@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import edu.nr.lib.units.GenericUnit;
+
 /**
  * 
  * A TCP server that listens for data on a new thread on a given port.
@@ -330,6 +332,7 @@ public class TCPServer implements Runnable {
 	public static class NetworkingDataType {
 		
 		ArrayList<NetworkingDataTypeListener> listeners;
+		public GenericUnit unit;
 		
 		/**
 		 * Create a networking data type.
@@ -340,7 +343,7 @@ public class TCPServer implements Runnable {
 		 * @param name
 		 *            A string describing the data. Eg "angle"
 		 */
-		public NetworkingDataType(char identifier, String name) {
+		public NetworkingDataType(char identifier, String name, GenericUnit unit) {
 			this.identifier = identifier;
 			this.name = name;
 			

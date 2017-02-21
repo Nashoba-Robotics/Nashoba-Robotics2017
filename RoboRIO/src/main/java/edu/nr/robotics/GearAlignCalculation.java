@@ -11,20 +11,21 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 
 	/**
 	 * The distance parallel to drive direction that the camera is from the center of rotation of the robot.
-	 * In inches
+	 * TODO: Gear: Get this number
 	 */
-	public static final double CAMERA_TO_CENTER_OF_ROBOT_DIST_Y = 0;
+	public static final Distance CAMERA_TO_CENTER_OF_ROBOT_DIST_Y = Distance.ZERO;
 	
 	/**
 	 * The distance to stop away from the tape of the gear
+	 * TODO: Gear: Get this other number
 	 */
-	public static final double DISTANCE_TO_STOP_FROM_GEAR = 0;
+	public static final Distance DISTANCE_TO_STOP_FROM_GEAR = Distance.ZERO;
 	
 	Angle turnAngle = Angle.ZERO;
 	Distance driveDistance = Distance.ZERO;
 	
 	private Angle lastSeenAngle;
-	private double lastSeenDistance;
+	private Distance lastSeenDistance;
 	
 	private Time timeOfLastData;
 	
@@ -45,14 +46,14 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	@Override
 	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
 		if(type.identifier == 'a') {
-			lastSeenAngle = new Angle(value, Angle.Unit.DEGREE);
+			lastSeenAngle = new Angle(value, (Angle.Unit) type.unit);
 		} else if(type.identifier == 'd') {
-			lastSeenDistance = value;
+			lastSeenDistance = new Distance(value, (Distance.Unit) type.unit);
 		}
 		timeOfLastData = Time.getCurrentTime();
 	
-		driveDistance = new Distance(Math.hypot(lastSeenDistance * lastSeenAngle.cos() + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y, lastSeenDistance * lastSeenAngle.sin()) - DISTANCE_TO_STOP_FROM_GEAR, Distance.Unit.INCH);
-		turnAngle = NRMath.atan2(lastSeenDistance * lastSeenAngle.sin(),lastSeenDistance * lastSeenAngle.cos() + CAMERA_TO_CENTER_OF_ROBOT_DIST_Y);
+		driveDistance = NRMath.hypot(lastSeenDistance.mul(lastSeenAngle.cos()).add(CAMERA_TO_CENTER_OF_ROBOT_DIST_Y), lastSeenDistance.mul(lastSeenAngle.sin())).sub(DISTANCE_TO_STOP_FROM_GEAR);
+		turnAngle = NRMath.atan2(lastSeenDistance.mul(lastSeenAngle.sin()),lastSeenDistance.mul(lastSeenAngle.cos()).add(CAMERA_TO_CENTER_OF_ROBOT_DIST_Y));
 	}
 	
 	public Distance getDistToDrive() {
