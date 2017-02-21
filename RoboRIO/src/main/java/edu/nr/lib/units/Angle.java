@@ -1,7 +1,6 @@
 package edu.nr.lib.units;
 
 import edu.nr.lib.Units;
-import edu.nr.lib.units.Distance.Unit;
 
 public class Angle {
 	

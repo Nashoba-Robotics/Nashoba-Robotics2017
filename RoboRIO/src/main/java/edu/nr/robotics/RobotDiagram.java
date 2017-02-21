@@ -1,7 +1,6 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.units.Angle;
-import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
