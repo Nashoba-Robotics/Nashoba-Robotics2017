@@ -20,11 +20,11 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 	public DriveToHopperAutoCommand() {
 		addParallel(new ZeroThenAutoTrackCommand());
 		if (Robot.side == SideOfField.blue) {
-			addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER, FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER, FieldMap.ANGLE_WALL_TO_HOPPER));
+			addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER, FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER, FieldMap.ANGLE_WALL_TO_HOPPER, true));
 		} else {
-			addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER, FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.negate(), FieldMap.ANGLE_WALL_TO_HOPPER.negate()));
+			addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER, FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.negate(), FieldMap.ANGLE_WALL_TO_HOPPER.negate(), true));
 		}
-		addParallel(new DriveConstantSpeedCommand(SPEED_DRIVING_INTO_HOPPER,SPEED_DRIVING_INTO_HOPPER));
+		addParallel(new DriveConstantSpeedCommand(-SPEED_DRIVING_INTO_HOPPER, -SPEED_DRIVING_INTO_HOPPER)); //Negated to go backwards in auto
 		addSequential(new WaitCommand(TIME_DRIVING_INTO_HOPPER));
 		addSequential(new DoNothingCommand(Drive.getInstance()));
 		if (Robot.autoShoot)

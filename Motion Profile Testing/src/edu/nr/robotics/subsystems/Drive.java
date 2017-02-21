@@ -10,10 +10,9 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.nr.lib.AngleUnit;
-import edu.nr.lib.DoNothingCommand;
+import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.NRMath;
-import edu.nr.lib.NRSubsystem;
+import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.NavX;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
@@ -30,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 import edu.nr.lib.sensorhistory.TalonEncoder;
+import edu.nr.lib.units.Angle;
 
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
 
@@ -119,7 +119,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 					RobotMap.MAX_RPS * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
 					RobotMap.MAX_ACC * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5, 
 					RobotMap.MAX_JERK * RobotMap.WHEEL_DIAMETER * Math.PI * 0.0254 * 0.5,
-					ticksPerRev, RobotMap.WHEEL_DIAMETER * 0.0254);
+					ticksPerRev, RobotMap.WHEEL_DIAMETER * 0.0254, RobotMap.WHEEL_BASE, true);
 			
 			encLeft = new TalonEncoder(talonLB);
 			encRight = new TalonEncoder(talonRB);
@@ -137,7 +137,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			SmartDashboard.putNumber("Y Waypoint 2", 3);
 			SmartDashboard.putNumber("End Angle 1", 45);
 			SmartDashboard.putNumber("End Angle 2", 0);
-
+			setJoystickCommand(new DriveJoystickCommand());
+			
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -147,7 +148,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 						//SmartDashboard.putNumber("rightPos", talonRB.getPosition());
 						//SmartDashboard.putNumber("leftPos", -talonLB.getPosition());
 	
-						SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw(AngleUnit.DEGREE));
+						SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw().get(Angle.Unit.DEGREE));
 	
 						//SmartDashboard.putString("Speed Right 2", Drive.getInstance().talonRB.getSpeed() + " : " +
 						//-Drive.getInstance().rightMotorSetPoint *
@@ -295,11 +296,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	}
 	
 	@Override
-	public void initDefaultCommand() {
-		setDefaultCommand(new DriveJoystickCommand());
-	}
-
-	@Override
 	public void disable() {
 		Drive.getInstance().setMotorSpeed(0, 0);
 		Command c = getCurrentCommand();
@@ -384,5 +380,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 		talonLB.set(left * RobotMap.MAX_RPS * 60);
 		talonRB.set(right * RobotMap.MAX_RPS * 60);
+	}
+
+	@Override
+	public void smartDashboardInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void periodic() {
+		// TODO Auto-generated method stub
+		
 	}
 }

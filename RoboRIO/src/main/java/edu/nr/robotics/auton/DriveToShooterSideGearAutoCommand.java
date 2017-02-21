@@ -10,12 +10,12 @@ public class DriveToShooterSideGearAutoCommand extends CommandGroup {
 	public DriveToShooterSideGearAutoCommand() {
 		addParallel(new ZeroThenAutoTrackCommand());
 		if (Robot.side == SideOfField.blue) {
-			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.negate(), FieldMap.ANGLE_TO_SIDE_PEG.negate()));
+			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.negate(), FieldMap.ANGLE_TO_SIDE_PEG.negate(), true));
 		}
 		else {
-			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG, FieldMap.ANGLE_TO_SIDE_PEG));
+			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG, FieldMap.ANGLE_TO_SIDE_PEG, true));
 		}
-		addSequential(new GearPegAlignCommand());
+		addSequential(new GearPegAlignCommand(true));
 		if (Robot.autoShoot) {
 			addSequential(new AlignThenShootCommand());
 		}

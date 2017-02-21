@@ -4,12 +4,11 @@ import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.nr.lib.AngleGyroCorrection;
-import edu.nr.lib.AngleUnit;
 import edu.nr.lib.NavX;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
-import edu.nr.lib.interfaces.GyroCorrection;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.GyroCorrection;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.Drive;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -81,7 +80,7 @@ private final Timer timer;
 		this.encoderTicksPerRevolution = encoderTicksPerRevolution;
 		this.initialPositionLeft = source.pidGetLeft();
 		this.initialPositionRight = source.pidGetRight();
-		this.gyroCorrection = new AngleGyroCorrection();
+		this.gyroCorrection = new GyroCorrection();
 		gyroCorrection.clearInitialValue();
 		this.wheelDiameter = wheelDiameter;
 		reset();
@@ -108,7 +107,7 @@ private final Timer timer;
 				double prelimOutputLeft = left.calculate((int)((source.pidGetLeft() - initialPositionLeft) * this.encoderTicksPerRevolution));
 				double prelimOutputRight = -right.calculate((int)(-(source.pidGetRight() - initialPositionRight) * this.encoderTicksPerRevolution));
 				
-				double gyroHeading = NavX.getInstance().getYaw(AngleUnit.DEGREE);
+				double gyroHeading = NavX.getInstance().getYaw().get(Angle.Unit.DEGREE);
 				double desiredHeading = Pathfinder.r2d(left.getHeading());
 				
 				double angleDifference = Pathfinder.boundHalfDegrees(desiredHeading - gyroHeading);

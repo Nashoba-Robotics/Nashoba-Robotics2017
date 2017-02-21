@@ -5,15 +5,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import edu.nr.lib.NRCommand;
+import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.Robot;
 
-public class DriveJoystickCommand extends NRCommand {
+public class DriveJoystickCommand extends JoystickCommand {
 
 	
 	public DriveJoystickCommand() {
-		requires(Drive.getInstance());
+		super(Drive.getInstance());
 	}
 
 	@Override
@@ -33,5 +33,15 @@ public class DriveJoystickCommand extends NRCommand {
 
 	@Override
 	protected void onEnd() {
+	}
+
+	@Override
+	protected boolean shouldSwitchToJoystick() {
+		return !Drive.getInstance().isProfilerEnabled();
+	}
+
+	@Override
+	protected long getPeriodOfCheckingForSwitchToJoystick() {
+		return 100;
 	}
 }
