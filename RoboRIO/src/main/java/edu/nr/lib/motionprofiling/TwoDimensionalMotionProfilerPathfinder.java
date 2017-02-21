@@ -33,7 +33,9 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	
 	private double initialPositionLeft;
 	private double initialPositionRight;
-			
+	
+	private boolean negate;
+	
 	private Trajectory trajectory;
 	private Trajectory.Config trajectoryConfig;
 	private TankModifier modifier;
@@ -52,7 +54,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	double timeSinceStart = 0;
 	double lastTime = 0;
 		
-	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, double wheelBase, long period) {
+	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, double wheelBase, long period, boolean negate) {
 		this.out = out;
 		this.source = source;
 		this.period = period;
@@ -80,13 +82,14 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 		this.gyroCorrection = new GyroCorrection();
 		gyroCorrection.clearInitialValue();
 		this.wheelDiameter = wheelDiameter;
+		this.negate = negate;
 		reset();
 		
 		//new Thread(this).start();
 	}
 	
-	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, double wheelBase) {
-		this(out, source, kv, ka, kp, ki, kd, kp_theta, max_velocity, max_acceleration, max_jerk, encoderTicksPerRevolution, wheelDiameter, wheelBase, defaultPeriod);
+	public TwoDimensionalMotionProfilerPathfinder(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double ki, double kd, double kp_theta, double max_velocity, double max_acceleration, double max_jerk, int encoderTicksPerRevolution, double wheelDiameter, double wheelBase, boolean negate) {
+		this(out, source, kv, ka, kp, ki, kd, kp_theta, max_velocity, max_acceleration, max_jerk, encoderTicksPerRevolution, wheelDiameter, wheelBase, defaultPeriod, negate);
 	}
 	
 	double timeOfVChange = 0;
@@ -96,6 +99,9 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	public void run() {
 			//System.out.println("Running!");
 		
+			double prelimOutputRight;
+			double prelimOutputLeft;
+			
 			if(enabled) {
 				lastTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
 
@@ -105,9 +111,14 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				
 				//source.pidGetLeft();
 				//source.pidGetRight();
-				
-				double prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
-				double prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
+
+				if (!this.negate) {
+					prelimOutputLeft = left.calculate((source.pidGetLeft() - initialPositionLeft)/(1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
+					prelimOutputRight = -right.calculate(-(source.pidGetRight() - initialPositionRight) / (1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
+				} else {
+					prelimOutputRight = -left.calculate(-(source.pidGetLeft() - initialPositionLeft)/(1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
+					prelimOutputLeft = right.calculate((source.pidGetRight() - initialPositionRight) / (1 / (wheelDiameter * Math.PI * .0254)) /*Rotations per meter*/);
+				}
 				
 				double currentHeading = -NavX.getInstance().getYaw().get(Angle.Unit.DEGREE);
 				//double currentHeading = -gyroCorrection.getAngleErrorDegrees();
@@ -151,7 +162,6 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 				//System.out.println("Time since last update: " + deltaT);
 	
 				SmartDashboard.putNumber("Delta T", deltaT);
-
 			}
 	}
 		
@@ -178,8 +188,13 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	public void reset() {
 		PIDSourceType type = source.getPIDSourceType();
 		source.setPIDSourceType(PIDSourceType.kDisplacement);
-		initialPositionLeft = source.pidGetLeft();
-		initialPositionRight = source.pidGetRight();
+		if (!negate) {
+			initialPositionLeft = source.pidGetLeft();
+			initialPositionRight = source.pidGetRight();
+		} else {
+			initialPositionLeft = -source.pidGetLeft();
+			initialPositionRight = -source.pidGetRight();
+		}
 		left.reset();
 		right.reset();
 		left.configurePIDVA(kp, ki, kd, kv, ka);

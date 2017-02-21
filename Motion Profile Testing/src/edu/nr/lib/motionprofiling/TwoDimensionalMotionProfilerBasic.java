@@ -3,10 +3,9 @@ package edu.nr.lib.motionprofiling;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import edu.nr.lib.AngleGyroCorrection;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
-import edu.nr.lib.interfaces.GyroCorrection;
+import edu.nr.lib.GyroCorrection;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -52,7 +51,7 @@ public class TwoDimensionalMotionProfilerBasic extends TimerTask implements TwoD
 		this.kp_theta = kp_theta;
 		this.initialPositionLeft = source.pidGetLeft();
 		this.initialPositionRight = source.pidGetRight();
-		this.gyroCorrection = new AngleGyroCorrection();
+		this.gyroCorrection = new GyroCorrection();
 		reset();
 	}
 	

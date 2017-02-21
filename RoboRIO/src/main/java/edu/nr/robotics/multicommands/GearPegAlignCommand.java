@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class GearPegAlignCommand extends CommandGroup {
 
-    public GearPegAlignCommand() {
+    public GearPegAlignCommand(boolean negate) {
     	addSequential(new NRCommand() {
     		@Override
 			protected boolean isFinishedNR() {
@@ -46,8 +46,13 @@ public class GearPegAlignCommand extends CommandGroup {
     		
     		@Override
     		public void onStart() {
-    			driveCommand = new DriveForwardCommand(GearAlignCalculation.getInstance().getDistToDrive());
-    			driveCommand.start();
+    			if (!negate) {
+    				driveCommand = new DriveForwardCommand(GearAlignCalculation.getInstance().getDistToDrive());
+    				driveCommand.start();
+    			} else {
+    				driveCommand = new DriveForwardCommand(GearAlignCalculation.getInstance().getDistToDrive().negate());
+    				driveCommand.start();
+    			}
     		}
     		
     		@Override

@@ -16,7 +16,7 @@ public class DriveOverBaselineAutoCommand extends CommandGroup {
 	
 	public DriveOverBaselineAutoCommand() {
 		addParallel(new ZeroThenAutoTrackCommand());
-		addSequential(new DriveForwardCommand(DISTANCE_TO_GET_OVER_BASELINE));
+		addSequential(new DriveForwardCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
 		if (Robot.autoShoot) {
 			addSequential(new AlignThenShootCommand());
 		}

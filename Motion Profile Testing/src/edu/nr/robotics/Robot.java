@@ -1,8 +1,7 @@
 
 package edu.nr.robotics;
 
-import edu.nr.lib.DoNothingCommand;
-import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
+import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.robotics.subsystems.Drive;
 import edu.nr.robotics.subsystems.EnableMotionProfile;
 import edu.wpi.first.wpilibj.IterativeRobot;

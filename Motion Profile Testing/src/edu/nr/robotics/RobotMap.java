@@ -22,4 +22,5 @@ public class RobotMap {
 	public static final double MAX_RPS = 13.33; 
 	public static final double MAX_ACC = 31.53;//RPS per second
 	public static final double MAX_JERK = 813.0; //No longer a total guess
+	public static final double WHEEL_BASE = 0.67; // Make more exact
 }

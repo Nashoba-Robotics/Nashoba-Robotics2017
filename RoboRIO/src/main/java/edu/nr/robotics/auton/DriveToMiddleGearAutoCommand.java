@@ -9,7 +9,7 @@ public class DriveToMiddleGearAutoCommand extends CommandGroup {
 
 	public DriveToMiddleGearAutoCommand() {
 		addParallel(new ZeroThenAutoTrackCommand());
-		addSequential(new DriveForwardCommand(FieldMap.DISTANCE_TO_CENTER_PEG));
+		addSequential(new DriveForwardCommand(FieldMap.DISTANCE_TO_CENTER_PEG.negate())); //Negated for driving backwards in auto
 		if (Robot.autoShoot) {
 			addSequential(new AlignThenShootCommand());
 		}

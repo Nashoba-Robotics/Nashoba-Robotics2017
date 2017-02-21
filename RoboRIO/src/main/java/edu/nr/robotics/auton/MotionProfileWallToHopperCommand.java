@@ -20,6 +20,7 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 	Distance forwardDistance; // In meters down below, inches on input
 	Distance sideDistance; // In meters down below, inches on input
 	Angle endHeading; // In degrees
+	boolean negate;
 
 	// Two-Dimensional motion profiling constants
 	// TODO: MotionProfileWallToHopperCommand: Get two-dimensional motion
@@ -38,11 +39,12 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 	 */
 	public static final Distance DISTANCE_FROM_ENDPOINT = Distance.ZERO;
 
-	public MotionProfileWallToHopperCommand(Distance forwardDistance, Distance sideDistance, Angle endHeading) {
+	public MotionProfileWallToHopperCommand(Distance forwardDistance, Distance sideDistance, Angle endHeading, boolean negate) {
 		super(Drive.getInstance());
 		this.forwardDistance = forwardDistance;
 		this.sideDistance = sideDistance;
 		this.endHeading = endHeading;
+		this.negate = negate;
 	}
 
 	@Override
@@ -53,14 +55,14 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER, Drive.TICKS_PER_REV,
-					Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER));
+					Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER), this.negate);
 		} else {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
 					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER * MAX_SPEED_PERCENTAGE,
 					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER, Drive.TICKS_PER_REV,
-					Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER));
+					Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER), this.negate);
 		}
 		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0), new Waypoint(
 				forwardDistance.sub((DISTANCE_FROM_ENDPOINT.mul(endHeading.cos()))).get(Distance.Unit.DRIVE_ROTATION),

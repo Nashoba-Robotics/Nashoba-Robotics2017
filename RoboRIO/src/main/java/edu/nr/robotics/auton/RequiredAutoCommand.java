@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public final class RequiredAutoCommand extends CommandGroup {
 
 	public RequiredAutoCommand() {
-		addParallel(new GearDeployCommand());
+		addSequential(new GearDeployCommand());
 		addParallel(new HoodPositionCommand(Angle.ZERO));
 		if (Robot.side == SideOfField.blue) {
 			addParallel(new TurretPositionCommand(Turret.REVERSE_POSITION));
