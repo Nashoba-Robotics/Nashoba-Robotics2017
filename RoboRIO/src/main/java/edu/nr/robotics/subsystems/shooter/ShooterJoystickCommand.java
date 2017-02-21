@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.shooter;
 
 import edu.nr.lib.commandbased.JoystickCommand;
-import edu.nr.robotics.AutoTrackingCalculation;
 
 public class ShooterJoystickCommand extends JoystickCommand {
 

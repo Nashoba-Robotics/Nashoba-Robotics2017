@@ -205,7 +205,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_RED));
 		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_BLUE));
 		
-		//new JoystickButton(operatorRight, ENABLE_AUTO_TRACKING_BUTTON_NUMBER).whenPressed(new EnableAutoTrackingCommand());
+		new JoystickButton(operatorRight, ENABLE_AUTO_TRACKING_BUTTON_NUMBER).whenPressed(new EnableAutoTrackingCommand());
 	
 		new JoystickButton(operatorRight, CANCEL_ALL_BUTTON_NUMBER).whenPressed(new CancelAllCommand());
 	
@@ -361,6 +361,10 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 	public boolean isShooterOn() {
 		return !shooterSwitch.get();
+	}
+	
+	public boolean isAgitatorOn() {
+		return !agitatorSwitch.get();
 	}
 	
 	public boolean isIntakeOn() {

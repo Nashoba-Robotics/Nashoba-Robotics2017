@@ -1,9 +1,5 @@
 package edu.nr.lib.units;
 
-import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
-
-import edu.nr.lib.units.Time.Unit;
-
 public class Acceleration {
 
 	public static final Acceleration ZERO = new Acceleration(Speed.ZERO, Time.ONE_SECOND);
