@@ -10,6 +10,7 @@ import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
+import edu.nr.robotics.multicommands.WallShotAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
@@ -61,7 +62,8 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int GEAR_DEPLOY_BUTTON_NUMBER = -1;
 	private static final int GEAR_RETRACT_BUTTON_NUMBER = -1;
 	private static final int GET_GEAR_IN_BUTTON_NUMBER = -1;
-	private static final int GET_GEAR_OUT_BUTTON_NUMBER = -1;*/
+	private static final int GET_GEAR_OUT_BUTTON_NUMBER = -1;
+	private static final int WALL_SHOT_BUTTON_NUMBER = -1;*/
 	
 	//Old driver station buttons numbers:
 	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = 2;
@@ -86,6 +88,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int GEAR_RETRACT_BUTTON_NUMBER = 3;
 	private static final int GET_GEAR_IN_BUTTON_NUMBER = 2;
 	private static final int GET_GEAR_OUT_BUTTON_NUMBER = 1;
+	private static final int WALL_SHOT_BUTTON_NUMBER = 10;
 	
 	private static final int DRIVE_GEAR_TOGGLE_BUTTON_NUMBER = 1;
 	
@@ -159,22 +162,6 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public void initOperatorLeft() {
-		
-		dumbDriveSwitch = new JoystickButton(operatorLeft, DUMB_DRIVE_SWITCH_BUTTON_NUMBER);
-		
-		dumbDriveSwitch.whenPressed(new NRCommand(Drive.getInstance()) {
-			@Override
-			public void onStart() {
-				Drive.getInstance().startDumbDrive();
-			}
-		});
-
-		dumbDriveSwitch.whenReleased(new NRCommand(Drive.getInstance()) {
-			@Override
-			public void onStart() {
-				Drive.getInstance().endDumbDrive();
-			}
-		});
 
 		
 		new JoystickButton(operatorLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand(false));
@@ -210,6 +197,8 @@ public class OI implements SmartDashboardSource, Periodic {
 		
 		new JoystickButton(operatorRight, GET_GEAR_IN_BUTTON_NUMBER).whenPressed(new GearGetPositionInCommand());
 		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new GearGetPositionOutCommand());
+		
+		new JoystickButton(operatorRight, WALL_SHOT_BUTTON_NUMBER).whenPressed(new WallShotAlignCommand());
 		
 		intakeSwitch = new JoystickButton(operatorRight, INTAKE_SWITCH_BUTTON_NUMBER);
 		shooterSwitch = new JoystickButton(operatorRight, SHOOTER_SWITCH_BUTTON_NUMBER);
