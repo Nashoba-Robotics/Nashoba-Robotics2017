@@ -19,11 +19,19 @@ public class Shooter extends NRSubsystem {
 	private static Shooter singleton;
 
 	private CANTalon talon;
+
+	/**
+	 * The max speed of the shooter
+	 * TODO: Shooter: Find max speed
+	 */
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
 	
 	/**
-	 * The speed that the motor is currently supposed to be running at
+	 * The speed that the motor is currently supposed to be running at.
+	 * 
+	 * The initial value is the speed it is supposed to run at to start the match.
 	 */
-	public AngularSpeed motorSetpoint = AngularSpeed.ZERO;
+	public AngularSpeed motorSetpoint = MAX_SPEED.mul(0.3);
 
 	private boolean autoAlign = false;
 
@@ -31,12 +39,6 @@ public class Shooter extends NRSubsystem {
 	 * The threshold the shooter needs to be within to shoot
 	 */
 	public static final AngularSpeed SHOOT_THRESHOLD = new AngularSpeed(50, Angle.Unit.ROTATION, Time.Unit.MINUTE);
-
-	/**
-	 * The max speed of the shooter
-	 * TODO: Shooter: Find max speed
-	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
 
 	//TODO: Shooter: Find FPID values
 	public static double F = Shooter.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
