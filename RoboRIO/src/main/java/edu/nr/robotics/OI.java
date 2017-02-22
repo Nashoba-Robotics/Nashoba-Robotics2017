@@ -8,7 +8,6 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
-import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.multicommands.WallShotAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -76,7 +75,6 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER = 6;
 	private static final int INCREMENT_HOOD_POSITION_BUTTON_NUMBER = 5;
 	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = 9;
-	private static final int DUMB_DRIVE_SWITCH_BUTTON_NUMBER = 3;
 	private static final int SHOOT_BUTTON_NUMBER = 1;
 	
 	private static final int ENABLE_AUTO_TRACKING_BUTTON_NUMBER = 5;

@@ -1,7 +1,6 @@
 package edu.nr.lib.units;
 
 import edu.nr.lib.Units;
-import edu.nr.lib.units.Time.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 
 public class Distance {
