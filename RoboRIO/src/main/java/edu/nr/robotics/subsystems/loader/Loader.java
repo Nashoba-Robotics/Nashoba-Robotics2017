@@ -27,8 +27,8 @@ public class Loader extends NRSubsystem {
 	 *
 	 * TODO: Loader: Get loader run speed
 	 */
-	public static final double LOW_RUN_VOLTAGE = 0.30;
-	public static final double HIGH_RUN_VOLTAGE = 0.65;
+	public static final double LOW_RUN_VOLTAGE = 0.50;
+	public static final double HIGH_RUN_VOLTAGE = 0.75;
 	
 	/**
 	 * The voltage percent for the loader to run at while going in reverse
@@ -91,12 +91,14 @@ public class Loader extends NRSubsystem {
 
 	@Override
 	public void smartDashboardInfo() {
-		if (lowTalon != null) {
+		if (lowTalon != null && highTalon != null) {
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Loader Current", lowTalon.getOutputCurrent());
+				SmartDashboard.putNumber("Kicker Current", highTalon.getOutputCurrent());
 			}
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Loader Voltage", lowTalon.getOutputVoltage());
+				SmartDashboard.putNumber("Kicker Voltage", highTalon.getOutputVoltage());
 			}
 		}
 	}

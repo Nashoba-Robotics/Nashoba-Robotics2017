@@ -30,7 +30,7 @@ public class Shooter extends NRSubsystem {
 	 * 
 	 * The initial value is the speed it is supposed to run at to start the match.
 	 */
-	public AngularSpeed motorSetpoint = MAX_SPEED.mul(0.3);
+	public AngularSpeed motorSetpoint = new AngularSpeed(0.3, Angle.Unit.DEGREE, Time.Unit.SECOND);
 
 	private boolean autoAlign = false;
 
@@ -105,7 +105,9 @@ public class Shooter extends NRSubsystem {
 			if(talon.getControlMode() == TalonControlMode.Speed) {
 				talon.set(motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
 			} else {
-				talon.set(motorSetpoint.div(MAX_SPEED));
+				double runSpeed = motorSetpoint.div(MAX_SPEED);
+				talon.set(runSpeed);
+				System.out.println("Shooter speed: " + runSpeed);
 			}
 		}
 	}

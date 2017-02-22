@@ -207,7 +207,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
 		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
 
-		//agitatorSwitch = new JoystickButton(operatorRight, AGITATOR_SWITCH_BUTTON_NUMBER);
+		//agitatorSwitch = new JoystickButton(operatorRight, SHOOTER_SWITCH_BUTTON_NUMBER);
 		intakeSwitch = new JoystickButton(operatorRight, INTAKE_SWITCH_BUTTON_NUMBER);
 		shooterSwitch = new JoystickButton(operatorRight, SHOOTER_SWITCH_BUTTON_NUMBER);
 
@@ -350,11 +350,13 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public boolean isShooterOn() {
+		System.out.println("Shooter on: " + !shooterSwitch.get());
 		return !shooterSwitch.get();
 	}
 	
 	public boolean isAgitatorOn() {
-		return !agitatorSwitch.get();
+		System.out.println("Agitator on: " + !shooterSwitch.get());
+		return !shooterSwitch.get(); //TODO: OI: Actual agitator switch
 	}
 	
 	public boolean isIntakeOn() {

@@ -10,8 +10,9 @@ public class ShooterJoystickCommand extends JoystickCommand {
 	
 	@Override
 	public void onExecute() {
+		//Shooter.getInstance().setMotorSpeedInRPM(new AngularSpeed(0.30, Angle.Unit.DEGREE, Time.Unit.SECOND));
 		//Shooter.getInstance().setMotorSpeedInRPM(Shooter.getInstance().motorSetpoint);
-		Shooter.getInstance().setMotorSpeedPercent(0.30);
+		Shooter.getInstance().setMotorSpeedPercent(0.50);
 	}
 
 	@Override
