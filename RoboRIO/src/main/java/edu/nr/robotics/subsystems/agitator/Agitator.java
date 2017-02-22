@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -64,7 +65,9 @@ public class Agitator extends NRSubsystem {
 	public void setMotorVoltage(double percent) {
 		motorSetpoint = percent;
 		if (talon != null) {
-			talon.set(motorSetpoint);
+			if(OI.getInstance().isAgitatorOn()) {
+				talon.set(motorSetpoint);
+			}
 		} 
 	}
 	
