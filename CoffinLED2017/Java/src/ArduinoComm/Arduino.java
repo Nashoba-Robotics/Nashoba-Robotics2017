@@ -334,7 +334,7 @@ public class Arduino implements SerialPortEventListener {
 							sendStr(inStr);
 							appendIn(inStr);
 						}else {
-							appendIn("***Please ekghvnd with a ';' : " + inStr + "***");
+							appendIn("***Please end with a ';' : " + inStr + "***");
 						}
 						inText.setText("");
 					}

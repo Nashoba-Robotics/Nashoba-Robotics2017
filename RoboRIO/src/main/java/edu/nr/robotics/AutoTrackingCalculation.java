@@ -87,18 +87,15 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		
 		//Gets average speed of two drive sides to get instantaneous speed in (inches / sec)
 		Speed speed = NRMath.average(Drive.getInstance().getLeftSpeed(),Drive.getInstance().getRightSpeed());
-		Speed vertSpeed = speed.mul(curRobotOrientation.cos());
 		
-		//Code until next break gets additional angle for turret to turn based on current speed
+		//Code until next break gets angle for turret to be at based on current speed
 		Time timeUntilMake = Calibration.getTimeInAirFromDistance(curDistReal);
 		Distance p = speed.mul(timeUntilMake);
-		Distance e = NRMath.lawOfCos(curDistReal, p, curTurretOrientation);
-		turretAngle = Units.HALF_CIRCLE.sub(NRMath.asin(curDistReal.mul(curTurretOrientation.sin()).div(e)));
+		//What the distance of the shot will map as due to forward/backward motion
+		Distance feltDist = NRMath.lawOfCos(curDistReal, p, curTurretOrientation);
+		turretAngle = Units.HALF_CIRCLE.sub(NRMath.asin(curDistReal.mul(curTurretOrientation.sin()).div(feltDist)));
 		//Sets the change in position of the turret
 		
-		//What the distance of the shot will map as due to forward/backward motion
-		Distance feltDist = vertSpeed.mul(timeUntilMake);
-
 		hoodAngle = Calibration.getHoodAngleFromDistance(feltDist);
 		
 		shooterSpeed = Calibration.getShooterSpeedFromDistance(feltDist);

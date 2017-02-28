@@ -6,8 +6,8 @@ public class RobotMap {
 		public static final int talonRF = 2;
 		public static final int talonLB = 1;
 		public static final int talonRB = 3;
-		public static final int talon_one = 2;
-		public static final int talon_two = 3;
+		public static final int talon_one = 1;
+		public static final int talon_two = 2;
 
 		public static final double WHEEL_DIAMETER = 3.5;
 		public static final double MAX_RPM = 200;

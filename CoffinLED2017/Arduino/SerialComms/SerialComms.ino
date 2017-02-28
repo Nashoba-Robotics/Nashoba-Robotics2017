@@ -74,6 +74,8 @@ void setup() {
 
   //clearLEDs();
   strip.show();
+
+  clearLEDs();
 }
 
 
@@ -102,7 +104,7 @@ void serialComms(char delim) {
     lcd.clear();
     Serial.println("LCD cleared");
   }else if(command == commands[4]) {
-    //clearLEDs();
+    clearLEDs();
   }else if(command == commands[5]) {
     setLED(params);
   }else if(command == commands[6]) {
@@ -327,6 +329,7 @@ void clearLEDs() {
     states[i][1] = 0;
     states[i][2] = 0;
   }
+  strip.show();
 }
 
 void setLED(String params) {//ex:(5, 0xFF, 0xE1, 0xF3)
@@ -336,7 +339,7 @@ void setLED(String params) {//ex:(5, 0xFF, 0xE1, 0xF3)
   if(paramNum != 4) return;
   int ints[4];
   for(int i = 0; i < paramNum; i++) {
-    if(checkQuit()) return;
+    if(checkQuit()) break;
     paramIntStr = parseNextParamInt(params);
     params = paramIntStr.str;
     ints[i] = paramIntStr.num;
@@ -364,11 +367,11 @@ void countDown(String params) {
   seconds = parseNextParamInt(params);
   
   for(int j = seconds.num; j>0; j--) {
-    if(checkQuit()) return;
+    if(checkQuit()) break;
     delay(1000);
     if(j<seconds.num && j>(seconds.num/3)*2) {
       for(int i=0; i<LED_COUNT; i++) {
-        if(checkQuit()) return;
+        if(checkQuit()) break;
         char printStr[20];
          sprintf(printStr, "%d, 0, 255, 0", i);
          setLED(printStr);
@@ -376,7 +379,7 @@ void countDown(String params) {
     }
      if(j<(seconds.num/3)*2 && j> seconds.num/3) {
        for(int i=0; i<LED_COUNT; i++) {
-        if(checkQuit()) return;
+        if(checkQuit()) break;
          char printStr[20];
          sprintf(printStr, "%d, 0, 0, 255", i);
          setLED(printStr);
@@ -384,7 +387,7 @@ void countDown(String params) {
      }
      if(j<seconds.num/3) {
        for(int i=0; i<LED_COUNT; i++) {
-        if(checkQuit()) return;
+        if(checkQuit()) break;
          char printStr[20];
          sprintf(printStr, "%d, 255, 0, 0", i);
          setLED(printStr);
@@ -396,6 +399,13 @@ void countDown(String params) {
 }
 
 void realGameTimer(String params) {//(time, total time)
+  for(int i = 0; i < LED_COUNT; i++) {
+    states[i][0] = 0;
+    states[i][1] = 0;
+    states[i][2] = 0;
+  }
+  drawStates();
+  
   int paramNum = countParams(params);
   if(paramNum != 2) return;
   doubleStr seconds;
@@ -418,7 +428,7 @@ void countDownTwo(String params) {
   double sec = seconds.num;
   
   for(int LED = LED_COUNT; LED >= 0; LED--) {
-    if(checkQuit()) return;
+    if(checkQuit()) break;
     //delay((seconds.num/LED_COUNT)*1000);
     states[LED][0] = 0x00;
     states[LED][1] = 0xFF;
@@ -426,7 +436,7 @@ void countDownTwo(String params) {
   }
   drawStates();
   for(int LED = LED_COUNT; LED >= 0; LED--) {
-    if(checkQuit()) return;
+    if(checkQuit()) break;
     delay((sec/LED_COUNT)*1000);
     states[LED][0] = 0xFF;
     states[LED][1] = 0x00;
@@ -435,11 +445,11 @@ void countDownTwo(String params) {
   }
 }
 
-void gameTimer() {
+void gameTimer() { //Old and fully accurate game timer
   double seconds = 2.5*60;
   double t1 = 12/seconds, t2 = (1.9*60)/seconds;
   for(int LED = LED_COUNT; LED >= 0; LED--) {
-    if(checkQuit()) return;
+    if(checkQuit()) break;
     //delay((seconds/LED_COUNT)*1000);
     if(LED < t1*LED_COUNT) {
       states[LED][2] = 0xFF;
@@ -459,7 +469,7 @@ void gameTimer() {
   }
   drawStates();
   for(int LED = 0; LED < LED_COUNT; LED++) {
-    if(checkQuit()) return;
+    if(checkQuit()) break;
     delay((seconds/LED_COUNT)*1000);
     char printStr[20];
          sprintf(printStr, "%d, 255, 0, 0", LED);
@@ -469,7 +479,7 @@ void gameTimer() {
 
 void drawStates() {
   for(int i = 0; i < LED_COUNT; i++) {
-    if(checkQuit()) return;
+    if(checkQuit()) break;
     strip.setPixelColor(i+1, states[i][0], states[i][1], states[i][2]); //i+1 because I think that is where the first LED in indexed
   }
   strip.show();
@@ -487,6 +497,8 @@ void setSingleLED(String str) {//(LED#, LEDState(1, 0))
 void updateTimer() {
   int t = (globTime / globTotTime) * LED_COUNT;
   for(int i = 0; i < LED_COUNT; i++) {
+    delay(1000);
+    if (checkQuit()) break;
     if(i < t) {
       states[i][1] = 255;
     }else if(i >= t) {
