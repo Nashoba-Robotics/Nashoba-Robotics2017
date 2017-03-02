@@ -1,10 +1,5 @@
 package edu.nr.robotics.subsystems;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import edu.nr.lib.commandbased.JoystickCommand;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.Robot;

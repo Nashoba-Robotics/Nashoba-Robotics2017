@@ -1,8 +1,12 @@
-package edu.nr.robotics.subsystems.drive;
+package edu.nr.robotics.multicommands;
 
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.commandbased.NRSubsystem;
+import edu.nr.lib.units.Angle;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.Robot;
+import edu.nr.robotics.subsystems.drive.Drive;
+import edu.nr.robotics.subsystems.turret.Turret;
 
 public class ClimbCommand extends NRCommand {
 
@@ -15,11 +19,17 @@ public class ClimbCommand extends NRCommand {
 	private static final double CLIMB_VOLTAGE = 0; //TODO: Climber: Find climb percent voltage
 
 	public ClimbCommand() {
-		super(Drive.getInstance());
+		super(new NRSubsystem[] {Drive.getInstance(), Turret.getInstance()});
 	}
 	
 	@Override
 	public void onStart() {
+		if ((Turret.getInstance().getPosition().sub(Turret.REVERSE_POSITION)).abs().lessThan(Turret.getInstance().getPosition().sub(Turret.FORWARD_POSITION).abs())) {
+			Turret.getInstance().setPosition(Turret.REVERSE_POSITION);
+		} else {
+			Turret.getInstance().setPosition(Turret.FORWARD_POSITION);
+		}
+		Turret.getInstance().setPosition(Turret.REVERSE_POSITION);
 		Robot.robotCompressor.stop();
 		Drive.getInstance().startDumbDrive();
 	}

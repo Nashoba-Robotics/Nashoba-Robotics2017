@@ -10,17 +10,12 @@ import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.StatusFrameRate;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.NRMath;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.NavX;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
-import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
-import edu.nr.lib.motionprofiling.OneDimensionalTrajectorySimple;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
-import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinderModified;
-import edu.nr.lib.sensorhistory.HistoricalCANTalon;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.wpi.first.wpilibj.PIDSourceType;
