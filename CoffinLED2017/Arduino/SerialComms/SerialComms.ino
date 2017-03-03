@@ -58,7 +58,11 @@ void setup() {
   
   Serial.println("Arduino ready->");
   Serial.println("Commands:");
-  for(int i = 0; i < numCommands; i++) Serial.println(commands[i]);
+  for(int i = 0; i < numCommands; i++) {
+    Serial.print(commands[i]);
+    Serial.print("--");
+  }
+  Serial.print("\n");
 
   strip.begin();
 
@@ -497,8 +501,6 @@ void setSingleLED(String str) {//(LED#, LEDState(1, 0))
 void updateTimer() {
   int t = (globTime / globTotTime) * LED_COUNT;
   for(int i = 0; i < LED_COUNT; i++) {
-    delay(1000);
-    if (checkQuit()) break;
     if(i < t) {
       states[i][1] = 255;
     }else if(i >= t) {
