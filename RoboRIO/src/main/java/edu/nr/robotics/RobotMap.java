@@ -15,14 +15,14 @@ public class RobotMap {
 	public static final int DRIVE_LEFT_B_TALON_PORT = 14;
 	public static final int DRIVE_RIGHT_F_TALON_PORT = 12;
 	public static final int DRIVE_RIGHT_B_TALON_PORT = 13;
-	public static final int SHOOTER_A_TALON_PORT = 0;
+	public static final int SHOOTER_A_TALON_PORT = 3;
 	public static final int SHOOTER_B_TALON_PORT = 1;
 	public static final int TURRET_TALON_PORT = 11;
 	public static final int LOADER_LOW_TALON_PORT = 5;
 	public static final int LOADER_HIGH_TALON_PORT = 4;
 	public static final int AGITATOR_TALON_PORT = 10;
 	public static final int INTAKE_LOW_TALON_PORT = 9;
-	public static final int INTAKE_HIGH_TALON_PORT = 3;
+	public static final int INTAKE_HIGH_TALON_PORT = 0;
 	public static final int HOOD_TALON_PORT = 2;	
 	
 	//Forwards are even, reverses are odd
