@@ -2,7 +2,7 @@ package edu.nr.robotics.multicommands;
 
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.robotics.GearAlignCalculation;
-import edu.nr.robotics.subsystems.drive.DriveForwardCommand;
+import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
 import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -42,15 +42,15 @@ public class GearPegAlignCommand extends CommandGroup {
 
     	
     	addSequential(new NRCommand() {
-    		DriveForwardCommand driveCommand;
+    		DriveForwardProfilingCommand driveCommand;
     		
     		@Override
     		public void onStart() {
     			if (!negate) {
-    				driveCommand = new DriveForwardCommand(GearAlignCalculation.getInstance().getDistToDrive());
+    				driveCommand = new DriveForwardProfilingCommand(GearAlignCalculation.getInstance().getDistToDrive());
     				driveCommand.start();
     			} else {
-    				driveCommand = new DriveForwardCommand(GearAlignCalculation.getInstance().getDistToDrive().negate());
+    				driveCommand = new DriveForwardProfilingCommand(GearAlignCalculation.getInstance().getDistToDrive().negate());
     				driveCommand.start();
     			}
     		}

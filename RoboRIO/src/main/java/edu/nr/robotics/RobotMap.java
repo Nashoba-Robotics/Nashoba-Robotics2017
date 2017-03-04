@@ -55,7 +55,6 @@ public class RobotMap {
 	public static final Distance Y_CAMERA_OFFSET = new Distance(6.75, Distance.Unit.INCH);
 	public static final Distance X_CAMERA_OFFSET = Distance.ZERO;
 	public static final Distance X_TURRET_OFFSET = new Distance(5.465, Distance.Unit.INCH);
-	public static final Distance Y_TURRET_OFFSET = new Distance(-7, Distance.Unit.INCH);
-
+	public static final Distance Y_TURRET_OFFSET = new Distance(7, Distance.Unit.INCH);
 
 }

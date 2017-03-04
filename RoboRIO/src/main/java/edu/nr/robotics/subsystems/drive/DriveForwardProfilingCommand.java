@@ -9,13 +9,13 @@ import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.subsystems.drive.Drive.Gear;
 
-public class DriveForwardCommand extends NRCommand {
+public class DriveForwardProfilingCommand extends NRCommand {
 
 	OneDimensionalMotionProfiler profiler;
 	Distance distance; // Rotations
 
 	// These are the one-dimensional motion profiling values
-	// TODO: DriveForwardCommand: Find the correct constants for one-dimensional
+	// TODO: DriveForwardProfilingCommand: Find the correct constants for one-dimensional
 	// motion profiling
 	public static final double KA = 0;
 	public static final double KP = 0;
@@ -29,7 +29,7 @@ public class DriveForwardCommand extends NRCommand {
 	 * 
 	 * @param distance
 	 */
-	public DriveForwardCommand(Distance distance) {
+	public DriveForwardProfilingCommand(Distance distance) {
 		super(Drive.getInstance());
 		this.distance = distance;
 	}

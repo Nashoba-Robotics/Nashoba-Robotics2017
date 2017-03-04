@@ -1,6 +1,7 @@
 package edu.nr.lib;
 
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Speed;
 import edu.nr.lib.units.Time;
@@ -78,6 +79,10 @@ public class NRMath {
 	public static double lawOfCos(double a, double b, Angle C) {
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) + 2 * a * b * C.cos());
 	}
+	
+	public static double lawOfCos(double a, double b, double c) {
+		return Math.acos((Math.pow(c, 2) - Math.pow(a, 2) - Math.pow(b, 2)) / (-2 * a * b));
+	}
 
 	public static Speed average(Speed leftSpeed, Speed rightSpeed) {
 		return new Speed((leftSpeed.getDefault() + rightSpeed.getDefault()) / 2, Distance.Unit.defaultUnit,
@@ -88,13 +93,17 @@ public class NRMath {
 		return new Distance(Math.hypot(x.getDefault(), y.getDefault()), Distance.Unit.defaultUnit);
 	}
 
-	public static Angle atan2(Distance x, Distance y) {
-		return NRMath.atan2(x.getDefault(), y.getDefault());
+	public static Angle atan2(Distance y, Distance x) {
+		return NRMath.atan2(y.getDefault(), x.getDefault());
 	}
 
 	public static Distance lawOfCos(Distance x, Distance y, Angle theta) {
 		return new Distance(NRMath.lawOfCos(x.getDefault(), y.getDefault(), theta),
 				Distance.Unit.defaultUnit);
+	}
+	
+	public static Angle lawOfCos(Distance x, Distance y, Distance z) {
+		return new Angle(NRMath.lawOfCos(x.getDefault(), y.getDefault(), z.getDefault()), Unit.defaultUnit);
 	}
 
 	public static Distance max(Distance a, Distance b) {

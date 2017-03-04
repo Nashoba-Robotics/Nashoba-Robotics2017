@@ -50,26 +50,17 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 		}
 		timeOfLastData = Time.getCurrentTime();
 		
-		Angle thetaYCamera = NRMath.atan2(RobotMap.Y_CAMERA_OFFSET, RobotMap.X_CAMERA_OFFSET);
-		Angle thetaXTurret = NRMath.atan2(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
-		Angle thetaYTurret = NRMath.atan2(RobotMap.Y_TURRET_OFFSET, RobotMap.X_TURRET_OFFSET);
+		Distance distReal = NRMath.lawOfCos(lastSeenDistance, RobotMap.Y_CAMERA_OFFSET, lastSeenAngle);
 		
-		//Code until break manipulates camera angle as if on center of robot
-		Distance z1 = NRMath.hypot(RobotMap.X_CAMERA_OFFSET, RobotMap.Y_CAMERA_OFFSET);
-		Angle theta4 = Units.HALF_CIRCLE.sub(thetaYCamera).sub(thetaXTurret);
-		Distance h4 = NRMath.hypot(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
-		Distance h3 = NRMath.lawOfCos(h4, z1, theta4);
-		Angle theta5 = Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).sub(thetaYCamera);
-		Angle theta6 = Units.RIGHT_ANGLE.sub(theta5).sub(NRMath.asin(h4.mul(theta4.sin()).div(h3)));
-		Distance distCenter = NRMath.lawOfCos(lastSeenDistance, h3, theta6.add(lastSeenAngle));
-		Angle angleCenter = Units.HALF_CIRCLE.sub(thetaXTurret).sub(NRMath.asin(z1.mul(theta4.sin()).div(h3))).sub(NRMath.asin(lastSeenDistance.mul(theta6.add(lastSeenAngle).sin()).div(distCenter)));
-
+		Angle theta4 = NRMath.asin(distReal.mul(lastSeenAngle.sin()).div(lastSeenDistance));
 		
-		//Manipulates camera as if on center of turret
-		Angle theta1 = Units.HALF_CIRCLE.sub(angleCenter).sub(thetaXTurret);
-		Distance distReal = NRMath.lawOfCos(distCenter, h4, theta1);
-		Angle theta2 = NRMath.asin(distCenter.mul(theta1.sin()).div(distReal));
-		turretAngle = theta2.sub(Units.RIGHT_ANGLE).add(thetaYTurret);
+		if (theta4.greaterThan(Angle.ZERO)) {
+			turretAngle = Units.HALF_CIRCLE.sub(theta4);
+		} else if (theta4.equals(Angle.ZERO)) {
+			turretAngle = Angle.ZERO;
+		} else {
+			turretAngle = Units.HALF_CIRCLE.negate().sub(theta4);
+		}
 
 		hoodAngle = Calibration.getHoodAngleFromDistance(distReal);
 

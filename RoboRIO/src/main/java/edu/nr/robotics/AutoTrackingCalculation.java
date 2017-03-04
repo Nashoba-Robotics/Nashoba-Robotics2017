@@ -58,15 +58,45 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		Angle thetaXTurret = NRMath.atan2(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
 		Angle thetaYTurret = NRMath.atan2(RobotMap.Y_TURRET_OFFSET, RobotMap.X_TURRET_OFFSET);
 		
+		Distance hypot = NRMath.hypot(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
+		
+		
+		Distance histDistCenter = Distance.ZERO;
+		Angle histAngleCenter = Angle.ZERO;
+		
+		Distance turretHistDistReal = NRMath.lawOfCos(lastSeenDistance, RobotMap.Y_CAMERA_OFFSET, lastSeenAngle);
+		
+		if (lastSeenAngle.greaterThan(Angle.ZERO) && Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).greaterThan(Angle.ZERO)) {
+			//Distance turretHistDistReal = NRMath.lawOfCos(lastSeenDistance, RobotMap.Y_CAMERA_OFFSET, lastSeenAngle);
+			Angle tempTheta1 = Units.FULL_CIRCLE.sub(thetaYTurret).sub(Units.RIGHT_ANGLE.sub(Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp))).sub(NRMath.lawOfCos(RobotMap.Y_CAMERA_OFFSET, turretHistDistReal, lastSeenDistance));
+			histDistCenter = NRMath.lawOfCos(hypot, turretHistDistReal, tempTheta1);
+			histAngleCenter = Units.HALF_CIRCLE.sub(thetaXTurret).sub(NRMath.lawOfCos(histDistCenter, hypot, turretHistDistReal));
+		} else if (lastSeenAngle.lessThan(Angle.ZERO) && Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).greaterThan(Angle.ZERO)) {
+			Angle tempTheta2 = NRMath.asin(lastSeenDistance.mul(Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).sin()).div(turretHistDistReal)).abs().sub(Units.RIGHT_ANGLE.sub(Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp)));
+			if (tempTheta2.greaterThan(thetaYTurret)) {
+				Angle tempTheta3 = tempTheta2.sub(thetaYTurret);
+				histDistCenter = NRMath.lawOfCos(hypot, turretHistDistReal, tempTheta3);
+				histAngleCenter = Units.HALF_CIRCLE.sub(thetaXTurret).sub(NRMath.lawOfCos(histDistCenter, hypot, turretHistDistReal));
+			} else if (tempTheta2.lessThan(thetaYTurret)) {
+				Angle tempTheta4 = NRMath.lawOfCos(turretHistDistReal, RobotMap.Y_TURRET_OFFSET, lastSeenDistance).sub(Units.RIGHT_ANGLE.sub(Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp)));
+				Angle tempTheta5 = thetaYTurret.sub(tempTheta4);
+				histDistCenter = NRMath.lawOfCos(turretHistDistReal, hypot, tempTheta5);
+				histAngleCenter = Units.HALF_CIRCLE.sub(NRMath.asin(turretHistDistReal.mul(tempTheta5.sin()).div(histDistCenter)).sub(thetaXTurret)).negate();
+			}
+		} else if (lastSeenAngle.greaterThan(Angle.ZERO) && Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).lessThan(Angle.ZERO)) {
+			
+		} else if (lastSeenAngle.lessThan(Angle.ZERO) && Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).lessThan(Angle.ZERO)) {
+			
+		}
+		
 		//Code until break manipulates camera angle as if on center of robot
-		Distance z1 = NRMath.hypot(RobotMap.X_CAMERA_OFFSET, RobotMap.Y_CAMERA_OFFSET);
 		Angle theta4 = Units.HALF_CIRCLE.sub(thetaYCamera).sub(thetaXTurret);
 		Distance h4 = NRMath.hypot(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
-		Distance h3 = NRMath.lawOfCos(h4, z1, theta4);
+		Distance h3 = NRMath.lawOfCos(h4, RobotMap.Y_CAMERA_OFFSET, theta4);
 		Angle theta5 = Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp).sub(thetaYCamera);
 		Angle theta6 = Units.RIGHT_ANGLE.sub(theta5).sub(NRMath.asin(h4.mul(theta4.sin()).div(h3)));
-		Distance histDistCenter = NRMath.lawOfCos(lastSeenDistance, h3, theta6.add(lastSeenAngle));
-		Angle histAngleCenter = Units.HALF_CIRCLE.sub(thetaXTurret).sub(NRMath.asin(z1.mul(theta4.sin()).div(h3))).sub(NRMath.asin(lastSeenDistance.mul(theta6.add(lastSeenAngle).sin()).div(histDistCenter)));
+		histDistCenter = NRMath.lawOfCos(lastSeenDistance, h3, theta6.add(lastSeenAngle));
+		histAngleCenter = Units.HALF_CIRCLE.sub(thetaXTurret).sub(NRMath.asin(RobotMap.Y_CAMERA_OFFSET.mul(theta4.sin()).div(h3))).sub(NRMath.asin(lastSeenDistance.mul(theta6.add(lastSeenAngle).sin()).div(histDistCenter)));
 		
 		Angle histRobotOrientation = histAngleCenter.add(Turret.getInstance().getHistoricalPosition(lastSeenTimeStamp));
 		Angle deltaAngle = NavX.getInstance().getYaw().sub(NavX.getInstance().getHistoricalYaw(lastSeenTimeStamp));
@@ -80,9 +110,8 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		Distance h = NRMath.lawOfCos(r, histDistCenter, theta1);
 		Angle theta0 = NRMath.asin(histDistCenter.mul(theta1.sin()).div(h)).sub(deltaAngle);
 		Distance curDist = NRMath.lawOfCos(h, r, theta0);
-		Distance hyp = NRMath.hypot(RobotMap.X_TURRET_OFFSET, RobotMap.Y_TURRET_OFFSET);
 		Angle theta3 = new Angle(0.5, Angle.Unit.ROTATION).sub(thetaXTurret).add(curRobotOrientation);
-		Distance curDistReal = NRMath.lawOfCos(curDist, hyp, theta3);
+		Distance curDistReal = NRMath.lawOfCos(curDist, hypot, theta3);
 		Angle curTurretOrientation = Units.RIGHT_ANGLE.sub(NRMath.asin(curDist.mul(theta3.sin()).div(curDistReal))).sub(thetaYTurret);
 		
 		//Gets average speed of two drive sides to get instantaneous speed in (inches / sec)

@@ -29,6 +29,7 @@ public class Units {
 	 */
 	public static final Angle RIGHT_ANGLE = new Angle(90, Angle.Unit.DEGREE);
 	public static final Angle HALF_CIRCLE = new Angle(180, Angle.Unit.DEGREE);
+	public static final Angle FULL_CIRCLE = new Angle(360, Angle.Unit.DEGREE);
 	public static final int MAGNETIC_NATIVE_UNITS_PER_REV = 4096;
 	public static final double HUNDRED_MS_PER_SECOND = 10;
 	/**
