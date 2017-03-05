@@ -97,6 +97,7 @@ public class Hood extends NRSubsystem {
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(true);
 			talon.setInverted(true);
+			talon.reverseOutput(true);
 			talon.enable();
 		}
 	}
