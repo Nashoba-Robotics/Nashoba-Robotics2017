@@ -116,8 +116,8 @@ public class Hood extends NRSubsystem {
 	}
 	
 	
-	double topEncRotations = 374265.0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
-	double encoderDistancePerRealRotation = topEncRotations / TOP_POSITION.get(Unit.ROTATION);
+	static final double topEncRotations = 374265.0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	static final double encoderDistancePerRealRotation = topEncRotations / TOP_POSITION.get(Unit.ROTATION);
 
 	private double addGearing(double in) {
 		return in * encoderDistancePerRealRotation;

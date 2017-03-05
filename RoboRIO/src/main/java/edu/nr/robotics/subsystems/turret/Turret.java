@@ -127,11 +127,11 @@ public class Turret extends NRSubsystem {
 		}
 	}
 	
-	double encoderDistancePerRealRotation = 933.0 + 1.0/3.0;
+	static final double encoderDistancePerRealRotation = 100.0 /*versa planetary*/ * 280.0 /*main gear*/ / 30.0 /*small gear*/;
 	
-	//double forwardEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
-	//double reverseEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
-	//double encoderDistancePerRealRotation = forwardEncRotations / FORWARD_POSITION.get(Unit.ROTATION) - reverseEncRotation / REVERSE_POSITION.get(Unit.ROTATION);
+	//static final double forwardEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	//static final double reverseEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	//static final double encoderDistancePerRealRotation = forwardEncRotations / FORWARD_POSITION.get(Unit.ROTATION) - reverseEncRotations / REVERSE_POSITION.get(Unit.ROTATION);
 
 	
 	private double addGearing(double in) {
