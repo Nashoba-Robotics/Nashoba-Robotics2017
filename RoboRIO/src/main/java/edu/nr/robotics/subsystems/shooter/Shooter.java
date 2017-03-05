@@ -101,13 +101,17 @@ public class Shooter extends NRSubsystem {
 	 */
 	public void setMotorSpeedInRPM(AngularSpeed speed) {
 		motorSetpoint = speed;
-		if (talon != null && OI.getInstance().isShooterOn()) {
-			if(talon.getControlMode() == TalonControlMode.Speed) {
-				talon.set(motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
+		if (talon != null) {
+			if(OI.getInstance().isShooterOn()) {
+				if(talon.getControlMode() == TalonControlMode.Speed) {
+					talon.set(motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
+				} else {
+					double runSpeed = motorSetpoint.div(MAX_SPEED);
+					talon.set(runSpeed);
+					System.out.println("Shooter speed: " + runSpeed);
+				}
 			} else {
-				double runSpeed = motorSetpoint.div(MAX_SPEED);
-				talon.set(runSpeed);
-				System.out.println("Shooter speed: " + runSpeed);
+				talon.set(0);
 			}
 		}
 	}
