@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
@@ -126,12 +127,19 @@ public class Turret extends NRSubsystem {
 		}
 	}
 	
+	double encoderDistancePerRealRotation = 933.0 + 1.0/3.0;
+	
+	//double forwardEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	//double reverseEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	//double encoderDistancePerRealRotation = forwardEncRotations / FORWARD_POSITION.get(Unit.ROTATION) - reverseEncRotation / REVERSE_POSITION.get(Unit.ROTATION);
+
+	
 	private double addGearing(double in) {
-		return in * 933.333;
+		return in * encoderDistancePerRealRotation;
 	}
 	
 	private double removeGearing(double in) {
-		return in / 933.333; 
+		return in / encoderDistancePerRealRotation; 
 	}
 	
 	/**
