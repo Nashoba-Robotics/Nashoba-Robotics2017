@@ -11,10 +11,12 @@ public class AgitatorRunCommand extends JoystickCommand {
 	
 	@Override
 	public void onExecute() {
-		if (OI.getInstance().isShooterOn()) {
-			Agitator.getInstance().setMotorVoltage(Agitator.HIGH_RUN_PERCENT);
-		} else {
-			Agitator.getInstance().setMotorVoltage(Agitator.LOW_RUN_PERCENT);
+		if(OI.getInstance().isAgitatorOn()) {
+			if (OI.getInstance().isShooterOn()) {
+				Agitator.getInstance().setMotorVoltage(Agitator.HIGH_RUN_PERCENT);
+			} else {
+				Agitator.getInstance().setMotorVoltage(Agitator.LOW_RUN_PERCENT);
+			}
 		}
 	}
 

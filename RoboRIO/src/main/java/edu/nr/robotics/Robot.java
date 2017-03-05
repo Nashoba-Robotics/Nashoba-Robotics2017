@@ -231,9 +231,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotPeriodic() {
-		//System.out.println("12.56 inches: " + new Distance(1, Distance.Unit.DRIVE_ROTATION).get(Distance.Unit.INCH));
-		//System.out.println("60 seconds: " + new Time(1, Time.Unit.MINUTE).get(Time.Unit.SECOND));
-		
 		Scheduler.getInstance().run();
 		
 		Periodic.runAll();
