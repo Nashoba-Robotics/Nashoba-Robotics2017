@@ -599,6 +599,21 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		return 0;
 	}
 
+	public void setVoltageRampRate(double rampRate) {
+		if(rightTalon != null) {
+			rightTalon.setVoltageRampRate(rampRate);
+		} 
+		if(tempRightTalon != null) {
+			tempRightTalon.setVoltageRampRate(rampRate);
+		}
+		if(leftTalon != null) {
+			leftTalon.setVoltageRampRate(rampRate);
+		}
+		if(tempLeftTalon != null) {
+			tempLeftTalon.setVoltageRampRate(rampRate);
+		}
+	}
+
 	// PID SOURCE
 
 	private PIDSourceType type = PIDSourceType.kRate;
