@@ -57,15 +57,13 @@ public class Turret extends NRSubsystem {
 
 	/**
 	 * The angle the turret will automatically turn to start the match
-	 * 
-	 * TODO: Turret: Get preset turret angle for blue side
 	 */
-	public static final Angle PRESET_ANGLE_BLUE = Angle.ZERO;
+	public static final Angle PRESET_ANGLE_BLUE = Turret.REVERSE_POSITION;
 
 	/**
 	 * The angle the turret will automatically turn to start the match
 	 */
-	public static final Angle PRESET_ANGLE_RED = PRESET_ANGLE_BLUE.negate();
+	public static final Angle PRESET_ANGLE_RED = Turret.FORWARD_POSITION;
 
 	/**
 	 * The percentage of max speed the turret will go when tracking

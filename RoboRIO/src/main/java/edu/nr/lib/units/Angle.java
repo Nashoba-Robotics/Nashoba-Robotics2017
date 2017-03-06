@@ -84,6 +84,10 @@ public class Angle {
 		return Math.sin(this.get(Unit.RADIAN));
 	}
 	
+	public double tan() {
+		return Math.tan(this.get(Unit.RADIAN));
+	}
+	
 	public boolean lessThan(Angle angleTwo) {
 		return this.get(Unit.defaultUnit) < angleTwo.get(Unit.defaultUnit);
 	}

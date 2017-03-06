@@ -59,13 +59,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	/**
 	 * The max driving speed of the robot in low gear 
-	 * TODO: Drive: Get max low gear speed
 	 */
 	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6, Distance.Unit.FOOT, Time.Unit.SECOND);
 
 	/**
 	 * The max driving speed of the robot in high gear 
-	 * TODO: Drive: Get max high gear speed
 	 */
 	public static final Speed MAX_HIGH_GEAR_SPEED = new Speed(16, Distance.Unit.FOOT, Time.Unit.SECOND);
 
