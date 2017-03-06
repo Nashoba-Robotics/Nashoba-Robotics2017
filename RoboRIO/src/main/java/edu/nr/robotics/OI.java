@@ -1,5 +1,6 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.commandbased.AnonymousCommandGroup;
 import edu.nr.lib.commandbased.CancelAllCommand;
 import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.interfaces.Periodic;
@@ -22,6 +23,7 @@ import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmRetractCommand;
+import edu.nr.robotics.subsystems.intakeSlide.IntakeSlideDeployCommand;
 import edu.nr.robotics.subsystems.intakeSlide.IntakeSlideRetractCommand;
 import edu.nr.robotics.subsystems.loader.LoaderRunCommand;
 import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
@@ -31,6 +33,8 @@ import edu.nr.robotics.subsystems.turret.TurretPositionCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -153,7 +157,33 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Intake.getInstance()));
 		
 		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmDeployCommand());
-		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
+		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new GearFlapInCommand());
+		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.2));
+				addSequential(new DoNothingCommand(Intake.getInstance()));
+			}
+		});
+		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.2));
+				addSequential(new IntakeSlideDeployCommand());
+			}
+		});
+		
+		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
+		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.3));
+				addSequential(new IntakeSpeedCommand(0));
+			}
+		});
+		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.5));
+				addSequential(new IntakeArmRetractCommand());
+			}
+		});
 		
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenPressed(new LoaderRunCommand());
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenReleased(new LoaderStopCommand());
@@ -162,9 +192,26 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, GEAR_RETRACT_BUTTON_NUMBER).whenPressed(new GearRetractCommand());
 		
 		new JoystickButton(operatorLeft, FLAP_IN_BUTTON_NUMBER).whenPressed(new GearFlapInCommand());
-		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new GearFlapOutCommand());
+		
 		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
-		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.3));
+				addSequential(new IntakeSpeedCommand(0));
+			}
+		});
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.5));
+				addSequential(new IntakeArmRetractCommand());
+			}
+		});
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.5));
+				addSequential(new GearFlapOutCommand());
+			}
+		});
 
 		
 		agitatorSwitch = new JoystickButton(operatorLeft, AGITATOR_SWITCH_BUTTON_NUMBER);
@@ -342,8 +389,8 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public boolean isAgitatorOn() {
-		System.out.println("Agitator on: " + !shooterSwitch.get());
-		return !shooterSwitch.get(); //TODO: OI: Actual agitator switch
+		System.out.println("Agitator on: " + !agitatorSwitch.get());
+		return !agitatorSwitch.get();
 	}
 	
 	public boolean isIntakeOn() {
