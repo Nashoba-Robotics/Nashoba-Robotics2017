@@ -61,7 +61,7 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 			}
 		}
 		if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
-			addParallel(new DriveConstantSpeedCommand(-PERCENT_DRIVING_INTO_HOPPER, -PERCENT_DRIVING_INTO_HOPPER)); //Not negated because we hit with intake in auto
+			addParallel(new DriveConstantSpeedCommand(-PERCENT_DRIVING_INTO_HOPPER, -PERCENT_DRIVING_INTO_HOPPER)); //Negated because we hit with gear in auto
 		} else {
 			addParallel(new DriveConstantSpeedCommand(PERCENT_DRIVING_INTO_HOPPER, PERCENT_DRIVING_INTO_HOPPER)); //Not negated because we hit with intake in auto
 		}

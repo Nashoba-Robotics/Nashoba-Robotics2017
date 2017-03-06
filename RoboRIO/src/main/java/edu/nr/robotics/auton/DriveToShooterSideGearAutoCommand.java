@@ -48,6 +48,7 @@ public class DriveToShooterSideGearAutoCommand extends CommandGroup {
 		if (FieldMap.gearAlignMethod == GearAlignMethod.camera) {
 			addSequential(new GearPegAlignCommand());
 		}
+		
 		if (Robot.autoShoot) {
 			addSequential(new AlignThenShootCommand());
 		}
