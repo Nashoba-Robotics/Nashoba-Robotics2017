@@ -8,6 +8,7 @@ import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -82,6 +83,16 @@ public class Shooter extends NRSubsystem {
 			singleton.setJoystickCommand(new ShooterJoystickCommand());
 		}
 	}
+	
+	static final double encoderDistancePerRealRotation = 3 /*versa planetary*/ * 36.0 /*main gear*/ / 24.0 /*small gear*/;
+		
+	private double speedToRaw(AngularSpeed in) {
+		return in.get(Angle.Unit.ROTATION, Time.Unit.MINUTE) * encoderDistancePerRealRotation;
+	}
+		
+	private AngularSpeed rawToSpeed(double in) {
+		return new AngularSpeed(in / encoderDistancePerRealRotation, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	}
 
 	/**
 	 * Sets motor speed of shooter
@@ -101,13 +112,15 @@ public class Shooter extends NRSubsystem {
 	 */
 	public void setMotorSpeedInRPM(AngularSpeed speed) {
 		motorSetpoint = speed;
-		if (talon != null && OI.getInstance().isShooterOn()) {
-			if(talon.getControlMode() == TalonControlMode.Speed) {
-				talon.set(motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
+		if (talon != null) {
+			if(OI.getInstance().isShooterOn()) {
+				if(talon.getControlMode() == TalonControlMode.Speed) {
+					talon.set(speedToRaw((motorSetpoint)));
+				} else {
+					talon.set(speedToRaw(motorSetpoint) / speedToRaw(MAX_SPEED));
+				}
 			} else {
-				double runSpeed = motorSetpoint.div(MAX_SPEED);
-				talon.set(runSpeed);
-				System.out.println("Shooter speed: " + runSpeed);
+				talon.set(0);
 			}
 		}
 	}
@@ -158,7 +171,7 @@ public class Shooter extends NRSubsystem {
 	 */
 	public AngularSpeed getSpeed() {
 		if(talon != null) {
-			return new AngularSpeed(talon.getSpeed(), Angle.Unit.ROTATION, Time.Unit.MINUTE);
+			return rawToSpeed(talon.getSpeed());
 		}
 		return AngularSpeed.ZERO;
 	}

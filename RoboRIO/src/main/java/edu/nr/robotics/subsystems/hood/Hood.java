@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
@@ -35,7 +36,7 @@ public class Hood extends NRSubsystem {
 	/**
 	 * TODO: Hood: Find top position
 	 */
-	private static final Angle TOP_POSITION = Angle.ZERO;
+	private static final Angle TOP_POSITION = new Angle(45, Angle.Unit.DEGREE);
 	
 	private static final Angle BOTTOM_POSITION = Angle.ZERO;
 
@@ -61,17 +62,17 @@ public class Hood extends NRSubsystem {
 	 * The max acceleration of the hood
 	 * TODO: Hood: Find max acceleration
 	 */
-	public static final AngularAcceleration MAX_ACCELERATION = new AngularAcceleration(1, Angle.Unit.DEGREE, Time.Unit.SECOND,Time.Unit.SECOND);
+	public static final AngularAcceleration MAX_ACCELERATION = new AngularAcceleration(100, Angle.Unit.DEGREE, Time.Unit.SECOND,Time.Unit.SECOND);
 
 	/**
 	 * The max speed of the hood, in degrees per second
 	 * TODO: Hood: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(70, Angle.Unit.DEGREE, Time.Unit.SECOND);
 	
 	//TODO: Hood: Find FPID values
 	public static double F = MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
-	public static double P_MOTION_MAGIC = 0;
+	public static double P_MOTION_MAGIC = 0.1;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
 	public static double P_OPERATOR_CONTROL = 0;
@@ -94,8 +95,9 @@ public class Hood extends NRSubsystem {
 			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
 			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND));
 			talon.enableBrakeMode(true);
-			talon.reverseSensor(false); //TODO: Hood: Find phase
+			talon.reverseSensor(true);
 			talon.setInverted(true);
+			talon.reverseOutput(true);
 			talon.enable();
 		}
 	}
@@ -113,13 +115,27 @@ public class Hood extends NRSubsystem {
 		}
 	}
 	
-	private double addGearing(double in) {
-		return in * 1685.71;
+	
+	static final double topEncRotations = 374265.0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	static final double encoderDistancePerRealRotation = topEncRotations / TOP_POSITION.get(Unit.ROTATION);
+
+	private double positionToRaw(Angle in) {
+		return in.get(Unit.ROTATION) * encoderDistancePerRealRotation;
 	}
 	
-	private double removeGearing(double in) {
-		return in / 1685.71;
+	private double speedToRaw(AngularSpeed in) {
+		return in.get(Angle.Unit.ROTATION, Time.Unit.MINUTE) * encoderDistancePerRealRotation;
 	}
+	
+	private Angle rawToPosition(double in) {
+		return new Angle(in / encoderDistancePerRealRotation, Angle.Unit.ROTATION);
+	}
+	
+	private AngularSpeed rawToSpeed(double in) {
+		return new AngularSpeed(in / encoderDistancePerRealRotation, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	}
+	
+	
 	
 	/**
 	 * Sets motor speed of hood.
@@ -149,9 +165,9 @@ public class Hood extends NRSubsystem {
 				}
 			}
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
-				talon.set(addGearing(speedSetpoint.div(MAX_SPEED)));
+				talon.set(speedToRaw(speedSetpoint) / speedToRaw(MAX_SPEED));
 			} else {
-				talon.set(addGearing(speedSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE)));				
+				talon.set(speedToRaw(speedSetpoint));				
 			}
 		}
 	}
@@ -163,7 +179,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public AngularSpeed getSpeed() {
 		if(talon != null)
-			return new AngularSpeed(removeGearing(talon.getSpeed()), Angle.Unit.ROTATION, Time.Unit.MINUTE);
+			return rawToSpeed(talon.getSpeed());
 		return AngularSpeed.ZERO;
 	}
 	
@@ -180,7 +196,7 @@ public class Hood extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(addGearing(positionSetpoint.get(Unit.ROTATION)));
+			talon.set(positionToRaw(positionSetpoint));
 		}
 
 	}
@@ -190,7 +206,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public Angle getPosition() {
 		if(talon != null) {
-			return new Angle(removeGearing(talon.getPosition()), Unit.ROTATION);
+			return rawToPosition(talon.getPosition());
 		}
 		return Angle.ZERO;
 	}
@@ -202,7 +218,7 @@ public class Hood extends NRSubsystem {
 	 */
 	public Angle getHistoricalPosition(Time deltaTime) {
 		if (encoder != null)
-			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Unit.ROTATION);
+			return rawToPosition(encoder.getPosition(deltaTime));
 		return Angle.ZERO;
 	}
 	
@@ -213,7 +229,7 @@ public class Hood extends NRSubsystem {
 	public void periodic() {
 		if(talon != null) {
 			if(talon.isRevLimitSwitchClosed()) {
-				talon.setPosition(TOP_POSITION.get(Unit.ROTATION));
+				//talon.setPosition(TOP_POSITION.get(Unit.ROTATION));
 			} else if(talon.isFwdLimitSwitchClosed()) {
 				talon.setPosition(BOTTOM_POSITION.get(Unit.ROTATION));
 			} 

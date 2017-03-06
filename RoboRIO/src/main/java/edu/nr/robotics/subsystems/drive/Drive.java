@@ -59,15 +59,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	/**
 	 * The max driving speed of the robot in low gear 
-	 * TODO: Drive: Get max low gear speed
 	 */
-	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(1, Distance.Unit.METER, Time.Unit.SECOND);
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6, Distance.Unit.FOOT, Time.Unit.SECOND);
 
 	/**
 	 * The max driving speed of the robot in high gear 
-	 * TODO: Drive: Get max high gear speed
 	 */
-	public static final Speed MAX_HIGH_GEAR_SPEED = new Speed(1, Distance.Unit.METER, Time.Unit.SECOND);
+	public static final Speed MAX_HIGH_GEAR_SPEED = new Speed(16, Distance.Unit.FOOT, Time.Unit.SECOND);
 
 	/**
 	 * The max driving acceleration in feet/sec/sec
@@ -597,6 +595,21 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			return leftTalon.getOutputCurrent();
 		}
 		return 0;
+	}
+
+	public void setVoltageRampRate(double rampRate) {
+		if(rightTalon != null) {
+			rightTalon.setVoltageRampRate(rampRate);
+		} 
+		if(tempRightTalon != null) {
+			tempRightTalon.setVoltageRampRate(rampRate);
+		}
+		if(leftTalon != null) {
+			leftTalon.setVoltageRampRate(rampRate);
+		}
+		if(tempLeftTalon != null) {
+			tempLeftTalon.setVoltageRampRate(rampRate);
+		}
 	}
 
 	// PID SOURCE

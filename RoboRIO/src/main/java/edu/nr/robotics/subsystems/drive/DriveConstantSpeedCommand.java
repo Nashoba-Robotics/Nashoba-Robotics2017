@@ -20,7 +20,7 @@ public class DriveConstantSpeedCommand extends NRCommand {
 	}
 	
 	@Override
-	public void onExecute() {
+	public void onStart() {
 		Drive.getInstance().setMotorSpeedInPercent(leftSpeed, rightSpeed);
 	}
 	

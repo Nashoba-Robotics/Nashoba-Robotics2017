@@ -67,6 +67,8 @@ public class Agitator extends NRSubsystem {
 		if (talon != null) {
 			if(OI.getInstance().isAgitatorOn()) {
 				talon.set(motorSetpoint);
+			} else {
+				talon.set(0);
 			}
 		} 
 	}
