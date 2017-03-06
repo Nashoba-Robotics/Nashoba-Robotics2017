@@ -44,7 +44,7 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 			addParallel(new RequiredAutoCommand());
 		}
 		if (Robot.side == SideOfField.blue) {
-			if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
+			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
 				addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)), FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER), FieldMap.ANGLE_WALL_TO_HOPPER, true));
 			} else {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
@@ -52,7 +52,7 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			}
 		} else {
-			if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
+			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
 				addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)), (FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate(), FieldMap.ANGLE_WALL_TO_HOPPER.negate(), true));
 			} else {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
@@ -60,12 +60,12 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			}
 		}
-		if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
+		if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
 			addParallel(new DriveConstantSpeedCommand(-PERCENT_DRIVING_INTO_HOPPER, -PERCENT_DRIVING_INTO_HOPPER)); //Negated because we hit with gear in auto
 		} else {
 			addParallel(new DriveConstantSpeedCommand(PERCENT_DRIVING_INTO_HOPPER, PERCENT_DRIVING_INTO_HOPPER)); //Not negated because we hit with intake in auto
 		}
-		if (FieldMap.hopperRamStopMethod == HopperRamStopMethod.current) {
+		if (AutoMoveMethods.hopperRamStopMethod == HopperRamStopMethod.current) {
 			addSequential(new DriveCurrentWaitCommand(MAX_CURRENT_INTO_HOPPER));
 		} else {
 			addSequential(new WaitCommand(TIME_DRIVING_INTO_HOPPER));
