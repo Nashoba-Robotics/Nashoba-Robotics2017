@@ -44,22 +44,29 @@ public class RobotDiagram implements NamedSendable {
 			table.putBoolean("Is Auto", Robot.getInstance().isAutonomous());
 			table.putBoolean("Can Gear See", GearAlignCalculation.getInstance().canSeeTarget());
 
-			table.putBoolean("Drive High Gear", Drive.getInstance().getCurrentGear() == Drive.Gear.high);
+			table.putBoolean("Drive Low Gear", Drive.getInstance().getCurrentGear() == Drive.Gear.low);
 
-			table.putBoolean("Hood Aligned",
-					StationaryTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition())
-							.lessThan(Hood.SHOOT_THRESHOLD)
-							|| AutoTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition()).abs()
-							.lessThan(Hood.SHOOT_THRESHOLD));
-			table.putBoolean("Turret Aligned",
+			boolean hoodAligned = StationaryTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition())
+					.lessThan(Hood.SHOOT_THRESHOLD)
+					|| AutoTrackingCalculation.getInstance().getHoodAngle().sub(Hood.getInstance().getPosition()).abs()
+					.lessThan(Hood.SHOOT_THRESHOLD);
+			
+			boolean turretAligned = 
 					StationaryTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition())
-							.lessThan(Turret.SHOOT_THRESHOLD)
-							|| AutoTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition()).abs()
-							.lessThan(Turret.SHOOT_THRESHOLD));
-			table.putBoolean("Shooter Aligned",
+					.lessThan(Turret.SHOOT_THRESHOLD)
+					|| AutoTrackingCalculation.getInstance().getTurretAngle().sub(Turret.getInstance().getPosition()).abs()
+					.lessThan(Turret.SHOOT_THRESHOLD);
+			
+			boolean shooterAligned = 
 					AutoTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD) ||
-					StationaryTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD));
+					StationaryTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD);
+			
+			table.putBoolean("Hood Aligned", hoodAligned);
+			table.putBoolean("Turret Aligned",turretAligned);
+			table.putBoolean("Shooter Aligned", shooterAligned);
 
+			table.putBoolean("Ready to Shoot", shooterAligned && turretAligned && hoodAligned);
+			
 			table.putBoolean("Hood Tracking", !Hood.getInstance().isAutoAlign());
 			table.putBoolean("Turret Tracking", !Turret.getInstance().isAutoAlign());
 			table.putBoolean("Shooter Tracking", !Shooter.getInstance().isAutoAlign());
