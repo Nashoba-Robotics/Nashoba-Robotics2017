@@ -2,9 +2,9 @@
 #include <Adafruit_NeoPixel.h>
 #include <stdlib.h>
 
-#define REDLITE 3
-#define GREENLITE 5
-#define BLUELITE 6
+#define REDLITE 52
+#define GREENLITE 48
+#define BLUELITE 46
 
 #define PIN 46
 #define LED_COUNT 45
@@ -12,16 +12,16 @@
 #define END_LED 'e'
 #define TOT_LEN 4 + (3*LED_COUNT)
 
-#define LED_NUM 8
+#define LED_NUM 9
 
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+LiquidCrystal lcd(44, 42, 40, 38, 36, 34);
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(LED_COUNT, PIN, NEO_GRB + NEO_KHZ800);
 
 int totLen = TOT_LEN;
-char states[LED_COUNT][3];//2d array LED_COUNT x 3
+char states[LED_COUNT][3]; //2d array LED_COUNT x 3
 char message[TOT_LEN];
 
-int leds[LED_NUM] = {1, 2, 3, 4, 5, 6, 7, 8};
+int leds[LED_NUM] = {30,32,31,33,35,37,39,41,26};
 
 double globTotTime = 0, globTime = 0, prevTime = 0, deltaTime = 0;
 
@@ -55,6 +55,8 @@ void setup() {
   pinMode(REDLITE, OUTPUT);
   pinMode(GREENLITE, OUTPUT);
   pinMode(BLUELITE, OUTPUT);
+
+setBacklight(0,255,0);
   
   Serial.println("Arduino ready->");
   Serial.println("Commands:");
@@ -87,9 +89,9 @@ void loop() {
   serialComms(';');
 
   //globTime prevTime deltaTime
-  globTime = ((double)millis()/1000) - prevTime;
-  updateTimer();
-  prevTime = (double)millis()/1000;
+  //globTime = ((double)millis()/1000) - prevTime;
+  //updateTimer();
+  //prevTime = (double)millis()/1000;
 }
 
 void serialComms(char delim) {
@@ -101,12 +103,12 @@ void serialComms(char delim) {
   if(command == commands[0]) {
     echo(params);
   }else if(command == commands[1]) {
-    LCDBrightness(params);
+    //LCDBrightness(params);
   }else if(command == commands[2]) {
     LCDPrint(params);
   }else if(command == commands[3]) {
     lcd.clear();
-    Serial.println("LCD cleared");
+    //Serial.println("LCD cleared");
   }else if(command == commands[4]) {
     clearLEDs();
   }else if(command == commands[5]) {
@@ -118,7 +120,7 @@ void serialComms(char delim) {
   }else if(command == commands[8]) {
     gameTimer();
   }else if(command == commands[9]) {
-    Serial.println("not in a loop");
+    //Serial.println("not in a loop");
   }else if(command == commands[10]) {
     realGameTimer(params);
   }else if(command == commands[11]) {
@@ -318,7 +320,7 @@ void LCDPrint(String params) {//(x, y, Str)
 
   char printStr[100];
   sprintf(printStr, "Printing to LCD- x%d, y%d, str: ", ints[0], ints[1]);
-  Serial.println(printStr + params);
+  //Serial.println(printStr + params);
   
   lcd.setCursor(ints[0]%16, ints[1]%2);//x<2, y<16
   lcd.print(params);
@@ -493,6 +495,10 @@ void setSingleLED(String str) {//(LED#, LEDState(1, 0))
   intStr LED = parseNextParamInt(str);
   intStr LEDState = parseNextParamInt(LED.str);
   digitalWrite(leds[LED.num%LED_NUM], LEDState.num%2);
+
+  //char printStr[100];
+  //sprintf(printStr, "Setting LED %d to %d", leds[LED.num%LED_NUM], LEDState.num%2);
+  //Serial.println(printStr);
 }
 
 
