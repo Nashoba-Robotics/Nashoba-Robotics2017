@@ -22,7 +22,7 @@ public class AlignThenShootCommand extends CommandGroup {
 		Command hoodCommand;
 		Command turretCommand;
 		Command shooterCommand;
-		if (FieldMap.shootAlignMode == ShootAlignMode.autonomous) {
+		if (AutoMoveMethods.shootAlignMode == ShootAlignMode.autonomous) {
 			hoodCommand = new HoodStationaryAngleCorrectionCommand();
 			shooterCommand = new ShooterStationarySpeedCorrectionCommand();
 		} else {

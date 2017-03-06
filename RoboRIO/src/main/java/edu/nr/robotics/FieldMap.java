@@ -12,23 +12,6 @@ import edu.nr.robotics.auton.ShootAlignMode;
 public class FieldMap {
 	
 	/**
-	 * The way we get around in autonomous mode
-	 */
-	public static final AutoTravelMethod autoTravelMethod = AutoTravelMethod.OneDProfilingAndPID;
-	
-	/**
-	 * The way we stop ramming into the hopper (time or current)
-	 */
-	public static final HopperRamStopMethod hopperRamStopMethod = HopperRamStopMethod.current;
-	
-	/**
-	 * The way we get to the gear peg (camera or profiling)
-	 */
-	public static final GearAlignMethod gearAlignMethod = GearAlignMethod.camera;
-	
-	public static final ShootAlignMode shootAlignMode = ShootAlignMode.manual;
-	
-	/**
 	 * The autonomous distance from the wall to the center peg in inches.
 	 * The distance is the distance the robot needs to drive and not the true distance
 	 */

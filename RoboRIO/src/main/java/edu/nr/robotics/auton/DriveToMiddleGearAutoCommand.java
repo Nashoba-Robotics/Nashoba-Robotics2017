@@ -17,8 +17,8 @@ public class DriveToMiddleGearAutoCommand extends CommandGroup {
 		} else {
 			addParallel(new RequiredAutoCommand());
 		}
-		if (FieldMap.gearAlignMethod == GearAlignMethod.profiling) {
-			if (FieldMap.autoTravelMethod == AutoTravelMethod.basic) {
+		if (AutoMoveMethods.gearAlignMethod == GearAlignMethod.profiling) {
+			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.basic) {
 				addSequential(new DriveForwardBasicCommand(DriveOverBaselineAutoCommand.FORWARD_PERCENT, (FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate()));
 			} else {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate())); //Negated for driving backwards in auto

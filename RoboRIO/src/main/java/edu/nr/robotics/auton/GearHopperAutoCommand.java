@@ -29,8 +29,8 @@ public class GearHopperAutoCommand extends CommandGroup {
 		
 		//Code to drop off gear in auto
 		if (Robot.side == SideOfField.red) {
-			if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
-				if (FieldMap.gearAlignMethod == GearAlignMethod.camera) {
+			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
+				if (AutoMoveMethods.gearAlignMethod == GearAlignMethod.camera) {
 					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos())), FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin())), FieldMap.ANGLE_TO_SIDE_PEG, true));
 				} else {
 					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST), FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)), FieldMap.ANGLE_TO_SIDE_PEG, true));
@@ -42,8 +42,8 @@ public class GearHopperAutoCommand extends CommandGroup {
 			}
 		}
 		else {
-			if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
-				if (FieldMap.gearAlignMethod == GearAlignMethod.camera) {
+			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
+				if (AutoMoveMethods.gearAlignMethod == GearAlignMethod.camera) {
 					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos())), (FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin()))).negate(), (FieldMap.ANGLE_TO_SIDE_PEG).negate(), true));
 				} else {
 					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST), (FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5))).negate(), (FieldMap.ANGLE_TO_SIDE_PEG).negate(), true));
@@ -55,7 +55,7 @@ public class GearHopperAutoCommand extends CommandGroup {
 			}
 		}
 		
-		if (FieldMap.gearAlignMethod == GearAlignMethod.camera) {
+		if (AutoMoveMethods.gearAlignMethod == GearAlignMethod.camera) {
 			addSequential(new GearPegAlignCommand());
 		}
 		
@@ -72,7 +72,7 @@ public class GearHopperAutoCommand extends CommandGroup {
 		addSequential(new DriveForwardProfilingCommand(FieldMap.GEAR_TO_HOPPER_SIDE_DIST.sub(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER).mul(FieldMap.ANGLE_TO_SIDE_PEG.tan())).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)));
 		
 		addParallel(new DriveConstantSpeedCommand(DriveToHopperAutoCommand.PERCENT_DRIVING_INTO_HOPPER, DriveToHopperAutoCommand.PERCENT_DRIVING_INTO_HOPPER));
-		if (FieldMap.hopperRamStopMethod == HopperRamStopMethod.current) {
+		if (AutoMoveMethods.hopperRamStopMethod == HopperRamStopMethod.current) {
 			addSequential(new DriveCurrentWaitCommand(DriveToHopperAutoCommand.MAX_CURRENT_INTO_HOPPER));
 		} else {
 			addSequential(new WaitCommand(DriveToHopperAutoCommand.TIME_DRIVING_INTO_HOPPER));

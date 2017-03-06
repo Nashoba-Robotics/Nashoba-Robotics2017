@@ -31,7 +31,7 @@ public class DriveOverBaselineAutoCommand extends CommandGroup {
 		} else {
 			addParallel(new RequiredAutoCommand());
 		}
-		if (FieldMap.autoTravelMethod == AutoTravelMethod.basic) {
+		if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.basic) {
 			addSequential(new DriveForwardBasicCommand(FORWARD_PERCENT, DISTANCE_TO_GET_OVER_BASELINE));
 		} else {
 			addSequential(new DriveForwardProfilingCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
