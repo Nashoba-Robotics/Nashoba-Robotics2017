@@ -7,6 +7,7 @@ import edu.nr.lib.units.Time;
 import edu.nr.robotics.auton.AutoTravelMethod;
 import edu.nr.robotics.auton.GearAlignMethod;
 import edu.nr.robotics.auton.HopperRamStopMethod;
+import edu.nr.robotics.auton.ShootAlignMode;
 
 public class FieldMap {
 	
@@ -24,6 +25,8 @@ public class FieldMap {
 	 * The way we get to the gear peg (camera or profiling)
 	 */
 	public static final GearAlignMethod gearAlignMethod = GearAlignMethod.camera;
+	
+	public static final ShootAlignMode shootAlignMode = ShootAlignMode.manual;
 	
 	/**
 	 * The autonomous distance from the wall to the center peg in inches.

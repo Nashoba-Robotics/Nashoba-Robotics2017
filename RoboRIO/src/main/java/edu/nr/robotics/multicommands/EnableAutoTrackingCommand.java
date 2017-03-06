@@ -4,6 +4,8 @@ import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.units.Angle;
 import edu.nr.robotics.AutoTrackingCalculation;
+import edu.nr.robotics.FieldMap;
+import edu.nr.robotics.auton.ShootAlignMode;
 import edu.nr.robotics.subsystems.hood.Hood;
 import edu.nr.robotics.subsystems.hood.HoodAutoAlignCommand;
 import edu.nr.robotics.subsystems.shooter.Shooter;
@@ -31,8 +33,10 @@ public class EnableAutoTrackingCommand extends NRCommand{
 	public void onEnd() {
 		Turret.getInstance().setPosition(Turret.getInstance().getPosition().add(TURRET_CAMERA_RANGE.mul(Turret.getInstance().turretTrackDirection)));
 		Turret.getInstance().disable();
-		new HoodAutoAlignCommand().start();
-		new ShooterAutoAlignCommand().start();
+		if (FieldMap.shootAlignMode == ShootAlignMode.autonomous) {
+			new HoodAutoAlignCommand().start();
+			new ShooterAutoAlignCommand().start();
+		}
 		new TurretAutoAlignCommand().start();
 	}
 	
