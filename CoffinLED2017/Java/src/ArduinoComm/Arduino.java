@@ -63,8 +63,16 @@ public class Arduino implements SerialPortEventListener {
 	private String[] lcd = {"Shooter Speed", "Hood Angle", "Turret Angle"};//numbers to get for the lcd
 	private String[] abrev = {"SP", "HA", "TA"};//abreviations to the lcd
 	
-	private String[] singleLEDs= {"Can Gear See", "Drive High Gear", "Hood Aligned", "Turret Aligned", "Shooter Aligned", "Hood Tracking", 
-			"Turret Tracking", "Shooter Tracking"};
+	private String[] singleLEDs= {
+			"Drive Low Gear", 
+			"Can Gear See", 
+			"Shooter Tracking",
+			"Shooter Aligned", 
+			"Hood Tracking", 
+			"Hood Aligned", 
+			"Turret Tracking", 
+			"Turret Aligned",
+			"Ready to Shoot"};
 	
 	/////////////VARIABLES////////////////
 	//double
@@ -80,8 +88,8 @@ public class Arduino implements SerialPortEventListener {
 	public void initialize() {
 		
 		//connect to the robot
-		setRobotListener();//set the event listener for the robot vars
 		Network.getInstance().connect();
+		setRobotListener();//set the event listener for the robot vars
 		//TODO: make this work with the GUI and make no connection handeling
 		
 		// init GUI
@@ -100,10 +108,10 @@ public class Arduino implements SerialPortEventListener {
 				}
 			}
 		}
-		if (portId == null) {//arduino not found
+		if (portId == null) {		//arduino not found
 			display.dissable();
 			return;
-		}else {//found arduino
+		}else {						//found arduino
 			display.enablee();
 		}
 
@@ -178,6 +186,8 @@ public class Arduino implements SerialPortEventListener {
 	}
 
 	
+	int runThrough = 0;
+	
 	//talk to the robot
 	public void setRobotListener() {
 		
@@ -185,67 +195,94 @@ public class Arduino implements SerialPortEventListener {
 
 			@Override
 			public void onMessageReceived(String key, Object value) {
-				//read the values
-				ArrayList<Double> values = new ArrayList<Double>();
-				for(int i = 0; i < lcd.length; i++) {
-					values.add(Network.getInstance().getNumber(lcd[i]));
-				}
-				
-				ArrayList<String> sendStr = new ArrayList<String>();//string of commands to send
-				//For the LCD screen
-				String col = "0";
-				for(int i = 0; i < values.size(); i++) {
-					if(i > 1) col = "8";//new column after row 2
-					sendStr.add("lcdPrint("
-						+ Integer.toString(i%2)//row
-						+ ","
-						+ col//column
-						+ ","
-						+ abrev[0]//print name
-						+ ":"
-						+ Double.toString(values.get(0))//value
-						+ ");"
-					);//finished Ex:"lcdPrint(0, 0, SP:1.2123);
-				}
-				
-				//read the bools
-				ArrayList<Boolean> bools= new ArrayList<Boolean>();
-				for(int i = 0; i < singleLEDs.length; i++) {
-					bools.add(Network.getInstance().getBoolean(singleLEDs[i]));
-				}
-				//For the single led booleans
-				char bool;
-				for(int i = 0; i < bools.size(); i++) {
-					if(bools.get(i)) bool = '1';
-					else bool = '0';
-					sendStr.add("setLED("
-						+ Integer.toString(i)//led number
-						+ ","
-						+ bool//'1' || '0'
-						+ ");"
-					);//finished Ex:"setLED(0, 1);"
-				}
-				
-				//match timer
-				String totSec = "135";
-				if(Network.getInstance().getBoolean("Is Auto")) {
-					totSec = "15";
-				}
-				sendStr.add("setTimer("//cur time, tot time
-					+ Network.getInstance().getNumber("Match Time")
-					+ ","
-					+ totSec
-					+ ");"
-				);
-				
-				//send the data
-				for(int i = 0; i < sendStr.size(); i++) {
-					if (verify(sendStr.get(i))) {
-						sendStr(sendStr.get(i));
-						GUI.getInstance().appendIn(sendStr.get(i));
-					}else {
-						GUI.getInstance().appendIn("***Please end with a ';' : " + sendStr.get(i) + "***");
+				runThrough++;
+				if(runThrough % 12 == 0) {
+				try {
+					//read the values
+					ArrayList<Double> values = new ArrayList<Double>();
+					for(int i = 0; i < lcd.length; i++) {
+						values.add(Network.getInstance().getNumber(lcd[i]));
 					}
+					
+					ArrayList<String> sendStr = new ArrayList<String>();//string of commands to send
+					
+					sendStr.add("clearLcd();");
+
+					//For the LCD screen
+					int row = 0;
+					for(int i = 0; i < values.size(); i++) {
+						
+						
+						//Which row:
+						if(i > 1) {
+							row = 13;//new column after row 2
+							if(values.get(i) < 0) {
+								row--;
+							}
+							if(Math.abs(values.get(i)) >= 100) {
+								row--;
+							}
+							if(Math.abs(values.get(i)) >= 10) {
+								row--;
+							}
+						}
+						
+						
+						sendStr.add("lcdPrint("
+							+ Integer.toString(row)//row
+							+ ","
+							+ Integer.toString(i%2)//column
+							+ ","
+							//+ abrev[i]//print name
+							//+ ":"
+							+ (abrev[i].equals("SP")? Integer.toString(values.get(i).intValue()) : Math.round(values.get(i)*10)/10.0)//value
+							+ ");"
+						);//finished Ex:"lcdPrint(0, 0, SP:1.2123);
+					}
+					
+					//read the bools
+					ArrayList<Boolean> bools= new ArrayList<Boolean>();
+					for(int i = 0; i < singleLEDs.length; i++) {
+						bools.add(Network.getInstance().getBoolean(singleLEDs[i]));
+					}
+					//For the single led booleans
+					char bool;
+					for(int i = 0; i < bools.size(); i++) {
+						if(bools.get(i)) bool = '1';
+						else bool = '0';
+						sendStr.add("setLed("
+							+ Integer.toString(i)//led number
+							+ ","
+							+ bool//'1' || '0'
+							+ ");"
+						);//finished Ex:"setLED(0, 1);"
+					}
+					
+					//match timer
+					String totSec = "135";
+					if(Network.getInstance().getBoolean("Is Auto")) {
+						totSec = "15";
+					}
+					sendStr.add("setTimer("//cur time, tot time
+						+ Network.getInstance().getNumber("Match Time")
+						+ ","
+						+ totSec
+						+ ");"
+					);
+					
+					//send the data
+					for(int i = 0; i < sendStr.size(); i++) {
+						if (verify(sendStr.get(i))) {
+							sendStr(sendStr.get(i));
+							System.out.println("Sending from robot: " + sendStr.get(i));
+							GUI.getInstance().appendIn(sendStr.get(i));
+						}else {
+							GUI.getInstance().appendIn("***Please end with a ';' : " + sendStr.get(i) + "***");
+						}
+					}
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 				}
 			}
 			
