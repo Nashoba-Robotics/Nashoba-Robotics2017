@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Angle;
@@ -126,12 +127,27 @@ public class Turret extends NRSubsystem {
 		}
 	}
 	
-	private double addGearing(double in) {
-		return in * 933.333;
+	static final double encoderDistancePerRealRotation = 100.0 /*versa planetary*/ * 280.0 /*main gear*/ / 30.0 /*small gear*/;
+	
+	//static final double forwardEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	//static final double reverseEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
+	//static final double encoderDistancePerRealRotation = forwardEncRotations / FORWARD_POSITION.get(Unit.ROTATION) - reverseEncRotations / REVERSE_POSITION.get(Unit.ROTATION);
+
+	
+	private double positionToRaw(Angle in) {
+		return in.get(Unit.ROTATION) * encoderDistancePerRealRotation;
 	}
 	
-	private double removeGearing(double in) {
-		return in / 933.333; 
+	private double speedToRaw(AngularSpeed in) {
+		return in.get(Angle.Unit.ROTATION, Time.Unit.MINUTE) * encoderDistancePerRealRotation;
+	}
+	
+	private Angle rawToPosition(double in) {
+		return new Angle(in / encoderDistancePerRealRotation, Angle.Unit.ROTATION);
+	}
+	
+	private AngularSpeed rawToSpeed(double in) {
+		return new AngularSpeed(in / encoderDistancePerRealRotation, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 	}
 	
 	/**
@@ -162,9 +178,9 @@ public class Turret extends NRSubsystem {
 				}
 			}
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
-				talon.set(addGearing(speedSetpoint.div(MAX_SPEED)));
+				talon.set(speedToRaw(speedSetpoint) / speedToRaw(MAX_SPEED));
 			} else {
-				talon.set(addGearing(speedSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE)));				
+				talon.set(speedToRaw(speedSetpoint));				
 			}
 		}
 	}
@@ -176,7 +192,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public AngularSpeed getSpeed() {
 		if(talon != null)
-			return new AngularSpeed(removeGearing(talon.getSpeed()), Angle.Unit.ROTATION, Time.Unit.MINUTE);
+			return rawToSpeed(talon.getSpeed());
 		return AngularSpeed.ZERO;
 	}
 	
@@ -193,7 +209,7 @@ public class Turret extends NRSubsystem {
 			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
 			}
-			talon.set(addGearing(positionSetpoint.get(Unit.ROTATION)));
+			talon.set(positionToRaw(positionSetpoint));
 		}
 
 	}
@@ -205,7 +221,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public Angle getPosition() {
 		if(talon != null)
-			return new Angle(removeGearing(talon.getPosition()), Angle.Unit.ROTATION);
+			return rawToPosition(talon.getPosition());
 		return Angle.ZERO;
 	}
 	
@@ -216,7 +232,7 @@ public class Turret extends NRSubsystem {
 	 */
 	public Angle getHistoricalPosition(Time deltaTime) {
 		if (encoder != null)
-			return new Angle(removeGearing(encoder.getPosition(deltaTime)), Angle.Unit.ROTATION);
+			return rawToPosition(encoder.getPosition(deltaTime));
 		return Angle.ZERO;
 	}
 	
