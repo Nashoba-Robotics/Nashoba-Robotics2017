@@ -3,6 +3,7 @@ package edu.nr.robotics.auton;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Speed;
 import edu.nr.lib.units.Time;
+import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveConstantSpeedCommand;
@@ -25,9 +26,16 @@ public class DriveOverBaselineAutoCommand extends CommandGroup {
 	public static final double FORWARD_PERCENT = 0.5;
 	
 	public DriveOverBaselineAutoCommand() {
-		addParallel(new ZeroThenAutoTrackCommand());
-		addSequential(new DriveForwardBasicCommand(0.5, DISTANCE_TO_GET_OVER_BASELINE));
-		//addSequential(new DriveForwardProfilingCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
+		if (Robot.autoShoot) {
+			addParallel(new ZeroThenAutoTrackCommand());
+		} else {
+			addParallel(new RequiredAutoCommand());
+		}
+		if (FieldMap.autoTravelMethod == AutoTravelMethod.basic) {
+			addSequential(new DriveForwardBasicCommand(FORWARD_PERCENT, DISTANCE_TO_GET_OVER_BASELINE));
+		} else {
+			addSequential(new DriveForwardProfilingCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
+		}
 		if (Robot.autoShoot) {
 			addSequential(new AlignThenShootCommand());
 		}

@@ -23,14 +23,18 @@ public class GearHopperAutoCommand extends CommandGroup {
 	private static final Time GEAR_SECONDS_TO_DELAY = new Time(5, Time.Unit.SECOND);
 	
 	public GearHopperAutoCommand() {
-		addParallel(new ZeroThenAutoTrackCommand());
+		if (Robot.autoShoot) {
+			addParallel(new ZeroThenAutoTrackCommand());
+		} else {
+			addParallel(new RequiredAutoCommand());
+		}
 		if (Robot.side == SideOfField.blue) {
 			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG, FieldMap.ANGLE_TO_SIDE_PEG, true));
 		}
 		else {
 			addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG, FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.negate(), FieldMap.ANGLE_TO_SIDE_PEG.negate(), true));
 		}
-		addSequential(new GearPegAlignCommand(true));
+		addSequential(new GearPegAlignCommand());
 		addSequential(new WaitCommand(GEAR_SECONDS_TO_DELAY.get(Time.Unit.SECOND)));
 		addSequential(new DriveForwardProfilingCommand(BACKWARD_DRIVE_DISTANCE.negate())); //Negated to go backwards in auto
 		if (Robot.side == SideOfField.blue) {
@@ -39,8 +43,9 @@ public class GearHopperAutoCommand extends CommandGroup {
 			addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_TO_SIDE_PEG.add(Units.RIGHT_ANGLE.negate())));
 		}
 		addSequential(new DriveForwardProfilingCommand(FieldMap.GEAR_TO_HOPPER_SIDE_DIST.add(BACKWARD_DRIVE_DISTANCE.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin()))));
-		addParallel(new DriveConstantSpeedCommand(DriveToHopperAutoCommand.SPEED_DRIVING_INTO_HOPPER,DriveToHopperAutoCommand.SPEED_DRIVING_INTO_HOPPER));
-		addSequential(new WaitCommand(DriveToHopperAutoCommand.TIME_DRIVING_INTO_HOPPER));
+		addParallel(new DriveConstantSpeedCommand(DriveToHopperAutoCommand.PERCENT_DRIVING_INTO_HOPPER,DriveToHopperAutoCommand.PERCENT_DRIVING_INTO_HOPPER));
+		addSequential(new DriveCurrentWaitCommand(DriveToHopperAutoCommand.MAX_CURRENT_INTO_HOPPER));
+		//addSequential(new WaitCommand(TIME_DRIVING_INTO_HOPPER));
 		addSequential(new DoNothingCommand(Drive.getInstance()));
 		if (Robot.autoShoot)
 			addSequential(new AlignThenShootCommand());

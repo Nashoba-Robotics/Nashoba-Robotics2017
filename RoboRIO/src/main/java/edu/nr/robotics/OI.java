@@ -168,7 +168,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	public void initOperatorLeft() {
 
 		
-		new JoystickButton(operatorLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand(false));
+		new JoystickButton(operatorLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
 
 		
 		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenPressed(new IntakeSpeedCommand(Intake.PUKE_VOLTAGE));

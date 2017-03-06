@@ -36,6 +36,8 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 	/**
 	 * On the path the distance away from the path endpoint that we want to stay
 	 * straight for
+	 * 
+	 * TODO: MotionProfilingWallToHopperCommand: Get distance from endpoint to stay straight for on path
 	 */
 	public static final Distance DISTANCE_FROM_ENDPOINT = Distance.ZERO;
 

@@ -56,5 +56,13 @@ public class RobotMap {
 	public static final Distance X_CAMERA_OFFSET = Distance.ZERO;
 	public static final Distance X_TURRET_OFFSET = new Distance(5.465, Distance.Unit.INCH);
 	public static final Distance Y_TURRET_OFFSET = new Distance(7, Distance.Unit.INCH);
+	
+	/**
+	 * The distance from the back of the back bumper to the front of the gear mechanism.
+	 * This is used in autonomous modes when the bumper is against the wall.
+	 * 
+	 * TODO: RobotMap: Get BUMPER_TO_GEAR_DIST
+	 */
+	public static final Distance BUMPER_TO_GEAR_DIST = Distance.ZERO;
 
 }
