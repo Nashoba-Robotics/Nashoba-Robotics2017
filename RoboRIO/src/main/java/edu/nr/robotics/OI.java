@@ -14,8 +14,8 @@ import edu.nr.robotics.multicommands.WallShotAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
-import edu.nr.robotics.subsystems.gearMover.GearGetPositionInCommand;
-import edu.nr.robotics.subsystems.gearMover.GearGetPositionOutCommand;
+import edu.nr.robotics.subsystems.gearMover.GearFlapInCommand;
+import edu.nr.robotics.subsystems.gearMover.GearFlapOutCommand;
 import edu.nr.robotics.subsystems.gearMover.GearRetractCommand;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
@@ -65,10 +65,10 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 	private static final int GEAR_DEPLOY_BUTTON_NUMBER = 9;
 	private static final int GEAR_RETRACT_BUTTON_NUMBER = 12;
-	private static final int GET_GEAR_IN_BUTTON_NUMBER = 11;
-	private static final int GET_GEAR_OUT_BUTTON_NUMBER = 8;
+	private static final int FLAP_IN_BUTTON_NUMBER = 11;
+	private static final int FLAP_OUT_BUTTON_NUMBER = 8;
 	
-	private static final int WALL_SHOT_BUTTON_NUMBER = 10;
+	private static final int WALL_SHOT_BUTTON_NUMBER = 9;
 
 	
 	private static final int DRIVE_GEAR_TOGGLE_BUTTON_NUMBER = 1;
@@ -161,10 +161,10 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorLeft, GEAR_DEPLOY_BUTTON_NUMBER).whenPressed(new GearDeployCommand());
 		new JoystickButton(operatorLeft, GEAR_RETRACT_BUTTON_NUMBER).whenPressed(new GearRetractCommand());
 		
-		new JoystickButton(operatorLeft, GET_GEAR_IN_BUTTON_NUMBER).whenPressed(new GearGetPositionInCommand());
-		new JoystickButton(operatorLeft, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new GearGetPositionOutCommand());
-		new JoystickButton(operatorLeft, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
-		new JoystickButton(operatorLeft, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
+		new JoystickButton(operatorLeft, FLAP_IN_BUTTON_NUMBER).whenPressed(new GearFlapInCommand());
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new GearFlapOutCommand());
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
 
 		
 		agitatorSwitch = new JoystickButton(operatorLeft, AGITATOR_SWITCH_BUTTON_NUMBER);
