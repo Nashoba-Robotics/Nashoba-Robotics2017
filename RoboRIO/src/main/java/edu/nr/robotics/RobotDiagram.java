@@ -60,9 +60,9 @@ public class RobotDiagram implements NamedSendable {
 					AutoTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD) ||
 					StationaryTrackingCalculation.getInstance().getShooterSpeed().sub(Shooter.getInstance().getSpeed()).abs().lessThan(Shooter.SHOOT_THRESHOLD));
 
-			table.putBoolean("Hood Tracking", Hood.getInstance().isAutoAlign());
-			table.putBoolean("Turret Tracking", Turret.getInstance().isAutoAlign());
-			table.putBoolean("Shooter Tracking", Shooter.getInstance().isAutoAlign());
+			table.putBoolean("Hood Tracking", !Hood.getInstance().isAutoAlign());
+			table.putBoolean("Turret Tracking", !Turret.getInstance().isAutoAlign());
+			table.putBoolean("Shooter Tracking", !Shooter.getInstance().isAutoAlign());
 
 		}
 
