@@ -19,12 +19,12 @@ public class DriveToMiddleGearAutoCommand extends CommandGroup {
 		}
 		if (FieldMap.gearAlignMethod == GearAlignMethod.profiling) {
 			if (FieldMap.autoTravelMethod == AutoTravelMethod.basic) {
-				addSequential(new DriveForwardBasicCommand(DriveOverBaselineAutoCommand.FORWARD_PERCENT, (FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate()));
+				addSequential(new DriveForwardBasicCommand(DriveOverBaselineAutoCommand.FORWARD_PERCENT, (FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate()));
 			} else {
-				addSequential(new DriveForwardProfilingCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate())); //Negated for driving backwards in auto
+				addSequential(new DriveForwardProfilingCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate())); //Negated for driving backwards in auto
 			}
 		} else {
-			addSequential(new DriveForwardProfilingCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG)).negate())); //Negated for driving backwards in auto
+			addSequential(new DriveForwardProfilingCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG)).negate())); //Negated for driving backwards in auto
 			addSequential(new GearPegAlignCommand());
 		}
 		if (Robot.autoShoot) {

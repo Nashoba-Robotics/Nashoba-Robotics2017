@@ -50,8 +50,6 @@ public class FieldMap {
 	/**
 	 * The dimensions to the hopper in auto that would be used in inches or degrees
 	 * The side distance assumes that robot center is on line and that center will hit edge of hopper
-	 * 
-	 * TODO: Field: Find the distances to the hoppers that would be used
 	 */
 	public static final Distance FORWARD_DISTANCE_WALL_TO_HOPPER = new Distance(103.2, Distance.Unit.INCH);
 	public static final Distance SIDE_DISTANCE_WALL_TO_HOPPER = new Distance(103.2, Distance.Unit.INCH);
@@ -63,7 +61,6 @@ public class FieldMap {
 	 *  TODO: Field: Find distance robot needs to drive from gear to hopper
 	 */
 	public static final Distance GEAR_TO_HOPPER_SIDE_DIST = Distance.ZERO;
-	public static final Distance GEAR_TO_HOPPER_FORWARD_DIST = Distance.ZERO;
 	
 	/**
 	 * The amount of time to wait without a picture before sweeping

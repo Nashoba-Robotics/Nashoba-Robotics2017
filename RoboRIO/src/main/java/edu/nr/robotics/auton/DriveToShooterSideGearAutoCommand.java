@@ -21,12 +21,12 @@ public class DriveToShooterSideGearAutoCommand extends CommandGroup {
 		if (Robot.side == SideOfField.red) {
 			if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
 				if (FieldMap.gearAlignMethod == GearAlignMethod.camera) {
-					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos())), FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin())), FieldMap.ANGLE_TO_SIDE_PEG, true));
+					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos())), FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin())), FieldMap.ANGLE_TO_SIDE_PEG, true));
 				} else {
-					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST), FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)), FieldMap.ANGLE_TO_SIDE_PEG, true));
+					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST), FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)), FieldMap.ANGLE_TO_SIDE_PEG, true));
 				}
 			} else {
-				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos()))).negate()));
+				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos()))).negate()));
 				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_TO_SIDE_PEG.negate()));
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin()))).negate()));
 			}
@@ -34,12 +34,12 @@ public class DriveToShooterSideGearAutoCommand extends CommandGroup {
 		else {
 			if (FieldMap.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
 				if (FieldMap.gearAlignMethod == GearAlignMethod.camera) {
-					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos())), (FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin()))).negate(), (FieldMap.ANGLE_TO_SIDE_PEG).negate(), true));
+					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos())), (FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin()))).negate(), (FieldMap.ANGLE_TO_SIDE_PEG).negate(), true));
 				} else {
-					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST), (FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5))).negate(), (FieldMap.ANGLE_TO_SIDE_PEG).negate(), true));
+					addSequential(new MotionProfileToSideGearCommand(FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST), (FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5))).negate(), (FieldMap.ANGLE_TO_SIDE_PEG).negate(), true));
 				}
 			} else {
-				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos()))).negate()));
+				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_TO_SIDE_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.cos()))).negate()));
 				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_TO_SIDE_PEG));
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_TO_SHOOTER_SIDE_PEG.add(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG.mul(FieldMap.ANGLE_TO_SIDE_PEG.sin()))).negate()));
 			}

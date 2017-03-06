@@ -61,8 +61,17 @@ public class RobotMap {
 	 * The distance from the back of the back bumper to the front of the gear mechanism.
 	 * This is used in autonomous modes when the bumper is against the wall.
 	 * 
-	 * TODO: RobotMap: Get BUMPER_TO_GEAR_DIST
+	 * TODO: RobotMap: Get BACK_BUMPER_TO_GEAR_DIST
 	 */
-	public static final Distance BUMPER_TO_GEAR_DIST = Distance.ZERO;
+	public static final Distance BACK_BUMPER_TO_GEAR_DIST = Distance.ZERO;
+	
+	public static final Distance GEAR_TO_CENTER_DIST = Distance.ZERO;
+	
+	/**
+	 * The distance parallel to drive direction that the camera is from the center of rotation of the robot.
+	 * 
+	 * TODO: RobotMap: Get the distance from the center of the robot to the gear camera
+	 */
+	public static final Distance GEAR_CAMERA_TO_CENTER_OF_ROBOT_DIST_Y = Distance.ZERO;
 
 }
