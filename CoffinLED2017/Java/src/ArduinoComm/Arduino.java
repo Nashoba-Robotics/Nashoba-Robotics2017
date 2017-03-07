@@ -196,6 +196,9 @@ public class Arduino implements SerialPortEventListener {
 			@Override
 			public void onMessageReceived(String key, Object value) {
 				runThrough++;
+				if(runThrough < 24) {
+					return;
+				}
 				if(runThrough % 12 == 0) {
 				try {
 					//read the values
@@ -243,11 +246,14 @@ public class Arduino implements SerialPortEventListener {
 					//read the bools
 					ArrayList<Boolean> bools= new ArrayList<Boolean>();
 					for(int i = 0; i < singleLEDs.length; i++) {
+						System.out.println("" + singleLEDs[i] + ": " + Network.getInstance().getBoolean(singleLEDs[i]));
 						bools.add(Network.getInstance().getBoolean(singleLEDs[i]));
 					}
 					//For the single led booleans
 					char bool;
 					for(int i = 0; i < bools.size(); i++) {
+						System.out.println(i);
+						System.out.flush();
 						if(bools.get(i)) bool = '1';
 						else bool = '0';
 						sendStr.add("setLed("

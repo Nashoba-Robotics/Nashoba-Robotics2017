@@ -68,7 +68,7 @@ public class Robot extends SampleRobot {
 
 		SmartDashboard.putString("Motor Two Speed",
 				Math.abs(talonTwo.getSpeed()) * Math.signum(talonSetpoint2) + "  :  " + talonSetpoint2);
-		SmartDashboard.putNumber("Motor Two Current", talonOne.getOutputCurrent());
+		SmartDashboard.putNumber("Motor Two Current", talonTwo.getOutputCurrent());
 		talonTwo.set(talonSetpoint2);
 		
 		SmartDashboard.putNumber("Encoder Test", talonTwo.getEncPosition());
