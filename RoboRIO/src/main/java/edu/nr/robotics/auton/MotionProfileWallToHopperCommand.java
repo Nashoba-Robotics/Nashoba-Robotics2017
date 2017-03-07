@@ -55,15 +55,15 @@ public class MotionProfileWallToHopperCommand extends NRCommand {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
 					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER, Drive.TICKS_PER_REV,
+					Drive.MAX_ACCELERATION.get(Distance.Unit.METER, Time.Unit.SECOND, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
+					Drive.MAX_JERK.get(Distance.Unit.METER, Time.Unit.SECOND, Time.Unit.SECOND, Time.Unit.SECOND), Drive.TICKS_PER_REV,
 					Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER), this.negate);
 		} else {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
 					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.METER, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_ACCELERATION * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_JERK * Units.INCHES_PER_FOOT / Units.INCHES_PER_METER, Drive.TICKS_PER_REV,
+					Drive.MAX_ACCELERATION.get(Distance.Unit.METER, Time.Unit.SECOND, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
+					Drive.MAX_JERK.get(Distance.Unit.METER, Time.Unit.SECOND, Time.Unit.SECOND, Time.Unit.SECOND), Drive.TICKS_PER_REV,
 					Drive.WHEEL_DIAMETER.get(Distance.Unit.METER), Drive.WHEEL_BASE.get(Distance.Unit.METER), this.negate);
 		}
 		profiler.setTrajectory(new Waypoint[] { new Waypoint(0, 0, 0), new Waypoint(

@@ -384,12 +384,12 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public boolean isShooterOn() {
-		System.out.println("Shooter on: " + !shooterSwitch.get());
+		//System.out.println("Shooter on: " + !shooterSwitch.get());
 		return !shooterSwitch.get();
 	}
 	
 	public boolean isAgitatorOn() {
-		System.out.println("Agitator on: " + !agitatorSwitch.get());
+		//System.out.println("Agitator on: " + !agitatorSwitch.get());
 		return !agitatorSwitch.get();
 	}
 	

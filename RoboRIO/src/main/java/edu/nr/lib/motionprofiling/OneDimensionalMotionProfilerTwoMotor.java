@@ -20,7 +20,7 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 	private double prevTime;
 	private double startTime;
 	
-	private boolean enabled = false;
+	private boolean enabled = true;
 	private DoublePIDOutput out;
 	private DoublePIDSource source;
 	
@@ -68,8 +68,9 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 			double dt = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - prevTime;
 			
 			double currentTimeSinceStart = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - startTime;
-			
+
 			double velocityGoal = trajectory.getGoalVelocity(currentTimeSinceStart);
+			System.out.println(velocityGoal);
 			double positionGoal = trajectory.getGoalPosition(currentTimeSinceStart);
 			double accelGoal = trajectory.getGoalAccel(currentTimeSinceStart);
 			
@@ -116,7 +117,7 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 					outputRight = -Math.max(-prelimOutputRight, -headingAdjustment);
 				}
 			}
-			
+
 			out.pidWrite(outputLeft, outputRight);
 			
 			source.setPIDSourceType(PIDSourceType.kRate);

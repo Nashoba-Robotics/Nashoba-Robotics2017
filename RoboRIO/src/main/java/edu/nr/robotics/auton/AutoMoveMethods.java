@@ -15,7 +15,7 @@ public class AutoMoveMethods {
 	/**
 	 * The way we get to the gear peg (camera or profiling)
 	 */
-	public static final GearAlignMethod gearAlignMethod = GearAlignMethod.camera;
+	public static final GearAlignMethod gearAlignMethod = GearAlignMethod.profiling;
 	
 	public static final ShootAlignMode shootAlignMode = ShootAlignMode.manual;
 }

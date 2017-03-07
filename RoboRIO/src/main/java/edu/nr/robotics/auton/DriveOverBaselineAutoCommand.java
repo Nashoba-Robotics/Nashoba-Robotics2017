@@ -23,16 +23,16 @@ public class DriveOverBaselineAutoCommand extends CommandGroup {
 	/**
 	 * The speed in percent to drive forward to get over baseline safely in auto
 	 */
-	public static final double FORWARD_PERCENT = 0.5;
+	public static final double FORWARD_PERCENT = 0.75;
 	
 	public DriveOverBaselineAutoCommand() {
 		if (Robot.autoShoot) {
 			addParallel(new ZeroThenAutoTrackCommand());
 		} else {
-			addParallel(new RequiredAutoCommand());
+			//addParallel(new RequiredAutoCommand());
 		}
 		if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.basic) {
-			addSequential(new DriveForwardBasicCommand(FORWARD_PERCENT, DISTANCE_TO_GET_OVER_BASELINE));
+			addSequential(new DriveForwardBasicCommand(FORWARD_PERCENT, DISTANCE_TO_GET_OVER_BASELINE.negate()));
 		} else {
 			addSequential(new DriveForwardProfilingCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
 		}

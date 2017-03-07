@@ -9,6 +9,7 @@ import edu.nr.robotics.subsystems.shooter.Shooter;
 import edu.nr.robotics.subsystems.turret.Turret;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.NamedSendable;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.tables.ITable;
 
 public class RobotDiagram implements NamedSendable {
@@ -70,6 +71,8 @@ public class RobotDiagram implements NamedSendable {
 			table.putBoolean("Hood Tracking", !Hood.getInstance().isAutoAlign());
 			table.putBoolean("Turret Tracking", !Turret.getInstance().isAutoAlign());
 			table.putBoolean("Shooter Tracking", !Shooter.getInstance().isAutoAlign());
+			
+			table.putNumber("Current robot time", Timer.getFPGATimestamp());
 
 		}
 

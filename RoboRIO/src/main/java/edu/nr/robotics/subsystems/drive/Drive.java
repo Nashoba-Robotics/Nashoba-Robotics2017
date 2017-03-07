@@ -5,7 +5,9 @@ import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.sensorhistory.TalonEncoder;
+import edu.nr.lib.units.Acceleration;
 import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Jerk;
 import edu.nr.lib.units.Speed;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.RobotMap;
@@ -30,6 +32,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private DoubleSolenoid gearSwitcher;
 
 	/**
+	 * 
 	 * The diameter of the wheels in inches.
 	 * 
 	 * This should not be used. Instead {@link WHEEL_DIAMETER} should be used.
@@ -60,34 +63,37 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The max driving speed of the robot in low gear 
 	 */
-	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6, Distance.Unit.FOOT, Time.Unit.SECOND);
-
+	//public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6, Distance.Unit.FOOT, Time.Unit.SECOND);
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(7, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
+	
 	/**
 	 * The max driving speed of the robot in high gear 
 	 */
-	public static final Speed MAX_HIGH_GEAR_SPEED = new Speed(16, Distance.Unit.FOOT, Time.Unit.SECOND);
-
+	//public static final Speed MAX_HIGH_GEAR_SPEED = new Speed(16, Distance.Unit.FOOT, Time.Unit.SECOND);
+	public static final Speed MAX_HIGH_GEAR_SPEED = new Speed(13, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
+	
 	/**
 	 * The max driving acceleration in feet/sec/sec
 	 * 
 	 * TODO: Drive: Get max acceleration
 	 */
-	public static final double MAX_ACCELERATION = 0;
+	public static final Acceleration MAX_ACCELERATION = new Acceleration(31.53, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND);
 
 	/**
 	 * The max drive jerk in feet/sec/sec/sec
 	 * 
 	 * TODO: Drive: Get max jerk
 	 */
-	public static final double MAX_JERK = 0;
+	public static final Jerk MAX_JERK = new Jerk(813.0, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND, Time.Unit.SECOND);
 
 	public static final Distance WHEEL_BASE = new Distance(26.1, Distance.Unit.INCH);
 
 	/**
 	 * The number of encoder ticks per wheel revolution
 	 */
-	public static final int TICKS_PER_REV = 2048; 
-
+	//public static final int TICKS_PER_REV = 2048; 
+	public static final int TICKS_PER_REV = 256;
+	
 	/**
 	 * The number of CANTalon "Native Units" per revolution
 	 */
@@ -106,8 +112,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private Speed rightMotorSetpoint = Speed.ZERO;
 
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR = MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
-			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV;
+	//public static final double F_LOW_GEAR = MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
+	//		Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV;
+	public static final double F_LOW_GEAR = 0.92;
 	public static final double P_LOW_GEAR = 0;
 	public static final double I_LOW_GEAR = 0;
 	public static final double D_LOW_GEAR = 0;
@@ -159,17 +166,19 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * Delta time checked for to compare talon positions to previous positions
 	 * to end profiler
 	 */
-	public static final Time PROFILE_TIME_THRESHOLD = new Time(200, Time.Unit.MILLISECOND);
-
+	public static final Time PROFILE_TIME_THRESHOLD = new Time(1000, Time.Unit.MILLISECOND);
+	
 	private Drive() {
 
 		if (EnabledSubsystems.DRIVE_ENABLED) {
 
-			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
-					RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
+			//gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
+			//		RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 
-			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
-
+			//leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
+			
+			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
+			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				leftTalon.changeControlMode(TalonControlMode.PercentVbus);
 			} else {
@@ -190,18 +199,21 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
-			leftTalon.reverseSensor(false);
+			//leftTalon.reverseSensor(false);
+			leftTalon.reverseSensor(true);
 			leftTalon.enable();
 
 			leftEncoder = new TalonEncoder(leftTalon);
 
-			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
+			//tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
+			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 
-			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
-
+			//rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
+			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
+			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				rightTalon.changeControlMode(TalonControlMode.PercentVbus);
 			} else {
@@ -228,7 +240,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 			rightEncoder = new TalonEncoder(rightTalon);
 
-			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
+			//tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
+			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);

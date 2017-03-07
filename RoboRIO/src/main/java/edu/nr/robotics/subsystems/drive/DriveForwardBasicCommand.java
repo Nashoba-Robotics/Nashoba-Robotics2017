@@ -11,6 +11,7 @@ public class DriveForwardBasicCommand extends NRCommand {
 	Distance encoderDistance;
 	
 	public DriveForwardBasicCommand(double percent, Distance distance) {
+		super(Drive.getInstance());
 		this.percent = percent;
 		this.distance = distance;
 	}
@@ -18,11 +19,11 @@ public class DriveForwardBasicCommand extends NRCommand {
 	@Override
 	public void onStart() {
 		encoderDistance = Drive.getInstance().getLeftPosition();
-		if (Drive.getInstance().getCurrentGear() == Gear.high) {
-			Drive.getInstance().setMotorSpeedInPercent(percent, percent);
-		} else {
-			Drive.getInstance().setMotorSpeedInPercent(percent, percent);
-		}
+		Drive.getInstance().setMotorSpeedInPercent(percent, percent);
+
+	}
+	
+	public void onExecute() {
 	}
 	
 	public void onEnd() {
@@ -31,6 +32,6 @@ public class DriveForwardBasicCommand extends NRCommand {
 	
 	@Override
 	public boolean isFinishedNR() {
-		return (Drive.getInstance().getLeftPosition().sub(encoderDistance)).abs().greaterThan(distance);
+		return (Drive.getInstance().getLeftPosition().sub(encoderDistance).abs()).greaterThan(distance);
 	}
 }
