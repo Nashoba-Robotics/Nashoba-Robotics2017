@@ -2,14 +2,14 @@ package edu.nr.robotics.subsystems.gearMover;
 
 import edu.nr.lib.commandbased.NRCommand;
 
-public class GearGetPositionInCommand extends NRCommand {
+public class GearFlapOutCommand extends NRCommand {
 
-	public GearGetPositionInCommand() {
+	public GearFlapOutCommand() {
 		super(GearMover.getInstance());
 	}
 	
 	public void onStart() {
-		GearMover.getInstance().inGearGetPosition();
+		GearMover.getInstance().outGearGetPosition();
 	}
 	
 }

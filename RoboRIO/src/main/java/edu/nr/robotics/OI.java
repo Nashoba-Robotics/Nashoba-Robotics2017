@@ -1,5 +1,6 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.commandbased.AnonymousCommandGroup;
 import edu.nr.lib.commandbased.CancelAllCommand;
 import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.interfaces.Periodic;
@@ -14,14 +15,15 @@ import edu.nr.robotics.multicommands.WallShotAlignCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
-import edu.nr.robotics.subsystems.gearMover.GearGetPositionInCommand;
-import edu.nr.robotics.subsystems.gearMover.GearGetPositionOutCommand;
+import edu.nr.robotics.subsystems.gearMover.GearFlapInCommand;
+import edu.nr.robotics.subsystems.gearMover.GearFlapOutCommand;
 import edu.nr.robotics.subsystems.gearMover.GearRetractCommand;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmRetractCommand;
+import edu.nr.robotics.subsystems.intakeSlide.IntakeSlideDeployCommand;
 import edu.nr.robotics.subsystems.intakeSlide.IntakeSlideRetractCommand;
 import edu.nr.robotics.subsystems.loader.LoaderRunCommand;
 import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
@@ -31,6 +33,8 @@ import edu.nr.robotics.subsystems.turret.TurretPositionCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -42,56 +46,34 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final double JOYSTICK_DEAD_ZONE = 0.15;
 
 	
-	//TODO: OI: Get button numbers
-	/*private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = -1;
+	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = 12;
 	
-	private static final int PUKE_BUTTON_NUMBER = -1;
-	private static final int DEPLOY_INTAKE_BUTTON_NUMBER = -1;
-	private static final int RETRACT_INTAKE_BUTTON_NUMBER = -1;
-	private static final int INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER = -1;
-	private static final int DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER = -1;
-	private static final int INTAKE_SWITCH_BUTTON_NUMBER = -1;
-	private static final int SHOOTER_SWITCH_BUTTON_NUMBER = -1;
-	private static final int INCREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
-	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = -1;
+	private static final int PUKE_BUTTON_NUMBER = 5;
+	private static final int DEPLOY_INTAKE_BUTTON_NUMBER = 4;
+	private static final int RETRACT_INTAKE_BUTTON_NUMBER = 6;
+	private static final int INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER = 11;
+	private static final int DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER = 10;
+	private static final int INCREMENT_HOOD_POSITION_BUTTON_NUMBER = 6;
+	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = 4;
+	private static final int SHOOT_BUTTON_NUMBER = 10;
+	private static final int THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER = 7;
 	
-	private static final int ENABLE_AUTO_TRACKING_BUTTON_NUMBER = -1;
-	private static final int PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER = -1;
-	private static final int PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER = -1;
-	private static final int CANCEL_ALL_BUTTON_NUMBER = -1;
-	private static final int SHOOT_BUTTON_NUMBER = -1;
-	private static final int GEAR_DEPLOY_BUTTON_NUMBER = -1;
-	private static final int GEAR_RETRACT_BUTTON_NUMBER = -1;
-	private static final int GET_GEAR_IN_BUTTON_NUMBER = -1;
-	private static final int GET_GEAR_OUT_BUTTON_NUMBER = -1;
-	private static final int WALL_SHOT_BUTTON_NUMBER = -1;*/
+	private static final int ENABLE_AUTO_TRACKING_BUTTON_NUMBER = 2;
+	private static final int PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER = 3;
+	private static final int PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER = 5;
+	private static final int CANCEL_ALL_BUTTON_NUMBER = 1;
 	
-	//Old driver station buttons numbers:
-	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = 2;
+	private static final int AGITATOR_SWITCH_BUTTON_NUMBER = 1;
+	private static final int SHOOTER_SWITCH_BUTTON_NUMBER = 2;
+	private static final int INTAKE_SWITCH_BUTTON_NUMBER = 3;
 	
-	private static final int PUKE_BUTTON_NUMBER = 12;
-	private static final int DEPLOY_INTAKE_BUTTON_NUMBER = 11;
-	private static final int RETRACT_INTAKE_BUTTON_NUMBER = 10;
-	private static final int INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER = 4;
-	private static final int DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER = 6;
-	private static final int INCREMENT_HOOD_POSITION_BUTTON_NUMBER = 5;
-	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = 9;
-	private static final int SHOOT_BUTTON_NUMBER = 1;
+	private static final int GEAR_DEPLOY_BUTTON_NUMBER = 9;
+	private static final int GEAR_RETRACT_BUTTON_NUMBER = 12;
+	private static final int FLAP_IN_BUTTON_NUMBER = 11;
+	private static final int FLAP_OUT_BUTTON_NUMBER = 8;
 	
-	private static final int ENABLE_AUTO_TRACKING_BUTTON_NUMBER = 5;
-	private static final int PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER = 9;
-	private static final int PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER = 8;
-	private static final int CANCEL_ALL_BUTTON_NUMBER = 7;
-	private static final int INTAKE_SWITCH_BUTTON_NUMBER = 11;
-	private static final int SHOOTER_SWITCH_BUTTON_NUMBER = 12;
-	private static final int GEAR_DEPLOY_BUTTON_NUMBER = 4;
-	private static final int GEAR_RETRACT_BUTTON_NUMBER = 3;
-	private static final int GET_GEAR_IN_BUTTON_NUMBER = 2;
-	private static final int GET_GEAR_OUT_BUTTON_NUMBER = 1;
-	
-	private static final int WALL_SHOT_BUTTON_NUMBER = 10;
+	private static final int WALL_SHOT_BUTTON_NUMBER = 9;
 
-	//private static final int AGITATOR_SWITCH_BUTTON_NUMBER = 10;
 	
 	private static final int DRIVE_GEAR_TOGGLE_BUTTON_NUMBER = 1;
 	
@@ -114,8 +96,8 @@ public class OI implements SmartDashboardSource, Periodic {
 		
 	private static final int STICK_LEFT = 0;
 	private static final int STICK_RIGHT = 1;
-	private static final int STICK_OPERATOR_LEFT = 3;
-	private static final int STICK_OPERATOR_RIGHT = 2;
+	private static final int STICK_OPERATOR_LEFT = 2;
+	private static final int STICK_OPERATOR_RIGHT = 3;
 
 
 	/**
@@ -134,6 +116,9 @@ public class OI implements SmartDashboardSource, Periodic {
 	 * What {@link Drive#DriveMode} for the {@link DriveJoystickCommand} to use.
 	 */
 	public static final Drive.DriveMode driveMode = Drive.DriveMode.arcadeDrive;
+
+
+	private static final int DRIVE_TURN_SLOW_BUTTON_NUMBER = 3;
 	
 	private OI() {		
 		driveLeft = new Joystick(STICK_LEFT);
@@ -156,7 +141,7 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	public void initDriveRight() {
 		
-		new JoystickButton(driveLeft, DRIVE_GEAR_TOGGLE_BUTTON_NUMBER).whenPressed(new NRCommand(Drive.getInstance()) {
+		new JoystickButton(driveRight, DRIVE_GEAR_TOGGLE_BUTTON_NUMBER).whenPressed(new NRCommand(Drive.getInstance()) {
 			@Override
 			public void onStart() {
 				Drive.getInstance().switchGear();
@@ -167,28 +152,80 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 	public void initOperatorLeft() {
 
-		
-		new JoystickButton(operatorLeft, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
-
-		
+				
 		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenPressed(new IntakeSpeedCommand(Intake.PUKE_VOLTAGE));
 		new JoystickButton(operatorLeft, PUKE_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Intake.getInstance()));
 		
 		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmDeployCommand());
-		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
-
-		new JoystickButton(operatorLeft, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE.negate()));
+		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new GearFlapInCommand());
+		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.2));
+				addSequential(new DoNothingCommand(Intake.getInstance()));
+			}
+		});
+		new JoystickButton(operatorLeft, DEPLOY_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.2));
+				addSequential(new IntakeSlideDeployCommand());
+			}
+		});
 		
-		
-		new JoystickButton(operatorLeft, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
-		new JoystickButton(operatorLeft, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
+		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
+		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.3));
+				addSequential(new IntakeSpeedCommand(0));
+			}
+		});
+		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.5));
+				addSequential(new IntakeArmRetractCommand());
+			}
+		});
 		
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenPressed(new LoaderRunCommand());
 		new JoystickButton(operatorLeft, SHOOT_BUTTON_NUMBER).whenReleased(new LoaderStopCommand());
+		
+		new JoystickButton(operatorLeft, GEAR_DEPLOY_BUTTON_NUMBER).whenPressed(new GearDeployCommand());
+		new JoystickButton(operatorLeft, GEAR_RETRACT_BUTTON_NUMBER).whenPressed(new GearRetractCommand());
+		
+		new JoystickButton(operatorLeft, FLAP_IN_BUTTON_NUMBER).whenPressed(new GearFlapInCommand());
+		
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.3));
+				addSequential(new IntakeSpeedCommand(0));
+			}
+		});
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.5));
+				addSequential(new IntakeArmRetractCommand());
+			}
+		});
+		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
+			public void commands() {
+				addSequential(new WaitCommand(0.5));
+				addSequential(new GearFlapOutCommand());
+			}
+		});
+
+		
+		agitatorSwitch = new JoystickButton(operatorLeft, AGITATOR_SWITCH_BUTTON_NUMBER);
+		intakeSwitch = new JoystickButton(operatorLeft, INTAKE_SWITCH_BUTTON_NUMBER);
+		shooterSwitch = new JoystickButton(operatorLeft, SHOOTER_SWITCH_BUTTON_NUMBER);
+
+
 	}
 
 	public void initOperatorRight() {
+		
+		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
+
+
 		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_RED));
 		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_BLUE));
 		
@@ -196,19 +233,15 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 		new JoystickButton(operatorRight, CANCEL_ALL_BUTTON_NUMBER).whenPressed(new CancelAllCommand());
 	
-		new JoystickButton(operatorRight, GEAR_DEPLOY_BUTTON_NUMBER).whenPressed(new GearDeployCommand());
-		new JoystickButton(operatorRight, GEAR_RETRACT_BUTTON_NUMBER).whenPressed(new GearRetractCommand());
-		
-		new JoystickButton(operatorRight, GET_GEAR_IN_BUTTON_NUMBER).whenPressed(new GearGetPositionInCommand());
-		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new GearGetPositionOutCommand());
 		
 		new JoystickButton(operatorRight, WALL_SHOT_BUTTON_NUMBER).whenPressed(new WallShotAlignCommand());
-		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new IntakeSlideRetractCommand());
-		new JoystickButton(operatorRight, GET_GEAR_OUT_BUTTON_NUMBER).whenPressed(new IntakeArmRetractCommand());
-
-		//agitatorSwitch = new JoystickButton(operatorRight, SHOOTER_SWITCH_BUTTON_NUMBER);
-		intakeSwitch = new JoystickButton(operatorRight, INTAKE_SWITCH_BUTTON_NUMBER);
-		shooterSwitch = new JoystickButton(operatorRight, SHOOTER_SWITCH_BUTTON_NUMBER);
+		
+		new JoystickButton(operatorRight, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
+		new JoystickButton(operatorRight, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE.negate()));
+		
+		
+		new JoystickButton(operatorRight, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
+		new JoystickButton(operatorRight, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
 
 	}
 
@@ -228,7 +261,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 
 	public double getArcadeTurnValue() {
-		return snapDriveJoysticks(driveRight.getX()) * getTurnAdjust();
+		return snapDriveJoysticks(driveRight.getX()) * getTurnAdjust() * (driveLeft.getRawButton(DRIVE_REVERSE_BUTTON_NUMBER) ? 1 : -1);
 	}
 
 	public double getTankLeftValue() {
@@ -273,14 +306,14 @@ public class OI implements SmartDashboardSource, Periodic {
 	// -> Joy2: Loader Roller Joystick
 	// Overrides loader motor power
 	public double getTurretValue() {
-		return snapCoffinJoysticks(operatorRight.getAxis(AxisType.kZ));
+		return snapCoffinJoysticks(operatorRight.getAxis(AxisType.kX));
 	}
 
 	// -> Joy3: Hood Joystick
 	// Overrides hood angle (undone if another auto hood angle command is
 	// sent)
 	public double getHoodValue() {
-		return snapCoffinJoysticks(operatorRight.getAxis(AxisType.kThrottle));
+		return -snapCoffinJoysticks(operatorLeft.getAxis(AxisType.kX));
 	}
 
 
@@ -297,9 +330,11 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 
 	private static double snapCoffinJoysticks(double value) {
-		if(value > -0.5 && value < 0.5)
+		double snapValue = 0.2;
+		
+		if(value > -snapValue && value < snapValue)
 			return 0;
-		return ((Math.abs(value)-0.5) / 0.5) * Math.signum(value);
+		return ((Math.abs(value)-snapValue) / snapValue) * Math.signum(value);
 	}
 
 	public double getRawMove() {
@@ -311,7 +346,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 
 	private double getTurnAdjust() {
-		return driveRight.getRawButton(1) ? 0.5 : 1;
+		return driveRight.getRawButton(DRIVE_TURN_SLOW_BUTTON_NUMBER) ? 0.5 : 1;
 	}
 
 	@Override
@@ -354,8 +389,8 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public boolean isAgitatorOn() {
-		System.out.println("Agitator on: " + !shooterSwitch.get());
-		return !shooterSwitch.get(); //TODO: OI: Actual agitator switch
+		System.out.println("Agitator on: " + !agitatorSwitch.get());
+		return !agitatorSwitch.get();
 	}
 	
 	public boolean isIntakeOn() {
