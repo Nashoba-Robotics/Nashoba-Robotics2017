@@ -47,6 +47,8 @@ public class DriveForwardPIDCommand extends NRCommand {
 		KP = SmartDashboard.getNumber("Drive Forward PID P", 0);
 		KI = SmartDashboard.getNumber("Drive Forward PID I", 0);
 		KD = SmartDashboard.getNumber("Drive Forward PID D", 0);
+		
+		lastTime = Time.getCurrentTime();
 	}
 	
 	@Override

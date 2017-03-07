@@ -9,21 +9,12 @@ import edu.nr.lib.units.Distance;
  * floating around.
  */
 public class RobotMap {
-
-	//Practice bot talon ports
-	public static final int DRIVE_LEFT_F_TALON_PORT = 1;
-	public static final int DRIVE_LEFT_B_TALON_PORT = 2;
-	public static final int DRIVE_RIGHT_F_TALON_PORT = 6;
-	public static final int DRIVE_RIGHT_B_TALON_PORT = 3;
 	
-	
-	// These are the talon ports
-	/*
+	//These are the talon ports
 	public static final int DRIVE_LEFT_F_TALON_PORT = 15;
 	public static final int DRIVE_LEFT_B_TALON_PORT = 14;
 	public static final int DRIVE_RIGHT_F_TALON_PORT = 12;
 	public static final int DRIVE_RIGHT_B_TALON_PORT = 13;
-	*/
 	public static final int SHOOTER_A_TALON_PORT = 3;
 	public static final int SHOOTER_B_TALON_PORT = 1;
 	public static final int TURRET_TALON_PORT = 11;

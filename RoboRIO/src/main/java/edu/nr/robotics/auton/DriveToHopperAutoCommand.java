@@ -2,11 +2,13 @@ package edu.nr.robotics.auton;
 
 import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Time;
 import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveConstantSpeedCommand;
+import edu.nr.robotics.subsystems.drive.DriveForwardPIDCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
 import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -23,7 +25,7 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 	 * 
 	 * TODO: Find time to drive into hopper
 	 */
-	final static double TIME_DRIVING_INTO_HOPPER = 0; 
+	final static Time TIME_DRIVING_INTO_HOPPER = new Time(0, Time.Unit.SECOND); 
 	
 	/**
 	 * Current at which ramming into hopper will stop
@@ -46,18 +48,26 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 		if (Robot.side == SideOfField.blue) {
 			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
 				addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)), FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER), FieldMap.ANGLE_WALL_TO_HOPPER, true));
-			} else {
+			} else if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.OneDProfilingAndPID) {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
 				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER.negate()));
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
+			} else {
+				addSequential(new DriveForwardPIDCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
+				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER.negate()));
+				addSequential(new DriveForwardPIDCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			}
 		} else {
 			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
 				addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)), (FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate(), FieldMap.ANGLE_WALL_TO_HOPPER.negate(), true));
-			} else {
+			} else if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.OneDProfilingAndPID) {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
 				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER));
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
+			} else {
+				addSequential(new DriveForwardPIDCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
+				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER));
+				addSequential(new DriveForwardPIDCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			}
 		}
 		if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
@@ -68,7 +78,7 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 		if (AutoMoveMethods.hopperRamStopMethod == HopperRamStopMethod.current) {
 			addSequential(new DriveCurrentWaitCommand(MAX_CURRENT_INTO_HOPPER));
 		} else {
-			addSequential(new WaitCommand(TIME_DRIVING_INTO_HOPPER));
+			addSequential(new WaitCommand(TIME_DRIVING_INTO_HOPPER.get(Time.Unit.SECOND)));
 		}
 		addSequential(new DoNothingCommand(Drive.getInstance()));
 		if (Robot.autoShoot)

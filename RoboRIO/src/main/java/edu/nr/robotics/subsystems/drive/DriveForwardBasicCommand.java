@@ -23,15 +23,12 @@ public class DriveForwardBasicCommand extends NRCommand {
 
 	}
 	
-	public void onExecute() {
-	}
-	
 	public void onEnd() {
 		Drive.getInstance().disable();
 	}
 	
 	@Override
 	public boolean isFinishedNR() {
-		return (Drive.getInstance().getLeftPosition().sub(encoderDistance).abs()).greaterThan(distance);
+		return (Drive.getInstance().getLeftPosition().sub(encoderDistance)).abs().greaterThan(distance);
 	}
 }

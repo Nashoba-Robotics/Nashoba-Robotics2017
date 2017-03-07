@@ -25,7 +25,7 @@ public class TwoDimensionalMotionProfilerPathfinder extends TimerTask  {
 	private final long period;
 	private static final long defaultPeriod = 20; //50 Hz 
 		
-	private boolean enabled = false;
+	private boolean enabled = true;
 	private DoublePIDOutput out;
 	private DoublePIDSource source;
 	

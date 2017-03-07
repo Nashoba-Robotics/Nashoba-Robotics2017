@@ -8,6 +8,7 @@ import edu.nr.robotics.Robot;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveConstantSpeedCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardBasicCommand;
+import edu.nr.robotics.subsystems.drive.DriveForwardPIDCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -29,11 +30,14 @@ public class DriveOverBaselineAutoCommand extends CommandGroup {
 		if (Robot.autoShoot) {
 			addParallel(new ZeroThenAutoTrackCommand());
 		} else {
-			//addParallel(new RequiredAutoCommand());
+			addParallel(new RequiredAutoCommand());
 		}
 		if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.basic) {
-			addSequential(new DriveForwardBasicCommand(FORWARD_PERCENT, DISTANCE_TO_GET_OVER_BASELINE.negate()));
-		} else {
+			addSequential(new DriveForwardBasicCommand(-FORWARD_PERCENT, DISTANCE_TO_GET_OVER_BASELINE));
+		} else if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.allPID) {
+			addSequential(new DriveForwardPIDCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
+		}
+		else {
 			addSequential(new DriveForwardProfilingCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
 		}
 		if (Robot.autoShoot) {

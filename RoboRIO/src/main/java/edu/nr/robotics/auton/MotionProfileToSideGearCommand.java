@@ -21,6 +21,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 	Distance sideDistance; // In meters down below, inches on input
 	Angle endHeading;
 	boolean negate;
+	Distance startPosition;
 
 	// Two-Dimensional motion profiling constants
 	// TODO: MotionProfileToSideGearCommand: Get two-dimensional motion
@@ -49,6 +50,7 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 
 	@Override
 	public void onStart() {
+		startPosition = Drive.getInstance().getLeftPosition();
 		if (Drive.getInstance().getCurrentGear() == Gear.low) {
 			profiler = new TwoDimensionalMotionProfilerPathfinder(Drive.getInstance(), Drive.getInstance(), KV, KA, KP,
 					KI, KD, KP_THETA,
@@ -84,14 +86,16 @@ public class MotionProfileToSideGearCommand extends NRCommand {
 
 	@Override
 	public boolean isFinishedNR() {
-		return Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD).abs().sub(Drive.getInstance().getLeftPosition())
+		boolean finished = (Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD).sub(Drive.getInstance().getLeftPosition())).abs()
 				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
-				&& Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).abs().sub(Drive.getInstance().getLeftPosition())
+				&& (Drive.getInstance().getHistoricalLeftPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).sub(Drive.getInstance().getLeftPosition())).abs()
 				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
-				&& Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD).abs().sub(Drive.getInstance().getRightPosition())
+				&& (Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD).sub(Drive.getInstance().getRightPosition())).abs()
 				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
-				&& Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).abs().sub(Drive.getInstance().getRightPosition())
-				.lessThan(Drive.PROFILE_POSITION_THRESHOLD);
+				&& (Drive.getInstance().getHistoricalRightPosition(Drive.PROFILE_TIME_THRESHOLD.mul(2)).sub(Drive.getInstance().getRightPosition())).abs()
+				.lessThan(Drive.PROFILE_POSITION_THRESHOLD)
+				&& (Drive.getInstance().getLeftPosition().sub(startPosition)).abs().greaterThan(Drive.PROFILE_POSITION_THRESHOLD);
+		return finished;
 	}
 
 }

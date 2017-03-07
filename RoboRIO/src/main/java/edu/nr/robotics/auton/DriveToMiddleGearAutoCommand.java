@@ -6,6 +6,7 @@ import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardBasicCommand;
+import edu.nr.robotics.subsystems.drive.DriveForwardPIDCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -19,7 +20,9 @@ public class DriveToMiddleGearAutoCommand extends CommandGroup {
 		}
 		if (AutoMoveMethods.gearAlignMethod == GearAlignMethod.profiling) {
 			if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.basic) {
-				addSequential(new DriveForwardBasicCommand(DriveOverBaselineAutoCommand.FORWARD_PERCENT, (FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate()));
+				addSequential(new DriveForwardBasicCommand(-DriveOverBaselineAutoCommand.FORWARD_PERCENT, FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)));
+			} else if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.allPID) {
+				addSequential(new DriveForwardPIDCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate())); //Negated for driving backwards in auto
 			} else {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP)).negate())); //Negated for driving backwards in auto
 			}

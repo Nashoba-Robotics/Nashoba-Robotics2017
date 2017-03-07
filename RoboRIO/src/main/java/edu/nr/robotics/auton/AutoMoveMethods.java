@@ -2,6 +2,8 @@ package edu.nr.robotics.auton;
 
 public class AutoMoveMethods {
 
+	//TODO: AutoMoveMethods: CHECK THESE VALUES BEFORE EVERY MATCH
+	
 	/**
 	 * The way we get around in autonomous mode
 	 */

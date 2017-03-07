@@ -70,11 +70,11 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 			double currentTimeSinceStart = edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - startTime;
 
 			double velocityGoal = trajectory.getGoalVelocity(currentTimeSinceStart);
-			System.out.println(velocityGoal);
 			double positionGoal = trajectory.getGoalPosition(currentTimeSinceStart);
 			double accelGoal = trajectory.getGoalAccel(currentTimeSinceStart);
 			
-			double headingAdjustment = gyroCorrection.getTurnValue(kp_theta);
+			//double headingAdjustment = gyroCorrection.getTurnValue(kp_theta);
+			double headingAdjustment = 0;
 			
 			double errorLeft = positionGoal - source.pidGetLeft() + initialPositionLeft;			
 			double errorDerivLeft = (errorLeft - errorLastLeft) / dt;
