@@ -85,6 +85,7 @@ public class Robot extends IterativeRobot {
 	 * Set a default choice by calling {@link SendableChooser#addDefault} and set other choices by calling {@link SendableChooser#addObject}
 	 */
 	public void autoChooserInit() {
+		robotCompressor.start();
 		autoSpotChooser.addDefault("Do Nothing", new DoNothingCommand());
 		autoSpotChooser.addObject("Baseline", new DriveOverBaselineAutoCommand());
 		autoSpotChooser.addObject("Non Shooter Gear", new DriveToNonShooterSideGearAutoCommand());

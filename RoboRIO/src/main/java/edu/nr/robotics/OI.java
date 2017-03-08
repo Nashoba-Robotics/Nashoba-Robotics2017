@@ -12,6 +12,7 @@ import edu.nr.lib.units.Time;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.multicommands.WallShotAlignCommand;
+import edu.nr.robotics.subsystems.compressor.CompressorStopCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
@@ -57,6 +58,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int DECREMENT_HOOD_POSITION_BUTTON_NUMBER = 4;
 	private static final int SHOOT_BUTTON_NUMBER = 10;
 	private static final int THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER = 7;
+	private static final int TURN_OFF_COMPRESSOR_BUTTON_NUMBER = 7;
 	
 	private static final int ENABLE_AUTO_TRACKING_BUTTON_NUMBER = 2;
 	private static final int PRESET_TURRET_ANGLE_BLUE_BUTTON_NUMBER = 3;
@@ -243,6 +245,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorRight, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
 		new JoystickButton(operatorRight, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
 
+		new JoystickButton(operatorRight, TURN_OFF_COMPRESSOR_BUTTON_NUMBER).whenPressed(new CompressorStopCommand());
 	}
 
 	public static OI getInstance() {
