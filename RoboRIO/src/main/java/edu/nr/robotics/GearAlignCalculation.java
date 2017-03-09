@@ -1,6 +1,7 @@
 package edu.nr.robotics;
 
 import edu.nr.lib.NRMath;
+import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
@@ -39,9 +40,14 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 			lastSeenDistance = new Distance(value, (Distance.Unit) type.unit);
 		}
 		timeOfLastData = Time.getCurrentTime();
+		
+		System.out.println("Dist: " + lastSeenDistance + " angle: " + lastSeenAngle);
 	
-		driveDistance = NRMath.hypot(lastSeenDistance.mul(lastSeenAngle.cos()).add(RobotMap.GEAR_CAMERA_TO_CENTER_OF_ROBOT_DIST_Y), lastSeenDistance.mul(lastSeenAngle.sin())).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP);
-		turnAngle = NRMath.atan2(lastSeenDistance.mul(lastSeenAngle.sin()),lastSeenDistance.mul(lastSeenAngle.cos()).add(RobotMap.GEAR_CAMERA_TO_CENTER_OF_ROBOT_DIST_Y));
+		Distance tempDistOne = NRMath.lawOfCos(lastSeenDistance, RobotMap.GEAR_TO_CENTER_DIST_X, Units.RIGHT_ANGLE.sub(lastSeenAngle));
+		Angle tempAngleOne = NRMath.lawOfCos(lastSeenDistance, RobotMap.GEAR_TO_CENTER_DIST_X, tempDistOne);
+		turnAngle = Units.RIGHT_ANGLE.sub(tempAngleOne);
+		//driveDistance = NRMath.hypot(lastSeenDistance.mul(lastSeenAngle.cos()).add(RobotMap.GEAR_CAMERA_TO_CENTER_OF_ROBOT_DIST_Y), lastSeenDistance.mul(lastSeenAngle.sin())).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP);
+		//turnAngle = NRMath.atan2(lastSeenDistance.mul(lastSeenAngle.sin()),lastSeenDistance.mul(lastSeenAngle.cos()).add(RobotMap.GEAR_CAMERA_TO_CENTER_OF_ROBOT_DIST_Y));
 	}
 	
 	public Distance getDistToDrive() {

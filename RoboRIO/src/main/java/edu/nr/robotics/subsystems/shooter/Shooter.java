@@ -24,14 +24,15 @@ public class Shooter extends NRSubsystem {
 	 * The max speed of the shooter
 	 * TODO: Shooter: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(2500, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 	
 	/**
 	 * The speed that the motor is currently supposed to be running at.
 	 * 
 	 * The initial value is the speed it is supposed to run at to start the match.
 	 */
-	public AngularSpeed motorSetpoint = new AngularSpeed(0.7, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public AngularSpeed defaultSpeed = MAX_SPEED.mul(0.7);
+	public AngularSpeed motorSetpoint = MAX_SPEED.mul(0.7);
 
 	private boolean autoAlign = false;
 

@@ -65,7 +65,8 @@ public class RobotMap {
 	 */
 	public static final Distance BACK_BUMPER_TO_GEAR_DIST = new Distance(31, Distance.Unit.INCH);
 	
-	public static final Distance GEAR_TO_CENTER_DIST = Distance.ZERO;
+	public static final Distance GEAR_TO_CENTER_DIST_Y = new Distance(31.5, Distance.Unit.INCH);
+	public static final Distance GEAR_TO_CENTER_DIST_X = new Distance(7, Distance.Unit.INCH);
 	
 	/**
 	 * The distance parallel to drive direction that the camera is from the center of rotation of the robot.

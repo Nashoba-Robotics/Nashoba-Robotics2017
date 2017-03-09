@@ -112,7 +112,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
 	 */
-	public static final AngularSpeed SHOOTER_SPEED_INCREMENT_VALUE = new AngularSpeed(100, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public static final AngularSpeed SHOOTER_SPEED_INCREMENT_VALUE = new AngularSpeed(10, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 
 	/**
