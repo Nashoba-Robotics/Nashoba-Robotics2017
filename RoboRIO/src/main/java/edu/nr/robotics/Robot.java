@@ -26,6 +26,8 @@ import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.loader.Loader;
 import edu.nr.robotics.subsystems.shooter.Shooter;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -45,7 +47,7 @@ public class Robot extends IterativeRobot {
 
 	private static Robot singleton;
 	
-	public static Robot getInstance() {
+	public synchronized static Robot getInstance() {
 		return singleton;
 	}
 	
@@ -67,7 +69,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		singleton = this;
-		//CameraServer.getInstance().startAutomaticCapture();
+		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		//cam.setFPS(20);
 		Agitator.init();
 		Loader.init();
 		Shooter.init();
@@ -183,6 +186,8 @@ public class Robot extends IterativeRobot {
 		autoShoot = autoShootChooser.getSelected();
 		side = sideChooser.getSelected();
 
+		System.out.println("Initializing auto command: " + autonomousCommand);
+		
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
@@ -236,6 +241,8 @@ public class Robot extends IterativeRobot {
 		
 		Periodic.runAll();
 		SmartDashboardSource.runAll();
+		SmartDashboard.putNumber("Gear Angle", GearAlignCalculation.getInstance().getAngleToTurn().get(Angle.Unit.DEGREE));
+		SmartDashboard.putBoolean("Compressor", Robot.robotCompressor.enabled());
 		SmartDashboard.putData(RobotDiagram.getInstance());
 	}
 }

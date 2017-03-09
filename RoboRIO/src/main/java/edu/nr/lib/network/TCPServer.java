@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import edu.nr.lib.units.GenericUnit;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 
@@ -297,10 +298,12 @@ public class TCPServer implements Runnable {
 				
 				while (true) {
 					m_isConnected = false;
+					SmartDashboard.putBoolean("Connected to " + num, false);
 					System.out.println("Trying to connect to " + num);
 					Socket connectionSocket = socket.accept();
 					m_isConnected = true;
 					System.out.println("Connected to " + num + "!" );
+					SmartDashboard.putBoolean("Connected to " + num, true);
 					BufferedReader inFromClient = new BufferedReader(
 							new InputStreamReader(connectionSocket.getInputStream()));
 					while (!connectionSocket.isClosed()) {

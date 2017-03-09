@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/NetworkTables.jar"/>
-	<classpathentry kind="lib" path="lib/RXTXcomm.jar">
+	<classpathentry exported="true" kind="lib" path="lib/NetworkTables.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/RXTXcomm.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="CoffinLED2017/rxtx"/>
 		</attributes>

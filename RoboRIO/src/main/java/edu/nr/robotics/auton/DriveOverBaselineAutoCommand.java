@@ -24,7 +24,7 @@ public class DriveOverBaselineAutoCommand extends CommandGroup {
 	/**
 	 * The speed in percent to drive forward to get over baseline safely in auto
 	 */
-	public static final double FORWARD_PERCENT = 0.75;
+	public static final double FORWARD_PERCENT = 0.25;
 	
 	public DriveOverBaselineAutoCommand() {
 		if (Robot.autoShoot) {

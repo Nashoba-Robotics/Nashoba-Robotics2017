@@ -30,11 +30,11 @@ public class Turret extends NRSubsystem {
 	/**
 	 * The position that the hood is currently supposed to be at
 	 */
-	private Angle positionSetpoint = Angle.ZERO;
+	private Angle positionSetpoint = new Angle(90, Angle.Unit.DEGREE);
 	
 	//TODO: Turret: Find forward versus reverse limit switches
-	public static final Angle FORWARD_POSITION = new Angle(-90, Angle.Unit.DEGREE);
-	public static final Angle REVERSE_POSITION = new Angle(90, Angle.Unit.DEGREE);
+	public static final Angle FORWARD_POSITION = new Angle(90, Angle.Unit.DEGREE);
+	public static final Angle REVERSE_POSITION = new Angle(-102, Angle.Unit.DEGREE);
 	
 	//Profiles
 	private static final int MOTION_MAGIC = 0;
@@ -240,10 +240,10 @@ public class Turret extends NRSubsystem {
 	public void periodic() {
 		if(talon != null) {
 			if(talon.isFwdLimitSwitchClosed()) { //TODO: Turret: Check limit switch direction
-				talon.setPosition(FORWARD_POSITION.get(Unit.ROTATION));
+				talon.setPosition(positionToRaw(FORWARD_POSITION));
 				turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {
-				talon.setPosition(REVERSE_POSITION.get(Unit.ROTATION));
+				talon.setPosition(positionToRaw(REVERSE_POSITION));
 				turretTrackDirection = 1;
 			} 
 		}

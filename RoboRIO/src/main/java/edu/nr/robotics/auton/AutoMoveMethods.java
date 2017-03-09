@@ -7,7 +7,7 @@ public class AutoMoveMethods {
 	/**
 	 * The way we get around in autonomous mode
 	 */
-	public static final AutoTravelMethod autoTravelMethod = AutoTravelMethod.OneDProfilingAndPID;
+	public static final AutoTravelMethod autoTravelMethod = AutoTravelMethod.basic;
 	
 	/**
 	 * The way we stop ramming into the hopper (time or current)

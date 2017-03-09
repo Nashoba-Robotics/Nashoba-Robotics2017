@@ -20,7 +20,7 @@ public class FieldMap {
 	/**
 	 * The distance we want to drive into the peg once we have reached it
 	 */
-	public static final Distance DRIVE_DEPTH_ON_PEG_FROM_SHIP = new Distance(0.5, Distance.Unit.INCH);
+	public static final Distance DRIVE_DEPTH_ON_PEG_FROM_SHIP = new Distance(4, Distance.Unit.INCH);
 	
 	/**
 	 * The dimensions to the pegs in auto that would be used in inches or degrees
