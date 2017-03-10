@@ -6,6 +6,7 @@ import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Distance.Unit;
 import edu.nr.lib.units.Time;
 
 public class GearAlignCalculation implements NetworkingDataTypeListener {

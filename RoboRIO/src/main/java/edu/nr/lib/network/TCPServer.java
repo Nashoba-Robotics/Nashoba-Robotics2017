@@ -349,6 +349,7 @@ public class TCPServer implements Runnable {
 		public NetworkingDataType(char identifier, String name, GenericUnit unit) {
 			this.identifier = identifier;
 			this.name = name;
+			this.unit = unit;
 			
 			this.listeners = new ArrayList<>();
 		}
