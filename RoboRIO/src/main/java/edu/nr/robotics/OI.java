@@ -213,7 +213,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		});
 		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
 			public void commands() {
-				addSequential(new WaitCommand(1.0));
+				addSequential(new WaitCommand(0.0)); //TODO: VERY IMPORTANT: ONCE WE HAVE INTAKE, THIS NEEDS TO BE ONE SECOND
 				addSequential(new GearFlapOutCommand());
 			}
 		});

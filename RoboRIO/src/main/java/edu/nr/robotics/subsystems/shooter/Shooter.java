@@ -19,6 +19,7 @@ public class Shooter extends NRSubsystem {
 	private static Shooter singleton;
 
 	private CANTalon talon;
+	private CANTalon tempTalon;
 
 	/**
 	 * The max speed of the shooter
@@ -65,7 +66,7 @@ public class Shooter extends NRSubsystem {
 			talon.enable();
 			setAutoAlign(true);
 			
-			CANTalon tempTalon = new CANTalon(RobotMap.SHOOTER_B_TALON_PORT);
+			tempTalon = new CANTalon(RobotMap.SHOOTER_B_TALON_PORT);
 			tempTalon.changeControlMode(TalonControlMode.Follower);
 			tempTalon.set(talon.getDeviceID());
 			tempTalon.enableBrakeMode(false);
@@ -141,7 +142,8 @@ public class Shooter extends NRSubsystem {
 	public void smartDashboardInfo() {
 		if (talon != null) {
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_BASIC_ENABLED){
-				SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
+				SmartDashboard.putNumber("Shooter Current A", talon.getOutputCurrent());
+				SmartDashboard.putNumber("Shooter Current B", tempTalon.getOutputCurrent());
 				SmartDashboard.putString("Shooter Speed", getSpeed().get(Angle.Unit.ROTATION, Time.Unit.MINUTE) + " : " + motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));	
 			}
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED){

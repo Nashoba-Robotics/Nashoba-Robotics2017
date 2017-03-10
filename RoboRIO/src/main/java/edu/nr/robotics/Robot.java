@@ -173,6 +173,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
+		for (NRSubsystem subsystem : NRSubsystem.subsystems) {
+			subsystem.disable();
+		}
 
 	}
 
