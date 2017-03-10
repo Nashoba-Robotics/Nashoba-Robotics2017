@@ -65,7 +65,7 @@ public class RobotMap {
 	 */
 	public static final Distance BACK_BUMPER_TO_GEAR_DIST = new Distance(31, Distance.Unit.INCH);
 	
-	public static final Distance GEAR_TO_CENTER_DIST_Y = new Distance(31.5, Distance.Unit.INCH);
+	public static final Distance GEAR_TO_CENTER_DIST_Y = new Distance(15.25, Distance.Unit.INCH);
 	public static final Distance GEAR_TO_CENTER_DIST_X = new Distance(7, Distance.Unit.INCH);
 	
 	/**
