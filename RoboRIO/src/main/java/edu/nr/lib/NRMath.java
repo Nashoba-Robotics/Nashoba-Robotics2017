@@ -77,7 +77,7 @@ public class NRMath {
 	}
 
 	public static double lawOfCos(double a, double b, Angle C) {
-		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) + 2 * a * b * C.cos());
+		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * C.cos());
 	}
 	
 	public static Angle lawOfCos(double a, double b, double c) {
