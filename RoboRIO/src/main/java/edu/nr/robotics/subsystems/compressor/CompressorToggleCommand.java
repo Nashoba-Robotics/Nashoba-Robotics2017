@@ -6,7 +6,7 @@ import edu.nr.robotics.Robot;
 public class CompressorToggleCommand extends NRCommand {
 	
 	public void onStart() {
-		if(Robot.robotCompressor.enabled()) {
+		if(Robot.robotCompressor.getClosedLoopControl()) {
 			Robot.robotCompressor.stop();
 		} else {
 			Robot.robotCompressor.start();

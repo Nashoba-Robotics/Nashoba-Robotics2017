@@ -35,6 +35,7 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	
 	@Override
 	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
+		System.out.println("Val: " + value + " type: " + type);
 		if(type.identifier == 'a') {
 			lastSeenAngle = new Angle(value, (Angle.Unit) type.unit);
 		} else if(type.identifier == 'd') {

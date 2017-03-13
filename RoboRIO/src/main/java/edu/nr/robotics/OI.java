@@ -15,6 +15,7 @@ import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.multicommands.WallShotAlignCommand;
 import edu.nr.robotics.subsystems.compressor.CompressorToggleCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
+import edu.nr.robotics.subsystems.drive.DriveForwardForeverBasicCommand;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
 import edu.nr.robotics.subsystems.gearMover.GearFlapInCommand;
@@ -138,7 +139,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 
 	public void initDriveLeft() {
-		
+		new JoystickButton(driveLeft, 2).whenPressed(new DoNothingCommand(Drive.getInstance()));
 
 	}
 
@@ -228,7 +229,8 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	public void initOperatorRight() {
 		
-		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
+		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new DriveForwardForeverBasicCommand(-0.5));
+		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Drive.getInstance()));
 
 
 		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_RED));

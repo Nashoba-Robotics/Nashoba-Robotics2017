@@ -314,8 +314,12 @@ public class TCPServer implements Runnable {
 						if (type != null) {
 							char[] data = new char[4];
 							inFromClient.read(data, 0, 4);
-							type.setData(((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
-									+ (data[3] & 0xFF));
+							if(data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0) {
+							} else {
+								type.setData(((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
+										+ (data[3] & 0xFF));
+							}
+							System.out.println("Data read: 0:" + (int) data[0] + " 1:" + (int) data[1] + " 2:" + (int) data[2] + " 3:" + (int) data[3]);
 							m_hasData = true;
 							type.updateListeners();
 						}

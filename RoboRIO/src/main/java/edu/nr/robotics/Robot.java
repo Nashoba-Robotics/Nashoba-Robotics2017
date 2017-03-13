@@ -20,6 +20,7 @@ import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveOverBaselineAutoCommand;
 import edu.nr.robotics.auton.DriveToHopperAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
+import edu.nr.robotics.auton.ShootThenBaselineAuto;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.subsystems.agitator.Agitator;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
@@ -97,6 +98,7 @@ public class Robot extends IterativeRobot {
 		autoSpotChooser.addObject("Shooter Gear", new DriveToShooterSideGearAutoCommand());
 		autoSpotChooser.addObject("Hopper", new DriveToHopperAutoCommand());
 		autoSpotChooser.addObject("Gear and Hopper", new GearHopperAutoCommand());
+		autoSpotChooser.addObject("Shoot then Baseline", new ShootThenBaselineAuto());
 		SmartDashboard.putData("Auto Destination", autoSpotChooser);
 		
 		autoShootChooser.addDefault("Shoot", Boolean.TRUE);
@@ -246,7 +248,8 @@ public class Robot extends IterativeRobot {
 		Periodic.runAll();
 		SmartDashboardSource.runAll();
 		SmartDashboard.putNumber("Gear Angle", GearAlignCalculation.getInstance().getAngleToTurn().get(Angle.Unit.DEGREE));
-		SmartDashboard.putBoolean("Compressor", Robot.robotCompressor.enabled());
+		SmartDashboard.putNumber("Turret Angle", AutoTrackingCalculation.getInstance().getRawTurretAngle().get(Angle.Unit.DEGREE));
+		SmartDashboard.putBoolean("Compressor", Robot.robotCompressor.getClosedLoopControl());
 		SmartDashboard.putData(RobotDiagram.getInstance());
 	}
 }

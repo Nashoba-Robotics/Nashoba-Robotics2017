@@ -22,11 +22,11 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	
 	AngularSpeed shooterSpeed = AngularSpeed.ZERO;
 	
-	private Time lastSeenTimeStamp;
-	private Angle lastSeenAngle;
-	private Distance lastSeenDistance;
+	private Time lastSeenTimeStamp = Time.ZERO;
+	private Angle lastSeenAngle = Angle.ZERO;
+	private Distance lastSeenDistance = Distance.ZERO;
 	
-	private Time timeOfLastData;
+	private Time timeOfLastData = Time.ZERO;
 	
 	private static AutoTrackingCalculation singleton;
 	
@@ -174,5 +174,9 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	
 	public boolean canSeeTarget() {
 		return Time.getCurrentTime().sub(timeOfLastData).lessThan(FieldMap.MIN_TRACKING_WAIT_TIME);
+	}
+
+	public Angle getRawTurretAngle() {
+		return lastSeenAngle;
 	}
 }
