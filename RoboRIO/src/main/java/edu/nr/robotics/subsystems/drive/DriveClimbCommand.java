@@ -30,6 +30,7 @@ public class DriveClimbCommand extends NRCommand {
 		
 		Robot.robotCompressor.stop();
 		Drive.getInstance().startDumbDrive();
+		Drive.getInstance().switchToLowGear();
 		Drive.getInstance().setVoltageRampRate(3.6);
 	}
 	
