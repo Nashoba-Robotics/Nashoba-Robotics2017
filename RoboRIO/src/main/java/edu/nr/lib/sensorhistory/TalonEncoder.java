@@ -1,6 +1,7 @@
 package edu.nr.lib.sensorhistory;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,13 +17,14 @@ public class TalonEncoder extends TimerTask {
 
 	// In milliseconds
 	private final Time period;
-	//TODO: TalonEncoder: actual default period
 	private static final Time defaultPeriod = new Time(5, Time.Unit.MILLISECOND); // 200
 																					// Hz
 
+	int maxNumPts = 200;
+	
 	CANTalon talon;
 
-	ArrayList<Data> data;
+	List<Data> data;
 
 	public TalonEncoder(CANTalon talon) {
 		this.talon = talon;
@@ -32,11 +34,14 @@ public class TalonEncoder extends TimerTask {
 		timer = new Timer();
 		timer.schedule(this, 0, (long) this.period.get(Time.Unit.MILLISECOND));
 
-		data = new ArrayList<>();
+		data = new LinkedList<>();
 	}
 
 	@Override
 	public void run() {
+		if(data.size() > maxNumPts) {
+			data.remove(0);
+		}
 		data.add(new Data(talon.getPosition(),
 				new AngularSpeed(talon.getSpeed(), Angle.Unit.ROTATION, Time.Unit.MINUTE), Time.getCurrentTime()));
 	}

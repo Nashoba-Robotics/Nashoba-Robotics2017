@@ -55,9 +55,7 @@ public class TCPServer implements Runnable {
 		 * Initialize the singleton without any default {@link NetworkingDataType}s or port number.
 		 */
 		public synchronized void init() {
-			if(singleton == null) {
-				singleton = new TCPServer(null, defaultPort, this);
-			}
+			init(defaultPort);
 		}
 		
 		/**
@@ -81,15 +79,7 @@ public class TCPServer implements Runnable {
 		 *            		If this is null, no data types will be added initially.
 		 */
 		public synchronized void init(Collection<? extends NetworkingDataType> dataTypes) {
-			if(dataTypes != null) {
-				if(singleton == null) {
-					singleton = new TCPServer(dataTypes, defaultPort, this);
-				} else {
-					singleton.addDataTypes(dataTypes);
-				}
-			} else {
-				init();
-			}
+			init(dataTypes, defaultPort);
 		}
 		
 		
