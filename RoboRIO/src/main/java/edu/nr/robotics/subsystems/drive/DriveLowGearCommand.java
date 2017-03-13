@@ -1,7 +1,6 @@
 package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.robotics.subsystems.drive.Drive.Gear;
 
 public class DriveLowGearCommand extends NRCommand {
 	

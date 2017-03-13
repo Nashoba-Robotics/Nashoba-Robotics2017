@@ -1,9 +1,9 @@
 package edu.nr.robotics;
 
-import edu.nr.lib.units.Distance;
-import edu.nr.lib.units.Time;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
+import edu.nr.lib.units.Distance;
+import edu.nr.lib.units.Time;
 
 public class Calibration {
 

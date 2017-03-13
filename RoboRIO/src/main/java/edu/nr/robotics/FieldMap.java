@@ -4,10 +4,6 @@ import edu.nr.lib.Units;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
-import edu.nr.robotics.auton.AutoTravelMethod;
-import edu.nr.robotics.auton.GearAlignMethod;
-import edu.nr.robotics.auton.HopperRamStopMethod;
-import edu.nr.robotics.auton.ShootAlignMode;
 
 public class FieldMap {
 	

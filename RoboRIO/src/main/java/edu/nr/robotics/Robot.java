@@ -14,11 +14,11 @@ import edu.nr.lib.network.TCPServer.Num;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
-import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
-import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
-import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveOverBaselineAutoCommand;
 import edu.nr.robotics.auton.DriveToHopperAutoCommand;
+import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
+import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
+import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.ShootThenBaselineAuto;
 import edu.nr.robotics.auton.SideOfField;
@@ -28,7 +28,6 @@ import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.loader.Loader;
 import edu.nr.robotics.subsystems.shooter.Shooter;
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -71,8 +70,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		singleton = this;
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-		//cam.setFPS(20);
+		CameraServer.getInstance().startAutomaticCapture();
 		Agitator.init();
 		Loader.init();
 		Shooter.init();

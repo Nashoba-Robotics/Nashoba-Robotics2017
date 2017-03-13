@@ -1,6 +1,5 @@
 package edu.nr.robotics.auton;
 
-import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.motionprofiling.TwoDimensionalMotionProfilerPathfinder;
 import edu.nr.lib.units.Angle;

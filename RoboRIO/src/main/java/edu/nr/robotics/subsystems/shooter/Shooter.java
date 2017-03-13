@@ -8,7 +8,6 @@ import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
-import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;

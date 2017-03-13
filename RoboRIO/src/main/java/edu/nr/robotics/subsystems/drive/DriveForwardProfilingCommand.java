@@ -1,6 +1,5 @@
 package edu.nr.robotics.subsystems.drive;
 
-import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfiler;
 import edu.nr.lib.motionprofiling.OneDimensionalMotionProfilerTwoMotor;
