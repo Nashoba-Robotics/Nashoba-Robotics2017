@@ -43,7 +43,7 @@ public class Shooter extends NRSubsystem {
 	public static final AngularSpeed SHOOT_THRESHOLD = new AngularSpeed(50, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 	//TODO: Shooter: Find FPID values
-	public static double F = 0.008;
+	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;

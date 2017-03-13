@@ -71,7 +71,7 @@ public class Hood extends NRSubsystem {
 	public static final AngularSpeed MAX_SPEED = new AngularSpeed(70, Angle.Unit.DEGREE, Time.Unit.SECOND);
 	
 	//TODO: Hood: Find FPID values
-	public static double F = MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
+	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P_MOTION_MAGIC = 0.1;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;

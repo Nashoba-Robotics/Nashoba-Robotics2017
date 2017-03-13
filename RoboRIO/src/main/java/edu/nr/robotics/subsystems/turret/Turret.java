@@ -82,7 +82,7 @@ public class Turret extends NRSubsystem {
 	public static final AngularSpeed MAX_SPEED = new AngularSpeed(85, Angle.Unit.DEGREE, Time.Unit.SECOND);
 
 	//TODO: Turret: Find FPID values
-	public static double F = 2;
+	public static double F = 1023.0/Turret.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
