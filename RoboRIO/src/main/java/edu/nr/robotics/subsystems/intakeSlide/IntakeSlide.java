@@ -16,8 +16,8 @@ public class IntakeSlide extends NRSubsystem {
 	public enum State {
 		DEPLOYED, RETRACTED;
 		
-		private static Value DEPLOYED_VALUE = Value.kForward;
-		private static Value RETRACTED_VALUE = Value.kReverse;
+		private static Value DEPLOYED_VALUE = Value.kReverse;
+		private static Value RETRACTED_VALUE = Value.kForward;
 		
 
 		

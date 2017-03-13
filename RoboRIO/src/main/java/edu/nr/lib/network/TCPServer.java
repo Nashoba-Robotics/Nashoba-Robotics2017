@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import edu.nr.lib.units.GenericUnit;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * 
@@ -297,10 +298,12 @@ public class TCPServer implements Runnable {
 				
 				while (true) {
 					m_isConnected = false;
+					SmartDashboard.putBoolean("Connected to " + num, false);
 					System.out.println("Trying to connect to " + num);
 					Socket connectionSocket = socket.accept();
 					m_isConnected = true;
 					System.out.println("Connected to " + num + "!" );
+					SmartDashboard.putBoolean("Connected to " + num, true);
 					BufferedReader inFromClient = new BufferedReader(
 							new InputStreamReader(connectionSocket.getInputStream()));
 					while (!connectionSocket.isClosed()) {
@@ -311,8 +314,12 @@ public class TCPServer implements Runnable {
 						if (type != null) {
 							char[] data = new char[4];
 							inFromClient.read(data, 0, 4);
-							type.setData(((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
-									+ (data[3] & 0xFF));
+							if(data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0) {
+							} else {
+								type.setData(((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
+										+ (data[3] & 0xFF));
+							}
+							System.out.println("Data read: 0:" + (int) data[0] + " 1:" + (int) data[1] + " 2:" + (int) data[2] + " 3:" + (int) data[3]);
 							m_hasData = true;
 							type.updateListeners();
 						}
@@ -346,6 +353,7 @@ public class TCPServer implements Runnable {
 		public NetworkingDataType(char identifier, String name, GenericUnit unit) {
 			this.identifier = identifier;
 			this.name = name;
+			this.unit = unit;
 			
 			this.listeners = new ArrayList<>();
 		}

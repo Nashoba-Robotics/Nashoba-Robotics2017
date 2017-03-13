@@ -1,11 +1,13 @@
 package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.NRMath;
+import edu.nr.lib.NavX;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.interfaces.DoublePIDOutput;
 import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Acceleration;
+import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Jerk;
 import edu.nr.lib.units.Speed;
@@ -63,7 +65,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The max driving speed of the robot in low gear 
 	 */
-	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6, Distance.Unit.FOOT, Time.Unit.SECOND);
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6.5, Distance.Unit.FOOT, Time.Unit.SECOND);
 	
 	/**
 	 * The max driving speed of the robot in high gear 
@@ -109,15 +111,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private Speed rightMotorSetpoint = Speed.ZERO;
 
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR = MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
-			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV;
+	public static final double F_LOW_GEAR = 0.2;/*MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
+			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV/400.0;*/
 	public static final double P_LOW_GEAR = 0;
 	public static final double I_LOW_GEAR = 0;
 	public static final double D_LOW_GEAR = 0;
 
 	// TODO: Drive: Find high gear FPID values
-	public static final double F_HIGH_GEAR = MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
-			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV;
+	public static final double F_HIGH_GEAR = 0.2;/*MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
+			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV/400.0;*/
 	public static final double P_HIGH_GEAR = 0;
 	public static final double I_HIGH_GEAR = 0;
 	public static final double D_HIGH_GEAR = 0;
@@ -311,6 +313,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 *            the right motor speed, from -1 to 1
 	 */
 	public void setMotorSpeedInPercent(double left, double right) {
+		//System.out.println("Left speed: " + left + " right speed: " + right);
 		setMotorSpeed(currentMaxSpeed().mul(left), currentMaxSpeed().mul(right));
 	}
 
@@ -566,6 +569,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 				SmartDashboard.putString("Drive Current", getLeftCurrent() + " : " + getRightCurrent());
 				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
 				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw().get(Angle.Unit.DEGREE));
 			}
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putData(this);

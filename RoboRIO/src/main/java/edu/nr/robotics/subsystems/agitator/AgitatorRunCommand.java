@@ -17,6 +17,8 @@ public class AgitatorRunCommand extends JoystickCommand {
 			} else {
 				Agitator.getInstance().setMotorVoltage(Agitator.LOW_RUN_PERCENT);
 			}
+		} else {
+			Agitator.getInstance().setMotorVoltage(0);
 		}
 	}
 

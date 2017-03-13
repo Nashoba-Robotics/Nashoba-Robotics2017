@@ -10,7 +10,7 @@ import edu.nr.robotics.subsystems.turret.Turret;
 
 public class DriveClimbCommand extends NRCommand {
 
-	private static final double MAX_CURRENT = 0; //TODO: Climber: Find spike current
+	private static final double MAX_CURRENT = 60; //TODO: Climber: Find spike current
 	
 	/**
 	 * Percent voltage
@@ -29,13 +29,13 @@ public class DriveClimbCommand extends NRCommand {
 		doingInitialClimb = true;
 		
 		Robot.robotCompressor.stop();
-		Drive.getInstance().startDumbDrive();
-		Drive.getInstance().setVoltageRampRate(3.6);
+		//Drive.getInstance().startDumbDrive();
+		//Drive.getInstance().setVoltageRampRate(3.6);
 	}
 	
 	@Override
 	public void onExecute() {
-		if(Drive.getInstance().getLeftCurrent() > MAX_CURRENT) {
+		if(Drive.getInstance().getRightCurrent() > MAX_CURRENT) {
 			doingInitialClimb = false;
 		}
 		
@@ -49,9 +49,9 @@ public class DriveClimbCommand extends NRCommand {
 	@Override
 	public void onEnd() {
 		Robot.robotCompressor.start();
-		if(!OI.getInstance().shouldDumbDrive()) {
-			Drive.getInstance().endDumbDrive();
-		}
+		//if(!OI.getInstance().shouldDumbDrive()) {
+		//	Drive.getInstance().endDumbDrive();
+		//}
 		Drive.getInstance().setVoltageRampRate(0.0);
 	}
 	

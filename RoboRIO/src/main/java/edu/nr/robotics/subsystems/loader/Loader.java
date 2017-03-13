@@ -27,7 +27,7 @@ public class Loader extends NRSubsystem {
 	 *
 	 * TODO: Loader: Get loader run speed
 	 */
-	public static final double LOW_RUN_VOLTAGE = 0.50;
+	public static final double LOW_RUN_VOLTAGE = 0.75;
 	public static final double HIGH_RUN_VOLTAGE = 0.75;
 	
 	/**

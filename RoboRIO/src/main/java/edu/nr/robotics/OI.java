@@ -9,11 +9,13 @@ import edu.nr.lib.interfaces.SmartDashboardSource;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
+import edu.nr.robotics.multicommands.ClimbCommand;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.multicommands.WallShotAlignCommand;
-import edu.nr.robotics.subsystems.compressor.CompressorStopCommand;
+import edu.nr.robotics.subsystems.compressor.CompressorToggleCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
+import edu.nr.robotics.subsystems.drive.DriveForwardForeverBasicCommand;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
 import edu.nr.robotics.subsystems.gearMover.GearFlapInCommand;
@@ -44,7 +46,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI implements SmartDashboardSource, Periodic {
 
-	private static final double JOYSTICK_DEAD_ZONE = 0.15;
+	private static final double JOYSTICK_DEAD_ZONE = 0.3;
 
 	
 	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = 12;
@@ -105,13 +107,13 @@ public class OI implements SmartDashboardSource, Periodic {
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
 	 */
-	public static final Angle HOOD_POSITION_INCREMENT_VALUE = new Angle(0.5, Angle.Unit.DEGREE);
+	public static final Angle HOOD_POSITION_INCREMENT_VALUE = new Angle(0.1, Angle.Unit.DEGREE);
 
 
 	/**
 	 * The change in speed that will occur whenever the shooter speed increment or decrement button is pressed.
 	 */
-	public static final AngularSpeed SHOOTER_SPEED_INCREMENT_VALUE = new AngularSpeed(100, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public static final AngularSpeed SHOOTER_SPEED_INCREMENT_VALUE = new AngularSpeed(10, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 
 	/**
@@ -149,6 +151,8 @@ public class OI implements SmartDashboardSource, Periodic {
 				Drive.getInstance().switchGear();
 			}
 		});
+		
+		new JoystickButton(driveRight, 2).whenPressed(new ClimbCommand());
 
 	}
 	
@@ -182,7 +186,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		});
 		new JoystickButton(operatorLeft, RETRACT_INTAKE_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
 			public void commands() {
-				addSequential(new WaitCommand(0.5));
+				addSequential(new WaitCommand(0.4));
 				addSequential(new IntakeArmRetractCommand());
 			}
 		});
@@ -210,7 +214,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		});
 		new JoystickButton(operatorLeft, FLAP_OUT_BUTTON_NUMBER).whenPressed(new AnonymousCommandGroup() {
 			public void commands() {
-				addSequential(new WaitCommand(0.5));
+				addSequential(new WaitCommand(0.0)); //TODO: VERY IMPORTANT: ONCE WE HAVE INTAKE, THIS NEEDS TO BE ONE SECOND
 				addSequential(new GearFlapOutCommand());
 			}
 		});
@@ -225,7 +229,8 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	public void initOperatorRight() {
 		
-		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
+		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new DriveForwardForeverBasicCommand(0.5));
+		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Drive.getInstance()));
 
 
 		new JoystickButton(operatorRight, PRESET_TURRET_ANGLE_RED_BUTTON_NUMBER).whenPressed(new TurretPositionCommand(Turret.PRESET_ANGLE_RED));
@@ -245,7 +250,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(operatorRight, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
 		new JoystickButton(operatorRight, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
 
-		new JoystickButton(operatorRight, TURN_OFF_COMPRESSOR_BUTTON_NUMBER).whenPressed(new CompressorStopCommand());
+		new JoystickButton(operatorRight, TURN_OFF_COMPRESSOR_BUTTON_NUMBER).whenPressed(new CompressorToggleCommand());
 	}
 
 	public static OI getInstance() {
@@ -316,7 +321,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	// Overrides hood angle (undone if another auto hood angle command is
 	// sent)
 	public double getHoodValue() {
-		return -snapCoffinJoysticks(operatorLeft.getAxis(AxisType.kX));
+		return snapCoffinJoysticks(operatorLeft.getAxis(AxisType.kX));
 	}
 
 
@@ -397,7 +402,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	}
 	
 	public boolean isIntakeOn() {
-		return !intakeSwitch.get();
+		return intakeSwitch.get();
 	}
 
 	public boolean shouldDumbDrive() {

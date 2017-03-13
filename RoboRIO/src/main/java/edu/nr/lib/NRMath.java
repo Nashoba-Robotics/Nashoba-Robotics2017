@@ -77,11 +77,11 @@ public class NRMath {
 	}
 
 	public static double lawOfCos(double a, double b, Angle C) {
-		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) + 2 * a * b * C.cos());
+		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * C.cos());
 	}
 	
-	public static double lawOfCos(double a, double b, double c) {
-		return Math.acos((Math.pow(c, 2) - Math.pow(a, 2) - Math.pow(b, 2)) / (-2 * a * b));
+	public static Angle lawOfCos(double a, double b, double c) {
+		return NRMath.acos((Math.pow(c, 2) - Math.pow(a, 2) - Math.pow(b, 2)) / (-2 * a * b));
 	}
 
 	public static Speed average(Speed leftSpeed, Speed rightSpeed) {
@@ -103,7 +103,7 @@ public class NRMath {
 	}
 	
 	public static Angle lawOfCos(Distance x, Distance y, Distance z) {
-		return new Angle(NRMath.lawOfCos(x.getDefault(), y.getDefault(), z.getDefault()), Unit.defaultUnit);
+		return NRMath.lawOfCos(x.getDefault(), y.getDefault(), z.getDefault());
 	}
 
 	public static Distance max(Distance a, Distance b) {

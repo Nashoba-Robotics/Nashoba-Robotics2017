@@ -21,13 +21,13 @@ public class Agitator extends NRSubsystem {
 	 * The percent voltage (-1 to 1) for the agitator to run at when turned on
 	 * TODO: Agitator: Get run speed
 	 */
-	public static final double HIGH_RUN_PERCENT = .50;
+	public static final double HIGH_RUN_PERCENT = .75;
 	
 	/**
 	 * The percent voltage (-1 to 1) for the agitator to run at when shooter is off
 	 * TODO: Agitator: Get slow run speed
 	 */
-	public static final double LOW_RUN_PERCENT = .50;
+	public static final double LOW_RUN_PERCENT = .75;
 	
 	/**
 	 * The percent voltage (-1 to 1) for the agitator to run at when reversing

@@ -19,19 +19,21 @@ public class Shooter extends NRSubsystem {
 	private static Shooter singleton;
 
 	private CANTalon talon;
+	private CANTalon tempTalon;
 
 	/**
 	 * The max speed of the shooter
 	 * TODO: Shooter: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(2500, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 	
 	/**
 	 * The speed that the motor is currently supposed to be running at.
 	 * 
 	 * The initial value is the speed it is supposed to run at to start the match.
 	 */
-	public AngularSpeed motorSetpoint = new AngularSpeed(0.3, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public AngularSpeed defaultSpeed = MAX_SPEED.mul(0.7);
+	public AngularSpeed motorSetpoint = MAX_SPEED.mul(0.7);
 
 	private boolean autoAlign = false;
 
@@ -64,7 +66,7 @@ public class Shooter extends NRSubsystem {
 			talon.enable();
 			setAutoAlign(true);
 			
-			CANTalon tempTalon = new CANTalon(RobotMap.SHOOTER_B_TALON_PORT);
+			tempTalon = new CANTalon(RobotMap.SHOOTER_B_TALON_PORT);
 			tempTalon.changeControlMode(TalonControlMode.Follower);
 			tempTalon.set(talon.getDeviceID());
 			tempTalon.enableBrakeMode(false);
@@ -140,7 +142,8 @@ public class Shooter extends NRSubsystem {
 	public void smartDashboardInfo() {
 		if (talon != null) {
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_BASIC_ENABLED){
-				SmartDashboard.putNumber("Shooter Current", talon.getOutputCurrent());
+				SmartDashboard.putNumber("Shooter Current A", talon.getOutputCurrent());
+				SmartDashboard.putNumber("Shooter Current B", tempTalon.getOutputCurrent());
 				SmartDashboard.putString("Shooter Speed", getSpeed().get(Angle.Unit.ROTATION, Time.Unit.MINUTE) + " : " + motorSetpoint.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));	
 			}
 			if(EnabledSubsystems.SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED){

@@ -26,25 +26,25 @@ public class RobotMap {
 	public static final int HOOD_TALON_PORT = 2;	
 	
 	//Forwards are even, reverses are odd
-	public static final int INTAKE_ARM_PCM_PORT = 0;
-	public static final int INTAKE_ARM_FORWARD = 6;
-	public static final int INTAKE_ARM_REVERSE = 7;
+	public static final int INTAKE_ARM_PCM_PORT = 0; //0
+	public static final int INTAKE_ARM_FORWARD = 6; //6
+	public static final int INTAKE_ARM_REVERSE = 7; //7
 
-	public static final int INTAKE_SLIDE_PCM_PORT = 0;
-	public static final int INTAKE_SLIDE_FORWARD = 4;
-	public static final int INTAKE_SLIDE_REVERSE = 5;
+	public static final int INTAKE_SLIDE_PCM_PORT = 0; //0
+	public static final int INTAKE_SLIDE_FORWARD = 4; //4
+	public static final int INTAKE_SLIDE_REVERSE = 5; //5
 
-	public static final int GEAR_MOVER_PCM_PORT = 0;
-	public static final int GEAR_MOVER_FORWARD = 0;
-	public static final int GEAR_MOVER_REVERSE = 1;
+	public static final int GEAR_MOVER_PCM_PORT = 0; //0
+	public static final int GEAR_MOVER_FORWARD = 0; //0
+	public static final int GEAR_MOVER_REVERSE = 1; //1
 	
-	public static final int GEAR_GET_POSITION_PCM_PORT = 0;
-	public static final int GEAR_GET_POSITION_FORWARD = 2;
-	public static final int GEAR_GET_POSITION_REVERSE = 3;
+	public static final int GEAR_GET_POSITION_PCM_PORT = 0; //0
+	public static final int GEAR_GET_POSITION_FORWARD = 2; //2
+	public static final int GEAR_GET_POSITION_REVERSE = 3; //3
 	
-	public static final int DRIVE_GEAR_SWITCHER_PCM_PORT = 1;
-	public static final int DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL = 0;
-	public static final int DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL = 1;
+	public static final int DRIVE_GEAR_SWITCHER_PCM_PORT = 1; //1
+	public static final int DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL = 6; //0
+	public static final int DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL = 7; //1
 	
 	/**
 	 * Offsets of camera and turret used for shooting on move calculations
@@ -63,9 +63,10 @@ public class RobotMap {
 	 * 
 	 * TODO: RobotMap: Get BACK_BUMPER_TO_GEAR_DIST
 	 */
-	public static final Distance BACK_BUMPER_TO_GEAR_DIST = Distance.ZERO;
+	public static final Distance BACK_BUMPER_TO_GEAR_DIST = new Distance(31, Distance.Unit.INCH);
 	
-	public static final Distance GEAR_TO_CENTER_DIST = Distance.ZERO;
+	public static final Distance GEAR_TO_CENTER_DIST_Y = new Distance(15.25, Distance.Unit.INCH);
+	public static final Distance GEAR_TO_CENTER_DIST_X = new Distance(7, Distance.Unit.INCH);
 	
 	/**
 	 * The distance parallel to drive direction that the camera is from the center of rotation of the robot.
