@@ -12,21 +12,19 @@ import edu.wpi.first.wpilibj.command.Command;
 public class NRCommand extends Command {
 
 	boolean forceCancel = false;
-	
-	ArrayList<NRSubsystem> subsystems = new ArrayList<>();
-	
+		
 	public NRCommand(ArrayList<NRSubsystem> subsystems) {
 		super();
-		this.subsystems = subsystems;
 		requires(subsystems);
 	}
 	
 	public NRCommand(NRSubsystem[] subsystems) {
 		super();
+		ArrayList<NRSubsystem> subsystemsArrList = new ArrayList<>();
 		for (int i = 0; i < subsystems.length; i++) {
-			this.subsystems.add(subsystems[i]);
+			subsystemsArrList.add(subsystems[i]);
 		}
-		requires(this.subsystems);
+		requires(subsystemsArrList);
 	}
 
 	/**
@@ -36,27 +34,22 @@ public class NRCommand extends Command {
 	 */
 	public NRCommand(ArrayList<NRSubsystem> subsystems, String name) {
 		super(name);
-		this.subsystems = subsystems;
 		requires(subsystems);
 	}
 
 	public NRCommand(ArrayList<NRSubsystem> subsystems, String name, double timeout) {
 		super(name, timeout);
-		this.subsystems = subsystems;
 		requires(subsystems);
 	}
 
 	public NRCommand(ArrayList<NRSubsystem> subsystems, double timeout) {
 		super(timeout);
-		this.subsystems = subsystems;
 		requires(subsystems);
 	}
 	
 	public NRCommand(NRSubsystem subsystem) {
 		super();
-		this.subsystems = new ArrayList<NRSubsystem>();
-		subsystems.add(subsystem);
-		requires(subsystems);
+		requires(subsystem);
 	}
 
 	/**
@@ -66,23 +59,17 @@ public class NRCommand extends Command {
 	 */
 	public NRCommand(NRSubsystem subsystem, String name) {
 		super(name);
-		this.subsystems = new ArrayList<NRSubsystem>();
-		subsystems.add(subsystem);
-		requires(subsystems);
+		requires(subsystem);
 	}
 
 	public NRCommand(NRSubsystem subsystem, String name, double timeout) {
 		super(name, timeout);
-		this.subsystems = new ArrayList<NRSubsystem>();
-		subsystems.add(subsystem);
-		requires(subsystems);
+		requires(subsystem);
 	}
 
 	public NRCommand(NRSubsystem subsystem, double timeout) {
 		super(timeout);
-		this.subsystems = new ArrayList<NRSubsystem>();
-		subsystems.add(subsystem);
-		requires(subsystems);
+		requires(subsystem);
 	}
 	
 

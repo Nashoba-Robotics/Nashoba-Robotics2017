@@ -6,15 +6,16 @@ package edu.nr.lib.commandbased;
  */
 public class CancelCommand extends NRCommand {
 
+	NRSubsystem subsystem;
+	
 	public CancelCommand(NRSubsystem subsystem) {
 		super(subsystem);
+		this.subsystem = subsystem;
 	}
 
 	@Override
 	public void onStart() {
-		for (NRSubsystem subsystem : this.subsystems) {
-			subsystem.disable();
-		}
+		subsystem.disable();
 	}
 	
 }
