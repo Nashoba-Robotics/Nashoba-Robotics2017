@@ -30,7 +30,6 @@ public class EnabledSubsystems {
 								SHOOTER_SMARTDASHBOARD_BASIC_ENABLED 	= true,
 								TURRET_SMARTDASHBOARD_BASIC_ENABLED 	= true;
 
-
 	public static final boolean AGITATOR_SMARTDASHBOARD_COMPLEX_ENABLED		= false,
 								DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								HOOD_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
@@ -41,5 +40,4 @@ public class EnabledSubsystems {
 								LOADER_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								TURRET_SMARTDASHBOARD_COMPLEX_ENABLED 		= false;
-
 }

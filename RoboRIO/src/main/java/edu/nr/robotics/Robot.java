@@ -28,6 +28,7 @@ import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.loader.Loader;
 import edu.nr.robotics.subsystems.shooter.Shooter;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;

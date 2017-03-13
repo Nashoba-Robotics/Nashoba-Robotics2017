@@ -22,7 +22,6 @@ public class Shooter extends NRSubsystem {
 
 	/**
 	 * The max speed of the shooter
-	 * TODO: Shooter: Find max speed
 	 */
 	public static final AngularSpeed MAX_SPEED = new AngularSpeed(4000, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 	
