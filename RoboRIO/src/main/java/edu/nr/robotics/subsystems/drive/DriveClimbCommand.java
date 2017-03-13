@@ -40,9 +40,9 @@ public class DriveClimbCommand extends NRCommand {
 		}
 		
 		if(doingInitialClimb) {
-			Drive.getInstance().setMotorSpeedInPercent(0, CLIMB_VOLTAGE);
+			Drive.getInstance().setMotorSpeedInPercent(CLIMB_VOLTAGE, CLIMB_VOLTAGE);
 		} else {
-			Drive.getInstance().setMotorSpeedInPercent(0, STAY_VOLTAGE);
+			Drive.getInstance().setMotorSpeedInPercent(STAY_VOLTAGE, STAY_VOLTAGE);
 		}
 	}
 	
