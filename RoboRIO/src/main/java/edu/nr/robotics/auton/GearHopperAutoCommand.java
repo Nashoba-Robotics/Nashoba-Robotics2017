@@ -2,7 +2,6 @@ package edu.nr.robotics.auton;
 
 import edu.nr.lib.Units;
 import edu.nr.lib.commandbased.DoNothingCommand;
-import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;

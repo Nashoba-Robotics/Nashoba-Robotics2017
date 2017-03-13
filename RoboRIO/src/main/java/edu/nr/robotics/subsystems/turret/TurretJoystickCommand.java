@@ -13,7 +13,7 @@ public class TurretJoystickCommand extends JoystickCommand {
 
 	@Override
 	public void onExecute() {
-		Turret.getInstance().setMotorSpeedInPercent(OI.getInstance().getTurretValue());
+		Turret.getInstance().setMotorSpeedInPercent(OI.getInstance().getTurretValue()/4);
 	}
 
 	@Override

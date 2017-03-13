@@ -1,6 +1,5 @@
 package edu.nr.robotics.auton;
 
-import edu.nr.lib.units.Distance;
 import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
 import edu.nr.robotics.RobotMap;

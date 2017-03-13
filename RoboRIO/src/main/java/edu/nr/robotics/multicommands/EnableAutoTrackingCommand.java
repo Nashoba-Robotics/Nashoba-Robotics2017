@@ -4,7 +4,6 @@ import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.units.Angle;
 import edu.nr.robotics.AutoTrackingCalculation;
-import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.auton.AutoMoveMethods;
 import edu.nr.robotics.auton.ShootAlignMode;
 import edu.nr.robotics.subsystems.hood.Hood;

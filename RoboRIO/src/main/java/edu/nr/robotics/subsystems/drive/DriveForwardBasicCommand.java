@@ -2,10 +2,7 @@ package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.GyroCorrection;
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
-import edu.nr.robotics.GearAlignCalculation;
-import edu.nr.robotics.subsystems.drive.Drive.Gear;
 
 public class DriveForwardBasicCommand extends NRCommand {
 

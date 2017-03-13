@@ -4,10 +4,6 @@ import edu.nr.lib.Units;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
-import edu.nr.robotics.auton.AutoTravelMethod;
-import edu.nr.robotics.auton.GearAlignMethod;
-import edu.nr.robotics.auton.HopperRamStopMethod;
-import edu.nr.robotics.auton.ShootAlignMode;
 
 public class FieldMap {
 	
@@ -20,7 +16,7 @@ public class FieldMap {
 	/**
 	 * The distance we want to drive into the peg once we have reached it
 	 */
-	public static final Distance DRIVE_DEPTH_ON_PEG_FROM_SHIP = new Distance(4, Distance.Unit.INCH);
+	public static final Distance DRIVE_DEPTH_ON_PEG_FROM_SHIP = new Distance(0, Distance.Unit.INCH);
 	
 	/**
 	 * The dimensions to the pegs in auto that would be used in inches or degrees

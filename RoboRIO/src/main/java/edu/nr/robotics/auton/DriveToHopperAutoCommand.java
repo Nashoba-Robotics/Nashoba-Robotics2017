@@ -1,11 +1,9 @@
 package edu.nr.robotics.auton;
 
 import edu.nr.lib.commandbased.DoNothingCommand;
-import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
-import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveConstantSpeedCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardPIDCommand;

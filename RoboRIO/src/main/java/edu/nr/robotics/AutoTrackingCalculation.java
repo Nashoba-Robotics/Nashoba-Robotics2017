@@ -6,11 +6,11 @@ import edu.nr.lib.Units;
 import edu.nr.lib.network.NetworkingDataTypeListener;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Speed;
 import edu.nr.lib.units.Time;
-import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.turret.Turret;
 
@@ -22,11 +22,11 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	
 	AngularSpeed shooterSpeed = AngularSpeed.ZERO;
 	
-	private Time lastSeenTimeStamp;
-	private Angle lastSeenAngle;
-	private Distance lastSeenDistance;
+	private Time lastSeenTimeStamp = Time.ZERO;
+	private Angle lastSeenAngle = Angle.ZERO;
+	private Distance lastSeenDistance = Distance.ZERO;
 	
-	private Time timeOfLastData;
+	private Time timeOfLastData = Time.ZERO;
 	
 	private static AutoTrackingCalculation singleton;
 	
@@ -174,5 +174,9 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 	
 	public boolean canSeeTarget() {
 		return Time.getCurrentTime().sub(timeOfLastData).lessThan(FieldMap.MIN_TRACKING_WAIT_TIME);
+	}
+
+	public Angle getRawTurretAngle() {
+		return lastSeenAngle;
 	}
 }

@@ -3,7 +3,6 @@ package edu.nr.robotics.auton;
 import edu.nr.lib.commandbased.NRCommand;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
-import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.subsystems.hood.HoodPositionCommand;
 import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
 import edu.nr.robotics.subsystems.loader.LoaderShootCommand;

@@ -1,12 +1,7 @@
 package edu.nr.robotics.subsystems.drive;
 
 import edu.nr.lib.commandbased.NRCommand;
-import edu.nr.lib.commandbased.NRSubsystem;
-import edu.nr.lib.units.Angle;
-import edu.nr.robotics.OI;
 import edu.nr.robotics.Robot;
-import edu.nr.robotics.subsystems.drive.Drive;
-import edu.nr.robotics.subsystems.turret.Turret;
 
 public class DriveClimbCommand extends NRCommand {
 
@@ -29,8 +24,7 @@ public class DriveClimbCommand extends NRCommand {
 		doingInitialClimb = true;
 		
 		Robot.robotCompressor.stop();
-		//Drive.getInstance().startDumbDrive();
-		//Drive.getInstance().setVoltageRampRate(3.6);
+		Drive.getInstance().switchToLowGear();
 	}
 	
 	@Override
@@ -40,19 +34,15 @@ public class DriveClimbCommand extends NRCommand {
 		}
 		
 		if(doingInitialClimb) {
-			Drive.getInstance().setMotorSpeedInPercent(0, CLIMB_VOLTAGE);
+			Drive.getInstance().setMotorSpeedInPercent(CLIMB_VOLTAGE, CLIMB_VOLTAGE);
 		} else {
-			Drive.getInstance().setMotorSpeedInPercent(0, STAY_VOLTAGE);
+			Drive.getInstance().setMotorSpeedInPercent(STAY_VOLTAGE, STAY_VOLTAGE);
 		}
 	}
 	
 	@Override
 	public void onEnd() {
 		Robot.robotCompressor.start();
-		//if(!OI.getInstance().shouldDumbDrive()) {
-		//	Drive.getInstance().endDumbDrive();
-		//}
-		Drive.getInstance().setVoltageRampRate(0.0);
 	}
 	
 	@Override

@@ -1,5 +1,9 @@
 package edu.nr.robotics.subsystems.drive;
 
+import com.ctre.CANTalon;
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.nr.lib.NRMath;
 import edu.nr.lib.NavX;
 import edu.nr.lib.commandbased.NRSubsystem;
@@ -14,14 +18,9 @@ import edu.nr.lib.units.Speed;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
-
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSource {
@@ -111,15 +110,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private Speed rightMotorSetpoint = Speed.ZERO;
 
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR = 0.2;/*MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
-			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV/400.0;*/
+	public static final double F_LOW_GEAR = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
 	public static final double P_LOW_GEAR = 0;
 	public static final double I_LOW_GEAR = 0;
 	public static final double D_LOW_GEAR = 0;
 
 	// TODO: Drive: Find high gear FPID values
-	public static final double F_HIGH_GEAR = 0.2;/*MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION,
-			Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV/400.0;*/
+	public static final double F_HIGH_GEAR = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
 	public static final double P_HIGH_GEAR = 0;
 	public static final double I_HIGH_GEAR = 0;
 	public static final double D_HIGH_GEAR = 0;

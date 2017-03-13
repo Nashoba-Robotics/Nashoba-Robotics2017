@@ -8,7 +8,6 @@ import edu.nr.lib.commandbased.NRSubsystem;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
-import edu.nr.lib.units.Angle.Unit;
 import edu.nr.robotics.OI;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -23,17 +22,16 @@ public class Shooter extends NRSubsystem {
 
 	/**
 	 * The max speed of the shooter
-	 * TODO: Shooter: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(2500, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(4000, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 	
 	/**
 	 * The speed that the motor is currently supposed to be running at.
 	 * 
 	 * The initial value is the speed it is supposed to run at to start the match.
 	 */
-	public AngularSpeed defaultSpeed = MAX_SPEED.mul(0.7);
-	public AngularSpeed motorSetpoint = MAX_SPEED.mul(0.7);
+	public AngularSpeed defaultSpeed = new AngularSpeed(2900, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public AngularSpeed motorSetpoint = new AngularSpeed(2900, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 	private boolean autoAlign = false;
 
@@ -43,7 +41,7 @@ public class Shooter extends NRSubsystem {
 	public static final AngularSpeed SHOOT_THRESHOLD = new AngularSpeed(50, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 	//TODO: Shooter: Find FPID values
-	public static double F = Shooter.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
+	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
@@ -62,7 +60,9 @@ public class Shooter extends NRSubsystem {
 			talon.setI(I);
 			talon.setD(D);
 			talon.enableBrakeMode(false);
-			talon.reverseSensor(false); //TODO: Shooter: Find phase
+			talon.reverseSensor(false);
+			//talon.setInverted(true);
+			//talon.reverseOutput(true);
 			talon.enable();
 			setAutoAlign(true);
 			

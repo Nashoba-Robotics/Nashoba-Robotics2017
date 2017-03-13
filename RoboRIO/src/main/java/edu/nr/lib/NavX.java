@@ -8,7 +8,6 @@ import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Time;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class NavX implements Periodic {

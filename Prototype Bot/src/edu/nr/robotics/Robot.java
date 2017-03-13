@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.SampleRobot;
 
 import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -24,9 +23,6 @@ public class Robot extends SampleRobot {
 	public double P = 1.5;
 	public double I = 0;
 	public double D = 0;
-
-	private static final int quadTicksPerRev = 256;
-	private static final int magTicksPerRev = 1024;
 	
 	Joystick stick;
 

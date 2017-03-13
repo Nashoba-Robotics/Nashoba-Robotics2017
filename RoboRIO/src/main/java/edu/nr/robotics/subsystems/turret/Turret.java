@@ -79,10 +79,10 @@ public class Turret extends NRSubsystem {
 	 * The max speed of the turret, in degrees per second
 	 * TODO: Turret: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(1, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(85, Angle.Unit.DEGREE, Time.Unit.SECOND);
 
 	//TODO: Turret: Find FPID values
-	public static double F = Turret.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
+	public static double F = 1023.0/Turret.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
 	public static double P_MOTION_MAGIC = 0;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
@@ -99,7 +99,7 @@ public class Turret extends NRSubsystem {
 			} else {
 				talon.changeControlMode(TalonControlMode.Speed);
 			}
-			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
@@ -258,8 +258,8 @@ public class Turret extends NRSubsystem {
 		if (talon != null) {
 			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_BASIC_ENABLED){
 				SmartDashboard.putNumber("Turret Current", talon.getOutputCurrent());
-				SmartDashboard.putString("Turret Speed", getSpeed() + " : " + speedSetpoint);
-				SmartDashboard.putString("Turret Position", getPosition() + " : " + positionSetpoint);	
+				SmartDashboard.putString("Turret Speed", getSpeed().get(Angle.Unit.DEGREE, Time.Unit.SECOND) + " : " + speedSetpoint.get(Angle.Unit.DEGREE, Time.Unit.SECOND));
+				SmartDashboard.putString("Turret Position", getPosition().get(Angle.Unit.DEGREE) + " : " + positionSetpoint.get(Angle.Unit.DEGREE));	
 			}
 			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_COMPLEX_ENABLED){
 				SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());

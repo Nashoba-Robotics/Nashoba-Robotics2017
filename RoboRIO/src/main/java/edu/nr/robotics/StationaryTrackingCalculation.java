@@ -8,7 +8,6 @@ import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
-import edu.nr.robotics.subsystems.turret.Turret;
 
 public class StationaryTrackingCalculation implements NetworkingDataTypeListener {
 		
