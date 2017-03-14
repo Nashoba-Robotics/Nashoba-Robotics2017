@@ -18,8 +18,16 @@ public class EnableAutoTrackingCommand extends NRCommand{
 
 	private static final Angle TURRET_CAMERA_RANGE = new Angle(10, Angle.Unit.DEGREE); 
 	
+	HoodAutoAlignCommand hoodAlignCommand;
+	ShooterAutoAlignCommand shooterAlignCommand;
+	TurretAutoAlignCommand turretAlignCommand;
+	
 	public EnableAutoTrackingCommand() {
 		super(new NRSubsystem[] {Hood.getInstance(), Turret.getInstance(), Shooter.getInstance()});
+		
+		hoodAlignCommand = new HoodAutoAlignCommand();
+		shooterAlignCommand = new ShooterAutoAlignCommand();
+		turretAlignCommand = new TurretAutoAlignCommand();
 	}
 	
 	@Override
@@ -34,10 +42,10 @@ public class EnableAutoTrackingCommand extends NRCommand{
 		Turret.getInstance().setPosition(Turret.getInstance().getPosition().add(TURRET_CAMERA_RANGE.mul(Turret.getInstance().turretTrackDirection)));
 		Turret.getInstance().disable();
 		if (AutoMoveMethods.shootAlignMode == ShootAlignMode.autonomous) {
-			new HoodAutoAlignCommand().start();
-			new ShooterAutoAlignCommand().start();
+			hoodAlignCommand.start();
+			shooterAlignCommand.start();
 		}
-		new TurretAutoAlignCommand().start();
+		turretAlignCommand.start();
 	}
 	
 	@Override

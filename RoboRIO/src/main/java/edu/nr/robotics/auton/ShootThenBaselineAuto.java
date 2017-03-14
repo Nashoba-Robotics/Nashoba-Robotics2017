@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.WaitCommand;
 public class ShootThenBaselineAuto extends CommandGroup {
 	
 	public ShootThenBaselineAuto() {
-		addSequential(new GearDeployCommand());
+		addSequential(new RequiredAutoCommand());
 		addSequential(new WaitCommand(1));
 		addSequential(new LoaderRunCommand());
 		addSequential(new WaitCommand(8));

@@ -25,7 +25,7 @@ public class NavX implements Periodic {
 		return singleton;
 	}
 	
-	public static void init() {
+	public synchronized static void init() {
 		if(singleton == null)
 			singleton = new NavX();
 	}

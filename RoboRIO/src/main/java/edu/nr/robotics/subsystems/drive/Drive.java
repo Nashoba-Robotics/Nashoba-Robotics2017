@@ -483,20 +483,16 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	// GEAR SWITCHING
 
 	public void switchToHighGear() {
-		if (getCurrentGear() != Gear.high) {
-			setProfile(Gear.HIGH_PROFILE);
-			if (gearSwitcher != null) {
-				gearSwitcher.set(Gear.HIGH_VALUE);
-			}
+		setProfile(Gear.HIGH_PROFILE);
+		if (gearSwitcher != null) {
+			gearSwitcher.set(Gear.HIGH_VALUE);
 		}
 	}
 
 	public void switchToLowGear() {
-		if (getCurrentGear() != Gear.low) {
-			setProfile(Gear.LOW_PROFILE);
-			if (gearSwitcher != null) {
-				gearSwitcher.set(Gear.LOW_VALUE);
-			}
+		setProfile(Gear.LOW_PROFILE);
+		if (gearSwitcher != null) {
+			gearSwitcher.set(Gear.LOW_VALUE);
 		}
 	}
 
