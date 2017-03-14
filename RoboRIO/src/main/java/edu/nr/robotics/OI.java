@@ -15,7 +15,9 @@ import edu.nr.robotics.multicommands.WallShotAlignCommand;
 import edu.nr.robotics.subsystems.compressor.CompressorToggleCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveForwardForeverBasicCommand;
+import edu.nr.robotics.subsystems.drive.DriveHighGearCommand;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
+import edu.nr.robotics.subsystems.drive.DriveLowGearCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
 import edu.nr.robotics.subsystems.gearMover.GearFlapInCommand;
 import edu.nr.robotics.subsystems.gearMover.GearFlapOutCommand;
@@ -77,7 +79,8 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int WALL_SHOT_BUTTON_NUMBER = 9;
 
 	
-	private static final int DRIVE_GEAR_TOGGLE_BUTTON_NUMBER = 1;
+	private static final int DRIVE_LOW_GEAR_BUTTON = 3;
+	private static final int DRIVE_HIGH_GEAR_BUTTON = 4;
 	
 	private static final int DRIVE_REVERSE_BUTTON_NUMBER = 1;
 
@@ -143,13 +146,10 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	public void initDriveRight() {
 		
-		new JoystickButton(driveRight, DRIVE_GEAR_TOGGLE_BUTTON_NUMBER).whenPressed(new NRCommand(Drive.getInstance()) {
-			@Override
-			public void onStart() {
-				Drive.getInstance().switchGear();
-			}
-		});
-		
+		new JoystickButton(driveRight, DRIVE_LOW_GEAR_BUTTON).whenPressed(new DriveLowGearCommand());
+
+		new JoystickButton(driveRight, DRIVE_HIGH_GEAR_BUTTON).whenPressed(new DriveHighGearCommand());
+
 		new JoystickButton(driveRight, 2).whenPressed(new ClimbCommand());
 
 	}
