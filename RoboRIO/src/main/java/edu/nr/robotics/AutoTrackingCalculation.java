@@ -131,7 +131,7 @@ public class AutoTrackingCalculation implements NetworkingDataTypeListener {
 		Distance h = NRMath.lawOfCos(r, histDistCenter, theta1);
 		Angle theta0 = NRMath.asin(histDistCenter.mul(theta1.sin()).div(h)).sub(deltaAngle);
 		Distance curDist = NRMath.lawOfCos(h, r, theta0);
-		Angle theta3 = new Angle(0.5, Angle.Unit.ROTATION).sub(thetaXTurret).add(curRobotOrientation);
+		Angle theta3 = Units.HALF_CIRCLE.sub(thetaXTurret).add(curRobotOrientation);
 		Distance curDistReal = NRMath.lawOfCos(curDist, hypot, theta3);
 		Angle curTurretOrientation = Units.RIGHT_ANGLE.sub(NRMath.asin(curDist.mul(theta3.sin()).div(curDistReal))).sub(thetaYTurret);
 		
