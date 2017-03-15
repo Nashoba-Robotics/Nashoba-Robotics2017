@@ -42,9 +42,32 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 			lastSeenDistance = new Distance(value, (Distance.Unit) type.unit);
 		}
 		timeOfLastData = Time.getCurrentTime();
-
-		driveDistance = NRMath.hypot(lastSeenDistance.mul(lastSeenAngle.cos()).add(RobotMap.GEAR_CAMERA_TO_CENTER_OF_ROBOT_DIST_Y), lastSeenDistance.mul(lastSeenAngle.sin())).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP);
-		turnAngle = NRMath.atan2(lastSeenDistance.mul(lastSeenAngle.sin()),lastSeenDistance.mul(lastSeenAngle.cos()).add(RobotMap.GEAR_CAMERA_TO_CENTER_OF_ROBOT_DIST_Y));
+		
+		// TODO: Figure out how to get angle of target
+		Angle lastSeenTargetAngle = Angle.ZERO;
+		
+		Angle theta4 = lastSeenTargetAngle.add(lastSeenAngle);
+		Distance distanceToPeg = NRMath.lawOfCos(lastSeenDistance, FieldMap.PEG_LENGTH, theta4);
+		Angle angleToPeg = NRMath.asin(FieldMap.PEG_LENGTH.mul(theta4.sin()).div(distanceToPeg)).add(lastSeenAngle);
+		
+		Distance r = NRMath.hypot(RobotMap.GEAR_TO_CENTER_DIST_X, RobotMap.GEAR_TO_CENTER_DIST_Y);
+		Angle theta0 = Units.RIGHT_ANGLE.add(NRMath.atan2(RobotMap.GEAR_TO_CENTER_DIST_Y, RobotMap.GEAR_TO_CENTER_DIST_X));
+		Angle theta1 = Angle.ZERO;
+		if (angleToPeg.greaterThan(NRMath.atan2(RobotMap.GEAR_TO_CENTER_DIST_X, RobotMap.GEAR_TO_CENTER_DIST_Y))) {
+			theta1 = Units.FULL_CIRCLE.sub(theta0).sub(angleToPeg);
+		} else {
+			theta1 = theta0.add(angleToPeg);
+		}
+		Distance d = NRMath.lawOfCos(distanceToPeg, r, theta1);
+		Angle theta2 = NRMath.asin(distanceToPeg.mul(theta1.sin()).div(d));
+		Angle theta3 = Units.HALF_CIRCLE.sub(theta0).sub(NRMath.asin(r.mul(theta0.sin()).div(d)));
+		if (angleToPeg.greaterThan(NRMath.atan2(RobotMap.GEAR_TO_CENTER_DIST_X, RobotMap.GEAR_TO_CENTER_DIST_Y))) {
+			turnAngle = theta2.add(theta3);
+		} else {
+			turnAngle = theta3.sub(theta2);
+		}
+		System.out.println("Dist: " + lastSeenDistance.get(Distance.Unit.INCH) + " angle: " + lastSeenAngle.get(Angle.Unit.DEGREE));
+		System.out.println("turn angle: " + turnAngle.get(Angle.Unit.DEGREE));
 	}
 	
 	public Distance getDistToDrive() {
