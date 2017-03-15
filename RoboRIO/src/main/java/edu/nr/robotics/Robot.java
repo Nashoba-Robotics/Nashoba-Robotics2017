@@ -1,6 +1,9 @@
 
 package edu.nr.robotics;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import edu.nr.lib.commandbased.CancelAllCommand;
@@ -71,7 +74,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		singleton = this;
-		CameraServer.getInstance().startAutomaticCapture();
 		Agitator.init();
 		Loader.init();
 		Shooter.init();
@@ -81,6 +83,47 @@ public class Robot extends IterativeRobot {
 		tcpServerInit();
 		OI.init();
 		smartDashboardInit();
+		
+		cameraInit();
+	}
+	
+	public void cameraInit() {
+		//CameraServer.getInstance().startAutomaticCapture();
+		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				Process p;
+				try {
+					System.out.println("About to begin execution");
+					p = Runtime.getRuntime().exec("/home/lvuser/run_streamer.sh");
+					System.out.println("Began execution");
+				    p.waitFor();
+				    
+				    System.out.println("Finished waiting");
+
+				    BufferedReader reader = 
+				         new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+				    String line = "";			
+				    while ((line = reader.readLine())!= null) {
+				    	System.out.println("Camera Script: " + line);
+				    }
+				    System.out.println("Finished reading");
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		}).start();
+
 	}
 	
 	/**
@@ -135,7 +178,7 @@ public class Robot extends IterativeRobot {
 		turret_cam_types.add(turretAngle);
 		turret_cam_types.add(turretDistance);
 		turret_cam_types.add(turretTimeStamp);
-		Num.turret.init(turret_cam_types, TCPServer.defaultPort);
+		Num.turret.init(turret_cam_types, TCPServer.defaultPort+2);
 		
 		ArrayList<NetworkingDataType> gear_cam_types = new ArrayList<>();
 		NetworkingDataType gearAngle = new NetworkingDataType('a', "angle", Angle.Unit.DEGREE) {
