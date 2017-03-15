@@ -46,35 +46,51 @@ public class GearMover extends NRSubsystem {
 	}
 	
 	public GearMoverState currentGearMoverState() {
-		if(GearMover.get() == GearMoverState.DEPLOYED_VALUE) {
-			return GearMoverState.DEPLOYED;
+		if(GearMover != null) {
+			if(GearMover.get() == GearMoverState.DEPLOYED_VALUE) {
+				return GearMoverState.DEPLOYED;
+			} else {
+				return GearMoverState.RETRACTED;
+			}
 		} else {
 			return GearMoverState.RETRACTED;
 		}
 	}
 	
 	public GearGetPositionState currentGearGetPositionState() {
-		if(GearGetPosition.get() == GearGetPositionState.DEPLOYED_VALUE) {
-			return GearGetPositionState.DEPLOYED;
+		if(GearGetPosition != null) {
+			if(GearGetPosition.get() == GearGetPositionState.DEPLOYED_VALUE) {
+				return GearGetPositionState.DEPLOYED;
+			} else {
+				return GearGetPositionState.RETRACTED;
+			}
 		} else {
 			return GearGetPositionState.RETRACTED;
 		}
 	}
 
 	public void deployGearMover() {
-		GearMover.set(GearMoverState.DEPLOYED_VALUE);
+		if(GearMover != null) {
+			GearMover.set(GearMoverState.DEPLOYED_VALUE);
+		}
 	}
 
 	public void retractGearMover() {
-		GearMover.set(GearMoverState.RETRACTED_VALUE);
+		if(GearMover != null) {
+			GearMover.set(GearMoverState.RETRACTED_VALUE);
+		}
 	}
 
 	public void outGearGetPosition() {
-		GearGetPosition.set(GearGetPositionState.DEPLOYED_VALUE);
+		if(GearGetPosition != null) {
+			GearGetPosition.set(GearGetPositionState.DEPLOYED_VALUE);
+		}
 	}
 
 	public void inGearGetPosition() {
-		GearGetPosition.set(GearGetPositionState.RETRACTED_VALUE);
+		if(GearGetPosition != null) {
+			GearGetPosition.set(GearGetPositionState.RETRACTED_VALUE);
+		}
 	}
 
 	public static GearMover getInstance() {
