@@ -43,8 +43,12 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 		}
 		timeOfLastData = Time.getCurrentTime();
 		
-		Angle angleToPeg = Angle.ZERO;
-		Distance distanceToPeg = Distance.ZERO;
+		// TODO: Figure out how to get angle of target
+		Angle lastSeenTargetAngle = Angle.ZERO;
+		
+		Angle theta4 = lastSeenTargetAngle.add(lastSeenAngle);
+		Distance distanceToPeg = NRMath.lawOfCos(lastSeenDistance, FieldMap.PEG_LENGTH, theta4);
+		Angle angleToPeg = NRMath.asin(FieldMap.PEG_LENGTH.mul(theta4.sin()).div(distanceToPeg)).add(lastSeenAngle);
 		
 		Distance r = NRMath.hypot(RobotMap.GEAR_TO_CENTER_DIST_X, RobotMap.GEAR_TO_CENTER_DIST_Y);
 		Angle theta0 = Units.RIGHT_ANGLE.add(NRMath.atan2(RobotMap.GEAR_TO_CENTER_DIST_Y, RobotMap.GEAR_TO_CENTER_DIST_X));

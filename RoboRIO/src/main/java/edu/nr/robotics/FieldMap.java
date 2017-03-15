@@ -7,6 +7,8 @@ import edu.nr.lib.units.Time;
 
 public class FieldMap {
 	
+	public static final Distance PEG_LENGTH = new Distance(13.95, Distance.Unit.INCH);
+	
 	/**
 	 * The autonomous distance from the wall to the center peg in inches.
 	 * The distance is the distance the robot needs to drive and not the true distance
