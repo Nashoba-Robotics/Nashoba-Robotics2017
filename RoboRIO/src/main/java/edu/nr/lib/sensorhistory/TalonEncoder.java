@@ -31,10 +31,11 @@ public class TalonEncoder extends TimerTask {
 
 		this.period = defaultPeriod;
 
+		data = new LinkedList<>();
+
 		timer = new Timer();
 		timer.schedule(this, 0, (long) this.period.get(Time.Unit.MILLISECOND));
 
-		data = new LinkedList<>();
 	}
 
 	@Override
