@@ -25,6 +25,7 @@ import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.ShootThenBaselineAuto;
 import edu.nr.robotics.auton.SideOfField;
+import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.nr.robotics.subsystems.agitator.Agitator;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
@@ -65,7 +66,7 @@ public class Robot extends IterativeRobot {
 	public static SideOfField side;
 	SendableChooser<SideOfField> sideChooser = new SendableChooser<>();
 	
-	public static Compressor robotCompressor = new Compressor();
+	public static Compressor robotCompressor;
 		
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -73,6 +74,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		if(EnabledSubsystems.COMPRESSOR_ENABLED) {
+			robotCompressor = new Compressor();
+		}
 		singleton = this;
 		Agitator.init();
 		Loader.init();
@@ -132,7 +136,9 @@ public class Robot extends IterativeRobot {
 	 * Set a default choice by calling {@link SendableChooser#addDefault} and set other choices by calling {@link SendableChooser#addObject}
 	 */
 	public void autoChooserInit() {
-		robotCompressor.start();
+		if(robotCompressor != null) {
+			robotCompressor.start();
+		}
 		autoSpotChooser.addDefault("Do Nothing", new DoNothingCommand());
 		autoSpotChooser.addObject("Baseline", new DriveOverBaselineAutoCommand());
 		autoSpotChooser.addObject("Non Shooter Gear", new DriveToNonShooterSideGearAutoCommand());
@@ -291,7 +297,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboardSource.runAll();
 		SmartDashboard.putNumber("Gear Angle", GearAlignCalculation.getInstance().getAngleToTurn().get(Angle.Unit.DEGREE));
 		SmartDashboard.putNumber("Turret Angle", AutoTrackingCalculation.getInstance().getRawTurretAngle().get(Angle.Unit.DEGREE));
-		SmartDashboard.putBoolean("Compressor", Robot.robotCompressor.getClosedLoopControl());
+		if(robotCompressor != null) {
+			SmartDashboard.putBoolean("Compressor", Robot.robotCompressor.getClosedLoopControl());
+		}
 		SmartDashboard.putData(RobotDiagram.getInstance());
 	}
 }

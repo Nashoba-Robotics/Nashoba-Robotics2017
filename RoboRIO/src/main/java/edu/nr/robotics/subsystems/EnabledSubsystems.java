@@ -1,22 +1,23 @@
 package edu.nr.robotics.subsystems;
 
 public class EnabledSubsystems {
-	public static final boolean DRIVE_ENABLED 		= true,
-								SHOOTER_ENABLED 	= true,
-								HOOD_ENABLED 		= true,
+	public static final boolean DRIVE_ENABLED 		= false,
+								SHOOTER_ENABLED 	= false,
+								HOOD_ENABLED 		= false,
 								TURRET_ENABLED 		= true,
 								INTAKE_ENABLED 		= false,
-								INTAKE_ARM_ENABLED 	= true,
-								INTAKE_SLIDE_ENABLED= true,
-								GEAR_MOVER_ENABLED 	= true,
-								LOADER_ENABLED 		= true,
-								AGITATOR_ENABLED 	= true;
+								INTAKE_ARM_ENABLED 	= false,
+								INTAKE_SLIDE_ENABLED= false,
+								GEAR_MOVER_ENABLED 	= false,
+								LOADER_ENABLED 		= false,
+								AGITATOR_ENABLED 	= false,
+								COMPRESSOR_ENABLED 	= false;
 	
 	//These start the subsystem in dumb mode. Changing them later sometimes ignores this.
 	public static final boolean DRIVE_DUMB_ENABLED	 	= false,
 								SHOOTER_DUMB_ENABLED 	= false,
 								HOOD_DUMB_ENABLED 		= false,
-								TURRET_DUMB_ENABLED 	= true;
+								TURRET_DUMB_ENABLED 	= false;
 	
 	
 	public static final boolean AGITATOR_SMARTDASHBOARD_BASIC_ENABLED 	= true,
@@ -39,5 +40,5 @@ public class EnabledSubsystems {
 								INTAKESLIDE_SMARTDASHBOARD_COMPLEX_ENABLED 	= false,
 								LOADER_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
-								TURRET_SMARTDASHBOARD_COMPLEX_ENABLED 		= false;
+								TURRET_SMARTDASHBOARD_COMPLEX_ENABLED 		= true;
 }
