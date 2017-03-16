@@ -40,8 +40,10 @@ public class Shooter extends NRSubsystem {
 	 */
 	public static final AngularSpeed SHOOT_THRESHOLD = new AngularSpeed(50, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
+	static final double encoderDistancePerRealRotation = 3 /*versa planetary*/ * 36.0 /*main gear*/ / 24.0 /*small gear*/;
+
 	//TODO: Shooter: Find FPID values
-	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
+	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
 	public static double P = 0;
 	public static double I = 0;
 	public static double D = 0;
@@ -85,9 +87,7 @@ public class Shooter extends NRSubsystem {
 			singleton.setJoystickCommand(new ShooterJoystickCommand());
 		}
 	}
-	
-	static final double encoderDistancePerRealRotation = 3 /*versa planetary*/ * 36.0 /*main gear*/ / 24.0 /*small gear*/;
-		
+			
 	private double speedToRaw(AngularSpeed in) {
 		return in.get(Angle.Unit.ROTATION, Time.Unit.MINUTE) * encoderDistancePerRealRotation;
 	}
