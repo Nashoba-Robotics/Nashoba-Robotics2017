@@ -33,19 +33,21 @@ public class EnableAutoTrackingCommand extends NRCommand{
 	@Override
 	public void onExecute() {
 		if (!AutoTrackingCalculation.getInstance().canSeeTarget()) {
-			Turret.getInstance().setMotorSpeedInDegreesPerSecond(Turret.MAX_SPEED.mul(Turret.MAX_TRACKING_PERCENTAGE).mul(Turret.getInstance().turretTrackDirection));
+			Turret.getInstance().setMotorSpeedInPercent(Turret.MAX_TRACKING_PERCENTAGE*Turret.getInstance().turretTrackDirection);
 		}
 	}
 	
 	@Override
-	public void onEnd() {
-		Turret.getInstance().setPosition(Turret.getInstance().getPosition().add(TURRET_CAMERA_RANGE.mul(Turret.getInstance().turretTrackDirection)));
-		Turret.getInstance().disable();
-		if (AutoMoveMethods.shootAlignMode == ShootAlignMode.autonomous) {
-			hoodAlignCommand.start();
-			shooterAlignCommand.start();
+	public void onEnd(boolean interrupted) {
+		if(!interrupted) {
+			Turret.getInstance().setPosition(Turret.getInstance().getPosition().add(TURRET_CAMERA_RANGE.mul(Turret.getInstance().turretTrackDirection)));
+			Turret.getInstance().disable();
+			if (AutoMoveMethods.shootAlignMode == ShootAlignMode.autonomous) {
+				hoodAlignCommand.start();
+				shooterAlignCommand.start();
+			}
+			turretAlignCommand.start();
 		}
-		turretAlignCommand.start();
 	}
 	
 	@Override

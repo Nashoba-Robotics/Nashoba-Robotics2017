@@ -32,9 +32,8 @@ public class Turret extends NRSubsystem {
 	 */
 	private Angle positionSetpoint = new Angle(90, Angle.Unit.DEGREE);
 	
-	//TODO: Turret: Find forward versus reverse limit switches
 	public static final Angle FORWARD_POSITION = new Angle(90, Angle.Unit.DEGREE);
-	public static final Angle REVERSE_POSITION = new Angle(-102, Angle.Unit.DEGREE);
+	public static final Angle REVERSE_POSITION = new Angle(-110.16, Angle.Unit.DEGREE);
 	
 	//Profiles
 	private static final int MOTION_MAGIC = 0;
@@ -47,7 +46,7 @@ public class Turret extends NRSubsystem {
 	/**
 	 * The angle around the goal position that we can be at
 	 */
-	public static final Angle POSITION_THRESHOLD = new Angle(0.5, Angle.Unit.DEGREE);
+	public static final Angle POSITION_THRESHOLD = new Angle(0.1, Angle.Unit.DEGREE);
 
 	/**
 	 * The angle threshold the turret needs to be within to shoot
@@ -57,36 +56,40 @@ public class Turret extends NRSubsystem {
 	/**
 	 * The angle the turret will automatically turn to start the match
 	 */
-	public static final Angle PRESET_ANGLE_BLUE = Turret.REVERSE_POSITION;
+	public static final Angle PRESET_ANGLE_BLUE = new Angle(0.5, Angle.Unit.DEGREE);
 
 	/**
 	 * The angle the turret will automatically turn to start the match
 	 */
-	public static final Angle PRESET_ANGLE_RED = Turret.FORWARD_POSITION;
+	public static final Angle PRESET_ANGLE_RED = new Angle(20, Angle.Unit.DEGREE);
 
 	/**
 	 * The percentage of max speed the turret will go when tracking
 	 */
-	public static final double MAX_TRACKING_PERCENTAGE = 0.1;
+	public static final double MAX_TRACKING_PERCENTAGE = 0.5;
 
 	/**
 	 * The max acceleration of the turret, in degrees per second per second
 	 * TODO: Turret: Find max acceleration
 	 */
-	public static final AngularAcceleration MAX_ACCELERATION = new AngularAcceleration(1, Angle.Unit.DEGREE, Time.Unit.SECOND, Time.Unit.SECOND);
+	public static final AngularAcceleration MAX_ACCELERATION = new AngularAcceleration(580, Angle.Unit.DEGREE, Time.Unit.SECOND, Time.Unit.SECOND);
 
 	/**
 	 * The max speed of the turret, in degrees per second
 	 * TODO: Turret: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(85, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(80, Angle.Unit.DEGREE, Time.Unit.SECOND);
 
 	//TODO: Turret: Find FPID values
-	public static double F = 1023.0/Turret.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND);
-	public static double P_MOTION_MAGIC = 0;
+	
+	static final double encoderDistancePerRealRotation = 100.0 /*versa planetary*/ * 280.0 /*main gear*/ / 30.0 /*small gear*/;
+
+	
+	public static double F = 1023.0/Turret.MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
+	public static double P_MOTION_MAGIC = 0.1;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
-	public static double P_OPERATOR_CONTROL = 0;
+	public static double P_OPERATOR_CONTROL = 0.005;
 	public static double I_OPERATOR_CONTROL = 0;
 	public static double D_OPERATOR_CONTROL = 0;
 	
@@ -99,13 +102,13 @@ public class Turret extends NRSubsystem {
 			} else {
 				talon.changeControlMode(TalonControlMode.Speed);
 			}
-			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
+			talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
-			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND));
+			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE) * encoderDistancePerRealRotation * 0.8);
+			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND) * encoderDistancePerRealRotation * 0.75);
 			talon.enableBrakeMode(true);
-			talon.reverseSensor(false); //TODO: Turret: Find phase
+			talon.reverseSensor(false);
 			talon.enable();
 			setAutoAlign(true);
 		}
@@ -124,7 +127,6 @@ public class Turret extends NRSubsystem {
 		}
 	}
 	
-	static final double encoderDistancePerRealRotation = 100.0 /*versa planetary*/ * 280.0 /*main gear*/ / 30.0 /*small gear*/;
 	
 	//static final double forwardEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
 	//static final double reverseEncRotations = 0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
@@ -167,12 +169,13 @@ public class Turret extends NRSubsystem {
 		speedSetpoint = speed;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.MotionMagic) {
+			if(mode != TalonControlMode.PercentVbus && mode != TalonControlMode.Speed) {
 				if(EnabledSubsystems.HOOD_DUMB_ENABLED) {
 					talon.changeControlMode(TalonControlMode.PercentVbus);
 				} else {
 					talon.changeControlMode(TalonControlMode.Speed);
 				}
+				talon.setProfile(Turret.OPERATOR_CONTROL);
 			}
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.set(speedToRaw(speedSetpoint) / speedToRaw(MAX_SPEED));
@@ -201,11 +204,18 @@ public class Turret extends NRSubsystem {
 	 */
 	public void setPosition(Angle position) {
 		positionSetpoint = position;
+		
+		System.out.println("Setting angle position: " + position.get(Angle.Unit.DEGREE));
+		
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
+			if(mode != TalonControlMode.MotionMagic) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
+				talon.setProfile(Turret.MOTION_MAGIC);
 			}
+			
+			System.out.println("Setting raw angle position: " + positionToRaw(positionSetpoint));
+			
 			talon.set(positionToRaw(positionSetpoint));
 		}
 
@@ -239,11 +249,11 @@ public class Turret extends NRSubsystem {
 	@Override
 	public void periodic() {
 		if(talon != null) {
-			if(talon.isFwdLimitSwitchClosed()) { //TODO: Turret: Check limit switch direction
+			if(talon.isFwdLimitSwitchClosed()) {
 				talon.setPosition(positionToRaw(FORWARD_POSITION));
 				turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {
-				talon.setPosition(positionToRaw(REVERSE_POSITION));
+				//talon.setPosition(positionToRaw(REVERSE_POSITION));
 				turretTrackDirection = 1;
 			} 
 		}
@@ -262,7 +272,10 @@ public class Turret extends NRSubsystem {
 				SmartDashboard.putString("Turret Position", getPosition().get(Angle.Unit.DEGREE) + " : " + positionSetpoint.get(Angle.Unit.DEGREE));	
 			}
 			if(EnabledSubsystems.TURRET_SMARTDASHBOARD_COMPLEX_ENABLED){
+				SmartDashboard.putString("Turret Control Mode", talon.getControlMode().toString());
 				SmartDashboard.putNumber("Turret Voltage", talon.getOutputVoltage());
+				SmartDashboard.putNumber("Turret Raw Position Ticks", talon.getEncPosition());
+				SmartDashboard.putNumber("Turret Raw Position Rotations", talon.getPosition());
 			}
 		}
 	}

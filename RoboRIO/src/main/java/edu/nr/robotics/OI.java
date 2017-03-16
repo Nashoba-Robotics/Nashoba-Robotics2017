@@ -34,6 +34,7 @@ import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterDeltaSpeedCommand;
 import edu.nr.robotics.subsystems.turret.Turret;
 import edu.nr.robotics.subsystems.turret.TurretPositionCommand;
+import edu.nr.robotics.subsystems.turret.TurretSpeedCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -46,7 +47,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI implements SmartDashboardSource, Periodic {
 
-	private static final double JOYSTICK_DEAD_ZONE = 0.3;
+	private static final double JOYSTICK_DEAD_ZONE = 0.4;
 
 	
 	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = 12;
@@ -141,6 +142,8 @@ public class OI implements SmartDashboardSource, Periodic {
 
 	public void initDriveLeft() {
 		new JoystickButton(driveLeft, 2).whenPressed(new DoNothingCommand(Drive.getInstance()));
+		new JoystickButton(driveLeft, 11).whenPressed(new TurretSpeedCommand(new AngularSpeed(3, Angle.Unit.DEGREE, Time.Unit.SECOND)));
+		new JoystickButton(driveLeft, 16).whenPressed(new TurretSpeedCommand(new AngularSpeed(-3, Angle.Unit.DEGREE, Time.Unit.SECOND)));
 
 	}
 

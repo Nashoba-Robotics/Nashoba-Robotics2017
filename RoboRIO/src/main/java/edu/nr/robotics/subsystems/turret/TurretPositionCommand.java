@@ -23,10 +23,11 @@ public class TurretPositionCommand extends NRCommand {
 
 	@Override
 	public boolean isFinishedNR() {
-		return Turret.getInstance().getPosition().get(Unit.DEGREE) < 
+		return false;
+		/*return Turret.getInstance().getPosition().get(Unit.DEGREE) < 
 				position.add(Turret.POSITION_THRESHOLD).get(Unit.DEGREE)
 				&& 
 				Turret.getInstance().getPosition().get(Unit.ROTATION) > 
-				position.sub(Turret.POSITION_THRESHOLD).get(Unit.ROTATION);
+				position.sub(Turret.POSITION_THRESHOLD).get(Unit.ROTATION);*/
 	}
 }
