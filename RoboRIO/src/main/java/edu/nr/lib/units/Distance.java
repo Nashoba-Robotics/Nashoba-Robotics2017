@@ -91,6 +91,12 @@ public class Distance {
 		return new Distance(Math.abs(this.get(Unit.defaultUnit)), Unit.defaultUnit);
 	}
 	
+	public double getSign() {
+		if(this.get(Unit.defaultUnit) > 0)
+			return 1;
+		return -1;
+	}
+	
 	@Override
 	public boolean equals(Object otherAngle) {
 		if(otherAngle instanceof Distance) {
