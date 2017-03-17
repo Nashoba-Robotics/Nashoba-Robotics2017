@@ -23,15 +23,15 @@ public class Shooter extends NRSubsystem {
 	/**
 	 * The max speed of the shooter
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(4000, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(3700, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 	
 	/**
 	 * The speed that the motor is currently supposed to be running at.
 	 * 
 	 * The initial value is the speed it is supposed to run at to start the match.
 	 */
-	public AngularSpeed defaultSpeed = new AngularSpeed(2900, Angle.Unit.ROTATION, Time.Unit.MINUTE);
-	public AngularSpeed motorSetpoint = new AngularSpeed(2900, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public AngularSpeed defaultSpeed = new AngularSpeed(3000, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public AngularSpeed motorSetpoint = new AngularSpeed(3000, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 	private boolean autoAlign = false;
 
@@ -40,7 +40,7 @@ public class Shooter extends NRSubsystem {
 	 */
 	public static final AngularSpeed SHOOT_THRESHOLD = new AngularSpeed(50, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
-	static final double encoderDistancePerRealRotation = 3 /*versa planetary*/ * 36.0 /*main gear*/ / 24.0 /*small gear*/;
+	static final double encoderDistancePerRealRotation = 3.0 /*versa planetary*/ * 36.0 /*main gear*/ / 24.0 /*small gear*/;
 
 	//TODO: Shooter: Find FPID values
 	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
