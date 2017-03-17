@@ -110,16 +110,28 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private Speed rightMotorSetpoint = Speed.ZERO;
 
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR = 0;
-	public static final double I_LOW_GEAR = 0;
-	public static final double D_LOW_GEAR = 0;
+	public static final double F_LOW_GEAR_LEFT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_LOW_GEAR_LEFT = 0;
+	public static final double I_LOW_GEAR_LEFT = 0;
+	public static final double D_LOW_GEAR_LEFT = 0;
 
 	// TODO: Drive: Find high gear FPID values
-	public static final double F_HIGH_GEAR = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_HIGH_GEAR = 0;
-	public static final double I_HIGH_GEAR = 0;
-	public static final double D_HIGH_GEAR = 0;
+	public static final double F_HIGH_GEAR_LEFT = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_HIGH_GEAR_LEFT = 0;
+	public static final double I_HIGH_GEAR_LEFT = 0;
+	public static final double D_HIGH_GEAR_LEFT = 0;
+	
+	// TODO: Drive: Find low gear FPID values
+	public static final double F_LOW_GEAR_RIGHT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_LOW_GEAR_RIGHT = 0;
+	public static final double I_LOW_GEAR_RIGHT = 0;
+	public static final double D_LOW_GEAR_RIGHT = 0;
+
+	// TODO: Drive: Find high gear FPID values
+	public static final double F_HIGH_GEAR_RIGHT = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_HIGH_GEAR_RIGHT = 0;
+	public static final double I_HIGH_GEAR_RIGHT = 0;
+	public static final double D_HIGH_GEAR_RIGHT = 0;
 
 	public static enum DriveMode {
 		arcadeDrive, tankDrive
@@ -179,15 +191,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			}
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			leftTalon.setProfile(Gear.LOW_PROFILE);
-			leftTalon.setF(F_LOW_GEAR);
-			leftTalon.setP(P_LOW_GEAR);
-			leftTalon.setI(I_LOW_GEAR);
-			leftTalon.setD(D_LOW_GEAR);
+			leftTalon.setF(F_LOW_GEAR_LEFT);
+			leftTalon.setP(P_LOW_GEAR_LEFT);
+			leftTalon.setI(I_LOW_GEAR_LEFT);
+			leftTalon.setD(D_LOW_GEAR_LEFT);
 			leftTalon.setProfile(Gear.HIGH_PROFILE);
-			leftTalon.setF(F_HIGH_GEAR);
-			leftTalon.setP(P_HIGH_GEAR);
-			leftTalon.setI(I_HIGH_GEAR);
-			leftTalon.setD(D_HIGH_GEAR);
+			leftTalon.setF(F_HIGH_GEAR_LEFT);
+			leftTalon.setP(P_HIGH_GEAR_LEFT);
+			leftTalon.setI(I_HIGH_GEAR_LEFT);
+			leftTalon.setD(D_HIGH_GEAR_LEFT);
 			leftTalon.setProfile(getCurrentGearProfile());
 			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
@@ -211,15 +223,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			}
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			rightTalon.setProfile(Gear.LOW_PROFILE);
-			rightTalon.setF(F_LOW_GEAR);
-			rightTalon.setP(P_LOW_GEAR);
-			rightTalon.setI(I_LOW_GEAR);
-			rightTalon.setD(D_LOW_GEAR);
+			rightTalon.setF(F_LOW_GEAR_RIGHT);
+			rightTalon.setP(P_LOW_GEAR_RIGHT);
+			rightTalon.setI(I_LOW_GEAR_RIGHT);
+			rightTalon.setD(D_LOW_GEAR_RIGHT);
 			rightTalon.setProfile(Gear.HIGH_PROFILE);
-			rightTalon.setF(F_HIGH_GEAR);
-			rightTalon.setP(P_HIGH_GEAR);
-			rightTalon.setI(I_HIGH_GEAR);
-			rightTalon.setD(D_HIGH_GEAR);
+			rightTalon.setF(F_HIGH_GEAR_RIGHT);
+			rightTalon.setP(P_HIGH_GEAR_RIGHT);
+			rightTalon.setI(I_HIGH_GEAR_RIGHT);
+			rightTalon.setD(D_HIGH_GEAR_RIGHT);
 			rightTalon.setProfile(getCurrentGearProfile());
 			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
