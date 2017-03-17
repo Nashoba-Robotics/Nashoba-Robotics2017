@@ -49,6 +49,11 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 		double turn = getAngleError().get(Unit.DEGREE) * P;
 		Drive.getInstance().arcadeDrive(0, turn);
 	}
+	
+	@Override
+	public void onEnd() {
+		Drive.getInstance().disable();
+	}
 
 	@Override
 	public boolean isFinishedNR() {
