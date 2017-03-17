@@ -36,7 +36,7 @@ public class Hood extends NRSubsystem {
 	/**
 	 * TODO: Hood: Find top position
 	 */
-	private static final Angle TOP_POSITION = new Angle(45, Angle.Unit.DEGREE);
+	private static final Angle TOP_POSITION = new Angle(38.1, Angle.Unit.DEGREE);
 	
 	private static final Angle BOTTOM_POSITION = Angle.ZERO;
 
@@ -50,7 +50,7 @@ public class Hood extends NRSubsystem {
 	 * The angle around the goal position that we can be at
 	 * TODO: Hood: Find the position threshold
 	 */
-	public static final Angle POSITION_THRESHOLD = new Angle(0.2, Angle.Unit.DEGREE);
+	public static final Angle POSITION_THRESHOLD = new Angle(0.05, Angle.Unit.DEGREE);
 
 	/**
 	 * The threshold the hood needs to be within to shoot
@@ -62,25 +62,21 @@ public class Hood extends NRSubsystem {
 	 * The max acceleration of the hood
 	 * TODO: Hood: Find max acceleration
 	 */
-	public static final AngularAcceleration MAX_ACCELERATION = new AngularAcceleration(100, Angle.Unit.DEGREE, Time.Unit.SECOND,Time.Unit.SECOND);
+	public static final AngularAcceleration MAX_ACCELERATION = new AngularAcceleration(375, Angle.Unit.DEGREE, Time.Unit.SECOND,Time.Unit.SECOND);
 
 	/**
 	 * The max speed of the hood, in degrees per second
 	 * TODO: Hood: Find max speed
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(70, Angle.Unit.DEGREE, Time.Unit.SECOND);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(75, Angle.Unit.DEGREE, Time.Unit.SECOND);
 	
-	//TODO: Hood: Find the actual range...
-	static final double topEncRotations = 374265.0 / Units.MAGNETIC_NATIVE_UNITS_PER_REV;
-	static final double encoderDistancePerRealRotation = topEncRotations / TOP_POSITION.get(Unit.ROTATION);
-
+	static final double encoderDistancePerRealRotation = 345.0 / 20.0 /*Main gear*/ * 50.0 / 1 /*Versa planetary*/;
 	
-	//TODO: Hood: Find FPID values
 	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
 	public static double P_MOTION_MAGIC = 0.1;
 	public static double I_MOTION_MAGIC = 0;
 	public static double D_MOTION_MAGIC = 0;
-	public static double P_OPERATOR_CONTROL = 0;
+	public static double P_OPERATOR_CONTROL = 0.005;
 	public static double I_OPERATOR_CONTROL = 0;
 	public static double D_OPERATOR_CONTROL = 0;
 	
@@ -97,11 +93,11 @@ public class Hood extends NRSubsystem {
 			talon.setPID(P_MOTION_MAGIC, I_MOTION_MAGIC, D_MOTION_MAGIC, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), MOTION_MAGIC);
 			talon.setPID(P_OPERATOR_CONTROL, I_OPERATOR_CONTROL, D_OPERATOR_CONTROL, F, (int)talon.getIZone(), talon.getCloseLoopRampRate(), OPERATOR_CONTROL);
 			talon.setProfile(OPERATOR_CONTROL);
-			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE));
-			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND));
+			talon.setMotionMagicCruiseVelocity(MAX_SPEED.get(Angle.Unit.ROTATION, Time.Unit.MINUTE)*encoderDistancePerRealRotation * 0.5);
+			talon.setMotionMagicAcceleration(MAX_ACCELERATION.get(Angle.Unit.ROTATION, Time.Unit.MINUTE, Time.Unit.SECOND)*encoderDistancePerRealRotation * 0.75);
 			talon.enableBrakeMode(true);
 			talon.reverseSensor(true);
-			talon.setInverted(true);
+			talon.setInverted(false);
 			talon.reverseOutput(true);
 			talon.enable();
 		}
@@ -160,12 +156,13 @@ public class Hood extends NRSubsystem {
 		speedSetpoint = speed;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.MotionMagic) {
+			if(mode != TalonControlMode.PercentVbus && mode != TalonControlMode.Speed) {
 				if(EnabledSubsystems.HOOD_DUMB_ENABLED) {
 					talon.changeControlMode(TalonControlMode.PercentVbus);
 				} else {
 					talon.changeControlMode(TalonControlMode.Speed);
 				}
+				talon.setProfile(OPERATOR_CONTROL);
 			}
 			if(mode == CANTalon.TalonControlMode.PercentVbus) {
 				talon.set(speedToRaw(speedSetpoint) / speedToRaw(MAX_SPEED));
@@ -196,8 +193,9 @@ public class Hood extends NRSubsystem {
 		positionSetpoint = position;
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
-			if(mode == CANTalon.TalonControlMode.Speed || mode == CANTalon.TalonControlMode.PercentVbus) {
+			if(mode != TalonControlMode.MotionMagic) {
 				talon.changeControlMode(TalonControlMode.MotionMagic);
+				talon.setProfile(MOTION_MAGIC);
 			}
 			talon.set(positionToRaw(positionSetpoint));
 		}
@@ -253,6 +251,7 @@ public class Hood extends NRSubsystem {
 			}
 			if(EnabledSubsystems.HOOD_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putNumber("Hood Voltage", talon.getOutputVoltage());
+				SmartDashboard.putData(this);
 			}
 		}
 	}

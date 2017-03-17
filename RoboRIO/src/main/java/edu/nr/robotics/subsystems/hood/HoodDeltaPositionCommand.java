@@ -24,6 +24,6 @@ public class HoodDeltaPositionCommand extends NRCommand{
 	
 	@Override
 	public boolean isFinishedNR() {
-		return Hood.getInstance().getPosition().lessThan(goalPosition.add(Hood.POSITION_THRESHOLD)) && Hood.getInstance().getPosition().lessThan(goalPosition.sub(Hood.POSITION_THRESHOLD));
+		return Hood.getInstance().getPosition().lessThan(goalPosition.add(Hood.POSITION_THRESHOLD)) && Hood.getInstance().getPosition().greaterThan(goalPosition.sub(Hood.POSITION_THRESHOLD));
 	}
 }

@@ -23,6 +23,8 @@ import edu.nr.robotics.subsystems.gearMover.GearFlapInCommand;
 import edu.nr.robotics.subsystems.gearMover.GearFlapOutCommand;
 import edu.nr.robotics.subsystems.gearMover.GearRetractCommand;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
+import edu.nr.robotics.subsystems.hood.HoodPositionCommand;
+import edu.nr.robotics.subsystems.hood.HoodSpeedCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;
@@ -109,7 +111,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
 	 */
-	public static final Angle HOOD_POSITION_INCREMENT_VALUE = new Angle(0.1, Angle.Unit.DEGREE);
+	public static final Angle HOOD_POSITION_INCREMENT_VALUE = new Angle(2, Angle.Unit.DEGREE);
 
 
 	/**
@@ -144,6 +146,9 @@ public class OI implements SmartDashboardSource, Periodic {
 		new JoystickButton(driveLeft, 2).whenPressed(new DoNothingCommand(Drive.getInstance()));
 		new JoystickButton(driveLeft, 11).whenPressed(new TurretSpeedCommand(new AngularSpeed(3, Angle.Unit.DEGREE, Time.Unit.SECOND)));
 		new JoystickButton(driveLeft, 16).whenPressed(new TurretSpeedCommand(new AngularSpeed(-3, Angle.Unit.DEGREE, Time.Unit.SECOND)));
+		new JoystickButton(driveLeft, 12).whenPressed(new HoodSpeedCommand(new AngularSpeed(6, Angle.Unit.DEGREE, Time.Unit.SECOND)));
+		new JoystickButton(driveLeft, 15).whenPressed(new HoodSpeedCommand(new AngularSpeed(-6, Angle.Unit.DEGREE, Time.Unit.SECOND)));
+		new JoystickButton(driveLeft, 9).whenPressed(new HoodPositionCommand(new Angle(10, Angle.Unit.DEGREE)));
 
 	}
 
@@ -244,12 +249,12 @@ public class OI implements SmartDashboardSource, Periodic {
 		
 		new JoystickButton(operatorRight, WALL_SHOT_BUTTON_NUMBER).whenPressed(new WallShotAlignCommand());
 		
-		new JoystickButton(operatorRight, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
-		new JoystickButton(operatorRight, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whileHeld(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE.negate()));
+		new JoystickButton(operatorRight, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
+		new JoystickButton(operatorRight, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE.negate()));
 		
 		
-		new JoystickButton(operatorRight, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
-		new JoystickButton(operatorRight, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whileHeld(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
+		new JoystickButton(operatorRight, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
+		new JoystickButton(operatorRight, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
 
 		new JoystickButton(operatorRight, TURN_OFF_COMPRESSOR_BUTTON_NUMBER).whenPressed(new CompressorToggleCommand());
 	}
@@ -322,7 +327,7 @@ public class OI implements SmartDashboardSource, Periodic {
 	// Overrides hood angle (undone if another auto hood angle command is
 	// sent)
 	public double getHoodValue() {
-		return snapCoffinJoysticks(operatorLeft.getAxis(AxisType.kX));
+		return -snapCoffinJoysticks(operatorLeft.getAxis(AxisType.kX));
 	}
 
 
@@ -343,7 +348,7 @@ public class OI implements SmartDashboardSource, Periodic {
 		
 		if(value > -snapValue && value < snapValue)
 			return 0;
-		return ((Math.abs(value)-snapValue) / snapValue) * Math.signum(value);
+		return ((Math.abs(value)-snapValue) / (1-snapValue)) * Math.signum(value);
 	}
 
 	public double getRawMove() {
