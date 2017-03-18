@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import edu.nr.lib.GyroCorrection;
 import edu.nr.lib.commandbased.CancelAllCommand;
 import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.commandbased.NRSubsystem;
@@ -29,6 +30,7 @@ import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.nr.robotics.subsystems.agitator.Agitator;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
+import edu.nr.robotics.subsystems.drive.DriveStationaryPIDCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.loader.Loader;
 import edu.nr.robotics.subsystems.shooter.Shooter;
@@ -126,6 +128,8 @@ public class Robot extends IterativeRobot {
 	public void smartDashboardInit() {
 		SmartDashboard.putData(new CSVSaverEnable());
 		SmartDashboard.putData(new CSVSaverDisable());
+		
+		SmartDashboard.putData(new DriveStationaryPIDCommand(1, GyroCorrection.DEFAULT_KP_THETA));
 	}
 	
 	/**
