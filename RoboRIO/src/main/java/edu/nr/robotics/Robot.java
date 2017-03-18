@@ -93,41 +93,6 @@ public class Robot extends IterativeRobot {
 	
 	public void cameraInit() {
 		//CameraServer.getInstance().startAutomaticCapture();
-		
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				Process p;
-				try {
-					System.out.println("About to begin execution");
-					p = Runtime.getRuntime().exec("/home/lvuser/run_streamer.sh");
-					System.out.println("Began execution");
-				    p.waitFor();
-				    
-				    System.out.println("Finished waiting");
-
-				    BufferedReader reader = 
-				         new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-				    String line = "";			
-				    while ((line = reader.readLine())!= null) {
-				    	System.out.println("Camera Script: " + line);
-				    }
-				    System.out.println("Finished reading");
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			}
-			
-		}).start();
-
 	}
 	
 	/**
@@ -205,11 +170,16 @@ public class Robot extends IterativeRobot {
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 		
 		AutoTrackingCalculation.init();
+		StationaryTrackingCalculation.init();
 		GearAlignCalculation.init();
 		
 		turretAngle.addListener(AutoTrackingCalculation.getInstance());
 		turretDistance.addListener(AutoTrackingCalculation.getInstance());
 		turretTimeStamp.addListener(AutoTrackingCalculation.getInstance());
+		
+		turretAngle.addListener(StationaryTrackingCalculation.getInstance());
+		turretDistance.addListener(StationaryTrackingCalculation.getInstance());
+		turretTimeStamp.addListener(StationaryTrackingCalculation.getInstance());
 		
 		gearAngle.addListener(GearAlignCalculation.getInstance());
 		gearDistance.addListener(GearAlignCalculation.getInstance());

@@ -1,5 +1,6 @@
 package edu.nr.robotics;
 
+import edu.nr.lib.HeldJoystickButton;
 import edu.nr.lib.commandbased.AnonymousCommandGroup;
 import edu.nr.lib.commandbased.CancelAllCommand;
 import edu.nr.lib.commandbased.DoNothingCommand;
@@ -47,7 +48,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
-public class OI implements SmartDashboardSource, Periodic {
+public class OI implements SmartDashboardSource {
 
 	private static final double JOYSTICK_DEAD_ZONE = 0.4;
 
@@ -106,7 +107,9 @@ public class OI implements SmartDashboardSource, Periodic {
 	private static final int STICK_RIGHT = 1;
 	private static final int STICK_OPERATOR_LEFT = 2;
 	private static final int STICK_OPERATOR_RIGHT = 3;
-
+	
+	private Time changeShooterWaitTime = new Time(400, Time.Unit.MILLISECOND);
+	private Time changeHoodWaitTime = new Time(400, Time.Unit.MILLISECOND);
 
 	/**
 	 * The change in position that will occur whenever the hood position increment or decrement button is pressed.
@@ -140,6 +143,8 @@ public class OI implements SmartDashboardSource, Periodic {
 		
 		initOperatorLeft();
 		initOperatorRight();
+		
+		SmartDashboardSource.sources.add(this);
 	}
 
 	public void initDriveLeft() {
@@ -249,12 +254,11 @@ public class OI implements SmartDashboardSource, Periodic {
 		
 		new JoystickButton(operatorRight, WALL_SHOT_BUTTON_NUMBER).whenPressed(new WallShotAlignCommand());
 		
-		new JoystickButton(operatorRight, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
-		new JoystickButton(operatorRight, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER).whenPressed(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE.negate()));
-		
-		
-		new JoystickButton(operatorRight, INCREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
-		new JoystickButton(operatorRight, DECREMENT_HOOD_POSITION_BUTTON_NUMBER).whenPressed(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
+		new HeldJoystickButton(operatorRight, INCREMENT_SHOOTER_SPEED_BUTTON_NUMBER, changeShooterWaitTime).initialThenRepeat(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE));
+		new HeldJoystickButton(operatorRight, DECREMENT_SHOOTER_SPEED_BUTTON_NUMBER, changeShooterWaitTime).initialThenRepeat(new ShooterDeltaSpeedCommand(OI.SHOOTER_SPEED_INCREMENT_VALUE.negate()));
+
+		new HeldJoystickButton(operatorRight, INCREMENT_HOOD_POSITION_BUTTON_NUMBER, changeHoodWaitTime).initialThenRepeat(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE));
+		new HeldJoystickButton(operatorRight, DECREMENT_HOOD_POSITION_BUTTON_NUMBER, changeHoodWaitTime).initialThenRepeat(new HoodDeltaPositionCommand(OI.HOOD_POSITION_INCREMENT_VALUE.negate()));
 
 		new JoystickButton(operatorRight, TURN_OFF_COMPRESSOR_BUTTON_NUMBER).whenPressed(new CompressorToggleCommand());
 	}
@@ -390,11 +394,6 @@ public class OI implements SmartDashboardSource, Periodic {
 	
 	public boolean isHoodNonZero() {
 		return getHoodValue() != 0;
-	}
-
-	@Override
-	public void periodic() {
-		
 	}
 	
 	public boolean isShooterOn() {

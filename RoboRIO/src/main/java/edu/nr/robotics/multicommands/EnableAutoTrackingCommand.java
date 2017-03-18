@@ -8,26 +8,29 @@ import edu.nr.robotics.auton.AutoMoveMethods;
 import edu.nr.robotics.auton.ShootAlignMode;
 import edu.nr.robotics.subsystems.hood.Hood;
 import edu.nr.robotics.subsystems.hood.HoodAutoAlignCommand;
+import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
 import edu.nr.robotics.subsystems.shooter.Shooter;
 import edu.nr.robotics.subsystems.shooter.ShooterAutoAlignCommand;
+import edu.nr.robotics.subsystems.shooter.ShooterStationarySpeedCorrectionCommand;
 import edu.nr.robotics.subsystems.turret.Turret;
 import edu.nr.robotics.subsystems.turret.TurretAutoAlignCommand;
+import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 
 
 public class EnableAutoTrackingCommand extends NRCommand{
 
 	private static final Angle TURRET_CAMERA_RANGE = new Angle(10, Angle.Unit.DEGREE); 
 	
-	HoodAutoAlignCommand hoodAlignCommand;
-	ShooterAutoAlignCommand shooterAlignCommand;
-	TurretAutoAlignCommand turretAlignCommand;
+	NRCommand hoodAlignCommand;
+	NRCommand shooterAlignCommand;
+	NRCommand turretAlignCommand;
 	
 	public EnableAutoTrackingCommand() {
 		super(new NRSubsystem[] {Hood.getInstance(), Turret.getInstance(), Shooter.getInstance()});
 		
-		hoodAlignCommand = new HoodAutoAlignCommand();
-		shooterAlignCommand = new ShooterAutoAlignCommand();
-		turretAlignCommand = new TurretAutoAlignCommand();
+		hoodAlignCommand = new HoodStationaryAngleCorrectionCommand();
+		shooterAlignCommand = new ShooterStationarySpeedCorrectionCommand();
+		turretAlignCommand = new TurretStationaryAngleCorrectionCommand();
 	}
 	
 	@Override
@@ -43,9 +46,9 @@ public class EnableAutoTrackingCommand extends NRCommand{
 			Turret.getInstance().setPosition(Turret.getInstance().getPosition().add(TURRET_CAMERA_RANGE.mul(Turret.getInstance().turretTrackDirection)));
 			Turret.getInstance().disable();
 			if (AutoMoveMethods.shootAlignMode == ShootAlignMode.autonomous) {
-				hoodAlignCommand.start();
-				shooterAlignCommand.start();
 			}
+			hoodAlignCommand.start();
+			shooterAlignCommand.start();
 			turretAlignCommand.start();
 		}
 	}

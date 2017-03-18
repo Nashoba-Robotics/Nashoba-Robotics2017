@@ -23,7 +23,7 @@ public class Shooter extends NRSubsystem {
 	/**
 	 * The max speed of the shooter
 	 */
-	public static final AngularSpeed MAX_SPEED = new AngularSpeed(3700, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public static final AngularSpeed MAX_SPEED = new AngularSpeed(3850, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 	
 	/**
 	 * The speed that the motor is currently supposed to be running at.
@@ -44,9 +44,9 @@ public class Shooter extends NRSubsystem {
 
 	//TODO: Shooter: Find FPID values
 	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
-	public static double P = 0;
+	public static double P = 0.02;
 	public static double I = 0;
-	public static double D = 0;
+	public static double D = 0.27;
 	
 	private Shooter() { 
 		if (EnabledSubsystems.SHOOTER_ENABLED) {
@@ -62,6 +62,7 @@ public class Shooter extends NRSubsystem {
 			talon.setI(I);
 			talon.setD(D);
 			talon.enableBrakeMode(false);
+			talon.setNominalClosedLoopVoltage(12.5);
 			talon.reverseSensor(false);
 			//talon.setInverted(true);
 			//talon.reverseOutput(true);

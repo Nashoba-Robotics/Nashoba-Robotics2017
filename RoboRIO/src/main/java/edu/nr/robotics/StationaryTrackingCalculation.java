@@ -8,20 +8,24 @@ import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
+import edu.nr.robotics.subsystems.hood.Hood;
+import edu.nr.robotics.subsystems.turret.Turret;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class StationaryTrackingCalculation implements NetworkingDataTypeListener {
 		
 	Angle turretAngle = Angle.ZERO;
+	Angle deltaTurretAngle = Angle.ZERO;
 	
 	Angle hoodAngle = Angle.ZERO;
 	
 	AngularSpeed shooterSpeed = AngularSpeed.ZERO;
 	
-	private Time lastSeenTimeStamp;
-	private Angle lastSeenAngle;
-	private Distance lastSeenDistance;
+	private Time lastSeenTimeStamp = Time.ZERO;
+	private Angle lastSeenAngle = Angle.ZERO;
+	private Distance lastSeenDistance = Distance.ZERO;
 	
-	private Time timeOfLastData;
+	private Time timeOfLastData = Time.ZERO;
 	
 	private static StationaryTrackingCalculation singleton;
 	
@@ -51,17 +55,24 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 		
 		Distance distReal = NRMath.lawOfCos(lastSeenDistance, RobotMap.Y_CAMERA_OFFSET, lastSeenAngle);
 		
-		Angle theta4 = NRMath.asin(distReal.mul(lastSeenAngle.sin()).div(lastSeenDistance));
+		SmartDashboard.putNumber("Turret Distance", distReal.get(Distance.Unit.INCH));
 		
-		if (theta4.greaterThan(Angle.ZERO)) {
-			turretAngle = Units.HALF_CIRCLE.sub(theta4);
-		} else if (theta4.equals(Angle.ZERO)) {
-			turretAngle = Angle.ZERO;
-		} else {
-			turretAngle = Units.HALF_CIRCLE.negate().sub(theta4);
-		}
+		deltaTurretAngle = (Units.HALF_CIRCLE.sub(NRMath.lawOfCos(distReal, RobotMap.Y_CAMERA_OFFSET, lastSeenDistance))).mul(lastSeenAngle.getSign());
 
-		hoodAngle = Calibration.getHoodAngleFromDistance(distReal);
+		SmartDashboard.putNumber("Delta Turret Angle", deltaTurretAngle.get(Angle.Unit.DEGREE));
+
+		turretAngle = Turret.getInstance().getPosition().add(deltaTurretAngle);
+		
+		System.out.println("Last Seen Angle: " + lastSeenAngle.get(Angle.Unit.DEGREE));
+		System.out.println("Delta Turret Angle: " + deltaTurretAngle.get(Angle.Unit.DEGREE));
+		
+		//System.out.println("Turret delta angle to set: " + turretAngle.get(Angle.Unit.DEGREE));
+		//System.out.println("Distance: " + distReal.get(Distance.Unit.INCH));
+
+		hoodAngle = Hood.getInstance().getPosition().add(Calibration.getHoodAngleFromDistance(distReal));
+		
+		//System.out.println("Hood delta angle to set: " + hoodAngle.get(Angle.Unit.DEGREE));
+
 
 		shooterSpeed = Calibration.getShooterSpeedFromDistance(distReal);
 
@@ -72,6 +83,13 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 	 */
 	public Angle getTurretAngle() {
 		return turretAngle;
+	}
+	
+	/**
+	 * @return Delta turret angle in degrees
+	 */
+	public Angle getDeltaTurretAngle() {
+		return deltaTurretAngle;
 	}
 
 	/**

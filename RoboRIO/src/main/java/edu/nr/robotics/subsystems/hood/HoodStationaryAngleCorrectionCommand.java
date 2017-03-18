@@ -1,6 +1,7 @@
 package edu.nr.robotics.subsystems.hood;
 
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.units.Angle;
 import edu.nr.robotics.StationaryTrackingCalculation;
 
 public class HoodStationaryAngleCorrectionCommand extends NRCommand {

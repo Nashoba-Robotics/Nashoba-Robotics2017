@@ -205,7 +205,7 @@ public class Turret extends NRSubsystem {
 	public void setPosition(Angle position) {
 		positionSetpoint = position;
 		
-		System.out.println("Setting angle position: " + position.get(Angle.Unit.DEGREE));
+		//System.out.println("Setting angle position: " + position.get(Angle.Unit.DEGREE));
 		
 		if (talon != null) {
 			CANTalon.TalonControlMode mode = talon.getControlMode();
@@ -214,7 +214,7 @@ public class Turret extends NRSubsystem {
 				talon.setProfile(Turret.MOTION_MAGIC);
 			}
 			
-			System.out.println("Setting raw angle position: " + positionToRaw(positionSetpoint));
+			//System.out.println("Setting raw angle position: " + positionToRaw(positionSetpoint));
 			
 			talon.set(positionToRaw(positionSetpoint));
 		}
