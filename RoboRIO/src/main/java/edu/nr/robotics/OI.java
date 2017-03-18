@@ -12,6 +12,7 @@ import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.multicommands.ClimbCommand;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
+import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.multicommands.WallShotAlignCommand;
 import edu.nr.robotics.subsystems.compressor.CompressorToggleCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
@@ -240,7 +241,7 @@ public class OI implements SmartDashboardSource {
 
 	public void initOperatorRight() {
 		
-		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new DriveForwardForeverBasicCommand(-0.5));
+		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenPressed(new GearPegAlignCommand());
 		new JoystickButton(operatorRight, GEAR_PEG_ALIGNMENT_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Drive.getInstance()));
 
 
