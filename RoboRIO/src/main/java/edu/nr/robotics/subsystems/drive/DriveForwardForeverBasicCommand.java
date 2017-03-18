@@ -26,9 +26,9 @@ public class DriveForwardForeverBasicCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		//double turnValue = gyro.getTurnValue();
+		double turnValue = gyro.getTurnValue();
 		//double turnValue = GearAlignCalculation.getInstance().getAngleToTurn().get(Angle.Unit.DEGREE) * 0.02;
-		double turnValue = 0;
+		//double turnValue = 0;
 		Drive.getInstance().setMotorSpeedInPercent(percent - turnValue, percent + turnValue);
 	}
 	
