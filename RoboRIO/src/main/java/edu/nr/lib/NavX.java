@@ -8,6 +8,7 @@ import edu.nr.lib.interfaces.Periodic;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Time;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 
 public class NavX implements Periodic {
@@ -37,14 +38,16 @@ public class NavX implements Periodic {
             /* Communicate w/navX MXP via the MXP SPI Bus.                                     */
             /* Alternatively:  I2C.Port.kMXP, SPI.Port.kMXP or SerialPort.Port.kUSB     */
             /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
-            ahrs = new AHRS(I2C.Port.kOnboard); 
+            ahrs = new AHRS(SPI.Port.kMXP); 
             navXSensor navx_sensor = new navXSensor(ahrs, "Drivetrain Orientation");
             orientation_history = new OrientationHistory(navx_sensor,
         		ahrs.getRequestedUpdateRate() * 10);
             
             periodics.add(this);
+            
+            System.out.println("Instantiating NavX");
 
-        } catch (Exception ex ) {
+        } catch (Exception ex) {
             System.out.println("Error instantiating navX MXP:  " + ex.getMessage());
         }	
 	}

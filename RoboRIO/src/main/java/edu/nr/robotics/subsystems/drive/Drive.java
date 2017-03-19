@@ -64,7 +64,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The max driving speed of the robot in low gear 
 	 */
-	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6.5, Distance.Unit.FOOT, Time.Unit.SECOND);
+	//public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6.5, Distance.Unit.FOOT, Time.Unit.SECOND);
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(13.33, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 	
 	/**
 	 * The max driving speed of the robot in high gear 
@@ -90,7 +91,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The number of encoder ticks per wheel revolution
 	 */
-	public static final int TICKS_PER_REV = 2048; 
+	//public static final int TICKS_PER_REV = 2048; 
+	public static final int TICKS_PER_REV = 256;
 	
 	/**
 	 * The number of CANTalon "Native Units" per revolution
@@ -111,7 +113,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	// TODO: Drive: Find low gear FPID values
 	public static final double F_LOW_GEAR_LEFT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_LEFT = 0;
+	public static final double P_LOW_GEAR_LEFT = 2.5;
 	public static final double I_LOW_GEAR_LEFT = 0;
 	public static final double D_LOW_GEAR_LEFT = 0;
 
@@ -123,7 +125,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	
 	// TODO: Drive: Find low gear FPID values
 	public static final double F_LOW_GEAR_RIGHT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_RIGHT = 0;
+	public static final double P_LOW_GEAR_RIGHT = 2.5;
 	public static final double I_LOW_GEAR_RIGHT = 0;
 	public static final double D_LOW_GEAR_RIGHT = 0;
 
@@ -179,10 +181,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 		if (EnabledSubsystems.DRIVE_ENABLED) {
 
-			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
-					RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
+			//gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
+				//	RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 
-			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
+			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
 			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				leftTalon.changeControlMode(TalonControlMode.PercentVbus);
@@ -204,17 +206,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
-			leftTalon.reverseSensor(false);
+			leftTalon.reverseSensor(true);
 			leftTalon.enable();
 
 			leftEncoder = new TalonEncoder(leftTalon);
 
-			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
+			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 
-			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
+			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
 			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				rightTalon.changeControlMode(TalonControlMode.PercentVbus);
@@ -242,7 +244,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 			rightEncoder = new TalonEncoder(rightTalon);
 
-			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
+			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
@@ -275,6 +277,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 */
 	public void arcadeDrive(double move, double turn) {
+		System.out.println("Move: " + move + " turn: " + turn);
 		move = NRMath.limit(move);
 		turn = NRMath.limit(turn);
 		double leftMotorSpeed, rightMotorSpeed;
@@ -322,7 +325,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 *            the right motor speed, from -1 to 1
 	 */
 	public void setMotorSpeedInPercent(double left, double right) {
-		//System.out.println("Left speed: " + left + " right speed: " + right);
+		System.out.println("Left speed: " + left + " right speed: " + right);
 		setMotorSpeed(currentMaxSpeed().mul(left), currentMaxSpeed().mul(right));
 	}
 

@@ -4,7 +4,8 @@ import edu.nr.lib.units.Angle;
 
 public class GyroCorrection
 {
-	public static final double DEFAULT_KP_THETA = 0.05, MAX_ANGLE_CORRECTION_SPEED = 0.2;
+	public static final double DEFAULT_KP_THETA = 0.05;
+	public double MAX_ANGLE_CORRECTION_SPEED = 0.2;
 	protected boolean initialized = false;
 	
 	private Angle initialAngle;
@@ -32,6 +33,12 @@ public class GyroCorrection
 		this(Angle.ZERO);
 	}
 	
+	public GyroCorrection(Angle angle, double MAX_ANGLE_CORRECTION_SPEED) {
+		this(angle);
+		this.MAX_ANGLE_CORRECTION_SPEED = MAX_ANGLE_CORRECTION_SPEED;
+		
+	}
+
 	/**
 	 * Get the speed that the robot should turn at, capped at {@value #MAX_ANGLE_CORRECTION_SPEED}. It is based linearly off of kP_theta. 
 	 * @param kP_theta The factor the angle should be changed by.
