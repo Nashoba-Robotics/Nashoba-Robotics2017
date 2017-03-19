@@ -137,9 +137,10 @@ public class Robot extends IterativeRobot {
 	 */
 	public void tcpServerInit() {
 		ArrayList<NetworkingDataType> turret_cam_types = new ArrayList<>();
-		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle", Angle.Unit.DEGREE) {
-			public double convert(int in) { //Convert pixels to degrees
-				return (Math.asin(in/235.95426680) / 4.298829);
+		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle", Angle.Unit.RADIAN) {
+			public double convert(int in) { //Convert pixels to radians
+				return Math.acos(in/235.95426680376644)/4.298829992446103;
+
 			}
 
 		};
