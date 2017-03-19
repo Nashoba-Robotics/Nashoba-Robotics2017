@@ -71,10 +71,10 @@ public class NavX implements Periodic {
 
 	@Override
 	public void periodic() {
-    	if ((Timer.getFPGATimestamp() - last_write_timestamp) > 5.0) {
-    		orientation_history.writeToDirectory("/home/lvuser/sf2");
-            last_write_timestamp = Timer.getFPGATimestamp();
-    	}
+    	//if ((Timer.getFPGATimestamp() - last_write_timestamp) > 5.0) {
+    	//	orientation_history.writeToDirectory("/home/lvuser/sf2");
+        //  last_write_timestamp = Timer.getFPGATimestamp();
+    	//}
    	}
 
 	public void reset() {
