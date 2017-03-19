@@ -25,9 +25,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 			//Get the joystick values
 			double moveValue = OI.getInstance().getArcadeMoveValue();
 			double rotateValue = OI.getInstance().getArcadeTurnValue();
-			
-			System.out.println("Joystick move: " + moveValue + " rotate: " + rotateValue);
-			
+						
 			//Square the inputs (while preserving the sign) to increase fine control while permitting full power
 			moveValue = NRMath.squareWithSign(moveValue);
 			rotateValue = NRMath.squareWithSign(rotateValue);

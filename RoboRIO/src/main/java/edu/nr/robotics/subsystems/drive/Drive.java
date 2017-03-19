@@ -38,7 +38,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * This should not be used. Instead {@link WHEEL_DIAMETER} should be used.
 	 */
-	public static final double WHEEL_DIAMETER_INCHES = 4;
+	public static final double WHEEL_DIAMETER_INCHES = 3.5;
 
 	/**
 	 * The distance the wheel travels in a single revolution, in inches
@@ -47,7 +47,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * This should not be used. Instead {@link DISTANCE_PER_REV} should be used.
 	 */
-	public static final double DISTANCE_PER_REV_INCHES = 4 * Math.PI;
+	public static final double DISTANCE_PER_REV_INCHES = WHEEL_DIAMETER_INCHES * Math.PI;
 
 	/**
 	 * The diameter of the wheels
@@ -65,7 +65,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * The max driving speed of the robot in low gear 
 	 */
 	//public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6.5, Distance.Unit.FOOT, Time.Unit.SECOND);
-	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(13.33, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(11.5, Distance.Unit.FOOT, Time.Unit.SECOND);
 	
 	/**
 	 * The max driving speed of the robot in high gear 
@@ -113,7 +113,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	// TODO: Drive: Find low gear FPID values
 	public static final double F_LOW_GEAR_LEFT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_LEFT = 2.5;
+	public static final double P_LOW_GEAR_LEFT = 0;
 	public static final double I_LOW_GEAR_LEFT = 0;
 	public static final double D_LOW_GEAR_LEFT = 0;
 
@@ -125,7 +125,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	
 	// TODO: Drive: Find low gear FPID values
 	public static final double F_LOW_GEAR_RIGHT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_RIGHT = 2.5;
+	public static final double P_LOW_GEAR_RIGHT = 0;
 	public static final double I_LOW_GEAR_RIGHT = 0;
 	public static final double D_LOW_GEAR_RIGHT = 0;
 
@@ -238,7 +238,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
-			rightTalon.reverseSensor(true);
+			rightTalon.reverseSensor(false);
 			rightTalon.setInverted(true);
 			rightTalon.enable();
 
@@ -277,7 +277,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 */
 	public void arcadeDrive(double move, double turn) {
-		System.out.println("Move: " + move + " turn: " + turn);
 		move = NRMath.limit(move);
 		turn = NRMath.limit(turn);
 		double leftMotorSpeed, rightMotorSpeed;
@@ -325,7 +324,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 *            the right motor speed, from -1 to 1
 	 */
 	public void setMotorSpeedInPercent(double left, double right) {
-		System.out.println("Left speed: " + left + " right speed: " + right);
 		setMotorSpeed(currentMaxSpeed().mul(left), currentMaxSpeed().mul(right));
 	}
 

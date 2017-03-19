@@ -275,6 +275,9 @@ public class Robot extends IterativeRobot {
 		if(robotCompressor != null) {
 			SmartDashboard.putBoolean("Compressor", Robot.robotCompressor.getClosedLoopControl());
 		}
+		
+		SmartDashboard.putNumber("Sine of time", Math.sin(edu.wpi.first.wpilibj.Timer.getFPGATimestamp()));
+		
 		SmartDashboard.putData(RobotDiagram.getInstance());
 	}
 }

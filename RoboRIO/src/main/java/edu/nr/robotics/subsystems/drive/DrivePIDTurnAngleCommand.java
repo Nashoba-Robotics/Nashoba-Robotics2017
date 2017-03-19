@@ -39,7 +39,7 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 	public void onExecute() {
 		double turn = gyro.getTurnValue(P);
 		System.out.println(turn);
-		Drive.getInstance().arcadeDrive(0.1, turn);
+		Drive.getInstance().arcadeDrive(0, turn);
 	}
 	
 	@Override
