@@ -2,10 +2,6 @@ package edu.nr.robotics;
 
 public class GearDistanceCalibration {
 
-	public static void main(String [] args) {
-		System.out.println(get(243));
-	}
-	
 	static final int[][] savedData = {{24,184}, {26,190}, {28,196}, {30,200}, {32,204}, {34,208}, {36,212}, {38,215}, {40,218}, {42,220}, {44,223}, {46,224}, {49,226}, {52,228}, {54,230}, {56,232}, {58,234}, {60,236}, {62,238}, {64,239}, {66,240}, {70,241}, {76,242}, {81,243}, {84,244}, {87,245}, {90,246}, {92,247}, {95,248}}; 
 	
 	public static double get(int num_px) {
