@@ -38,7 +38,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * This should not be used. Instead {@link WHEEL_DIAMETER} should be used.
 	 */
-	public static final double WHEEL_DIAMETER_INCHES = 4;
+	public static final double WHEEL_DIAMETER_INCHES = 3.5;
 
 	/**
 	 * The distance the wheel travels in a single revolution, in inches
@@ -47,7 +47,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * This should not be used. Instead {@link DISTANCE_PER_REV} should be used.
 	 */
-	public static final double DISTANCE_PER_REV_INCHES = 4 * Math.PI;
+	public static final double DISTANCE_PER_REV_INCHES = WHEEL_DIAMETER_INCHES * Math.PI;
 
 	/**
 	 * The diameter of the wheels
@@ -64,7 +64,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The max driving speed of the robot in low gear 
 	 */
-	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6.5, Distance.Unit.FOOT, Time.Unit.SECOND);
+	//public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6.5, Distance.Unit.FOOT, Time.Unit.SECOND);
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(11.5, Distance.Unit.FOOT, Time.Unit.SECOND);
 	
 	/**
 	 * The max driving speed of the robot in high gear 
@@ -90,7 +91,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The number of encoder ticks per wheel revolution
 	 */
-	public static final int TICKS_PER_REV = 2048; 
+	//public static final int TICKS_PER_REV = 2048; 
+	public static final int TICKS_PER_REV = 256;
 	
 	/**
 	 * The number of CANTalon "Native Units" per revolution
@@ -179,10 +181,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 		if (EnabledSubsystems.DRIVE_ENABLED) {
 
-			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
-					RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
+			//gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
+				//	RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 
-			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
+			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
 			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				leftTalon.changeControlMode(TalonControlMode.PercentVbus);
@@ -204,17 +206,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
-			leftTalon.reverseSensor(false);
+			leftTalon.reverseSensor(true);
 			leftTalon.enable();
 
 			leftEncoder = new TalonEncoder(leftTalon);
 
-			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
+			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 
-			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
+			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
 			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				rightTalon.changeControlMode(TalonControlMode.PercentVbus);
@@ -236,13 +238,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
-			rightTalon.reverseSensor(true);
+			rightTalon.reverseSensor(false);
 			rightTalon.setInverted(true);
 			rightTalon.enable();
 
 			rightEncoder = new TalonEncoder(rightTalon);
 
-			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
+			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
@@ -322,7 +324,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 *            the right motor speed, from -1 to 1
 	 */
 	public void setMotorSpeedInPercent(double left, double right) {
-		//System.out.println("Left speed: " + left + " right speed: " + right);
 		setMotorSpeed(currentMaxSpeed().mul(left), currentMaxSpeed().mul(right));
 	}
 

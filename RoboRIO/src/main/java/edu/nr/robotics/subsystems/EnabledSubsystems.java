@@ -1,10 +1,10 @@
 package edu.nr.robotics.subsystems;
 
 public class EnabledSubsystems {
-	public static final boolean DRIVE_ENABLED 		= false,
+	public static final boolean DRIVE_ENABLED 		= true,
 								SHOOTER_ENABLED 	= false,
 								HOOD_ENABLED 		= false,
-								TURRET_ENABLED 		= true,
+								TURRET_ENABLED 		= false,
 								INTAKE_ENABLED 		= false,
 								INTAKE_ARM_ENABLED 	= false,
 								INTAKE_SLIDE_ENABLED= false,
@@ -20,19 +20,19 @@ public class EnabledSubsystems {
 								TURRET_DUMB_ENABLED 	= false;
 	
 	
-	public static final boolean AGITATOR_SMARTDASHBOARD_BASIC_ENABLED 	= true,
+	public static final boolean AGITATOR_SMARTDASHBOARD_BASIC_ENABLED 	= false,
 								DRIVE_SMARTDASHBOARD_BASIC_ENABLED 		= true,
-								HOOD_SMARTDASHBOARD_BASIC_ENABLED 		= true,
-								GEAR_MOVER_SMARTDASHBOARD_BASIC_ENABLED = true,
-								INTAKE_SMARTDASHBOARD_BASIC_ENABLED 	= true,
-								INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED 	= true,
-								INTAKESLIDE_SMARTDASHBOARD_BASIC_ENABLED= true,
-								LOADER_SMARTDASHBOARD_BASIC_ENABLED 	= true,
-								SHOOTER_SMARTDASHBOARD_BASIC_ENABLED 	= true,
-								TURRET_SMARTDASHBOARD_BASIC_ENABLED 	= true;
+								HOOD_SMARTDASHBOARD_BASIC_ENABLED 		= false,
+								GEAR_MOVER_SMARTDASHBOARD_BASIC_ENABLED = false,
+								INTAKE_SMARTDASHBOARD_BASIC_ENABLED 	= false,
+								INTAKEARM_SMARTDASHBOARD_BASIC_ENABLED 	= false,
+								INTAKESLIDE_SMARTDASHBOARD_BASIC_ENABLED= false,
+								LOADER_SMARTDASHBOARD_BASIC_ENABLED 	= false,
+								SHOOTER_SMARTDASHBOARD_BASIC_ENABLED 	= false,
+								TURRET_SMARTDASHBOARD_BASIC_ENABLED 	= false;
 
 	public static final boolean AGITATOR_SMARTDASHBOARD_COMPLEX_ENABLED		= false,
-								DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
+								DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED 		= true,
 								HOOD_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								GEAR_MOVER_SMARTDASHBOARD_COMPLEX_ENABLED 	= false,
 								INTAKE_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
@@ -40,5 +40,5 @@ public class EnabledSubsystems {
 								INTAKESLIDE_SMARTDASHBOARD_COMPLEX_ENABLED 	= false,
 								LOADER_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
 								SHOOTER_SMARTDASHBOARD_COMPLEX_ENABLED 		= false,
-								TURRET_SMARTDASHBOARD_COMPLEX_ENABLED 		= true;
+								TURRET_SMARTDASHBOARD_COMPLEX_ENABLED 		= false;
 }

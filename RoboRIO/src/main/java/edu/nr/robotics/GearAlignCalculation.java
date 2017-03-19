@@ -46,9 +46,13 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 		// TODO: Figure out how to get angle of target
 		Angle lastSeenTargetAngle = Angle.ZERO;
 		
+		/*
 		Angle theta4 = lastSeenTargetAngle.add(lastSeenAngle);
 		Distance distanceToPeg = NRMath.lawOfCos(lastSeenDistance, FieldMap.PEG_LENGTH, theta4);
 		Angle angleToPeg = NRMath.asin(FieldMap.PEG_LENGTH.mul(theta4.sin()).div(distanceToPeg)).add(lastSeenAngle);
+		*/
+		Angle angleToPeg = lastSeenAngle;
+		Distance distanceToPeg = lastSeenDistance;
 		
 		Distance r = NRMath.hypot(RobotMap.GEAR_TO_CENTER_DIST_X, RobotMap.GEAR_TO_CENTER_DIST_Y);
 		Angle theta0 = Units.RIGHT_ANGLE.add(NRMath.atan2(RobotMap.GEAR_TO_CENTER_DIST_Y, RobotMap.GEAR_TO_CENTER_DIST_X));
@@ -66,6 +70,9 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 		} else {
 			turnAngle = theta3.sub(theta2);
 		}
+		
+		driveDistance = d.sub(RobotMap.GEAR_TO_CENTER_DIST_Y).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP);
+		
 		System.out.println("Dist: " + lastSeenDistance.get(Distance.Unit.INCH) + " angle: " + lastSeenAngle.get(Angle.Unit.DEGREE));
 		System.out.println("turn angle: " + turnAngle.get(Angle.Unit.DEGREE));
 	}

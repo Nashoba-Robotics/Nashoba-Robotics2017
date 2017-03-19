@@ -20,6 +20,8 @@ import edu.nr.robotics.subsystems.drive.DriveForwardForeverBasicCommand;
 import edu.nr.robotics.subsystems.drive.DriveHighGearCommand;
 import edu.nr.robotics.subsystems.drive.DriveJoystickCommand;
 import edu.nr.robotics.subsystems.drive.DriveLowGearCommand;
+import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleCommand;
+import edu.nr.robotics.subsystems.drive.DriveTurnConstantSpeedCommand;
 import edu.nr.robotics.subsystems.gearMover.GearDeployCommand;
 import edu.nr.robotics.subsystems.gearMover.GearFlapInCommand;
 import edu.nr.robotics.subsystems.gearMover.GearFlapOutCommand;
@@ -51,7 +53,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI implements SmartDashboardSource {
 
-	private static final double JOYSTICK_DEAD_ZONE = 0.4;
+	private static final double JOYSTICK_DEAD_ZONE = 0.1;
 
 	
 	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = 12;
@@ -165,7 +167,6 @@ public class OI implements SmartDashboardSource {
 		new JoystickButton(driveRight, DRIVE_HIGH_GEAR_BUTTON).whenPressed(new DriveHighGearCommand());
 
 		new JoystickButton(driveRight, 2).whenPressed(new ClimbCommand());
-
 	}
 	
 	public void initOperatorLeft() {
@@ -231,6 +232,9 @@ public class OI implements SmartDashboardSource {
 			}
 		});
 
+		//new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenPressed(new DrivePIDTurnAngleCommand(new Angle(-5, Angle.Unit.DEGREE)));
+		new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenPressed(new DriveTurnConstantSpeedCommand(0.3));
+		//new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Drive.getInstance()));
 		
 		agitatorSwitch = new JoystickButton(operatorLeft, AGITATOR_SWITCH_BUTTON_NUMBER);
 		intakeSwitch = new JoystickButton(operatorLeft, INTAKE_SWITCH_BUTTON_NUMBER);
@@ -370,7 +374,7 @@ public class OI implements SmartDashboardSource {
 
 	@Override
 	public void smartDashboardInfo() {
-		driveSpeedMultiplier = SmartDashboard.getNumber("Speed Multiplier", 0);
+		//driveSpeedMultiplier = SmartDashboard.getNumber("Speed Multiplier", 1);
 	}
 
 	public boolean isTankNonZero() {
