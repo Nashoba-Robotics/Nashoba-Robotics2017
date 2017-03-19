@@ -139,14 +139,15 @@ public class Robot extends IterativeRobot {
 		ArrayList<NetworkingDataType> turret_cam_types = new ArrayList<>();
 		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle", Angle.Unit.DEGREE) {
 			public double convert(int in) { //Convert pixels to degrees
-				return 0.0647 * in + 0.0863;
+				return (Math.asin(in/235.95426680) / 4.298829);
 			}
 
 		};
 		NetworkingDataType turretDistance = new NetworkingDataType('d', "distance", Distance.Unit.INCH) {
 			public double convert(int in) { //Convert pixels to inches
 				//return 1.419 * Math.pow(10, -9) * Math.pow(in, 4) - 9.542 * Math.pow(10, -7) * Math.pow(in, 3) + 3.661 * Math.pow(10, -4) * Math.pow(in, 2) + 0.08515 * in + 61.52;
-				return 40.8 + Math.pow(248.4, 0.00404 * in);
+				//return 40.8 + Math.pow(248.4, 0.00404 * in);
+				return -80.79309 * (Math.log((double) in) / Math.log(Math.E)) + 567.68835; 
 			}
 
 		};
