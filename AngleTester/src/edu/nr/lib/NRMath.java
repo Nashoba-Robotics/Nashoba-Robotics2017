@@ -1,6 +1,7 @@
 package edu.nr.lib;
 
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Speed;
 import edu.nr.lib.units.Time;
@@ -28,7 +29,7 @@ public class NRMath {
 	 * @return the value a^b * the sign of a
 	 */
 	public static double powWithSign(double x, double exp) {
-		return Math.abs(Math.pow(x, exp)) * Math.signum(x);
+		return Math.pow(x, exp) * Math.signum(x);
 	}
 
 	/**

@@ -112,10 +112,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private Speed rightMotorSetpoint = Speed.ZERO;
 
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR_LEFT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_LEFT = 0;
+	public static final double F_LOW_GEAR_LEFT = 0.9;//1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_LOW_GEAR_LEFT = 2.5;
 	public static final double I_LOW_GEAR_LEFT = 0;
-	public static final double D_LOW_GEAR_LEFT = 0;
+	public static final double D_LOW_GEAR_LEFT = 25;
 
 	// TODO: Drive: Find high gear FPID values
 	public static final double F_HIGH_GEAR_LEFT = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
@@ -124,10 +124,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public static final double D_HIGH_GEAR_LEFT = 0;
 	
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR_RIGHT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_RIGHT = 0;
+	public static final double F_LOW_GEAR_RIGHT = 0.97;//1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_LOW_GEAR_RIGHT = 2.5;
 	public static final double I_LOW_GEAR_RIGHT = 0;
-	public static final double D_LOW_GEAR_RIGHT = 0;
+	public static final double D_LOW_GEAR_RIGHT = 25;
 
 	// TODO: Drive: Find high gear FPID values
 	public static final double F_HIGH_GEAR_RIGHT = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
@@ -239,7 +239,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
 			rightTalon.reverseSensor(false);
-			rightTalon.setInverted(true);
 			rightTalon.enable();
 
 			rightEncoder = new TalonEncoder(rightTalon);
@@ -339,7 +338,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public void setMotorSpeed(Speed left, Speed right) {
 		if (leftTalon != null && rightTalon != null) {
 			leftMotorSetpoint = left;
-			rightMotorSetpoint = right;
+			rightMotorSetpoint = right.negate();
 
 			if (leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
 				leftTalon.set(leftMotorSetpoint.div(currentMaxSpeed()));
@@ -642,7 +641,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetLeft() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getLeftSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE);
+			return getInstance().getLeftSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 		} else {
 			return getInstance().getLeftPosition().get(Distance.Unit.DRIVE_ROTATION);
 		}
@@ -651,9 +650,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetRight() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE);
+			return -getInstance().getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 		} else {
-			return getInstance().getRightPosition().get(Distance.Unit.DRIVE_ROTATION);
+			return -getInstance().getRightPosition().get(Distance.Unit.DRIVE_ROTATION);
 		}
 	}
 
@@ -661,8 +660,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	@Override
 	public void pidWrite(double outputLeft, double outputRight) {
-		setMotorSpeed(new Speed(outputLeft, Distance.Unit.METER, Time.Unit.SECOND),
-				new Speed(outputRight, Distance.Unit.METER, Time.Unit.SECOND));
+		setMotorSpeed(currentMaxSpeed().mul(outputLeft),currentMaxSpeed().mul(outputRight));
 	}
 
 	// END OF PID
