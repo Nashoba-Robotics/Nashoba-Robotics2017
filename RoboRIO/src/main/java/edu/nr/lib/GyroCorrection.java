@@ -92,9 +92,7 @@ public class GyroCorrection
 	 */
 	public void reset()
 	{
-		System.out.println("Resetting navx... Current initial angle: " + initialAngle);
 		initialAngle = navx.getYaw();
-		System.out.println("Final initial angle: " + initialAngle);
 	}		
 	/**
 	 * Causes the initial angle value to be reset the next time getTurnValue() is called. Use this in the end() and interrupted()

@@ -18,7 +18,7 @@ public class FieldMap {
 	/**
 	 * The distance we want to drive into the peg once we have reached it
 	 */
-	public static final Distance DRIVE_DEPTH_ON_PEG_FROM_SHIP = new Distance(0, Distance.Unit.INCH);
+	public static final Distance DRIVE_DEPTH_ON_PEG_FROM_SHIP = new Distance(2, Distance.Unit.INCH);
 	
 	/**
 	 * The dimensions to the pegs in auto that would be used in inches or degrees
@@ -49,7 +49,7 @@ public class FieldMap {
 	/**
 	 * The amount of time to wait without a picture before sweeping
 	 */
-	public static final Time MIN_TRACKING_WAIT_TIME = new Time(0.5, Time.Unit.SECOND);
+	public static final Time MIN_TRACKING_WAIT_TIME = new Time(0.2, Time.Unit.SECOND);
 	
 	/**
 	 * Distance away from hopper to stop before ramming into it
@@ -59,5 +59,5 @@ public class FieldMap {
 	/**
 	 * Distance away from peg (stop point) to stop before ramming into it
 	 */
-	public final static Distance GEAR_ALIGN_STOP_DISTANCE_FROM_PEG = new Distance(1, Distance.Unit.METER);
+	public final static Distance GEAR_ALIGN_STOP_DISTANCE_FROM_PEG = new Distance(3, Distance.Unit.FOOT);
 }

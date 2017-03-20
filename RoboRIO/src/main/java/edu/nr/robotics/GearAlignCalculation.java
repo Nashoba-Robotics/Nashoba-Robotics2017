@@ -8,6 +8,7 @@ import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Distance.Unit;
 import edu.nr.lib.units.Time;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GearAlignCalculation implements NetworkingDataTypeListener {
 	
@@ -35,7 +36,7 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 	
 	@Override
 	public void updateDataType(TCPServer.NetworkingDataType type, double value) {
-		System.out.println("Val: " + value + " type: " + type);
+		//System.out.println("Val: " + value + " type: " + type);
 		if(type.identifier == 'a') {
 			lastSeenAngle = new Angle(value, (Angle.Unit) type.unit);
 		} else if(type.identifier == 'd') {
@@ -71,10 +72,8 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 			turnAngle = theta3.sub(theta2);
 		}
 		
-		driveDistance = d.sub(RobotMap.GEAR_TO_CENTER_DIST_Y).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP);
-		
-		System.out.println("Dist: " + lastSeenDistance.get(Distance.Unit.INCH) + " angle: " + lastSeenAngle.get(Angle.Unit.DEGREE));
-		System.out.println("turn angle: " + turnAngle.get(Angle.Unit.DEGREE));
+		driveDistance = d.sub(RobotMap.GEAR_TO_CENTER_DIST_Y).add(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP);
+		SmartDashboard.putNumber("Drive Distance", driveDistance.get(Distance.Unit.INCH));
 	}
 	
 	public Distance getDistToDrive() {

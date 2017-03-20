@@ -1,9 +1,11 @@
 package edu.nr.robotics.multicommands;
 
 import edu.nr.lib.commandbased.NRCommand;
+import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Distance;
 import edu.nr.robotics.GearAlignCalculation;
-import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
-import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleCommand;
+import edu.nr.robotics.subsystems.drive.DriveForwardProfilingExtendableCommand;
+import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleExtendableCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class GearPegAlignCommand extends CommandGroup {
@@ -11,56 +13,52 @@ public class GearPegAlignCommand extends CommandGroup {
     public GearPegAlignCommand() {
     	addSequential(new NRCommand() {
     		@Override
+    		public void onExecute() {
+    			System.out.println("Waiting for seeing gear");
+    		}
+    		
+    		@Override
 			protected boolean isFinishedNR() {
     			return GearAlignCalculation.getInstance().canSeeTarget();
     		}
     	});
     	
     	addSequential(new NRCommand() {
-    		DrivePIDTurnAngleCommand turnCommand;
-    		
     		@Override
     		public void onStart() {
-    			turnCommand = new DrivePIDTurnAngleCommand(GearAlignCalculation.getInstance().getAngleToTurn());
-    			turnCommand.start();
-    		}
-    		
-    		@Override
-    		public boolean isFinishedNR() {
-    			if(turnCommand == null) {
-    				return false;
-    			}
-    			return turnCommand.isFinishedNR();
-    		}
-    		
-    		@Override
-    		public void onEnd() {
-    			turnCommand.cancel();
+    			System.out.println("About to turn");
     		}
     	});
     	
+    	addSequential(new DrivePIDTurnAngleExtendableCommand() {
 
+			@Override
+			public Angle getAngleToTurn() {
+				return GearAlignCalculation.getInstance().getAngleToTurn();
+			}
+    		
+    	});
     	
     	addSequential(new NRCommand() {
-    		DriveForwardProfilingCommand driveCommand;
-    		
     		@Override
     		public void onStart() {
-    			driveCommand = new DriveForwardProfilingCommand(GearAlignCalculation.getInstance().getDistToDrive().negate());
-    			driveCommand.start();
+    			System.out.println("Finished turning");
     		}
+    	});
+    	
+    	addSequential(new DriveForwardProfilingExtendableCommand() {
+
+			@Override
+			public Distance distanceToGo() {
+				return GearAlignCalculation.getInstance().getDistToDrive().negate();
+			}
     		
+    	});
+    	
+    	addSequential(new NRCommand() {
     		@Override
-    		public boolean isFinishedNR() {
-    			if(driveCommand == null) {
-    				return false;
-    			}
-    			return driveCommand.isFinishedNR();
-    		}
-    		
-    		@Override
-    		public void onEnd() {
-    			driveCommand.cancel();
+    		public void onStart() {
+    			System.out.println("Finished driving");
     		}
     	});
     }
