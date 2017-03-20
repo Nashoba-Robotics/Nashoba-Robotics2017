@@ -20,9 +20,9 @@ import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.auton.DriveOverBaselineAutoCommand;
 import edu.nr.robotics.auton.DriveToHopperAutoCommand;
+import edu.nr.robotics.auton.DriveToLeftSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
-import edu.nr.robotics.auton.DriveToNonShooterSideGearAutoCommand;
-import edu.nr.robotics.auton.DriveToShooterSideGearAutoCommand;
+import edu.nr.robotics.auton.DriveToRightSideGearAutoCommand;
 import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.ShootThenBaselineAuto;
 import edu.nr.robotics.auton.SideOfField;
@@ -30,7 +30,9 @@ import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.nr.robotics.subsystems.agitator.Agitator;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
+import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
 import edu.nr.robotics.subsystems.drive.DriveStationaryPIDCommand;
+import edu.nr.robotics.subsystems.drive.DriveTurnConstantSmartDashboardSpeedCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.loader.Loader;
 import edu.nr.robotics.subsystems.shooter.Shooter;
@@ -108,9 +110,9 @@ public class Robot extends IterativeRobot {
 		}
 		autoSpotChooser.addDefault("Do Nothing", new DoNothingCommand());
 		autoSpotChooser.addObject("Baseline", new DriveOverBaselineAutoCommand());
-		autoSpotChooser.addObject("Non Shooter Gear", new DriveToNonShooterSideGearAutoCommand());
+		autoSpotChooser.addObject("Left Gear", new DriveToLeftSideGearAutoCommand());
 		autoSpotChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
-		autoSpotChooser.addObject("Shooter Gear", new DriveToShooterSideGearAutoCommand());
+		autoSpotChooser.addObject("Right Gear", new DriveToRightSideGearAutoCommand());
 		autoSpotChooser.addObject("Hopper", new DriveToHopperAutoCommand());
 		autoSpotChooser.addObject("Gear and Hopper", new GearHopperAutoCommand());
 		autoSpotChooser.addObject("Shoot then Baseline", new ShootThenBaselineAuto());
@@ -130,6 +132,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData(new CSVSaverDisable());
 		
 		SmartDashboard.putData(new DriveStationaryPIDCommand(1, GyroCorrection.DEFAULT_KP_THETA));
+		
+		SmartDashboard.putData(new DriveTurnConstantSmartDashboardSpeedCommand());
+	
+		SmartDashboard.putData(new DriveForwardProfilingCommand(Distance.ZERO));
 	}
 	
 	/**
@@ -167,7 +173,7 @@ public class Robot extends IterativeRobot {
 		};
 		NetworkingDataType gearDistance = new NetworkingDataType('d', "distance", Distance.Unit.INCH) {
 			public double convert(int in) { //Convert pixels to inches
-				return 5764.4699518042*Math.pow(in, -1.1867971592);
+				return GearDistanceCalibration.get(in);
 			}
 
 		};

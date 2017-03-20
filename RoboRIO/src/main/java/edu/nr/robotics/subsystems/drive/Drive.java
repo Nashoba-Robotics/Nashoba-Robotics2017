@@ -642,7 +642,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetLeft() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getLeftSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE);
+			return getInstance().getLeftSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 		} else {
 			return getInstance().getLeftPosition().get(Distance.Unit.DRIVE_ROTATION);
 		}
@@ -651,7 +651,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetRight() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE);
+			return getInstance().getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 		} else {
 			return getInstance().getRightPosition().get(Distance.Unit.DRIVE_ROTATION);
 		}
@@ -661,8 +661,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	@Override
 	public void pidWrite(double outputLeft, double outputRight) {
-		setMotorSpeed(new Speed(outputLeft, Distance.Unit.METER, Time.Unit.SECOND),
-				new Speed(outputRight, Distance.Unit.METER, Time.Unit.SECOND));
+		setMotorSpeed(currentMaxSpeed().mul(outputLeft),currentMaxSpeed().mul(outputRight));
 	}
 
 	// END OF PID

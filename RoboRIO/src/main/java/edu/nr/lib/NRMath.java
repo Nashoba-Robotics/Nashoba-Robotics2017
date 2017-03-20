@@ -28,7 +28,7 @@ public class NRMath {
 	 * @return the value a^b * the sign of a
 	 */
 	public static double powWithSign(double x, double exp) {
-		return Math.pow(x, exp) * Math.signum(x);
+		return Math.abs(Math.pow(x, exp)) * Math.signum(x);
 	}
 
 	/**

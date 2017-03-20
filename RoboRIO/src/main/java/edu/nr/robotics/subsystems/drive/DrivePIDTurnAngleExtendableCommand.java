@@ -7,7 +7,7 @@ import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Angle.Unit;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DrivePIDTurnAngleCommand extends NRCommand {
+public abstract class DrivePIDTurnAngleExtendableCommand extends NRCommand {
 
 	GyroCorrection gyro;
 	
@@ -18,49 +18,28 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 	 */
 	public static final Angle PID_TURN_ANGLE_THRESHOLD = new Angle(0.3, Angle.Unit.DEGREE);
 
-	// TODO: PIDTurnCommand: Get p value
-	public static double P = 0.1;
+	public static double P = 0.01;
 
-	boolean setAngle;
+	
+	
+	Angle angle;
+	
+	public abstract Angle getAngleToTurn();
 	
 	/**
 	 * 
 	 * @param angle
 	 *            in degrees
 	 */
-	public DrivePIDTurnAngleCommand() {
+	public DrivePIDTurnAngleExtendableCommand() {
 		super(Drive.getInstance());
-		
-		this.setAngle = false;
-	}
-	
-	/**
-	 * 
-	 * @param angle
-	 *            in degrees
-	 */
-	public DrivePIDTurnAngleCommand(Angle angle) {
-		super(Drive.getInstance());
-		
-		this.setAngle = true;
-		
-		gyro = new GyroCorrection(angle,0.3);
-
 	}
 	
 	@Override
 	public void onStart() {
-		if(!setAngle) {
-			SmartDashboard.putNumber("Turn angle", SmartDashboard.getNumber("Turn angle", 0));
-			Angle angle = new Angle(SmartDashboard.getNumber("Turn angle", 0), Angle.Unit.DEGREE);
-	
-			gyro = new GyroCorrection(angle,0.3);
-			gyro.reset();
-		} else {
-			gyro.reset();
-		}
-		SmartDashboard.putNumber("P Value", SmartDashboard.getNumber("P Value", 0));
-		P = SmartDashboard.getNumber("P Value", 0);
+		angle = getAngleToTurn();
+		gyro = new GyroCorrection(angle,0.3);
+		gyro.reset();
 	}
 
 	@Override
@@ -80,6 +59,6 @@ public class DrivePIDTurnAngleCommand extends NRCommand {
 
 	@Override
 	public boolean isFinishedNR() {
-		return gyro.getAngleError().abs().lessThan(DrivePIDTurnAngleCommand.PID_TURN_ANGLE_THRESHOLD);
+		return gyro.getAngleError().abs().lessThan(DrivePIDTurnAngleExtendableCommand.PID_TURN_ANGLE_THRESHOLD);
 	}
 }

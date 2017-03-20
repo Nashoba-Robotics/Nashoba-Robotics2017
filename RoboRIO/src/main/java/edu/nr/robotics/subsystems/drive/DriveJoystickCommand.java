@@ -27,8 +27,8 @@ public class DriveJoystickCommand extends JoystickCommand {
 			double rotateValue = OI.getInstance().getArcadeTurnValue();
 						
 			//Square the inputs (while preserving the sign) to increase fine control while permitting full power
-			moveValue = NRMath.squareWithSign(moveValue);
-			rotateValue = NRMath.squareWithSign(rotateValue);
+			moveValue = NRMath.powWithSign(moveValue,3);
+			rotateValue = NRMath.powWithSign(rotateValue,3);
 			
 			//Make the gyro guide us when we're going straight, 
 			//otherwise reset the gyroscrope and use the joystick turn value

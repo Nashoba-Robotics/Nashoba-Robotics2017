@@ -42,7 +42,6 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 		this.period = period;
 		this.trajectory = new OneDimensionalTrajectorySimple(0,1,1,1);
 		timer = new Timer();
-		timer.schedule(this, 0, this.period);
 		this.source.setPIDSourceType(PIDSourceType.kDisplacement);
 		this.ka = ka;
 		this.kp = kp;
@@ -53,6 +52,7 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 		this.initialPositionRight = source.pidGetRight();
 		this.gyroCorrection = new GyroCorrection();
 		reset();
+		timer.schedule(this, 0, this.period);
 	}
 	
 	public OneDimensionalMotionProfilerTwoMotor(DoublePIDOutput out, DoublePIDSource source, double kv, double ka, double kp, double kd, double kp_theta) {
@@ -73,8 +73,8 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 			double positionGoal = trajectory.getGoalPosition(currentTimeSinceStart);
 			double accelGoal = trajectory.getGoalAccel(currentTimeSinceStart);
 			
-			//double headingAdjustment = gyroCorrection.getTurnValue(kp_theta);
-			double headingAdjustment = 0;
+			double headingAdjustment = gyroCorrection.getTurnValue(kp_theta);
+			//double headingAdjustment = 0;
 			
 			double errorLeft = positionGoal - source.pidGetLeft() + initialPositionLeft;			
 			double errorDerivLeft = (errorLeft - errorLastLeft) / dt;
@@ -124,8 +124,8 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 			SmartDashboard.putString("Motion Profiler V Left", source.pidGetLeft() + ":" + outputLeft * trajectory.getMaxPossibleVelocity() * Math.signum(trajectory.getMaxPossibleVelocity()));
 			SmartDashboard.putString("Motion Profiler V Right", source.pidGetRight() + ":" + outputRight * trajectory.getMaxPossibleVelocity() * Math.signum(trajectory.getMaxPossibleVelocity()));
 			source.setPIDSourceType(PIDSourceType.kDisplacement);
-			SmartDashboard.putString("Motion Profiler X Left", source.pidGetLeft() + ":" + (positionGoal + initialPositionLeft));
-			SmartDashboard.putString("Motion Profiler X Right", source.pidGetRight() + ":" + (positionGoal + initialPositionRight));
+			SmartDashboard.putString("Motion Profiler X Left", source.pidGetLeft() + ":" + (positionGoal + initialPositionLeft) + ":" + errorLeft);
+			SmartDashboard.putString("Motion Profiler X Right", source.pidGetRight() + ":" + (positionGoal + initialPositionRight) + ":" + errorRight);
 		}
 		
 		prevTime = edu.wpi.first.wpilibj.Timer.getFPGATimestamp();
@@ -143,8 +143,8 @@ public class OneDimensionalMotionProfilerTwoMotor extends TimerTask implements O
 	 * Reset the profiler and start it running
 	 */
 	public void enable() {
-		enabled = true;
 		reset();
+		enabled = true;
 	}
 	
 	/**
