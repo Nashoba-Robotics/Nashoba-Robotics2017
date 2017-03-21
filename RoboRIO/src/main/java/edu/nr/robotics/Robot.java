@@ -80,6 +80,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		if(EnabledSubsystems.COMPRESSOR_ENABLED) {
 			robotCompressor = new Compressor();
+			robotCompressor.stop();
 		}
 		singleton = this;
 		Agitator.init();

@@ -11,19 +11,19 @@ import edu.nr.lib.units.Distance;
 public class RobotMap {
 	
 	//These are the talon ports
-	public static final int DRIVE_LEFT_F_TALON_PORT = 2;
-	public static final int DRIVE_LEFT_B_TALON_PORT = 1;
-	public static final int DRIVE_RIGHT_F_TALON_PORT = 4;
-	public static final int DRIVE_RIGHT_B_TALON_PORT = 3;
-	public static final int SHOOTER_A_TALON_PORT = 13;
-	public static final int SHOOTER_B_TALON_PORT = 6;
+	public static final int DRIVE_LEFT_F_TALON_PORT = 15;
+	public static final int DRIVE_LEFT_B_TALON_PORT = 14;
+	public static final int DRIVE_RIGHT_F_TALON_PORT = 12;
+	public static final int DRIVE_RIGHT_B_TALON_PORT = 13;
+	public static final int SHOOTER_A_TALON_PORT = 3;
+	public static final int SHOOTER_B_TALON_PORT = 1;
 	public static final int TURRET_TALON_PORT = 11;
 	public static final int LOADER_LOW_TALON_PORT = 5;
-	public static final int LOADER_HIGH_TALON_PORT = 0;
+	public static final int LOADER_HIGH_TALON_PORT = 4;
 	public static final int AGITATOR_TALON_PORT = 10;
 	public static final int INTAKE_LOW_TALON_PORT = 9;
-	public static final int INTAKE_HIGH_TALON_PORT = 7;
-	public static final int HOOD_TALON_PORT = 8;	
+	public static final int INTAKE_HIGH_TALON_PORT = 0;
+	public static final int HOOD_TALON_PORT = 2;	
 	
 	//Forwards are even, reverses are odd
 	public static final int INTAKE_ARM_PCM_PORT = 0; //0
@@ -65,8 +65,8 @@ public class RobotMap {
 	 */
 	public static final Distance BACK_BUMPER_TO_GEAR_DIST = new Distance(31, Distance.Unit.INCH);
 	
-	public static final Distance GEAR_TO_CENTER_DIST_Y = new Distance(15.5, Distance.Unit.INCH);
-	public static final Distance GEAR_TO_CENTER_DIST_X = new Distance(6, Distance.Unit.INCH);
+	public static final Distance GEAR_TO_CENTER_DIST_Y = new Distance(15.25, Distance.Unit.INCH);
+	public static final Distance GEAR_TO_CENTER_DIST_X = new Distance(7, Distance.Unit.INCH);
 	
 	/**
 	 * The distance parallel to drive direction that the camera is from the center of rotation of the robot.

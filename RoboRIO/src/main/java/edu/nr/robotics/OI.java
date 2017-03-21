@@ -232,8 +232,8 @@ public class OI implements SmartDashboardSource {
 			}
 		});
 
-		new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenPressed(new DrivePIDTurnAngleCommand());
-		//new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenPressed(new DriveTurnConstantSpeedCommand(0.3));
+		//new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenPressed(new DrivePIDTurnAngleCommand());
+		new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenPressed(new DriveTurnConstantSpeedCommand(0.1));
 		//new JoystickButton(operatorLeft, THREE_SIXTY_NO_SCOPE_BUTTON_NUMBER).whenReleased(new DoNothingCommand(Drive.getInstance()));
 		
 		agitatorSwitch = new JoystickButton(operatorLeft, AGITATOR_SWITCH_BUTTON_NUMBER);

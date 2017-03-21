@@ -11,7 +11,7 @@ public class EnabledSubsystems {
 								GEAR_MOVER_ENABLED 	= false,
 								LOADER_ENABLED 		= false,
 								AGITATOR_ENABLED 	= false,
-								COMPRESSOR_ENABLED 	= false;
+								COMPRESSOR_ENABLED 	= true;
 	
 	//These start the subsystem in dumb mode. Changing them later sometimes ignores this.
 	public static final boolean DRIVE_DUMB_ENABLED	 	= false,

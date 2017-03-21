@@ -20,10 +20,10 @@ public abstract class DriveForwardProfilingExtendableCommand extends NRCommand {
 	// TODO: DriveForwardProfilingCommand: Find the correct constants for one-dimensional
 	// motion profiling
 	public static double KA = 0;
-	public static double KP = 0.15;
+	public static double KP = 0.7;
 	public static double KV = 1 / Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 	public static double KD = 0;
-	public static double KP_THETA = 0.02;
+	public static double KP_THETA = 0;//0.02;
 	public static double MAX_SPEED_PERCENTAGE = 0.25;
 
 	public abstract Distance distanceToGo();
@@ -35,7 +35,6 @@ public abstract class DriveForwardProfilingExtendableCommand extends NRCommand {
 	public DriveForwardProfilingExtendableCommand(double speed) {
 		super(Drive.getInstance());
 		this.speed = speed;
-		System.out.println("KV: " + KV);
 	}
 	
 	/**
@@ -48,36 +47,38 @@ public abstract class DriveForwardProfilingExtendableCommand extends NRCommand {
 	
 	@Override
 	public void onStart() {
+		Drive.getInstance().switchToLowGear();
 		distance = distanceToGo();
-		//SmartDashboard.putNumber("KA", SmartDashboard.getNumber("KA", KA));
-		//SmartDashboard.putNumber("KP", SmartDashboard.getNumber("KP", KP));
-		//SmartDashboard.putNumber("KD", SmartDashboard.getNumber("KD", KD));
-		//SmartDashboard.putNumber("KP_THETA", SmartDashboard.getNumber("KP_THETA", KP_THETA));
-		//SmartDashboard.putNumber("Max Percentage", SmartDashboard.getNumber("Max Percentage", MAX_SPEED_PERCENTAGE));
-		//SmartDashboard.putNumber("Distance", SmartDashboard.getNumber("Distance", 0));
+		/*SmartDashboard.putNumber("KA", SmartDashboard.getNumber("KA", KA));
+		SmartDashboard.putNumber("KP", SmartDashboard.getNumber("KP", KP));
+		SmartDashboard.putNumber("KD", SmartDashboard.getNumber("KD", KD));
+		SmartDashboard.putNumber("KP_THETA", SmartDashboard.getNumber("KP_THETA", KP_THETA));
+		SmartDashboard.putNumber("Max Percentage", SmartDashboard.getNumber("Max Percentage", MAX_SPEED_PERCENTAGE));
+		SmartDashboard.putNumber("Distance", SmartDashboard.getNumber("Distance", 0));
 		
-		//KA = SmartDashboard.getNumber("KA", KA);
-		//KP = SmartDashboard.getNumber("KP", KP);
-		//KD = SmartDashboard.getNumber("KD", KD);
-		//KP_THETA = SmartDashboard.getNumber("KP_THETA", KP_THETA);
-		//MAX_SPEED_PERCENTAGE = SmartDashboard.getNumber("Max Percentage", MAX_SPEED_PERCENTAGE);
-		//this.distance = new Distance(SmartDashboard.getNumber("Distance", 0), Distance.Unit.INCH);
+		KA = SmartDashboard.getNumber("KA", KA);
+		KP = SmartDashboard.getNumber("KP", KP);
+		KD = SmartDashboard.getNumber("KD", KD);
+		KP_THETA = SmartDashboard.getNumber("KP_THETA", KP_THETA);
+		MAX_SPEED_PERCENTAGE = SmartDashboard.getNumber("Max Percentage", MAX_SPEED_PERCENTAGE);
+		this.distance = new Distance(SmartDashboard.getNumber("Distance", 0), Distance.Unit.INCH);
+		
+		KV = 1 / Drive.getInstance().currentMaxSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);*/
 		
 		startPosition = Drive.getInstance().getLeftPosition();
 		
-		Drive.getInstance().switchToLowGear();
 		profiler = new OneDimensionalMotionProfilerTwoMotor(Drive.getInstance(), Drive.getInstance(), KV, KA, KP, KD,
 				KP_THETA);
 		if (Drive.getInstance().getCurrentGear() == Gear.low) {
 			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
 					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND),
-					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_ACCELERATION.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND)));	
+					Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND) * speed,
+					Drive.MAX_ACCELERATION.mul(0.75).get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND)));	
 		} else {
 			profiler.setTrajectory(new OneDimensionalTrajectorySimple(distance.get(Distance.Unit.DRIVE_ROTATION),
 					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND),
-					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND) * MAX_SPEED_PERCENTAGE,
-					Drive.MAX_ACCELERATION.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND)));
+					Drive.MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND) * speed,
+					Drive.MAX_ACCELERATION.mul(0.75).get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND)));
 		}
 		profiler.enable();
 	}

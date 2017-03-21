@@ -38,7 +38,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * This should not be used. Instead {@link WHEEL_DIAMETER} should be used.
 	 */
-	public static final double WHEEL_DIAMETER_INCHES = 3.5;
+	public static final double WHEEL_DIAMETER_INCHES = 3.96;
 
 	/**
 	 * The distance the wheel travels in a single revolution, in inches
@@ -64,8 +64,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The max driving speed of the robot in low gear 
 	 */
-	//public static final Speed MAX_LOW_GEAR_SPEED = new Speed(6.5, Distance.Unit.FOOT, Time.Unit.SECOND);
-	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(11.5, Distance.Unit.FOOT, Time.Unit.SECOND);
+	public static final Speed MAX_LOW_GEAR_SPEED = new Speed(5.4, Distance.Unit.FOOT, Time.Unit.SECOND);
 	
 	/**
 	 * The max driving speed of the robot in high gear 
@@ -75,9 +74,11 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The max driving acceleration in feet/sec/sec
 	 * 
+	 * For low gear
+	 * 
 	 * TODO: Drive: Get max acceleration
 	 */
-	public static final Acceleration MAX_ACCELERATION = new Acceleration(31.53, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND);
+	public static final Acceleration MAX_ACCELERATION = new Acceleration(20, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND);
 
 	/**
 	 * The max drive jerk in feet/sec/sec/sec
@@ -91,8 +92,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	/**
 	 * The number of encoder ticks per wheel revolution
 	 */
-	//public static final int TICKS_PER_REV = 2048; 
-	public static final int TICKS_PER_REV = 256;
+	public static final int TICKS_PER_REV = 2048; 
 	
 	/**
 	 * The number of CANTalon "Native Units" per revolution
@@ -112,26 +112,26 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private Speed rightMotorSetpoint = Speed.ZERO;
 
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR_LEFT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_LEFT = 0;
+	public static final double F_LOW_GEAR_LEFT = 0.263;//1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_LOW_GEAR_LEFT = 0.15;
 	public static final double I_LOW_GEAR_LEFT = 0;
 	public static final double D_LOW_GEAR_LEFT = 0;
 
 	// TODO: Drive: Find high gear FPID values
-	public static final double F_HIGH_GEAR_LEFT = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_HIGH_GEAR_LEFT = 0;
+	public static final double F_HIGH_GEAR_LEFT = 0.100793;//1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_HIGH_GEAR_LEFT = 0.35;
 	public static final double I_HIGH_GEAR_LEFT = 0;
 	public static final double D_HIGH_GEAR_LEFT = 0;
 	
 	// TODO: Drive: Find low gear FPID values
-	public static final double F_LOW_GEAR_RIGHT = 1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_RIGHT = 0;
+	public static final double F_LOW_GEAR_RIGHT = 0.285;//1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_LOW_GEAR_RIGHT = 0.15;
 	public static final double I_LOW_GEAR_RIGHT = 0;
 	public static final double D_LOW_GEAR_RIGHT = 0;
 
 	// TODO: Drive: Find high gear FPID values
-	public static final double F_HIGH_GEAR_RIGHT = 1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_HIGH_GEAR_RIGHT = 0;
+	public static final double F_HIGH_GEAR_RIGHT = 0.105;//1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
+	public static final double P_HIGH_GEAR_RIGHT = 0.35;
 	public static final double I_HIGH_GEAR_RIGHT = 0;
 	public static final double D_HIGH_GEAR_RIGHT = 0;
 
@@ -158,7 +158,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		}
 	}
 
-	private Speed currentMaxSpeed() {
+	public Speed currentMaxSpeed() {
 		if (getCurrentGear() == Gear.low) {
 			return MAX_LOW_GEAR_SPEED;
 		} else {
@@ -181,10 +181,10 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 		if (EnabledSubsystems.DRIVE_ENABLED) {
 
-			//gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
-				//	RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
+			gearSwitcher = new DoubleSolenoid(RobotMap.DRIVE_GEAR_SWITCHER_PCM_PORT,
+					RobotMap.DRIVE_GEAR_SWITCHER_FORWARD_CHANNEL, RobotMap.DRIVE_GEAR_SWITCHER_REVERSE_CHANNEL);
 
-			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
+			leftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
 			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				leftTalon.changeControlMode(TalonControlMode.PercentVbus);
@@ -206,17 +206,17 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			leftTalon.configEncoderCodesPerRev(TICKS_PER_REV);
 			leftTalon.enableBrakeMode(true);
 			leftTalon.setEncPosition(0);
-			leftTalon.reverseSensor(true);
+			leftTalon.reverseSensor(false);
 			leftTalon.enable();
 
 			leftEncoder = new TalonEncoder(leftTalon);
 
-			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_F_TALON_PORT);
+			tempLeftTalon = new CANTalon(RobotMap.DRIVE_LEFT_B_TALON_PORT);
 			tempLeftTalon.changeControlMode(TalonControlMode.Follower);
 			tempLeftTalon.set(leftTalon.getDeviceID());
 			tempLeftTalon.enableBrakeMode(true);
 
-			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
+			rightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
 			
 			if (EnabledSubsystems.DRIVE_DUMB_ENABLED) {
 				rightTalon.changeControlMode(TalonControlMode.PercentVbus);
@@ -239,12 +239,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			rightTalon.enableBrakeMode(true);
 			rightTalon.setEncPosition(0);
 			rightTalon.reverseSensor(false);
-			rightTalon.setInverted(true);
+			rightTalon.setInverted(false);
 			rightTalon.enable();
 
 			rightEncoder = new TalonEncoder(rightTalon);
 
-			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_F_TALON_PORT);
+			tempRightTalon = new CANTalon(RobotMap.DRIVE_RIGHT_B_TALON_PORT);
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
@@ -339,7 +339,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public void setMotorSpeed(Speed left, Speed right) {
 		if (leftTalon != null && rightTalon != null) {
 			leftMotorSetpoint = left;
-			rightMotorSetpoint = right;
+			rightMotorSetpoint = right.negate();
 
 			if (leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
 				leftTalon.set(leftMotorSetpoint.div(currentMaxSpeed()));
@@ -651,9 +651,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public double pidGetRight() {
 		if (type == PIDSourceType.kRate) {
-			return getInstance().getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
+			return -getInstance().getRightSpeed().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 		} else {
-			return getInstance().getRightPosition().get(Distance.Unit.DRIVE_ROTATION);
+			return -getInstance().getRightPosition().get(Distance.Unit.DRIVE_ROTATION);
 		}
 	}
 
