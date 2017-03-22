@@ -63,8 +63,8 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 
 		turretAngle = Turret.getInstance().getPosition().add(deltaTurretAngle);
 		
-		System.out.println("Last Seen Angle: " + lastSeenAngle.get(Angle.Unit.DEGREE));
-		System.out.println("Delta Turret Angle: " + deltaTurretAngle.get(Angle.Unit.DEGREE));
+		//System.out.println("Last Seen Angle: " + lastSeenAngle.get(Angle.Unit.DEGREE));
+		//System.out.println("Delta Turret Angle: " + deltaTurretAngle.get(Angle.Unit.DEGREE));
 		
 		//System.out.println("Turret delta angle to set: " + turretAngle.get(Angle.Unit.DEGREE));
 		//System.out.println("Distance: " + distReal.get(Distance.Unit.INCH));

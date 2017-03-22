@@ -36,6 +36,7 @@ import edu.nr.robotics.subsystems.drive.DriveTurnConstantSmartDashboardSpeedComm
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.loader.Loader;
 import edu.nr.robotics.subsystems.shooter.Shooter;
+import edu.nr.robotics.subsystems.shooter.ShooterSmartDashboardSpeedCommand;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
@@ -137,6 +138,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData(new DriveTurnConstantSmartDashboardSpeedCommand());
 	
 		SmartDashboard.putData(new DriveForwardProfilingCommand(Distance.ZERO));
+
+		SmartDashboard.putData(new ShooterSmartDashboardSpeedCommand());
 	}
 	
 	/**
@@ -146,7 +149,7 @@ public class Robot extends IterativeRobot {
 		ArrayList<NetworkingDataType> turret_cam_types = new ArrayList<>();
 		NetworkingDataType turretAngle = new NetworkingDataType('a', "angle", Angle.Unit.RADIAN) {
 			public double convert(int in) { //Convert pixels to radians
-				return Math.acos(in/235.95426680376644)/4.298829992446103;
+				return Math.asin(in/235.95426680376644)/4.298829992446103;
 
 			}
 

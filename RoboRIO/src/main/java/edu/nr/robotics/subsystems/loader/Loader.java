@@ -91,14 +91,20 @@ public class Loader extends NRSubsystem {
 
 	@Override
 	public void smartDashboardInfo() {
-		if (lowTalon != null && highTalon != null) {
+		if (highTalon != null) {
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_BASIC_ENABLED){
-				SmartDashboard.putNumber("Loader Current", lowTalon.getOutputCurrent());
-				SmartDashboard.putNumber("Kicker Current", highTalon.getOutputCurrent());
+				SmartDashboard.putNumber("Loader Current", highTalon.getOutputCurrent());
 			}
 			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_COMPLEX_ENABLED){
-				SmartDashboard.putNumber("Loader Voltage", lowTalon.getOutputVoltage());
-				SmartDashboard.putNumber("Kicker Voltage", highTalon.getOutputVoltage());
+				SmartDashboard.putNumber("Loader Voltage", highTalon.getOutputVoltage());
+			}
+		}
+		if (lowTalon != null) {
+			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_BASIC_ENABLED){
+				SmartDashboard.putNumber("Kicker Current", lowTalon.getOutputCurrent());
+			}
+			if(EnabledSubsystems.LOADER_SMARTDASHBOARD_COMPLEX_ENABLED){
+				SmartDashboard.putNumber("Kicker Voltage", lowTalon.getOutputVoltage());
 			}
 		}
 	}

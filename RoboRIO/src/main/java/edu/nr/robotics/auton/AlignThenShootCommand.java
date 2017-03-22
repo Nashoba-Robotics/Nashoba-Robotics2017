@@ -14,6 +14,11 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AlignThenShootCommand extends CommandGroup {
 
+	// Hopper shot distance blue: 72 inches
+	// Hopper shot distance red: 85.5 inches
+	// Side gear shot distance: 159 inches
+	// Center gear shot distance: 164 inches
+	
 	public static final Angle hoodAngle = Angle.ZERO;
 	public static final AngularSpeed shooterSpeed = AngularSpeed.ZERO;
 	
