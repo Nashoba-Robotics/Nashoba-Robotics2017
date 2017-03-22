@@ -86,14 +86,15 @@ public class Arduino implements SerialPortEventListener {
 	//setLED(LED#, state)
 	//////////////////////////////////////
 	public void initialize() {
+
+		// init GUI
+		display = GUI.getInstance();
 		
 		//connect to the robot
 		Network.getInstance().connect();
 		setRobotListener();//set the event listener for the robot vars
 		//TODO: make this work with the GUI and make no connection handeling
 		
-		// init GUI
-		display = GUI.getInstance();
 		
 		CommPortIdentifier portId = null;
 		Enumeration<?> portEnum = CommPortIdentifier.getPortIdentifiers();
