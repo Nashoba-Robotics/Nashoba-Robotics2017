@@ -29,17 +29,11 @@ public class AngularSpeed {
 	}
 
 	public AngularSpeed sub(AngularSpeed angleTwo) {
-		return new AngularSpeed(
-				angle.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.sub(angleTwo.angle.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+		return this.add(angleTwo.negate());
 	}
 
 	public AngularSpeed add(AngularSpeed angleTwo) {
-		return new AngularSpeed(
-				angle.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.add(angleTwo.angle.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+		return new AngularSpeed(this.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit) + angleTwo.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit),Angle.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	public AngularSpeed mul(double x) {

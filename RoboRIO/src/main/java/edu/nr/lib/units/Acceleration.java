@@ -26,17 +26,13 @@ public class Acceleration {
 	}
 
 	public Acceleration sub(Acceleration angleTwo) {
-		return new Acceleration(
-				speed.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.sub(angleTwo.speed.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+		return this.add(angleTwo.negate());
 	}
 
 	public Acceleration add(Acceleration angleTwo) {
-		return new Acceleration(
-				speed.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.add(angleTwo.speed.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+		return new Acceleration(this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit, Time.Unit.defaultUnit)
+				+ angleTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit, Time.Unit.defaultUnit)
+				,Distance.Unit.defaultUnit, Time.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	public Acceleration mul(double x) {

@@ -26,17 +26,14 @@ public class AngularAcceleration {
 	}
 
 	public AngularAcceleration sub(AngularAcceleration angleTwo) {
-		return new AngularAcceleration(
-				speed.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.sub(angleTwo.speed.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+		return this.add(angleTwo.negate());
 	}
 
 	public AngularAcceleration add(AngularAcceleration angleTwo) {
 		return new AngularAcceleration(
-				speed.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.add(angleTwo.speed.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+				this.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit, Time.Unit.defaultUnit)
+				+ angleTwo.get(Angle.Unit.defaultUnit, Time.Unit.defaultUnit, Time.Unit.defaultUnit)
+				,Angle.Unit.defaultUnit, Time.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	public AngularAcceleration mul(double x) {

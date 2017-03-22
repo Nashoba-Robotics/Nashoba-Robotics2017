@@ -29,17 +29,11 @@ public class Speed {
 	}
 
 	public Speed sub(Speed angleTwo) {
-		return new Speed(
-				distance.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.sub(angleTwo.distance.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+		return this.add(angleTwo.negate());
 	}
 
 	public Speed add(Speed angleTwo) {
-		return new Speed(
-				distance.mul(angleTwo.time.get(Time.Unit.SECOND))
-						.add(angleTwo.distance.mul(time.get(Time.Unit.SECOND))),
-				time.mul(angleTwo.time.get(Time.Unit.SECOND)));
+		return new Speed(this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) + angleTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit),Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	public Speed mul(double x) {
