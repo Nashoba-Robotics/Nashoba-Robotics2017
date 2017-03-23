@@ -62,7 +62,7 @@ public class Shooter extends NRSubsystem {
 			talon.setI(I);
 			talon.setD(D);
 			talon.enableBrakeMode(false);
-			talon.setNominalClosedLoopVoltage(12.5);
+			//talon.setNominalClosedLoopVoltage(12.5);
 			talon.reverseSensor(false);
 			//talon.setInverted(true);
 			//talon.reverseOutput(true);
@@ -115,8 +115,12 @@ public class Shooter extends NRSubsystem {
 	 */
 	public void setMotorSpeedInRPM(AngularSpeed speed) {
 		motorSetpoint = speed;
+		if(!motorSetpoint.equals(AngularSpeed.ZERO)) {
+			defaultSpeed = motorSetpoint;
+		}
 		if (talon != null) {
 			if(OI.getInstance().isShooterOn()) {
+				talon.enable();
 				if(talon.getControlMode() == TalonControlMode.Speed) {
 					talon.set(speedToRaw((motorSetpoint)));
 				} else {
@@ -124,6 +128,7 @@ public class Shooter extends NRSubsystem {
 				}
 			} else {
 				talon.set(0);
+				talon.disable();
 			}
 		}
 	}

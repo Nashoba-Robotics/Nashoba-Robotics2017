@@ -8,11 +8,13 @@ import edu.nr.lib.units.Time;
 public class Calibration {
 
 	public static AngularSpeed getShooterSpeedFromDistance(Distance dist) {
-		return AngularSpeed.ZERO; //TODO: Calibration: Map distance to shooter speed
+		return AngularSpeed.ZERO;
+		//return new AngularSpeed(dist.get(Distance.Unit.INCH)*10, Angle.Unit.ROTATION, Time.Unit.MINUTE);//AngularSpeed.ZERO; //TODO: Calibration: Map distance to shooter speed
 	}
 
 	public static Angle getHoodAngleFromDistance(Distance dist) {
-		return Angle.ZERO; //TODO: Calibration: Map distance to hood angle
+		return Angle.ZERO;
+		//return new Angle(dist.get(Distance.Unit.FOOT), Angle.Unit.DEGREE); //TODO: Calibration: Map distance to hood angle
 	}
 
 	public static Time getTimeInAirFromDistance(Distance distance) {

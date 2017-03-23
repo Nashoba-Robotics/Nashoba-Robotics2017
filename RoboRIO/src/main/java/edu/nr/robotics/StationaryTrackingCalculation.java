@@ -69,7 +69,7 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 		//System.out.println("Turret delta angle to set: " + turretAngle.get(Angle.Unit.DEGREE));
 		//System.out.println("Distance: " + distReal.get(Distance.Unit.INCH));
 
-		hoodAngle = Hood.getInstance().getPosition().add(Calibration.getHoodAngleFromDistance(distReal));
+		hoodAngle = Calibration.getHoodAngleFromDistance(distReal);//Hood.getInstance().getPosition().add(Calibration.getHoodAngleFromDistance(distReal));
 		
 		//System.out.println("Hood delta angle to set: " + hoodAngle.get(Angle.Unit.DEGREE));
 

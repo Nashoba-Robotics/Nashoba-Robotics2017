@@ -12,11 +12,11 @@ public class ShooterStationarySpeedCorrectionCommand extends NRCommand {
 	@Override
 	public void onStart() {
 		Shooter.getInstance().setAutoAlign(true);
-		Shooter.getInstance().setMotorSpeedInRPM(StationaryTrackingCalculation.getInstance().getShooterSpeed());
 	}
 	
 	@Override
 	public void onExecute() {		
+		Shooter.getInstance().setMotorSpeedInRPM(StationaryTrackingCalculation.getInstance().getShooterSpeed());
 	}
 	
 	@Override

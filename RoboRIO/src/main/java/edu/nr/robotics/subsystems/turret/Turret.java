@@ -46,7 +46,7 @@ public class Turret extends NRSubsystem {
 	/**
 	 * The angle around the goal position that we can be at
 	 */
-	public static final Angle POSITION_THRESHOLD = new Angle(0.1, Angle.Unit.DEGREE);
+	public static final Angle POSITION_THRESHOLD = new Angle(0.3, Angle.Unit.DEGREE);
 
 	/**
 	 * The angle threshold the turret needs to be within to shoot

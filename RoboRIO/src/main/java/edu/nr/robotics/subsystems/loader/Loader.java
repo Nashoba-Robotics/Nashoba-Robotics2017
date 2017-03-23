@@ -27,8 +27,8 @@ public class Loader extends NRSubsystem {
 	 *
 	 * TODO: Loader: Get loader run speed
 	 */
-	public static final double LOW_RUN_VOLTAGE = 0.75;
-	public static final double HIGH_RUN_VOLTAGE = 0.75;
+	public static final double LOW_RUN_VOLTAGE = 1.0;
+	public static final double HIGH_RUN_VOLTAGE = 1.0;
 	
 	/**
 	 * The voltage percent for the loader to run at while going in reverse
@@ -38,11 +38,11 @@ public class Loader extends NRSubsystem {
 		
 	private Loader() { 
 		if (EnabledSubsystems.LOADER_ENABLED) { 
-			lowTalon = new CANTalon(RobotMap.LOADER_LOW_TALON_PORT);
+			/*lowTalon = new CANTalon(RobotMap.LOADER_LOW_TALON_PORT);
 			lowTalon.changeControlMode(TalonControlMode.PercentVbus);
 			lowTalon.enableBrakeMode(false);
 			lowTalon.setInverted(true);
-			lowTalon.enable();
+			lowTalon.enable();*/
 			
 			highTalon = new CANTalon(RobotMap.LOADER_HIGH_TALON_PORT);
 			highTalon.changeControlMode(TalonControlMode.PercentVbus);
