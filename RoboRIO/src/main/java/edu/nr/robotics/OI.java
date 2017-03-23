@@ -141,11 +141,20 @@ public class OI implements SmartDashboardSource {
 		operatorLeft = new Joystick(STICK_OPERATOR_LEFT);
 		operatorRight = new Joystick(STICK_OPERATOR_RIGHT);
 
-		initDriveLeft();
-		initDriveRight();
+		new JoystickButton(driveLeft, 11).whenPressed(new IntakeArmDeployCommand());
+		new JoystickButton(driveLeft, 10).whenPressed(new IntakeArmRetractCommand());
 		
-		initOperatorLeft();
-		initOperatorRight();
+		new JoystickButton(driveLeft, 6).whenPressed(new IntakeSlideDeployCommand());
+		new JoystickButton(driveLeft, 7).whenPressed(new IntakeSlideRetractCommand());
+
+		new JoystickButton(driveLeft, 9).whenPressed(new DoNothingCommand(Intake.getInstance()));
+		new JoystickButton(driveLeft, 8).whenPressed(new IntakeSpeedCommand(0));
+
+		//initDriveLeft();
+		//initDriveRight();
+		
+		//initOperatorLeft();
+		//initOperatorRight();
 		
 		SmartDashboardSource.sources.add(this);
 	}
