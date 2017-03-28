@@ -284,7 +284,7 @@ public class OI implements SmartDashboardSource {
 	}
 
 	public double getArcadeTurnValue() {
-		return snapDriveJoysticks(driveRight.getX()) * getTurnAdjust() * (driveLeft.getRawButton(DRIVE_REVERSE_BUTTON_NUMBER) ? 1 : -1);
+		return -snapDriveJoysticks(driveRight.getX()) * getTurnAdjust();
 	}
 
 	public double getTankLeftValue() {
@@ -369,7 +369,7 @@ public class OI implements SmartDashboardSource {
 	}
 
 	private double getTurnAdjust() {
-		return driveRight.getRawButton(DRIVE_TURN_SLOW_BUTTON_NUMBER) ? 0.5 : 1;
+		return driveRight.getRawButton(2) ? 0.5 : 1;
 	}
 
 	@Override
