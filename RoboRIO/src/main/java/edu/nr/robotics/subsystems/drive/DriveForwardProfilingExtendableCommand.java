@@ -20,7 +20,7 @@ public abstract class DriveForwardProfilingExtendableCommand extends NRCommand {
 	// TODO: DriveForwardProfilingCommand: Find the correct constants for one-dimensional
 	// motion profiling
 	public static double KA = 0;
-	public static double KP = 0.7;
+	public static double KP = 1.2;
 	public static double KV = 1 / Drive.MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND);
 	public static double KD = 0;
 	public static double KP_THETA = 0;//0.02;
