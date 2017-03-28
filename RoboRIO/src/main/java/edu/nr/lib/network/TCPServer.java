@@ -300,6 +300,11 @@ public class TCPServer implements Runnable {
 						char firstCharacter = (char) inFromClient.read();
 						// inFromClient.read() should really return a character, not an int...
 						// Blame Oracle
+						
+						if(firstCharacter == 65535) { //This is the error code, showing that the camera disconnected.
+							break;
+						}
+						
 						NetworkingDataType type = getType(firstCharacter);
 						if (type != null) {
 							char[] data = new char[4];
