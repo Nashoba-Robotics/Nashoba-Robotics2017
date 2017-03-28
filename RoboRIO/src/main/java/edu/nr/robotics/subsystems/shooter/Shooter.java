@@ -41,7 +41,7 @@ public class Shooter extends NRSubsystem {
 	 */
 	public static final AngularSpeed SHOOT_THRESHOLD = new AngularSpeed(50, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
-	static final double encoderDistancePerRealRotation = 3.0 /*versa planetary*/ * 36.0 /*main gear*/ / 24.0 /*small gear*/;
+	static final double encoderDistancePerRealRotation = 36.0 /*main gear*/ / 24.0 /*small gear*/;
 
 	//TODO: Shooter: Find FPID values
 	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
