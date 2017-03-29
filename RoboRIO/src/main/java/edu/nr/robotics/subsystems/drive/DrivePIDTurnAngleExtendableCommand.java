@@ -11,14 +11,14 @@ public abstract class DrivePIDTurnAngleExtendableCommand extends NRCommand {
 
 	GyroCorrection gyro;
 	
-	public static final double START_TURN_THRESHOLD = 0.1;
+	public static final double START_TURN_THRESHOLD = 0.15;
 	
 	/**
 	 * Degrees in which the robot needs to be to stop DrivePIDTurnAngleCommand
 	 */
 	public static final Angle PID_TURN_ANGLE_THRESHOLD = new Angle(0.3, Angle.Unit.DEGREE);
 
-	public static double P = 0.01;
+	public static double P = 0.02;
 
 	
 	

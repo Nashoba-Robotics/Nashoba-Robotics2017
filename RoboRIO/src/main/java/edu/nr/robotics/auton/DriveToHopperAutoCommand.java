@@ -1,6 +1,7 @@
 package edu.nr.robotics.auton;
 
 import edu.nr.lib.commandbased.DoNothingCommand;
+import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.FieldMap;
 import edu.nr.robotics.Robot;
@@ -8,7 +9,7 @@ import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveConstantSpeedCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardPIDCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
-import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleCommand;
+import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleExtendableCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
@@ -48,11 +49,21 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 				addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)), FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER), FieldMap.ANGLE_WALL_TO_HOPPER, true));
 			} else if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.OneDProfilingAndPID) {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
-				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER.negate()));
+				addSequential(new DrivePIDTurnAngleExtendableCommand() {
+					@Override
+					public Angle getAngleToTurn() {
+						return FieldMap.ANGLE_WALL_TO_HOPPER.negate();
+					}
+				});
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			} else {
 				addSequential(new DriveForwardPIDCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
-				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER.negate()));
+				addSequential(new DrivePIDTurnAngleExtendableCommand() {
+					@Override
+					public Angle getAngleToTurn() {
+						return FieldMap.ANGLE_WALL_TO_HOPPER.negate();
+					}
+				});
 				addSequential(new DriveForwardPIDCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			}
 		} else {
@@ -60,12 +71,21 @@ public class DriveToHopperAutoCommand extends CommandGroup {
 				addSequential(new MotionProfileWallToHopperCommand(FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)), (FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate(), FieldMap.ANGLE_WALL_TO_HOPPER.negate(), true));
 			} else if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.OneDProfilingAndPID) {
 				addSequential(new DriveForwardProfilingCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
-				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER));
+				addSequential(new DrivePIDTurnAngleExtendableCommand() {
+					@Override
+					public Angle getAngleToTurn() {
+						return FieldMap.ANGLE_WALL_TO_HOPPER;
+					}
+				});
 				addSequential(new DriveForwardProfilingCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			} else {
 				addSequential(new DriveForwardPIDCommand((FieldMap.FORWARD_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5))).negate()));
-				addSequential(new DrivePIDTurnAngleCommand(FieldMap.ANGLE_WALL_TO_HOPPER));
-				addSequential(new DriveForwardPIDCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
+				addSequential(new DrivePIDTurnAngleExtendableCommand() {
+					@Override
+					public Angle getAngleToTurn() {
+						return FieldMap.ANGLE_WALL_TO_HOPPER;
+					}
+				});				addSequential(new DriveForwardPIDCommand((FieldMap.SIDE_DISTANCE_WALL_TO_HOPPER.sub(Drive.WHEEL_BASE.mul(0.5)).sub(FieldMap.STOP_DISTANCE_FROM_HOPPER)).negate()));
 			}
 		}
 		if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.twoDmotionProfiling) {
