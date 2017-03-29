@@ -4,7 +4,7 @@ public class EnabledSubsystems {
 	public static final boolean DRIVE_ENABLED 		= false,
 								SHOOTER_ENABLED 	= true,
 								HOOD_ENABLED 		= true,
-								TURRET_ENABLED 		= false,
+								TURRET_ENABLED 		= true,
 								INTAKE_ENABLED 		= false,
 								INTAKE_ARM_ENABLED 	= false,
 								INTAKE_SLIDE_ENABLED= false,

@@ -44,10 +44,10 @@ public class Shooter extends NRSubsystem {
 	static final double encoderDistancePerRealRotation = 36.0 /*main gear*/ / 24.0 /*small gear*/;
 
 	//TODO: Shooter: Find FPID values
-	public static double F = 1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
-	public static double P = 0.02;
+	public static double F = 0.0275;//1023.0/MAX_SPEED.get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)/encoderDistancePerRealRotation;
+	public static double P = 0.07;
 	public static double I = 0;
-	public static double D = 0.27;
+	public static double D = 1.4;
 	
 	private Shooter() { 
 		if (EnabledSubsystems.SHOOTER_ENABLED) {
