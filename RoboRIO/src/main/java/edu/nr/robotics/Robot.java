@@ -153,6 +153,7 @@ public class Robot extends IterativeRobot {
 		turret_cam_types.add(turretAngle);
 		turret_cam_types.add(turretDistance);
 		turret_cam_types.add(turretTimeStamp);
+		turret_cam_types.add(new NetworkingDataType('x', "heartbeat", Time.Unit.SECOND));
 		Num.turret.init(turret_cam_types, TCPServer.defaultPort+2);
 		
 		ArrayList<NetworkingDataType> gear_cam_types = new ArrayList<>();
@@ -171,6 +172,7 @@ public class Robot extends IterativeRobot {
 		gear_cam_types.add(gearAngle);
 		gear_cam_types.add(gearDistance);
 		gear_cam_types.add(new NetworkingDataType('t', "time", Time.Unit.SECOND));
+		gear_cam_types.add(new NetworkingDataType('x', "heartbeat", Time.Unit.SECOND));
 		Num.gear.init(gear_cam_types, TCPServer.defaultPort + 1);
 		
 		AutoTrackingCalculation.init();
