@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class DriveToRightSideGearAutoCommand extends CommandGroup {
 
 	public DriveToRightSideGearAutoCommand() {
-		addParallel(new RequiredAutoCommand());
+		addSequential(new RequiredAutoCommand());
 		
 		addSequential(new DriveForwardProfilingCommand(new Distance(-89, Distance.Unit.INCH),0.5));
 		addSequential(new DrivePIDTurnAngleExtendableCommand() {

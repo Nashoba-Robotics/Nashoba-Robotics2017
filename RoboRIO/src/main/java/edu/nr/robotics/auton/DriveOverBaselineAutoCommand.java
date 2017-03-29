@@ -22,21 +22,9 @@ public class DriveOverBaselineAutoCommand extends CommandGroup {
 	public static final double FORWARD_PERCENT = 0.25;
 	
 	public DriveOverBaselineAutoCommand() {
-		if (Robot.autoShoot) {
-			addParallel(new ZeroThenAutoTrackCommand());
-		} else {
-			addParallel(new RequiredAutoCommand());
-		}
-		if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.basic) {
-			addSequential(new DriveForwardBasicCommand(-FORWARD_PERCENT, DISTANCE_TO_GET_OVER_BASELINE));
-		} else if (AutoMoveMethods.autoTravelMethod == AutoTravelMethod.allPID) {
-			addSequential(new DriveForwardPIDCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
-		}
-		else {
-			addSequential(new DriveForwardProfilingCommand(DISTANCE_TO_GET_OVER_BASELINE.negate())); //Negated to drive backwards in auto
-		}
-		if (Robot.autoShoot) {
-			addSequential(new AlignThenShootCommand());
-		}
+		addSequential(new RequiredAutoCommand());
+
+		addSequential(new DriveForwardBasicCommand(-.6, new Distance(70, Distance.Unit.INCH)));
+
 	}
 }

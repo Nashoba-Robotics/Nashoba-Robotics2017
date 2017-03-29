@@ -19,11 +19,11 @@ import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Time;
 import edu.nr.robotics.auton.DriveOverBaselineAutoCommand;
-import edu.nr.robotics.auton.DriveToHopperAutoCommand;
+import edu.nr.robotics.auton.DriveToHopperBlueAutoCommand;
+import edu.nr.robotics.auton.DriveToHopperRedAutoCommand;
 import edu.nr.robotics.auton.DriveToLeftSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
 import edu.nr.robotics.auton.DriveToRightSideGearAutoCommand;
-import edu.nr.robotics.auton.GearHopperAutoCommand;
 import edu.nr.robotics.auton.ShootThenBaselineAuto;
 import edu.nr.robotics.auton.SideOfField;
 import edu.nr.robotics.subsystems.EnabledSubsystems;
@@ -64,12 +64,6 @@ public class Robot extends IterativeRobot {
 	
 	Command autonomousCommand;
 	SendableChooser<Command> autoSpotChooser = new SendableChooser<>();
-	SendableChooser<Boolean> autoShootChooser = new SendableChooser<>();
-	
-	public static boolean autoShoot;
-	
-	public static SideOfField side;
-	SendableChooser<SideOfField> sideChooser = new SendableChooser<>();
 	
 	public static Compressor robotCompressor;
 		
@@ -115,18 +109,11 @@ public class Robot extends IterativeRobot {
 		autoSpotChooser.addObject("Left Gear", new DriveToLeftSideGearAutoCommand());
 		autoSpotChooser.addObject("Center Gear", new DriveToMiddleGearAutoCommand());
 		autoSpotChooser.addObject("Right Gear", new DriveToRightSideGearAutoCommand());
-		autoSpotChooser.addObject("Hopper", new DriveToHopperAutoCommand());
-		autoSpotChooser.addObject("Gear and Hopper", new GearHopperAutoCommand());
+		autoSpotChooser.addObject("Hopper Red", new DriveToHopperRedAutoCommand());
+		autoSpotChooser.addObject("Hopper Blue", new DriveToHopperBlueAutoCommand());
+		//autoSpotChooser.addObject("Gear and Hopper", new GearHopperAutoCommand());
 		autoSpotChooser.addObject("Shoot then Baseline", new ShootThenBaselineAuto());
 		SmartDashboard.putData("Auto Destination", autoSpotChooser);
-		
-		autoShootChooser.addDefault("Shoot", Boolean.TRUE);
-		autoShootChooser.addObject("No Shoot", Boolean.FALSE);
-		SmartDashboard.putData("Shooting", autoShootChooser);
-		
-		sideChooser.addDefault("Red", SideOfField.red);
-		sideChooser.addObject("Blue", SideOfField.blue);
-		SmartDashboard.putData("Side of field", sideChooser);
 	}
 	
 	public void smartDashboardInit() {
@@ -224,8 +211,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = autoSpotChooser.getSelected();
-		autoShoot = autoShootChooser.getSelected();
-		side = sideChooser.getSelected();
 
 		System.out.println("Initializing auto command: " + autonomousCommand);
 		
