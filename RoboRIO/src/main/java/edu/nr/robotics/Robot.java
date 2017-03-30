@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import edu.nr.lib.GyroCorrection;
+import edu.nr.lib.NavX;
 import edu.nr.lib.commandbased.CancelAllCommand;
 import edu.nr.lib.commandbased.DoNothingCommand;
 import edu.nr.lib.commandbased.NRSubsystem;

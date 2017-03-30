@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -287,37 +288,44 @@ public class TCPServer implements Runnable {
 				ServerSocket socket = new ServerSocket(port); 
 				
 				while (true) {
-					m_isConnected = false;
-					SmartDashboard.putBoolean("Connected to " + num, false);
-					System.out.println("Trying to connect to " + num);
-					Socket connectionSocket = socket.accept();
-					m_isConnected = true;
-					System.out.println("Connected to " + num + "!" );
-					SmartDashboard.putBoolean("Connected to " + num, true);
-					BufferedReader inFromClient = new BufferedReader(
-							new InputStreamReader(connectionSocket.getInputStream()));
-					while (!connectionSocket.isClosed()) {
-						char firstCharacter = (char) inFromClient.read();
-						// inFromClient.read() should really return a character, not an int...
-						// Blame Oracle
-						
-						if(firstCharacter == 65535) { //This is the error code, showing that the camera disconnected.
-							break;
-						}
-						
-						NetworkingDataType type = getType(firstCharacter);
-						if (type != null) {
-							char[] data = new char[4];
-							inFromClient.read(data, 0, 4);
-							if(data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0) {
-							} else {
-								type.setData(((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
-										+ (data[3] & 0xFF));
+					try {
+						m_isConnected = false;
+						SmartDashboard.putBoolean("Connected to " + num, false);
+						System.out.println("Trying to connect to " + num);
+						Socket connectionSocket = socket.accept();
+						connectionSocket.setSoTimeout(1000);
+						m_isConnected = true;
+						System.out.println("Connected to " + num + "!" );
+						SmartDashboard.putBoolean("Connected to " + num, true);
+						BufferedReader inFromClient = new BufferedReader(
+								new InputStreamReader(connectionSocket.getInputStream()));
+						while (!connectionSocket.isClosed()) {
+							char firstCharacter = (char) inFromClient.read();
+							// inFromClient.read() should really return a character, not an int...
+							// Blame Oracle
+							
+							//System.out.println("First character: " + firstCharacter + " int: " + (int) firstCharacter);
+							
+							if(firstCharacter == 65535) { //This is the error code, showing that the camera disconnected.
+								break;
 							}
-							//System.out.println("Data read: 0:" + (int) data[0] + " 1:" + (int) data[1] + " 2:" + (int) data[2] + " 3:" + (int) data[3]);
-							m_hasData = true;
-							type.updateListeners();
+							
+							NetworkingDataType type = getType(firstCharacter);
+							if (type != null) {
+								char[] data = new char[4];
+								inFromClient.read(data, 0, 4);
+								if(data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0) {
+								} else {
+									type.setData(((data[0] & 0xFF) << 24) + ((data[1] & 0xFF) << 16) + ((data[2] & 0xFF) << 8)
+											+ (data[3] & 0xFF));
+								}
+								//System.out.println("Data read: 0:" + (int) data[0] + " 1:" + (int) data[1] + " 2:" + (int) data[2] + " 3:" + (int) data[3]);
+								m_hasData = true;
+								type.updateListeners();
+							}
 						}
+					} catch (SocketTimeoutException e) {
+						e.printStackTrace();
 					}
 
 				}

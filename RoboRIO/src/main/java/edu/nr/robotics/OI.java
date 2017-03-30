@@ -52,7 +52,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class OI implements SmartDashboardSource {
 
-	private static final double JOYSTICK_DEAD_ZONE = 0.1;
+	private static final double JOYSTICK_DEAD_ZONE = 0.15;
 
 	
 	private static final int GEAR_PEG_ALIGNMENT_BUTTON_NUMBER = 12;
@@ -322,7 +322,7 @@ public class OI implements SmartDashboardSource {
 	 * @return The speed, in rotations per minute
 	 */
 	public double getIntakeValue() {
-		return intakeSwitch.get() ? Intake.RUN_VOLTAGE : 0;
+		return isIntakeOn() ? Intake.RUN_VOLTAGE : 0;
 	}
 	
 	// -> Joy2: Loader Roller Joystick
@@ -411,7 +411,7 @@ public class OI implements SmartDashboardSource {
 	}
 	
 	public boolean isIntakeOn() {
-		return intakeSwitch.get();
+		return !intakeSwitch.get();
 	}
 
 	public boolean shouldDumbDrive() {

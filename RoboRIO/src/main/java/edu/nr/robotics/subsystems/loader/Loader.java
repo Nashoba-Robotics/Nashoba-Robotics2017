@@ -38,11 +38,11 @@ public class Loader extends NRSubsystem {
 		
 	private Loader() { 
 		if (EnabledSubsystems.LOADER_ENABLED) { 
-			/*lowTalon = new CANTalon(RobotMap.LOADER_LOW_TALON_PORT);
+			lowTalon = new CANTalon(RobotMap.LOADER_LOW_TALON_PORT);
 			lowTalon.changeControlMode(TalonControlMode.PercentVbus);
 			lowTalon.enableBrakeMode(false);
 			lowTalon.setInverted(true);
-			lowTalon.enable();*/
+			lowTalon.enable();
 			
 			highTalon = new CANTalon(RobotMap.LOADER_HIGH_TALON_PORT);
 			highTalon.changeControlMode(TalonControlMode.PercentVbus);

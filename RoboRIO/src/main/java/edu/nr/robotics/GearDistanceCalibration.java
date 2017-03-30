@@ -26,7 +26,6 @@ public class GearDistanceCalibration {
 		}
 		
 		double timeRatio = ((double) num_px - (double) beforeNum)/((double) afterNum - (double) beforeNum);
-		System.out.println("Time ratio: " + timeRatio);
 		return interpolate(beforeDist, afterDist, timeRatio);
 			
 	}
