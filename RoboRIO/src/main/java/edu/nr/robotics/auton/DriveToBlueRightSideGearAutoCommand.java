@@ -8,12 +8,12 @@ import edu.nr.robotics.subsystems.drive.DrivePIDTurnAngleExtendableCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
-public class DriveToRightSideGearAutoCommand extends CommandGroup {
+public class DriveToBlueRightSideGearAutoCommand extends CommandGroup {
 
-	public DriveToRightSideGearAutoCommand() {
+	public DriveToBlueRightSideGearAutoCommand() {
 		addSequential(new RequiredAutoCommand());
 		
-		addSequential(new DriveForwardProfilingCommand(new Distance(-87, Distance.Unit.INCH),0.5));
+		addSequential(new DriveForwardProfilingCommand(new Distance(-84, Distance.Unit.INCH),0.5));
 		addSequential(new DrivePIDTurnAngleExtendableCommand() {
 			@Override
 			public Angle getAngleToTurn() {

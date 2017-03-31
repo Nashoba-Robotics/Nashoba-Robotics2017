@@ -253,7 +253,7 @@ public class Turret extends NRSubsystem {
 				talon.setPosition(positionToRaw(FORWARD_POSITION));
 				turretTrackDirection = -1;
 			} else if(talon.isRevLimitSwitchClosed()) {
-				//talon.setPosition(positionToRaw(REVERSE_POSITION));
+				talon.setPosition(positionToRaw(REVERSE_POSITION));
 				turretTrackDirection = 1;
 			} 
 		}

@@ -28,6 +28,7 @@ import edu.nr.robotics.subsystems.gearMover.GearRetractCommand;
 import edu.nr.robotics.subsystems.hood.HoodDeltaPositionCommand;
 import edu.nr.robotics.subsystems.hood.HoodPositionCommand;
 import edu.nr.robotics.subsystems.hood.HoodSpeedCommand;
+import edu.nr.robotics.subsystems.hood.HoodStationaryAngleCorrectionCommand;
 import edu.nr.robotics.subsystems.intake.Intake;
 import edu.nr.robotics.subsystems.intake.IntakeSpeedCommand;
 import edu.nr.robotics.subsystems.intakeArm.IntakeArmDeployCommand;
@@ -37,9 +38,11 @@ import edu.nr.robotics.subsystems.intakeSlide.IntakeSlideRetractCommand;
 import edu.nr.robotics.subsystems.loader.LoaderRunCommand;
 import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.nr.robotics.subsystems.shooter.ShooterDeltaSpeedCommand;
+import edu.nr.robotics.subsystems.shooter.ShooterStationarySpeedCorrectionCommand;
 import edu.nr.robotics.subsystems.turret.Turret;
 import edu.nr.robotics.subsystems.turret.TurretPositionCommand;
 import edu.nr.robotics.subsystems.turret.TurretSpeedCommand;
+import edu.nr.robotics.subsystems.turret.TurretStationaryAngleCorrectionCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -151,11 +154,9 @@ public class OI implements SmartDashboardSource {
 
 	public void initDriveLeft() {
 		new JoystickButton(driveLeft, 2).whenPressed(new DoNothingCommand(Drive.getInstance()));
-		new JoystickButton(driveLeft, 11).whenPressed(new TurretSpeedCommand(new AngularSpeed(3, Angle.Unit.DEGREE, Time.Unit.SECOND)));
-		new JoystickButton(driveLeft, 16).whenPressed(new TurretSpeedCommand(new AngularSpeed(-3, Angle.Unit.DEGREE, Time.Unit.SECOND)));
-		new JoystickButton(driveLeft, 12).whenPressed(new HoodSpeedCommand(new AngularSpeed(6, Angle.Unit.DEGREE, Time.Unit.SECOND)));
-		new JoystickButton(driveLeft, 15).whenPressed(new HoodSpeedCommand(new AngularSpeed(-6, Angle.Unit.DEGREE, Time.Unit.SECOND)));
-		new JoystickButton(driveLeft, 9).whenPressed(new HoodPositionCommand(new Angle(10, Angle.Unit.DEGREE)));
+		new JoystickButton(driveLeft, 14).whenPressed(new TurretStationaryAngleCorrectionCommand());
+		new JoystickButton(driveLeft, 15).whenPressed(new HoodStationaryAngleCorrectionCommand());
+		new JoystickButton(driveLeft, 16).whenPressed(new ShooterStationarySpeedCorrectionCommand());
 
 	}
 

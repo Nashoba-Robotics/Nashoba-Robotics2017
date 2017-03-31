@@ -12,9 +12,9 @@ import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
-public class DriveToLeftSideGearAutoCommand extends CommandGroup {
+public class DriveToBlueLeftSideGearAutoCommand extends CommandGroup {
 
-	public DriveToLeftSideGearAutoCommand() {
+	public DriveToBlueLeftSideGearAutoCommand() {
 		addSequential(new RequiredAutoCommand());
 		
 		addParallel(new EnableAutoTrackingCommandAuton());
