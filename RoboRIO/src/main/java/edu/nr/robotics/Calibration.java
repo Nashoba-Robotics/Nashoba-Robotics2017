@@ -11,18 +11,18 @@ public class Calibration {
 	
 	public static AngularSpeed getShooterSpeedFromDistance(Distance dist) {
 		if(dist.lessThan(hopperShotLimit)) {
-			return new AngularSpeed(2.7*dist.get(Distance.Unit.INCH) + 2026,Angle.Unit.ROTATION, Time.Unit.MINUTE);
+			return new AngularSpeed(2.4263*dist.get(Distance.Unit.INCH) + 2132,Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		} else {
-			return new AngularSpeed(7.22*dist.get(Distance.Unit.INCH) + 1396,Angle.Unit.ROTATION, Time.Unit.MINUTE);
+			return new AngularSpeed(10*dist.get(Distance.Unit.INCH) + 950,Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		}
 		//TODO: Calibration: Map distance to shooter speed
 	}
 
 	public static Angle getHoodAngleFromDistance(Distance dist) {
 		if(dist.lessThan(hopperShotLimit)) {
-			return new Angle(0.0162*dist.get(Distance.Unit.INCH) + 16.97, Angle.Unit.DEGREE);
+			return new Angle(0.0282*dist.get(Distance.Unit.INCH) + 12.147, Angle.Unit.DEGREE);
 		} else {
-			return new Angle(0.0278*dist.get(Distance.Unit.INCH) + 19.24, Angle.Unit.DEGREE);
+			return new Angle(0.0051*dist.get(Distance.Unit.INCH) + 22.944, Angle.Unit.DEGREE);
 		}
 		//return new Angle(dist.get(Distance.Unit.FOOT), Angle.Unit.DEGREE); //TODO: Calibration: Map distance to hood angle
 	}

@@ -7,6 +7,8 @@ import edu.nr.robotics.GearAlignCalculation;
 import edu.nr.robotics.RobotMap;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
+import edu.nr.robotics.subsystems.loader.LoaderRunCommand;
+import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.ConditionalCommand;
 import edu.wpi.first.wpilibj.command.WaitCommand;
@@ -21,6 +23,15 @@ public class DriveToMiddleGearAutoCommand extends CommandGroup {
 		addSequential(new WaitCommand(1));
 		
 		addSequential(new GearPegAlignCommand());
+		
+		addParallel(new EnableAutoTrackingCommandAuton());
+		
+		addSequential(new WaitCommand(1));
+		
+		addSequential(new LoaderRunCommand());
+		addSequential(new WaitCommand(9));
+		addSequential(new LoaderStopCommand());
+
 		
 		/*addSequential(new ConditionalCommand(new GearPegAlignCommand(),new DriveForwardProfilingCommand(new Distance(-36, Distance.Unit.INCH),0.5)) {
 
