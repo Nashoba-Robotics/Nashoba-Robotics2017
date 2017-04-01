@@ -280,6 +280,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboardSource.runAll();
 		SmartDashboard.putNumber("Gear Angle", GearAlignCalculation.getInstance().getAngleToTurn().get(Angle.Unit.DEGREE));
 		SmartDashboard.putNumber("Turret Angle", AutoTrackingCalculation.getInstance().getRawTurretAngle().get(Angle.Unit.DEGREE));
+		
+		SmartDashboard.putBoolean("Can Gear See", GearAlignCalculation.getInstance().canSeeTarget());
+		
 		if(robotCompressor != null) {
 			SmartDashboard.putBoolean("Compressor", Robot.robotCompressor.getClosedLoopControl());
 		}
