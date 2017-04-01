@@ -1,5 +1,6 @@
 package edu.nr.robotics.auton;
 
+import edu.nr.lib.commandbased.AnonymousCommandGroup;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Distance;
 import edu.nr.robotics.FieldMap;
@@ -12,9 +13,9 @@ import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
-public class DriveToBlueLeftSideGearAutoCommand extends CommandGroup {
+public class DriveToBlueLeftSideGearShootFirstAutoCommand extends CommandGroup {
 
-	public DriveToBlueLeftSideGearAutoCommand() {
+	public DriveToBlueLeftSideGearShootFirstAutoCommand() {
 		addSequential(new RequiredAutoCommand());
 		
 		addParallel(new EnableAutoTrackingCommandAuton());

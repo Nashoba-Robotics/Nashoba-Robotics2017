@@ -50,7 +50,7 @@ public class GearPegAlignCommand extends CommandGroup {
 
 			@Override
 			public Distance distanceToGo() {
-				return GearAlignCalculation.getInstance().getDistToDrive().negate();
+				return GearAlignCalculation.getInstance().getDistToDrive().add(new Distance(6, Distance.Unit.INCH)).negate();
 			}
     		
     	});

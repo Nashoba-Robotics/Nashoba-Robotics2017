@@ -31,8 +31,8 @@ public class Shooter extends NRSubsystem {
 	 * 
 	 * The initial value is the speed it is supposed to run at to start the match.
 	 */
-	public AngularSpeed defaultSpeed = new AngularSpeed(3000, Angle.Unit.ROTATION, Time.Unit.MINUTE);
-	public AngularSpeed motorSetpoint = new AngularSpeed(3000, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public AngularSpeed defaultSpeed = new AngularSpeed(2500, Angle.Unit.ROTATION, Time.Unit.MINUTE);
+	public AngularSpeed motorSetpoint = new AngularSpeed(2500, Angle.Unit.ROTATION, Time.Unit.MINUTE);
 
 	private boolean autoAlign = false;
 

@@ -1,5 +1,6 @@
 package edu.nr.robotics.auton;
 
+import edu.nr.lib.commandbased.AnonymousCommandGroup;
 import edu.nr.lib.network.TCPServer;
 import edu.nr.lib.units.Distance;
 import edu.nr.robotics.FieldMap;
@@ -20,17 +21,28 @@ public class DriveToMiddleGearAutoCommand extends CommandGroup {
 		
 		addSequential(new DriveForwardProfilingCommand((FieldMap.DISTANCE_TO_CENTER_PEG.sub(RobotMap.BACK_BUMPER_TO_GEAR_DIST).sub(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP).sub(FieldMap.GEAR_ALIGN_STOP_DISTANCE_FROM_PEG)).negate(),0.5)); //Negated for driving backwards in auto
 		
-		addSequential(new WaitCommand(1));
 		
+		addParallel(new AnonymousCommandGroup() {
+
+			@Override
+			public void commands() {
+				addSequential(new WaitCommand(4));
+
+				addParallel(new EnableAutoTrackingCommandAuton());
+				
+				addSequential(new WaitCommand(2));
+				
+				addSequential(new LoaderRunCommand());
+				
+			}
+			
+		});
+
+		addSequential(new WaitCommand(1));
+
 		addSequential(new GearPegAlignCommand());
 		
-		addParallel(new EnableAutoTrackingCommandAuton());
-		
-		addSequential(new WaitCommand(1));
-		
-		addSequential(new LoaderRunCommand());
-		addSequential(new WaitCommand(9));
-		addSequential(new LoaderStopCommand());
+				
 
 		
 		/*addSequential(new ConditionalCommand(new GearPegAlignCommand(),new DriveForwardProfilingCommand(new Distance(-36, Distance.Unit.INCH),0.5)) {
