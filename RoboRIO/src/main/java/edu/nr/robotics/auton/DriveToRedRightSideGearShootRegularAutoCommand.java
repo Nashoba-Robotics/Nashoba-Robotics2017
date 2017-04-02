@@ -40,7 +40,7 @@ public class DriveToRedRightSideGearShootRegularAutoCommand extends CommandGroup
 			
 		});
 		
-		addSequential(new WaitCommand(1));
+		addSequential(new WaitCommand(1.5));
 		
 		addSequential(new GearPegAlignCommand());		
 

@@ -15,7 +15,7 @@ public class EnabledSubsystems {
 	
 	//These start the subsystem in dumb mode. Changing them later sometimes ignores this.
 	public static final boolean DRIVE_DUMB_ENABLED	 	= false,
-								SHOOTER_DUMB_ENABLED 	= false,
+								SHOOTER_DUMB_ENABLED 	= true,
 								HOOD_DUMB_ENABLED 		= false,
 								TURRET_DUMB_ENABLED 	= false;
 	

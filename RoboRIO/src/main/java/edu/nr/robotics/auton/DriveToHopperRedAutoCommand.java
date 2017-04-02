@@ -57,7 +57,7 @@ addSequential(new DriveLowGearCommand());
 			
 		});
 				
-		addSequential(new DriveForwardProfilingCommand(new Distance(78.5, Distance.Unit.INCH),.5));
+		addSequential(new DriveForwardProfilingCommand(new Distance(92.5, Distance.Unit.INCH),.75));
 		addSequential(new DrivePIDTurnAngleExtendableCommand() {
 			@Override
 			public Angle getAngleToTurn() {
@@ -69,7 +69,7 @@ addSequential(new DriveLowGearCommand());
 
 			@Override
 			public void commands() {
-				addSequential(new WaitCommand(4));
+				addSequential(new WaitCommand(1.5));
 
 				addParallel(new EnableAutoTrackingCommandAuton());
 				
@@ -82,6 +82,6 @@ addSequential(new DriveLowGearCommand());
 		});
 		
 		
-		addSequential(new DriveForwardProfilingCommand(new Distance(42.5, Distance.Unit.INCH),.5));
+		addSequential(new DriveForwardProfilingCommand(new Distance(62, Distance.Unit.INCH),.5));
 	}
 }

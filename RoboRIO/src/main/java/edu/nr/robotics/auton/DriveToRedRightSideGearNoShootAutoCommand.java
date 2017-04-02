@@ -11,9 +11,9 @@ import edu.nr.robotics.subsystems.loader.LoaderStopCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
-public class DriveToRedRightSideGearShootFirstAutoCommand extends CommandGroup {
+public class DriveToRedRightSideGearNoShootAutoCommand extends CommandGroup {
 
-	public DriveToRedRightSideGearShootFirstAutoCommand() {
+	public DriveToRedRightSideGearNoShootAutoCommand() {
 		addSequential(new RequiredAutoCommand());
 		
 		
@@ -23,15 +23,6 @@ public class DriveToRedRightSideGearShootFirstAutoCommand extends CommandGroup {
 		addSequential(new LoaderRunCommand());
 		addSequential(new WaitCommand(4));
 		addSequential(new LoaderStopCommand());
-		
-		
-		addSequential(new DriveForwardProfilingCommand(new Distance(-78, Distance.Unit.INCH),0.5));
-		addSequential(new DrivePIDTurnAngleExtendableCommand() {
-			@Override
-			public Angle getAngleToTurn() {
-				return new Angle(60, Angle.Unit.DEGREE);
-			}
-		});
 		
 		addSequential(new WaitCommand(1.5));
 		

@@ -11,7 +11,7 @@ public class Calibration {
 	
 	public static AngularSpeed getShooterSpeedFromDistance(Distance dist) {
 		if(dist.lessThan(hopperShotLimit)) {
-			return new AngularSpeed(2.4263*dist.get(Distance.Unit.INCH) + 2132,Angle.Unit.ROTATION, Time.Unit.MINUTE);
+			return new AngularSpeed(2.4263*dist.get(Distance.Unit.INCH) + 2142,Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		} else {
 			return new AngularSpeed(9.93*dist.get(Distance.Unit.INCH) + 968,Angle.Unit.ROTATION, Time.Unit.MINUTE);
 		}
