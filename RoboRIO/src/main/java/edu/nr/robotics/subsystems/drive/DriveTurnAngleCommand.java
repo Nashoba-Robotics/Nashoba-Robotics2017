@@ -27,7 +27,7 @@ public class DriveTurnAngleCommand extends NRCommand {
 	
 	@Override
 	public void onExecute() {
-		Drive.getInstance().arcadeDrive(0, TURN_PERCENTAGE * deltaAngle.getSign());
+		Drive.getInstance().arcadeDrive(0, TURN_PERCENTAGE * deltaAngle.signum());
 	}
 	
 	@Override

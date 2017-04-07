@@ -64,24 +64,24 @@ public class Distance {
 		return get(Unit.defaultUnit);
 	}
 	
-	public Distance sub(Distance angleTwo) {
-		return new Distance(this.get(Unit.defaultUnit) - angleTwo.get(Unit.defaultUnit), Unit.defaultUnit);
+	public Distance sub(Distance distanceTwo) {
+		return new Distance(this.get(Unit.defaultUnit) - distanceTwo.get(Unit.defaultUnit), Unit.defaultUnit);
 	}
 	
-	public Distance add(Distance angleTwo) {
-		return new Distance(this.get(Unit.defaultUnit) + angleTwo.get(Unit.defaultUnit), Unit.defaultUnit);
+	public Distance add(Distance distanceTwo) {
+		return new Distance(this.get(Unit.defaultUnit) + distanceTwo.get(Unit.defaultUnit), Unit.defaultUnit);
 	}
 	
 	public Distance mul(double x) {
 		return new Distance(this.get(Unit.defaultUnit) * x, Unit.defaultUnit);
 	}
 	
-	public boolean lessThan(Distance angleTwo) {
-		return this.get(Unit.defaultUnit) < angleTwo.get(Unit.defaultUnit);
+	public boolean lessThan(Distance distanceTwo) {
+		return this.get(Unit.defaultUnit) < distanceTwo.get(Unit.defaultUnit);
 	}
 
-	public boolean greaterThan(Distance angleTwo) {
-		return this.get(Unit.defaultUnit) > angleTwo.get(Unit.defaultUnit);
+	public boolean greaterThan(Distance distanceTwo) {
+		return this.get(Unit.defaultUnit) > distanceTwo.get(Unit.defaultUnit);
 	}
 	
 	public Distance negate() {
@@ -92,16 +92,14 @@ public class Distance {
 		return new Distance(Math.abs(this.get(Unit.defaultUnit)), Unit.defaultUnit);
 	}
 	
-	public double getSign() {
-		if(this.get(Unit.defaultUnit) > 0)
-			return 1;
-		return -1;
+	public double signum() {
+		return Math.signum(this.get(Unit.defaultUnit));
 	}
 	
 	@Override
-	public boolean equals(Object otherAngle) {
-		if(otherAngle instanceof Distance) {
-			return this.get(Unit.defaultUnit) == ((Distance) otherAngle).get(Unit.defaultUnit);
+	public boolean equals(Object distanceTwo) {
+		if(distanceTwo instanceof Distance) {
+			return this.get(Unit.defaultUnit) == ((Distance) distanceTwo).get(Unit.defaultUnit);
 		} else {
 			return false;
 		}

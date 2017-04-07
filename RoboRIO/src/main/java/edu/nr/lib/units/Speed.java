@@ -1,5 +1,7 @@
 package edu.nr.lib.units;
 
+import edu.nr.lib.units.Angle.Unit;
+
 public class Speed {
 
 	public static final Speed ZERO = new Speed(Distance.ZERO, Time.ONE_SECOND);
@@ -28,32 +30,32 @@ public class Speed {
 		return get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
-	public Speed sub(Speed angleTwo) {
-		return this.add(angleTwo.negate());
+	public Speed sub(Speed speedTwo) {
+		return this.add(speedTwo.negate());
 	}
 
-	public Speed add(Speed angleTwo) {
-		return new Speed(this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) + angleTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit),Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
+	public Speed add(Speed speedTwo) {
+		return new Speed(this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) + speedTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit),Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	public Speed mul(double x) {
 		return new Speed(distance.mul(x), time);
 	}
 
-	public Distance mul(Time t) {
-		return distance.mul(t.div(time));
+	public Distance mul(Time timeTwo) {
+		return distance.mul(timeTwo.div(time));
 	}
 
-	public double div(Speed other) {
-		return distance.div(other.distance) / time.div(other.time);
+	public double div(Speed speedTwo) {
+		return distance.div(speedTwo.distance) / time.div(speedTwo.time);
 	}
 
-	public boolean lessThan(Speed angleTwo) {
-		return this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) < angleTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
+	public boolean lessThan(Speed speedTwo) {
+		return this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) < speedTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
-	public boolean greaterThan(Speed angleTwo) {
-		return this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) > angleTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
+	public boolean greaterThan(Speed speedTwo) {
+		return this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) > speedTwo.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
 	}
 
 	public Speed negate() {
@@ -64,10 +66,14 @@ public class Speed {
 		return new Speed(distance.abs(), time.abs());
 	}
 
+	public double signum() {
+		return Math.signum(distance.get(Distance.Unit.defaultUnit));
+	}
+	
 	@Override
-	public boolean equals(Object otherAngle) {
-		if (otherAngle instanceof Speed) {
-			return this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) == ((Speed) otherAngle).get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
+	public boolean equals(Object speedTwo) {
+		if (speedTwo instanceof Speed) {
+			return this.get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit) == ((Speed) speedTwo).get(Distance.Unit.defaultUnit, Time.Unit.defaultUnit);
 		} else {
 			return false;
 		}

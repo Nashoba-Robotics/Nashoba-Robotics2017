@@ -101,8 +101,8 @@ public class NRMath {
 				Distance.Unit.defaultUnit);
 	}
 	
-	public static Angle lawOfCos(Distance x, Distance y, Distance z) {
-		return NRMath.lawOfCos(x.getDefault(), y.getDefault(), z.getDefault());
+	public static Angle lawOfCos(Distance adj1, Distance adj2, Distance oppo) {
+		return NRMath.lawOfCos(adj1.getDefault(), adj2.getDefault(), oppo.getDefault());
 	}
 
 	public static Distance max(Distance a, Distance b) {

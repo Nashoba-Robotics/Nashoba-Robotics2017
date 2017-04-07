@@ -58,12 +58,12 @@ public class Time {
 		return type.convert(val, toType);
 	}
 	
-	public Time sub(Time angleTwo) {
-		return new Time(this.get(Unit.defaultUnit) - angleTwo.get(Unit.defaultUnit), Unit.defaultUnit);
+	public Time sub(Time timeTwo) {
+		return new Time(this.get(Unit.defaultUnit) - timeTwo.get(Unit.defaultUnit), Unit.defaultUnit);
 	}
 	
-	public Time add(Time angleTwo) {
-		return new Time(this.get(Unit.defaultUnit) + angleTwo.get(Unit.defaultUnit), Unit.defaultUnit);
+	public Time add(Time timeTwo) {
+		return new Time(this.get(Unit.defaultUnit) + timeTwo.get(Unit.defaultUnit), Unit.defaultUnit);
 	}
 	
 	public Time mul(double x) {
@@ -74,16 +74,16 @@ public class Time {
 		return speed.mul(this);
 	}
 
-	public double div(Time t) {
-		return this.get(Unit.defaultUnit) / t.get(Unit.defaultUnit);
+	public double div(Time time) {
+		return this.get(Unit.defaultUnit) / time.get(Unit.defaultUnit);
 	}
 	
-	public boolean lessThan(Time angleTwo) {
-		return this.get(Unit.defaultUnit) < angleTwo.get(Unit.defaultUnit);
+	public boolean lessThan(Time timeTwo) {
+		return this.get(Unit.defaultUnit) < timeTwo.get(Unit.defaultUnit);
 	}
 
-	public boolean greaterThan(Time angleTwo) {
-		return this.get(Unit.defaultUnit) > angleTwo.get(Unit.defaultUnit);
+	public boolean greaterThan(Time timeTwo) {
+		return this.get(Unit.defaultUnit) > timeTwo.get(Unit.defaultUnit);
 	}
 	
 	public Time negate() {
@@ -99,9 +99,9 @@ public class Time {
 	}
 	
 	@Override
-	public boolean equals(Object otherTime) {
-		if(otherTime instanceof Time) {
-			return this.get(Unit.defaultUnit) == ((Time) otherTime).get(Unit.defaultUnit);
+	public boolean equals(Object timeTwo) {
+		if(timeTwo instanceof Time) {
+			return this.get(Unit.defaultUnit) == ((Time) timeTwo).get(Unit.defaultUnit);
 		} else {
 			return false;
 		}

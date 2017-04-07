@@ -76,6 +76,10 @@ public class Angle {
 		return new Angle(this.get(Unit.defaultUnit) * x, Unit.defaultUnit);
 	}
 	
+	public double div(Angle angleTwo) {
+		return this.get(Unit.defaultUnit) / angleTwo.get(Unit.defaultUnit);
+	}
+	
 	public double cos() {
 		return Math.cos(this.get(Unit.RADIAN));
 	}
@@ -104,23 +108,17 @@ public class Angle {
 		return new Angle(Math.abs(this.get(Unit.defaultUnit)), Unit.defaultUnit);
 	}
 	
-	public double getSign() {
-		if(this.get(Unit.defaultUnit) > 0)
-			return 1;
-		return -1;
+	public double signum() {
+		return Math.signum(this.get(Unit.defaultUnit));
 	}
 	
 	@Override
-	public boolean equals(Object otherAngle) {
-		if(otherAngle instanceof Angle) {
-			return this.get(Unit.defaultUnit) == ((Angle) otherAngle).get(Unit.defaultUnit);
+	public boolean equals(Object angleTwo) {
+		if(angleTwo instanceof Angle) {
+			return this.get(Unit.defaultUnit) == ((Angle) angleTwo).get(Unit.defaultUnit);
 		} else {
 			return false;
 		}
-	}
-
-	public double div(Angle angle) {
-		return this.get(Unit.defaultUnit) / angle.get(Unit.defaultUnit);
 	}
 
 }

@@ -57,7 +57,7 @@ public class StationaryTrackingCalculation implements NetworkingDataTypeListener
 		
 		SmartDashboard.putNumber("Turret Distance", distReal.get(Distance.Unit.INCH));
 		
-		deltaTurretAngle = (Units.HALF_CIRCLE.sub(NRMath.lawOfCos(distReal, RobotMap.Y_CAMERA_OFFSET, lastSeenDistance))).mul(lastSeenAngle.getSign());
+		deltaTurretAngle = (Units.HALF_CIRCLE.sub(NRMath.lawOfCos(distReal, RobotMap.Y_CAMERA_OFFSET, lastSeenDistance))).mul(lastSeenAngle.signum());
 		
 		deltaTurretAngle = deltaTurretAngle.add(new Angle(-1, Angle.Unit.DEGREE));
 

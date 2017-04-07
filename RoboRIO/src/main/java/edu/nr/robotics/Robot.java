@@ -30,6 +30,7 @@ import edu.nr.robotics.auton.DriveToRedLeftSideGearAutoCommand;
 import edu.nr.robotics.auton.DriveToRedRightSideGearNoShootAutoCommand;
 import edu.nr.robotics.auton.DriveToRedRightSideGearShootFirstAutoCommand;
 import edu.nr.robotics.auton.DriveToMiddleGearAutoCommand;
+import edu.nr.robotics.auton.DriveToMiddleGearNoShootAutoCommand;
 import edu.nr.robotics.auton.DriveToRedRightSideGearShootRegularAutoCommand;
 import edu.nr.robotics.auton.ShootThenBaselineAuto;
 import edu.nr.robotics.auton.SideOfField;
@@ -118,7 +119,7 @@ public class Robot extends IterativeRobot {
 		autoSpotChooser.addObject("Blue Left Gear Shoot First", new DriveToBlueLeftSideGearShootFirstAutoCommand());
 		autoSpotChooser.addObject("Blue Left Gear No Shoot", new DriveToBlueLeftSideGearNoShootAutoCommand());
 		autoSpotChooser.addObject("Center Gear Shoot", new DriveToMiddleGearAutoCommand());
-		autoSpotChooser.addObject("Center Gear No Shoot", new DriveToMiddleGearAutoCommand());
+		autoSpotChooser.addObject("Center Gear No Shoot", new DriveToMiddleGearNoShootAutoCommand());
 		autoSpotChooser.addObject("Red Right Gear Shoot Later", new DriveToRedRightSideGearShootRegularAutoCommand());
 		autoSpotChooser.addObject("Red Right Gear Shoot First", new DriveToRedRightSideGearShootFirstAutoCommand());
 		autoSpotChooser.addObject("Red Right Gear No Shoot", new DriveToRedRightSideGearNoShootAutoCommand());
