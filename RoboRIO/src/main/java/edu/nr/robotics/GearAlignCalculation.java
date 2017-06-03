@@ -67,9 +67,9 @@ public class GearAlignCalculation implements NetworkingDataTypeListener {
 		Angle theta2 = NRMath.asin(distanceToPeg.mul(theta1.sin()).div(d));
 		Angle theta3 = Units.HALF_CIRCLE.sub(theta0).sub(NRMath.asin(r.mul(theta0.sin()).div(d)));
 		if (angleToPeg.greaterThan(NRMath.atan2(RobotMap.GEAR_TO_CENTER_DIST_X, RobotMap.GEAR_TO_CENTER_DIST_Y))) {
-			turnAngle = theta2.add(theta3);
+			turnAngle = theta2.add(theta3).add(new Angle(2, Angle.Unit.DEGREE));
 		} else {
-			turnAngle = theta3.sub(theta2);
+			turnAngle = theta3.sub(theta2).add(new Angle(2, Angle.Unit.DEGREE));
 		}
 		
 		driveDistance = d.sub(RobotMap.GEAR_TO_CENTER_DIST_Y).add(FieldMap.DRIVE_DEPTH_ON_PEG_FROM_SHIP);

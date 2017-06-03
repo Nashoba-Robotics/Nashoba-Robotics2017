@@ -33,7 +33,7 @@ public class DriveJoystickCommand extends JoystickCommand {
 			//Make the gyro guide us when we're going straight, 
 			//otherwise reset the gyroscrope and use the joystick turn value
 			if (Math.abs(rotateValue) < 0.05 && Math.abs(moveValue) > .1) {
-				rotateValue = gyroCorrection.getTurnValue();
+				rotateValue = gyroCorrection.getTurnValue(0.04);
 			} else {
 				gyroCorrection.clearInitialValue();
 			}

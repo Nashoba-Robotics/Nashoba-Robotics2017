@@ -38,7 +38,7 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * 
 	 * This should not be used. Instead {@link WHEEL_DIAMETER} should be used.
 	 */
-	public static final double WHEEL_DIAMETER_INCHES = 3.96;
+	public static final double WHEEL_DIAMETER_INCHES = 4.15;
 
 	/**
 	 * The distance the wheel travels in a single revolution, in inches

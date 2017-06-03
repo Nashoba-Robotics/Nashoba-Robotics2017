@@ -139,7 +139,7 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData(new DriveTurnConstantSmartDashboardSpeedCommand());
 	
-		SmartDashboard.putData(new DriveForwardProfilingCommand(Distance.ZERO));
+		SmartDashboard.putData(new DriveForwardProfilingCommand(new Distance(72, Distance.Unit.INCH)));
 
 		SmartDashboard.putData(new ShooterSmartDashboardSpeedCommand());
 	}
@@ -158,9 +158,13 @@ public class Robot extends IterativeRobot {
 		};
 		NetworkingDataType turretDistance = new NetworkingDataType('d', "distance", Distance.Unit.INCH) {
 			public double convert(int in) { //Convert pixels to inches
-				//return 1.419 * Math.pow(10, -9) * Math.pow(in, 4) - 9.542 * Math.pow(10, -7) * Math.pow(in, 3) + 3.661 * Math.pow(10, -4) * Math.pow(in, 2) + 0.08515 * in + 61.52;
-				//return 40.8 + Math.pow(248.4, 0.00404 * in);
-				return -80.79309 * (Math.log((double) in) / Math.log(Math.E)) + 567.68835; 
+				double out = 268.592 
+						- 1.20506 * in 
+						+ 0.00345722 * in * in 
+						- 5.31907 * Math.pow(10, -6) * Math.pow(in, 3) 
+						+ 3.20365 * Math.pow(10, -9) * Math.pow(in, 4);
+				System.out.println("Pixel count: " + in + " converted to: " + out);
+				return out;
 			}
 
 		};
