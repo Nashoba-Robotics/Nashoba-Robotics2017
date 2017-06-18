@@ -36,9 +36,9 @@ public class Hood extends NRSubsystem {
 	/**
 	 * TODO: Hood: Find top position
 	 */
-	private static final Angle TOP_POSITION = new Angle(38.1, Angle.Unit.DEGREE);
+	public static final Angle TOP_POSITION = new Angle(38.1, Angle.Unit.DEGREE);
 	
-	private static final Angle BOTTOM_POSITION = Angle.ZERO;
+	public static final Angle BOTTOM_POSITION = Angle.ZERO;
 
 	//CANTalon PID Profile numbers
 	private static final int MOTION_MAGIC = 0;
