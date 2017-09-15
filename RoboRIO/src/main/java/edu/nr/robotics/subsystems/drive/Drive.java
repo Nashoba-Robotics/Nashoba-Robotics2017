@@ -33,6 +33,16 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	private DoubleSolenoid gearSwitcher;
 
 	/**
+	 * The percent the robot will drive after reaching max current
+	 */
+	public static final double ABOVE_MAX_CURRENT_DRIVE_PERCENT = 0.4;
+	
+	/**
+	 * The maximum current the robot drive will withstand before we set motor speed to prevent motor burn out
+	 */
+	public static final double MAX_DRIVE_CURRENT = 25;
+	
+	/**
 	 * 
 	 * The diameter of the wheels in inches.
 	 * 
@@ -338,9 +348,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 */
 	public void setMotorSpeed(Speed left, Speed right) {
 		if (leftTalon != null && rightTalon != null) {
-			leftMotorSetpoint = left;
-			rightMotorSetpoint = right.negate();
-
+			
+			if (getLeftCurrent() > MAX_DRIVE_CURRENT || getRightCurrent() > MAX_DRIVE_CURRENT) {
+				leftMotorSetpoint = new Speed(currentMaxSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) * ABOVE_MAX_CURRENT_DRIVE_PERCENT, Distance.Unit.FOOT, Time.Unit.SECOND);
+				rightMotorSetpoint = new Speed(currentMaxSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) * -ABOVE_MAX_CURRENT_DRIVE_PERCENT, Distance.Unit.FOOT, Time.Unit.SECOND);
+			}
+			else {
+				leftMotorSetpoint = left;
+				rightMotorSetpoint = right.negate();
+			}
 			if (leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
 				leftTalon.set(leftMotorSetpoint.div(currentMaxSpeed()));
 			} else {
@@ -351,7 +367,6 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			} else {
 				rightTalon.set(rightMotorSetpoint.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.MINUTE));
 			}
-
 		}
 	}
 
@@ -576,6 +591,8 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
 				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
 				SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw().get(Angle.Unit.DEGREE));
+				SmartDashboard.putNumber("Drive Left Percent", leftMotorSetpoint.div(currentMaxSpeed()));
+				SmartDashboard.putNumber("Drive Right Percent", rightMotorSetpoint.div(currentMaxSpeed()));
 			}
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putData(this);
