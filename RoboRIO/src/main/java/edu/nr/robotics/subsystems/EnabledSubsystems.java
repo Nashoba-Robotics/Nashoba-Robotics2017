@@ -14,7 +14,7 @@ public class EnabledSubsystems {
 								COMPRESSOR_ENABLED 	= true;
 	
 	//These start the subsystem in dumb mode. Changing them later sometimes ignores this.
-	public static final boolean DRIVE_DUMB_ENABLED	 	= false,
+	public static final boolean DRIVE_DUMB_ENABLED	 	= true,
 								SHOOTER_DUMB_ENABLED 	= true,
 								HOOD_DUMB_ENABLED 		= false,
 								TURRET_DUMB_ENABLED 	= false;

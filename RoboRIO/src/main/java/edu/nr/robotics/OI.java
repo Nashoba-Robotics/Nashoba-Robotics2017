@@ -14,7 +14,6 @@ import edu.nr.robotics.multicommands.ClimbCommand;
 import edu.nr.robotics.multicommands.EnableAutoTrackingCommand;
 import edu.nr.robotics.multicommands.GearPegAlignCommand;
 import edu.nr.robotics.multicommands.WallShotAlignCommand;
-import edu.nr.robotics.multicommands.WaterfallCommand;
 import edu.nr.robotics.subsystems.compressor.CompressorToggleCommand;
 import edu.nr.robotics.subsystems.drive.Drive;
 import edu.nr.robotics.subsystems.drive.DriveForwardForeverBasicCommand;
@@ -94,8 +93,6 @@ public class OI implements SmartDashboardSource {
 	
 	private static final int DRIVE_REVERSE_BUTTON_NUMBER = 1;
 	
-	private static final int WATERFALL_BUTTON_NUMBER = 5;
-
 	private double driveSpeedMultiplier = 1;
 
 	private static OI singleton;
@@ -160,7 +157,6 @@ public class OI implements SmartDashboardSource {
 		new JoystickButton(driveLeft, 14).whenPressed(new TurretStationaryAngleCorrectionCommand());
 		new JoystickButton(driveLeft, 15).whenPressed(new HoodStationaryAngleCorrectionCommand());
 		new JoystickButton(driveLeft, 16).whenPressed(new ShooterStationarySpeedCorrectionCommand());
-		new JoystickButton(driveLeft, 5).whenPressed(new WaterfallCommand());
 	}
 
 	public void initDriveRight() {

@@ -12,6 +12,7 @@ import edu.nr.lib.interfaces.DoublePIDSource;
 import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Acceleration;
 import edu.nr.lib.units.Angle;
+import edu.nr.lib.units.Angle.Unit;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Jerk;
 import edu.nr.lib.units.Speed;
@@ -258,6 +259,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			tempRightTalon.changeControlMode(TalonControlMode.Follower);
 			tempRightTalon.set(rightTalon.getDeviceID());
 			tempRightTalon.enableBrakeMode(true);
+			
+			SmartDashboard.putNumber("Drive Percent", 0);
+			SmartDashboard.putNumber("Distance to Profile in Feet", 0);
 		}
 	}
 
@@ -322,6 +326,24 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 */
 	public void tankDrive(double left, double right) {
 		setMotorSpeedInPercent(left, right);
+	}
+	
+	public Distance getLeftDistance() {
+		if(leftTalon != null) {
+		return new Distance(leftTalon.getPosition(), Distance.Unit.DRIVE_ROTATION);
+		}
+		
+		else
+			return Distance.ZERO;
+	}
+	
+	public Distance getRightDistance() {
+		if(rightTalon != null) {
+			return new Distance(rightTalon.getPosition(), Distance.Unit.DRIVE_ROTATION);
+			}
+		else {
+			return Distance.ZERO;
+		}
 	}
 
 	/**
@@ -588,11 +610,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 		if (leftTalon != null && rightTalon != null) {
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putString("Drive Current", getLeftCurrent() + " : " + getRightCurrent());
-				SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
-				SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				//SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				//SmartDashboard.putString("Drive Right Speed", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
 				SmartDashboard.putNumber("NavX Yaw", NavX.getInstance().getYaw().get(Angle.Unit.DEGREE));
 				SmartDashboard.putNumber("Drive Left Percent", leftMotorSetpoint.div(currentMaxSpeed()));
 				SmartDashboard.putNumber("Drive Right Percent", rightMotorSetpoint.div(currentMaxSpeed()));
+				
+				SmartDashboard.putString("Drive Left Velocity vs Set Velocity: ", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				SmartDashboard.putString("Drive Right Velocity vs Set Velocity: ", getRightSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + rightMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
+				
 			}
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_COMPLEX_ENABLED) {
 				SmartDashboard.putData(this);

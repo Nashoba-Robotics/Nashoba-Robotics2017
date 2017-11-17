@@ -38,6 +38,7 @@ import edu.nr.robotics.subsystems.EnabledSubsystems;
 import edu.nr.robotics.subsystems.agitator.Agitator;
 import edu.nr.robotics.subsystems.drive.CSVSaverDisable;
 import edu.nr.robotics.subsystems.drive.CSVSaverEnable;
+import edu.nr.robotics.subsystems.drive.DriveForwardCommand;
 import edu.nr.robotics.subsystems.drive.DriveForwardProfilingCommand;
 import edu.nr.robotics.subsystems.drive.DriveStationaryPIDCommand;
 import edu.nr.robotics.subsystems.drive.DriveTurnConstantSmartDashboardSpeedCommand;
@@ -96,11 +97,11 @@ public class Robot extends IterativeRobot {
 		OI.init();
 		smartDashboardInit();
 		
-		cameraInit();
+		//cameraInit();
 	}
 	
 	public void cameraInit() {
-		//CameraServer.getInstance().startAutomaticCapture();
+		CameraServer.getInstance().startAutomaticCapture();
 	}
 	
 	/**
@@ -142,6 +143,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData(new DriveForwardProfilingCommand(new Distance(72, Distance.Unit.INCH)));
 
 		SmartDashboard.putData(new ShooterSmartDashboardSpeedCommand());
+		
+		SmartDashboard.putData(new DriveForwardCommand());
+		
+		//SmartDashboard.putNumber("Number", 42);
 	}
 	
 	/**
