@@ -97,11 +97,11 @@ public class Robot extends IterativeRobot {
 		OI.init();
 		smartDashboardInit();
 		
-		//cameraInit();
+		cameraInit();
 	}
 	
 	public void cameraInit() {
-		CameraServer.getInstance().startAutomaticCapture();
+		//CameraServer.getInstance().startAutomaticCapture();
 	}
 	
 	/**

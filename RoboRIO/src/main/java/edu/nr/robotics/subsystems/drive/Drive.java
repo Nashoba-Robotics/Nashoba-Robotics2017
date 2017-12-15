@@ -13,6 +13,7 @@ import edu.nr.lib.sensorhistory.TalonEncoder;
 import edu.nr.lib.units.Acceleration;
 import edu.nr.lib.units.Angle;
 import edu.nr.lib.units.Angle.Unit;
+import edu.nr.lib.units.AngularSpeed;
 import edu.nr.lib.units.Distance;
 import edu.nr.lib.units.Jerk;
 import edu.nr.lib.units.Speed;
@@ -97,6 +98,12 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	 * TODO: Drive: Get max jerk
 	 */
 	public static final Jerk MAX_JERK = new Jerk(813.0, Distance.Unit.DRIVE_ROTATION, Time.Unit.SECOND, Time.Unit.SECOND, Time.Unit.SECOND);
+	
+	//linear F-value data
+	public static final double MIN_MOVE_VOLTAGE_PERCENT_LEFT = 0.106; //This is 0 to 1 number
+	public static final double MIN_MOVE_VOLTAGE_PERCENT_RIGHT = 0.0945; //This is 0 to 1 number
+	public static final double VOLTAGE_PERCENT_VELOCITY_SLOPE_LEFT = 0.0676;
+	public static final double VOLTAGE_PERCENT_VELOCITY_SLOPE_RIGHT = 0.0689;
 
 	public static final Distance WHEEL_BASE = new Distance(26.1, Distance.Unit.INCH);
 
@@ -124,9 +131,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 
 	// TODO: Drive: Find low gear FPID values
 	public static final double F_LOW_GEAR_LEFT = 0.263;//1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_LEFT = 0.15;
+	public static final double P_LOW_GEAR_LEFT = 0.675;
 	public static final double I_LOW_GEAR_LEFT = 0;
-	public static final double D_LOW_GEAR_LEFT = 0;
+	public static final double D_LOW_GEAR_LEFT = 0.0675;
 
 	// TODO: Drive: Find high gear FPID values
 	public static final double F_HIGH_GEAR_LEFT = 0.100793;//1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
@@ -136,9 +143,9 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	
 	// TODO: Drive: Find low gear FPID values
 	public static final double F_LOW_GEAR_RIGHT = 0.285;//1023.0/(MAX_LOW_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
-	public static final double P_LOW_GEAR_RIGHT = 0.15;
+	public static final double P_LOW_GEAR_RIGHT = 0.675;
 	public static final double I_LOW_GEAR_RIGHT = 0;
-	public static final double D_LOW_GEAR_RIGHT = 0;
+	public static final double D_LOW_GEAR_RIGHT = 0.0675;
 
 	// TODO: Drive: Find high gear FPID values
 	public static final double F_HIGH_GEAR_RIGHT = 0.105;//1023.0/(MAX_HIGH_GEAR_SPEED.get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND) * NATIVE_UNITS_PER_REV);
@@ -204,13 +211,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			}
 			leftTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			leftTalon.setProfile(Gear.LOW_PROFILE);
-			leftTalon.setF(F_LOW_GEAR_LEFT);
-			leftTalon.setP(P_LOW_GEAR_LEFT);
+			leftTalon.setF(0);
+			leftTalon.setP(0);
 			leftTalon.setI(I_LOW_GEAR_LEFT);
 			leftTalon.setD(D_LOW_GEAR_LEFT);
 			leftTalon.setProfile(Gear.HIGH_PROFILE);
-			leftTalon.setF(F_HIGH_GEAR_LEFT);
-			leftTalon.setP(P_HIGH_GEAR_LEFT);
+			leftTalon.setF(0);
+			leftTalon.setP(0);
 			leftTalon.setI(I_HIGH_GEAR_LEFT);
 			leftTalon.setD(D_HIGH_GEAR_LEFT);
 			leftTalon.setProfile(getCurrentGearProfile());
@@ -236,13 +243,13 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			}
 			rightTalon.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 			rightTalon.setProfile(Gear.LOW_PROFILE);
-			rightTalon.setF(F_LOW_GEAR_RIGHT);
-			rightTalon.setP(P_LOW_GEAR_RIGHT);
+			rightTalon.setF(0);
+			rightTalon.setP(0);
 			rightTalon.setI(I_LOW_GEAR_RIGHT);
 			rightTalon.setD(D_LOW_GEAR_RIGHT);
 			rightTalon.setProfile(Gear.HIGH_PROFILE);
-			rightTalon.setF(F_HIGH_GEAR_RIGHT);
-			rightTalon.setP(P_HIGH_GEAR_RIGHT);
+			rightTalon.setF(0);
+			rightTalon.setP(0);
 			rightTalon.setI(I_HIGH_GEAR_RIGHT);
 			rightTalon.setD(D_HIGH_GEAR_RIGHT);
 			rightTalon.setProfile(getCurrentGearProfile());
@@ -262,6 +269,15 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 			
 			SmartDashboard.putNumber("Drive Percent", 0);
 			SmartDashboard.putNumber("Distance to Profile in Feet", 0);
+			
+			SmartDashboard.putNumber("Left P Value", 0);
+			SmartDashboard.putNumber("Left I Value", 0);
+			SmartDashboard.putNumber("Left D Value", 0);
+			
+			SmartDashboard.putNumber("Right P Value", 0);
+			SmartDashboard.putNumber("Right I Value", 0);
+			SmartDashboard.putNumber("Right D Value", 0);
+			
 		}
 	}
 
@@ -371,14 +387,14 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	public void setMotorSpeed(Speed left, Speed right) {
 		if (leftTalon != null && rightTalon != null) {
 			
-			if (getLeftCurrent() > MAX_DRIVE_CURRENT || getRightCurrent() > MAX_DRIVE_CURRENT) {
-				leftMotorSetpoint = new Speed(currentMaxSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) * ABOVE_MAX_CURRENT_DRIVE_PERCENT, Distance.Unit.FOOT, Time.Unit.SECOND);
-				rightMotorSetpoint = new Speed(currentMaxSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) * -ABOVE_MAX_CURRENT_DRIVE_PERCENT, Distance.Unit.FOOT, Time.Unit.SECOND);
-			}
-			else {
-				leftMotorSetpoint = left;
-				rightMotorSetpoint = right.negate();
-			}
+			leftMotorSetpoint = left;
+			rightMotorSetpoint = right.negate();
+			
+			leftTalon.setF(((VOLTAGE_PERCENT_VELOCITY_SLOPE_LEFT * leftMotorSetpoint.abs().get(Distance.Unit.FOOT, Time.Unit.SECOND) + MIN_MOVE_VOLTAGE_PERCENT_LEFT) * 1023.0) / (new AngularSpeed(leftMotorSetpoint.abs().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND), Angle.Unit.ROTATION, Time.Unit.HUNDRED_MILLISECOND).get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)));
+			rightTalon.setF(((VOLTAGE_PERCENT_VELOCITY_SLOPE_RIGHT * rightMotorSetpoint.abs().get(Distance.Unit.FOOT, Time.Unit.SECOND) + MIN_MOVE_VOLTAGE_PERCENT_RIGHT) * 1023.0) / (new AngularSpeed(rightMotorSetpoint.abs().get(Distance.Unit.DRIVE_ROTATION, Time.Unit.HUNDRED_MILLISECOND), Angle.Unit.ROTATION, Time.Unit.HUNDRED_MILLISECOND).get(Angle.Unit.MAGNETIC_ENCODER_NATIVE_UNITS, Time.Unit.HUNDRED_MILLISECOND)));
+			
+			
+			
 			if (leftTalon.getControlMode() == TalonControlMode.PercentVbus) {
 				leftTalon.set(leftMotorSetpoint.div(currentMaxSpeed()));
 			} else {
@@ -608,6 +624,18 @@ public class Drive extends NRSubsystem implements DoublePIDOutput, DoublePIDSour
 	@Override
 	public void smartDashboardInfo() {
 		if (leftTalon != null && rightTalon != null) {
+			
+			leftTalon.setP(SmartDashboard.getNumber("Left P Value", 0));
+			leftTalon.setI(SmartDashboard.getNumber("Left I Value", 0));
+			leftTalon.setD(SmartDashboard.getNumber("Left D Value", 0));
+			
+			rightTalon.setP(SmartDashboard.getNumber("Right P Value", 0));
+			rightTalon.setI(SmartDashboard.getNumber("Right I Value", 0));
+			rightTalon.setD(SmartDashboard.getNumber("Right D Value", 0));
+			
+			SmartDashboard.putNumber("Left F Value", leftTalon.getF());
+			SmartDashboard.putNumber("Right F Value", rightTalon.getF());
+			
 			if (EnabledSubsystems.DRIVE_SMARTDASHBOARD_BASIC_ENABLED) {
 				SmartDashboard.putString("Drive Current", getLeftCurrent() + " : " + getRightCurrent());
 				//SmartDashboard.putString("Drive Left Speed", getLeftSpeed().get(Distance.Unit.FOOT, Time.Unit.SECOND) + " : " + leftMotorSetpoint.get(Distance.Unit.FOOT, Time.Unit.SECOND));
